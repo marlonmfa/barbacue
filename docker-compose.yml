@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      # Host 5437 → container 5432 (avoids clashing with a host Postgres on 5432).
+      # Internal services reach it as "postgres:5432" regardless of this mapping.
+      - "5437:5432"
+    environment:
+      POSTGRES_USER: barbacue
+      POSTGRES_PASSWORD: barbacue
+      POSTGRES_DB: barbacue
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U barbacue"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # One-shot: applies drizzle migrations, then exits. `web` waits for it.
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: migrate
+    environment:
+      DATABASE_URL: postgresql://barbacue:barbacue@postgres:5432/barbacue
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: runner
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Container-internal DB host is the service name "postgres".
+      DATABASE_URL: postgresql://barbacue:barbacue@postgres:5432/barbacue
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_COOKIE_SECRET: ${ADMIN_COOKIE_SECRET}
+      ADMIN_MASTER_PASSWORD: ${ADMIN_MASTER_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  postgres_data:

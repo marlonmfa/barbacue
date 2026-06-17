@@ -1,0 +1,77 @@
+name: barbacue
+description: "Lanches do Barba — cardápio e pedidos"
+publish_to: 'none'
+
+version: 1.1.0+2
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # HTTP & networking
+  http: ^1.2.2
+
+  # State management (Riverpod)
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Navigation
+  go_router: ^14.8.1
+
+  # Local storage (cart persistence)
+  shared_preferences: ^2.5.3
+
+  # Images with cache
+  cached_network_image: ^3.4.1
+
+  # JSON serialization
+  json_annotation: ^4.9.0
+
+  # URL launcher (WhatsApp)
+  url_launcher: ^6.3.1
+
+  # Pix QR Code rendering (payment screen)
+  qr_flutter: ^4.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.14
+  json_serializable: ^6.9.4
+  riverpod_generator: ^2.6.1
+  flutter_launcher_icons: ^0.14.3
+  # flutter_native_splash: only needed to (re)generate the native splash assets,
+  # which are already committed (res/drawable*/launch_background.xml, iOS
+  # LaunchImage). Keeping it as a runtime dep broke the release build because its
+  # GeneratedPluginRegistrant entry references a class the package no longer ships.
+  # To regenerate splash assets: temporarily re-add it, run
+  # `dart run flutter_native_splash:create`, then remove it again.
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icon/
+    - assets/splash/
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icon/icon.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#F59E0B"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+
+flutter_native_splash:
+  color: "#F59E0B"
+  image: assets/splash/logo.png
+  android: true
+  ios: true
+  android_12:
+    color: "#F59E0B"
+    image: assets/splash/logo.png

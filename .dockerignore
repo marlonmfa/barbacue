@@ -1,0 +1,11 @@
+**/node_modules
+**/.next
+**/build
+**/.dart_tool
+**/.git
+apps/mobile
+.env
+.env.*
+!.env.example
+npm-debug.log*
+**/*.log

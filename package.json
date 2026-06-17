@@ -1,0 +1,13 @@
+{
+  "name": "barbacue",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "scrape": "npm run scrape --workspace=packages/scraper",
+    "seed": "npm run seed --workspace=packages/scraper"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}

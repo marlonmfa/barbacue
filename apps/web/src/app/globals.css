@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  /* ── BARBACUE brand ── */
+  --brand-red: #ed1b24;
+  --brand-red-hover: #c8141c;
+  --brand-tan: #af9a7b;
+  --brand-tan-soft: #c8b89a;
+
+  /* ── Dark "na brasa" surfaces (warm charcoal, not flat gray) ── */
+  --bg: #0e0b0a;
+  --surface: #1a1512;
+  --surface-2: #241d18;
+  --border: #352b24;
+  --border-hover: #4d3f34;
+  --text: #f6efe8;
+  --text-muted: #a89a8c;
+
+  --background: var(--bg);
+  --foreground: var(--text);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-geist-sans, system-ui, -apple-system, sans-serif);
+}
+
+.ig-gradient {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.ig-gradient-border {
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888) border-box;
+  border: 2px solid transparent;
+}

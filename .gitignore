@@ -1,0 +1,7 @@
+node_modules
+.DS_Store
+
+# Env files (single source of truth is the root .env — never commit secrets)
+.env
+.env.*
+!.env.example

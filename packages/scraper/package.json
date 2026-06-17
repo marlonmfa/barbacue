@@ -1,0 +1,20 @@
+{
+  "name": "@barbacue/scraper",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "scrape": "npx ts-node src/scrape.ts",
+    "seed": "npx ts-node src/seed.ts"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0",
+    "pg": "^8.13.0",
+    "dotenv": "^16.4.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.0",
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  }
+}
