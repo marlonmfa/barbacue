@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   }
 
   const res = NextResponse.json({ ok: true });
-  setAdminCookie(res);
+  await setAdminCookie(res);
   return res;
 }
 

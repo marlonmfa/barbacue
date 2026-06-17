@@ -4,17 +4,43 @@ import { NextRequest, NextResponse } from "next/server";
 const COOKIE_NAME = "barbacue_admin";
 const MAX_AGE = 60 * 60 * 8; // 8 hours
 
-function sign(value: string, secret: string): string {
-  // Simple HMAC-like signature using base64 — good enough for a single-owner admin
-  const buf = Buffer.from(`${value}:${secret}`);
-  return `${value}.${buf.toString("base64url")}`;
+// HMAC-SHA256 via Web Crypto so it works in BOTH the Edge runtime (proxy.ts
+// middleware) and the Node runtime (route handlers). A keyed MAC — unlike the
+// previous reversible base64(value:secret) scheme — never exposes the secret
+// even if an attacker captures a cookie, and forgery requires the secret.
+const enc = new TextEncoder();
+
+async function importKey(secret: string, usage: KeyUsage): Promise<CryptoKey> {
+  return crypto.subtle.importKey(
+    "raw",
+    enc.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    [usage],
+  );
 }
 
-function verify(token: string, secret: string): boolean {
+async function sign(value: string, secret: string): Promise<string> {
+  const key = await importKey(secret, "sign");
+  const sig = await crypto.subtle.sign("HMAC", key, enc.encode(value));
+  const mac = Buffer.from(new Uint8Array(sig)).toString("base64url");
+  return `${value}.${mac}`;
+}
+
+async function verify(token: string, secret: string): Promise<boolean> {
   const dot = token.lastIndexOf(".");
   if (dot === -1) return false;
   const value = token.slice(0, dot);
-  return sign(value, secret) === token;
+  let sig: ArrayBuffer;
+  try {
+    const raw = Buffer.from(token.slice(dot + 1), "base64url");
+    sig = raw.buffer.slice(raw.byteOffset, raw.byteOffset + raw.byteLength);
+  } catch {
+    return false;
+  }
+  const key = await importKey(secret, "verify");
+  // crypto.subtle.verify performs a constant-time comparison internally.
+  return crypto.subtle.verify("HMAC", key, sig, enc.encode(value));
 }
 
 export function isMasterPassword(pw: string): boolean {
@@ -26,12 +52,12 @@ export function isValidAdminPassword(pw: string): boolean {
   return pw === process.env.ADMIN_PASSWORD || isMasterPassword(pw);
 }
 
-export function makeAdminToken(): string {
+export async function makeAdminToken(): Promise<string> {
   const secret = process.env.ADMIN_COOKIE_SECRET!;
   return sign("admin_authenticated", secret);
 }
 
-export function isValidAdminToken(token: string): boolean {
+export async function isValidAdminToken(token: string): Promise<boolean> {
   const secret = process.env.ADMIN_COOKIE_SECRET;
   if (!secret) return false;
   return verify(token, secret);
@@ -41,16 +67,16 @@ export function isValidAdminToken(token: string): boolean {
 export async function requireAdmin(): Promise<void> {
   const store = await cookies();
   const token = store.get(COOKIE_NAME)?.value ?? "";
-  if (!isValidAdminToken(token)) {
-    // Redirect is caught by the caller via thrown Response in middleware
+  if (!(await isValidAdminToken(token))) {
     throw new Error("unauthorized");
   }
 }
 
 /** Used in the login API route to set the session cookie. */
-export function setAdminCookie(response: NextResponse): void {
-  response.cookies.set(COOKIE_NAME, makeAdminToken(), {
+export async function setAdminCookie(response: NextResponse): Promise<void> {
+  response.cookies.set(COOKIE_NAME, await makeAdminToken(), {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
     maxAge: MAX_AGE,
@@ -63,7 +89,7 @@ export function clearAdminCookie(response: NextResponse): void {
 }
 
 /** Middleware helper — reads the cookie from the request directly. */
-export function isAdminRequest(req: NextRequest): boolean {
+export async function isAdminRequest(req: NextRequest): Promise<boolean> {
   const token = req.cookies.get(COOKIE_NAME)?.value ?? "";
   return isValidAdminToken(token);
 }
