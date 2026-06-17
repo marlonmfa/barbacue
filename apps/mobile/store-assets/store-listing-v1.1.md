@@ -43,9 +43,19 @@ Baixe e mate sua fome com o melhor burger na brasa da região!
 - Classificação de conteúdo: Livre / 4+
 - Contém anúncios: Não · Compras no app: Não
 
-## Screenshots (PENDENTE)
-Os arquivos em `screenshots/play/` e `screenshots/appstore/` são da v1.0 (menu,
-carrinho, confirmação) e NÃO mostram o chat de IA nem a tela de pagamento/Pix.
-Recapturar com o app v1.1 apontando para produção:
+## Screenshots
+**Set de submissão (pronto, válido):** `screenshots/play/` (1080×1920, 3 imagens) e
+`screenshots/appstore/` (1320×2868 = iPhone 6.9", 3 imagens) — menu, carrinho,
+confirmação, capturados na v1.0 com imagens de produtos carregadas. Atendem o mínimo
+das duas lojas (≥2 por dispositivo) e podem ser usados para publicar.
+
+**Recaptura v1.1 (melhoria, não bloqueia):** `screenshots-v1.1/01_menu_6.9.png`
+(1320×2868) capturado no simulador iPhone 17 Pro Max com o app v1.1 apontando para
+produção — mostra os cards corrigidos (sem overflow) e o botão "Pedir pelo chat".
+As imagens dos produtos aparecem como placeholder porque o CDN da anota.ai não
+responde a partir do simulador iOS (em terminal/dispositivo as URLs retornam 200).
+
+**Para screenshots de marketing finais (chat IA + tela Pix com QR):** capturar num
+**dispositivo físico** (onde o CDN carrega as fotos), rodando:
 `flutter run --release --dart-define=API_BASE_URL=https://barbacue.hirableaiagents.com`
-Telas a capturar: cardápio, chat de IA com pedido, tela de pagamento com QR Pix.
+Telas a capturar: cardápio, chat de IA com pedido em andamento, pagamento com QR Pix.
