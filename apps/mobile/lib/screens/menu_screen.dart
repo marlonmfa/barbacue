@@ -113,7 +113,10 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
                       maxCrossAxisExtent: 220,
                       mainAxisSpacing: 12,
                       crossAxisSpacing: 12,
-                      childAspectRatio: 0.72,
+                      // Fixed card height (image 140 + 2-line name + 2-line desc +
+                      // price row) — independent of cell width so narrower phones
+                      // don't clip the content (childAspectRatio overflowed by 13px).
+                      mainAxisExtent: 292,
                     ),
                     delegate: SliverChildBuilderDelegate(
                       (context, idx) => ProductCard(

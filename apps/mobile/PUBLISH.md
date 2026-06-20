@@ -5,6 +5,46 @@ o app nas lojas. O projeto já está compilado e os artefatos de release estão 
 
 ---
 
+## STATUS ATUAL — v1.1.0+2 (build automatizado)
+
+| Item | Estado | Observação |
+|---|---|---|
+| `flutter analyze` | ✅ 0 issues | |
+| `flutter test` | ✅ passa | |
+| **Android AAB** | ✅ PRONTO | `build/app/outputs/bundle/release/app-release.aab` — assinado c/ upload-keystore (`CN=Lanches do Barba`), URL de produção embutida, v1.1.0(2). **Pronto para upload na Play Console.** |
+| **Android APK** | ✅ PRONTO | `build/app/outputs/flutter-apk/app-release.apk` — sideload/testes |
+| **iOS archive** | ✅ PRONTO | `build/ios/archive/Runner.xcarchive` — v1.1.0(2), team `3A3X2G4UPK`, URL de produção embutida, launch image da marca |
+| **iOS IPA (App Store)** | ⛔ BLOQUEADO | Export falha com `No Accounts / No profiles`. **Requer login da conta Apple Developer no Xcode** (ação manual — credenciais do dono). Ver abaixo. |
+| Ícone do app (512 + adaptive) | ✅ PRONTO | |
+| Feature graphic (Play 1024×500) | ✅ PRONTO | `store-assets/play/feature_graphic_1024x500.png` |
+| Política de privacidade | ✅ NO AR | https://barbacue.hirableaiagents.com/privacy.html |
+| Ficha de loja (copy pt-BR) | ✅ PRONTO | `store-assets/store-listing-v1.1.md` |
+| Screenshots v1.1 (chat IA + Pix) | ⚠️ v1.0 servem | Set v1.0 (menu/carrinho/confirmação) é válido p/ submeter; recapturar p/ destacar chat/Pix é melhoria |
+
+### ⛔ Único bloqueio para a App Store: login da conta Apple
+
+O archive iOS está pronto, mas gerar/enviar o IPA exige uma conta Apple Developer
+logada no Xcode (nenhuma está nesta máquina — erro `exportArchive No Accounts`).
+Para destravar, **na máquina com o archive**:
+
+1. **Xcode → Settings → Accounts → "+"** → entre com o Apple ID da conta do time
+   `3A3X2G4UPK` (a que paga os USD 99/ano e tem o cert "Apple Distribution").
+2. Depois rode o export automatizado:
+   ```bash
+   cd apps/mobile
+   flutter build ipa --release \
+     --dart-define=API_BASE_URL=https://barbacue.hirableaiagents.com \
+     --export-options-plist=ios/ExportOptions.plist
+   # IPA sai em build/ios/ipa/*.ipa
+   ```
+   **OU** distribua direto pelo Organizer (mais simples, faz login no fluxo):
+   ```bash
+   open build/ios/archive/Runner.xcarchive
+   # Organizer → Distribute App → App Store Connect → Upload
+   ```
+
+---
+
 ## Artefatos gerados (não republicar sem nova versão)
 
 | Arquivo | Localização | Uso |
@@ -18,12 +58,18 @@ o app nas lojas. O projeto já está compilado e os artefatos de release estão 
 ## Credenciais importantes — GUARDE COM SEGURANÇA
 
 ```
-Keystore Android : android/app/upload-keystore.jks
-Alias            : upload
-Senha            : barbacue2024
-Team ID Apple    : Y5B2NQ244A
-Bundle ID        : com.lanchesdobarba.barbacue
+Keystore Android      : android/app/upload-keystore.jks
+Alias                 : upload
+Senha                 : barbacue2024
+Bundle ID             : com.lanchesdobarba.barbacue
+Apple Team (DISTRIB.) : 3A3X2G4UPK  ← usar este p/ publicar (cert "Apple Distribution")
+Apple Team (dev)      : Y5B2NQ244A  ← time pessoal/grátis, só cert "Apple Development"
 ```
+
+> ⚠️ Existem DUAS contas Apple nesta máquina. A publicação na App Store **exige**
+> o time `3A3X2G4UPK` (é o único com certificado "Apple Distribution"). O projeto
+> Xcode (`DEVELOPMENT_TEAM`) e o `ios/ExportOptions.plist` já apontam para ele.
+> O time `Y5B2NQ244A` (pessoal) NÃO consegue distribuir na loja.
 
 > O keystore é irreversível. Se perder, não consegue publicar atualizações
 > na Play Store. Faça backup em local seguro (ex: 1Password, cofre criptografado).
