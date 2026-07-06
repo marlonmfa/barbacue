@@ -11,7 +11,7 @@ relativo (`/generated/products/…`).
 | **Web (produção)** | ✅ NO AR | Fotos deployadas em `/root/barbacue/apps/web/public/generated/` + 107 `image_url` atualizados no banco de produção (host `:5432`). PM2 reiniciado. Verificado: 105 fotos na home, 0 quebradas. |
 | **iOS — upload** | ✅ FEITO | Build **1.1.0 (4)** enviada e **processada (VALID)** no App Store Connect via API key. Assinada com `Apple Distribution (3A3X2G4UPK)`, export-compliance OK. |
 | **Android — upload** | ✅ NA CONSOLE | Build **1.1.0 (4)** (versionCode 4) publicada na trilha **internal testing** via service account. Instalável por testers agora. |
-| **iOS — submeter p/ revisão** | ⏳ MANUAL | Precisa de ações no painel (abaixo). |
+| **iOS — submeter p/ revisão** | ✅ SUBMETIDO | v1.1.0 (4) em `WAITING_FOR_REVIEW`, release automático na aprovação (~24–48h). Todos os 3 bloqueios resolvidos via API: build anexada, screenshots iPad 13" (3) e iPhone 6.5" (3), contact info, export compliance. Nada manual restante. |
 | **Android — produção** | ⏳ MANUAL | Rollout de produção bloqueado por `FAILED_PRECONDITION` (setup da ficha/produção incompleto). |
 
 Artefatos locais (build 4): `apps/mobile/build/app/outputs/bundle/release/app-release.aab`,
@@ -30,18 +30,18 @@ o dono.
 
 ---
 
-## iOS — o que falta (App Store Connect, ~15 min)
+## iOS — CONCLUÍDO (submetido em 2026-07-06)
 
-A build 4 já está **VALID** em https://appstoreconnect.apple.com → BARBACUE → TestFlight/Builds.
-
-1. **App Store → versão 1.1.0 → Build** → selecione **1.1.0 (4)**.
-2. **App Review Information → Contact Information**: preencher nome, telefone (com
-   DDI, ex. `+55 47 9XXXX-XXXX`) e e-mail monitorado. (Bloqueio #3 da v1.1.0+2.)
-3. **Screenshots iPad 13"** (2064×2752): capturar com
-   `bash scripts/capture_ipad_screenshots.sh` e subir no slot **13" Display**.
-   (Bloqueio #2 da v1.1.0+2. Ver `RELEASE_BLOCKERS_v1.1.0.md`.)
-4. **Export compliance**: já resolvido no binário (`ITSAppUsesNonExemptEncryption=false`).
-5. **Add for Review → Submit to App Review**. Revisão Apple: ~24–48h.
+Nada manual restante. Feito automaticamente via App Store Connect API:
+- Build **1.1.0 (4)** anexada à versão (VALID).
+- **Screenshots iPad 13"** (2064×2752) capturados via `lib/main_screenshot.dart` e
+  enviados (3 imagens: menu/carrinho/pagamento) — bloqueio #2 resolvido.
+- iPhone 6.5": 3 screenshots já presentes.
+- **Contact Information** já preenchida (Marlon Alcantara) — bloqueio #3 resolvido.
+- **Export compliance** no binário — bloqueio #1 resolvido.
+- **Submetido para revisão** (`releaseType=AFTER_APPROVAL`): assim que a Apple
+  aprovar, o app **publica sozinho**. Acompanhe em App Store Connect. Se quiser
+  cancelar antes da revisão: App Store Connect → versão → *Remove from Review*.
 
 ---
 
