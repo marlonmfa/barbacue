@@ -22,6 +22,27 @@
       "when": 1781557193618,
       "tag": "0002_init",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782052985626,
+      "tag": "0003_typical_rhino",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1782187662458,
+      "tag": "0004_tables_dine_in",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1783007935856,
+      "tag": "0005_silly_celestials",
+      "breakpoints": true
     }
   ]
 }

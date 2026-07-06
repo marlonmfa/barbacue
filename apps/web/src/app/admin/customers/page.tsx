@@ -32,15 +32,15 @@ export default function AdminCustomers() {
         placeholder="Buscar por nome ou telefone..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full bg-neutral-800 border border-neutral-700 text-white rounded-xl px-4 py-2.5 text-sm mb-5 focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-neutral-500"
+        className="w-full bg-[#1a1512] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm mb-5 focus:outline-none focus:ring-2 focus:ring-[#ed1b24] placeholder-[#7c6f61]"
       />
 
       {loading ? (
-        <p className="text-neutral-400 text-sm">Carregando...</p>
+        <p className="text-[#a89a8c] text-sm">Carregando...</p>
       ) : (
-        <div className="bg-neutral-800 rounded-2xl border border-neutral-700 overflow-hidden">
+        <div className="bg-[#1a1512] rounded-2xl border border-[#352b24] overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-900 text-neutral-400 text-left">
+            <thead className="bg-[#0e0b0a] text-[#a89a8c] text-left">
               <tr>
                 <th className="px-5 py-3">Nome</th>
                 <th className="px-5 py-3">Telefone</th>
@@ -50,11 +50,11 @@ export default function AdminCustomers() {
             </thead>
             <tbody>
               {filtered.map((c) => (
-                <tr key={c.id} className="border-t border-neutral-700">
+                <tr key={c.id} className="border-t border-[#352b24]">
                   <td className="px-5 py-3 text-white font-medium">{c.name}</td>
-                  <td className="px-5 py-3 text-neutral-300">{c.phone}</td>
-                  <td className="px-5 py-3 text-neutral-400">{c.address ?? "—"}</td>
-                  <td className="px-5 py-3 text-neutral-500 text-xs">
+                  <td className="px-5 py-3 text-[#a89a8c]">{c.phone}</td>
+                  <td className="px-5 py-3 text-[#a89a8c]">{c.address ?? "—"}</td>
+                  <td className="px-5 py-3 text-[#a89a8c] text-xs">
                     {c.createdAt
                       ? new Date(c.createdAt).toLocaleDateString("pt-BR")
                       : "—"}
@@ -64,7 +64,7 @@ export default function AdminCustomers() {
             </tbody>
           </table>
           {filtered.length === 0 && (
-            <p className="text-neutral-400 text-sm px-5 py-8 text-center">
+            <p className="text-[#a89a8c] text-sm px-5 py-8 text-center">
               {search ? "Nenhum cliente encontrado." : "Nenhum cliente cadastrado ainda."}
             </p>
           )}

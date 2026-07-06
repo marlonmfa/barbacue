@@ -3,28 +3,40 @@ import { z } from "zod";
 import { db } from "@/db";
 import { products, categories } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
+import { withStaff } from "@/lib/admin-auth";
 
 const ProductSchema = z.object({
   categoryId: z.number().int().positive(),
   name: z.string().min(1),
   description: z.string().optional(),
   priceCents: z.number().int().positive(),
+  promoPriceCents: z.number().int().positive().optional().nullable(),
+  promoStartsAt: z.string().datetime().optional().nullable(),
+  promoEndsAt: z.string().datetime().optional().nullable(),
   imageUrl: z.string().url().optional().nullable(),
   available: z.boolean().optional(),
   sortOrder: z.number().int().optional(),
 });
 
-export async function GET() {
+export const GET = withStaff(async () => {
   const cats = await db.select().from(categories).orderBy(asc(categories.sortOrder));
   const prods = await db.select().from(products).orderBy(asc(products.sortOrder));
   return NextResponse.json({ categories: cats, products: prods });
-}
+});
 
-export async function POST(req: NextRequest) {
+export const POST = withStaff(async (req: NextRequest) => {
   const body = await req.json().catch(() => null);
   const parsed = ProductSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
 
-  const [product] = await db.insert(products).values(parsed.data).returning();
+  const { promoStartsAt, promoEndsAt, ...rest } = parsed.data;
+  const [product] = await db
+    .insert(products)
+    .values({
+      ...rest,
+      promoStartsAt: promoStartsAt ? new Date(promoStartsAt) : null,
+      promoEndsAt: promoEndsAt ? new Date(promoEndsAt) : null,
+    })
+    .returning();
   return NextResponse.json(product, { status: 201 });
-}
+});

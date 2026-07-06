@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "@/db";
 import { orders } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { withStaff } from "@/lib/admin-auth";
 
 const PatchSchema = z.object({
   status: z.enum(["pending", "confirmed", "preparing", "ready", "delivered", "cancelled"]).optional(),
@@ -10,7 +11,7 @@ const PatchSchema = z.object({
 
 type Params = { params: Promise<{ id: string }> };
 
-export async function PATCH(req: NextRequest, { params }: Params) {
+export const PATCH = withStaff(async (req: NextRequest, { params }: Params) => {
   const { id } = await params;
   const body = await req.json().catch(() => null);
   const parsed = PatchSchema.safeParse(body);
@@ -24,4 +25,4 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
   if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(updated);
-}
+});

@@ -1,74 +1,104 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import { useCart, formatPrice } from "@/lib/cart";
+import { isPromoActive, effectivePrice } from "@/lib/pricing";
+import { ProductImage } from "@/components/ProductImage";
+import { fallbackArt } from "@/lib/category-art";
 import type { Product } from "@/db/schema";
 
 interface Props {
   product: Product;
+  /** Category context → picks the generated fallback photo when imageUrl is null. */
+  categorySlug?: string | null;
+  categoryName?: string | null;
+  /** When the store is closed, ordering is disabled (badge shown instead). */
+  isClosed?: boolean;
 }
 
-export function ProductCard({ product }: Props) {
-  const { add, items, setQty, remove } = useCart();
-  const cartItem = items.find((i) => i.productId === product.id);
+export function ProductCard({ product, categorySlug, categoryName, isClosed = false }: Props) {
+  const { add, items, setQty } = useCart();
+  // Gate cart-derived UI until after hydration so the server (empty cart) and the
+  // first client render agree — otherwise the qty stepper pops in / flashes.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const cartItem = mounted ? items.find((i) => i.productId === product.id) : undefined;
+  const onSale = isPromoActive(product);
+  const price = effectivePrice(product);
+  // product.id seeds a stable per-product variant so a grid of image-less items
+  // in one category shows varied (not identical) appetizing photos.
+  const fallbackSrc = fallbackArt(categorySlug, categoryName, product.id);
 
   function handleAdd() {
     add({
       productId: product.id,
       name: product.name,
-      priceCents: product.priceCents,
+      priceCents: price,
       imageUrl: product.imageUrl ?? null,
     });
   }
 
   return (
-    <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] overflow-hidden flex flex-col hover:border-[var(--brand-red)] transition-colors">
-      <div className="relative w-full h-44 bg-[var(--surface-2)]">
-        {product.imageUrl ? (
-          <Image
-            src={product.imageUrl}
-            alt={product.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 640px) 100vw, 320px"
-            unoptimized
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-4xl text-[var(--border-hover)]">
-            🍔
-          </div>
+    <div className="group bg-[var(--surface)] rounded-2xl border border-[var(--border)] overflow-hidden flex flex-col transition-all duration-200 hover:border-[var(--brand-red)] hover:-translate-y-1 hover:shadow-xl hover:shadow-black/40">
+      <div className="relative w-full h-44 bg-[var(--surface-2)] overflow-hidden">
+        {onSale && (
+          <span className="absolute top-2.5 left-2.5 z-10 bg-[var(--brand-red)] text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide shadow-lg shadow-black/40">
+            🔥 Promo
+          </span>
         )}
+        <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-110">
+          <ProductImage
+            src={product.imageUrl}
+            fallbackSrc={fallbackSrc}
+            alt={product.name}
+            sizes="(max-width: 640px) 100vw, 320px"
+          />
+        </div>
+        {/* Scrim keeps the dark theme cohesive at the image's lower edge. */}
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-2/5 card-scrim pointer-events-none" />
       </div>
 
-      <div className="p-3.5 flex flex-col flex-1 gap-1.5">
-        <h3 className="font-semibold text-sm leading-tight line-clamp-2 text-[var(--text)]">
+      <div className="p-4 flex flex-col flex-1 gap-1.5">
+        <h3 className="font-semibold text-[15px] leading-snug line-clamp-2 text-[var(--text)]">
           {product.name}
         </h3>
         {product.description && (
-          <p className="text-xs text-[var(--text-muted)] line-clamp-2">
-            {product.description}
-          </p>
+          <p className="text-xs text-[var(--text-muted)] line-clamp-2 leading-relaxed">{product.description}</p>
         )}
 
-        <div className="mt-auto pt-3 flex items-center justify-between">
-          <span className="font-bold text-sm text-[var(--brand-tan)]">
-            {formatPrice(product.priceCents)}
+        <div className="mt-auto pt-3 flex items-center justify-between gap-2">
+          <span className="flex flex-col leading-none">
+            {onSale && (
+              <span className="text-[11px] text-[var(--text-muted)] line-through">
+                {formatPrice(product.priceCents)}
+              </span>
+            )}
+            <span className={`font-bold text-lg ${onSale ? "text-[var(--brand-red)]" : "text-[var(--brand-tan)]"}`}>
+              {formatPrice(price)}
+            </span>
           </span>
 
-          {cartItem ? (
-            <div className="flex items-center gap-2">
+          {isClosed ? (
+            <span className="text-[11px] font-semibold text-[var(--text-muted)] border border-[var(--border)] rounded-full px-3 py-1.5">
+              Loja fechada
+            </span>
+          ) : cartItem ? (
+            <div className="flex items-center gap-2 animate-pop">
               <button
                 onClick={() => setQty(cartItem.productId, cartItem.qty - 1)}
-                className="w-7 h-7 rounded-full border border-[var(--border-hover)] text-[var(--text)] font-bold flex items-center justify-center hover:border-[var(--brand-red)] transition-colors"
+                aria-label={`Diminuir ${product.name}`}
+                className="w-8 h-8 rounded-full border border-[var(--border-hover)] text-[var(--text)] font-bold flex items-center justify-center hover:border-[var(--brand-red)] active:scale-90 transition-all"
               >
                 −
               </button>
-              <span className="w-5 text-center text-sm font-semibold text-[var(--text)]">
+              <span className="w-5 text-center text-sm font-semibold text-[var(--text)]" aria-live="polite">
                 {cartItem.qty}
               </span>
               <button
                 onClick={handleAdd}
-                className="w-7 h-7 rounded-full bg-[var(--brand-red)] text-white font-bold flex items-center justify-center hover:bg-[var(--brand-red-hover)] transition-colors"
+                aria-label={`Aumentar ${product.name}`}
+                className="w-8 h-8 rounded-full btn-brand font-bold flex items-center justify-center"
               >
                 +
               </button>
@@ -76,7 +106,7 @@ export function ProductCard({ product }: Props) {
           ) : (
             <button
               onClick={handleAdd}
-              className="bg-[var(--brand-red)] hover:bg-[var(--brand-red-hover)] text-white text-xs font-semibold px-4 py-1.5 rounded-full transition-colors"
+              className="btn-brand text-xs font-bold px-5 py-2.5 rounded-full"
             >
               Adicionar
             </button>

@@ -64,18 +64,18 @@ export default function AdminCategories() {
         <h1 className="text-2xl font-bold text-white">Categorias</h1>
         <button
           onClick={openCreate}
-          className="bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+          className="bg-[#ed1b24] hover:bg-[#c8141c] text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
         >
           + Nova categoria
         </button>
       </div>
 
       {loading ? (
-        <p className="text-neutral-400 text-sm">Carregando...</p>
+        <p className="text-[#a89a8c] text-sm">Carregando...</p>
       ) : (
-        <div className="bg-neutral-800 rounded-2xl border border-neutral-700 overflow-hidden">
+        <div className="bg-[#1a1512] rounded-2xl border border-[#352b24] overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-900 text-neutral-400 text-left">
+            <thead className="bg-[#0e0b0a] text-[#a89a8c] text-left">
               <tr>
                 <th className="px-5 py-3">Nome</th>
                 <th className="px-5 py-3">Slug</th>
@@ -85,13 +85,13 @@ export default function AdminCategories() {
             </thead>
             <tbody>
               {categories.map((c) => (
-                <tr key={c.id} className="border-t border-neutral-700">
+                <tr key={c.id} className="border-t border-[#352b24]">
                   <td className="px-5 py-3 text-white font-medium">{c.name}</td>
-                  <td className="px-5 py-3 text-neutral-400 font-mono text-xs">{c.slug}</td>
-                  <td className="px-5 py-3 text-neutral-400">{c.sortOrder ?? 0}</td>
+                  <td className="px-5 py-3 text-[#a89a8c] font-mono text-xs">{c.slug}</td>
+                  <td className="px-5 py-3 text-[#a89a8c]">{c.sortOrder ?? 0}</td>
                   <td className="px-5 py-3 flex gap-2">
                     <button onClick={() => openEdit(c)}
-                      className="text-neutral-400 hover:text-white text-xs px-3 py-1.5 rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors">
+                      className="text-[#a89a8c] hover:text-white text-xs px-3 py-1.5 rounded-lg bg-[#241d18] hover:bg-[#352b24] transition-colors">
                       Editar
                     </button>
                     <button onClick={() => handleDelete(c.id)}
@@ -104,20 +104,20 @@ export default function AdminCategories() {
             </tbody>
           </table>
           {categories.length === 0 && (
-            <p className="text-neutral-400 text-sm px-5 py-8 text-center">Nenhuma categoria cadastrada.</p>
+            <p className="text-[#a89a8c] text-sm px-5 py-8 text-center">Nenhuma categoria cadastrada.</p>
           )}
         </div>
       )}
 
       {showForm && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-neutral-800 rounded-2xl border border-neutral-700 w-full max-w-md p-6">
+          <div className="bg-[#1a1512] rounded-2xl border border-[#352b24] w-full max-w-md p-6">
             <h2 className="text-lg font-bold text-white mb-5">
               {editing ? "Editar categoria" : "Nova categoria"}
             </h2>
             <form onSubmit={handleSave} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm text-neutral-400">Nome *</label>
+                <label className="text-sm text-[#a89a8c]">Nome *</label>
                 <input required className={ic} value={form.name}
                   onChange={(e) => {
                     const name = e.target.value;
@@ -125,22 +125,22 @@ export default function AdminCategories() {
                   }} />
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm text-neutral-400">Slug *</label>
+                <label className="text-sm text-[#a89a8c]">Slug *</label>
                 <input required className={ic} value={form.slug}
                   onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))} />
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm text-neutral-400">Ordem</label>
+                <label className="text-sm text-[#a89a8c]">Ordem</label>
                 <input type="number" className={ic} value={form.sortOrder}
                   onChange={(e) => setForm((f) => ({ ...f, sortOrder: Number(e.target.value) }))} />
               </div>
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setShowForm(false)}
-                  className="flex-1 py-2.5 rounded-xl border border-neutral-600 text-neutral-300 hover:text-white text-sm">
+                  className="flex-1 py-2.5 rounded-xl border border-[#352b24] text-[#a89a8c] hover:text-white text-sm">
                   Cancelar
                 </button>
                 <button type="submit" disabled={saving}
-                  className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm disabled:opacity-50">
+                  className="flex-1 py-2.5 rounded-xl bg-[#ed1b24] hover:bg-[#c8141c] text-white font-semibold text-sm disabled:opacity-50">
                   {saving ? "Salvando..." : "Salvar"}
                 </button>
               </div>
@@ -152,4 +152,4 @@ export default function AdminCategories() {
   );
 }
 
-const ic = "bg-neutral-700 border border-neutral-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 w-full";
+const ic = "bg-[#241d18] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#ed1b24] w-full";

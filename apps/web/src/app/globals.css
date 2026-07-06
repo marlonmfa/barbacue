@@ -14,7 +14,11 @@
   --border: #352b24;
   --border-hover: #4d3f34;
   --text: #f6efe8;
-  --text-muted: #a89a8c;
+  /* Lifted from #a89a8c for ≥4.5:1 contrast on --bg/--surface (a11y audit). */
+  --text-muted: #bdae9d;
+
+  /* Ember gradient for branded image fallbacks + accents (red→fire). */
+  --ember: radial-gradient(120% 120% at 50% 0%, #2a1410 0%, #1a0f0c 55%, #0e0b0a 100%);
 
   --background: var(--bg);
   --foreground: var(--text);
@@ -33,6 +37,49 @@ body {
   font-family: var(--font-geist-sans, system-ui, -apple-system, sans-serif);
 }
 
+/* ── Display type: Anton for the wordmark + section headings (grill-poster) ── */
+.font-display {
+  font-family: var(--font-anton), "Arial Narrow", Impact, system-ui, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+/* Section heading used between menu categories: small ember tick + uppercase. */
+.section-title {
+  font-family: var(--font-anton), Impact, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+/* Branded primary button (fire-red with a subtle ember glow on hover). */
+.btn-brand {
+  background: var(--brand-red);
+  color: #fff;
+  transition: background-color 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease;
+}
+.btn-brand:hover {
+  background: var(--brand-red-hover);
+  box-shadow: 0 6px 24px -6px rgba(237, 27, 36, 0.6);
+}
+.btn-brand:active { transform: scale(0.96); }
+
+/* Hero scrim: keeps the wordmark legible over the flame photo. */
+.hero-scrim {
+  background:
+    linear-gradient(to top, var(--bg) 2%, rgba(14, 11, 10, 0.55) 38%, rgba(14, 11, 10, 0.15) 70%, rgba(14, 11, 10, 0.45) 100%),
+    radial-gradient(120% 80% at 50% 110%, rgba(237, 27, 36, 0.22), transparent 60%);
+}
+
+/* Bottom scrim on product card images so the promo ribbon / dark theme blend. */
+.card-scrim {
+  background: linear-gradient(to top, rgba(14, 11, 10, 0.85) 0%, rgba(14, 11, 10, 0.1) 45%, transparent 70%);
+}
+
+/* Soft ember glow behind featured elements. */
+.fire-glow {
+  box-shadow: 0 0 0 1px var(--border), 0 18px 40px -20px rgba(237, 27, 36, 0.45);
+}
+
 .ig-gradient {
   background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
 }
@@ -41,4 +88,64 @@ body {
   background: linear-gradient(white, white) padding-box,
               linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888) border-box;
   border: 2px solid transparent;
+}
+
+/* ── Branded image fallback (replaces bare emoji on missing/broken images) ── */
+.ember-bg {
+  background-image: var(--ember);
+}
+
+/* ── Motion: keep it subtle, honor reduced-motion ── */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  0%   { background-position: -480px 0; }
+  100% { background-position: 480px 0; }
+}
+@keyframes pop {
+  0%   { transform: scale(0.8); opacity: 0.4; }
+  60%  { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-fade-in-up { animation: fade-in-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-slide-up   { animation: slide-up 0.32s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-pop        { animation: pop 0.25s ease-out both; }
+
+/* Skeleton shimmer for loading states. */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 37%, var(--surface-2) 63%);
+  background-size: 480px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Smooth anchor jumps from the category nav, offset for the sticky header. */
+html { scroll-behavior: smooth; }
+
+/* Hide scrollbars on the horizontal category rail without losing scrollability. */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Print: used by the admin "Mesas" QR cards — show only the print area. */
+@media print {
+  body * { visibility: hidden; }
+  .print-area, .print-area * { visibility: visible; }
+  .print-area { position: absolute; inset: 0; }
+  .no-print { display: none !important; }
 }

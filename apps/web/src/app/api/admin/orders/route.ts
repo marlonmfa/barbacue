@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { orders, customers } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
+import { withStaff } from "@/lib/admin-auth";
 
-export async function GET() {
+export const GET = withStaff(async () => {
   const rows = await db
     .select({
       id: orders.id,
@@ -23,4 +24,4 @@ export async function GET() {
     .orderBy(desc(orders.createdAt));
 
   return NextResponse.json(rows);
-}
+});

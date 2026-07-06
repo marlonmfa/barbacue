@@ -1,8 +1,20 @@
 import { NextRequest } from "next/server";
 import OpenAI from "openai";
 import { db } from "@/db";
-import { categories, products, storeSettings } from "@/db/schema";
-import { eq, asc } from "drizzle-orm";
+import {
+  categories,
+  products,
+  storeSettings,
+  customers,
+  orders,
+  closedDays,
+  coupons,
+  restaurantTables,
+} from "@/db/schema";
+import { eq, asc, desc, gte } from "drizzle-orm";
+import { effectivePrice, isPromoActive } from "@/lib/pricing";
+import { computeStoreStatus } from "@/lib/store-hours";
+import { safeEqual } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -19,8 +31,6 @@ interface AgentItem {
 const fmt = (cents: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
 
-// Always show the #id of each line so the model never guesses a productId when
-// it wants to keep/modify an item already in the cart.
 const cartSummary = (cart: AgentItem[]) => {
   if (cart.length === 0) return "Carrinho vazio.";
   const total = cart.reduce((s, i) => s + i.priceCents * i.qty, 0);
@@ -41,6 +51,10 @@ export async function POST(req: NextRequest) {
     cart?: AgentItem[];
     customer?: { name?: string; phone?: string; address?: string; notes?: string };
     paymentMethod?: string;
+    couponCode?: string | null;
+    customerPhone?: string;
+    // When seated via QR, the dining table's opaque token (dine-in mode).
+    tableToken?: string;
   };
   try {
     body = await req.json();
@@ -53,6 +67,13 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: "Mensagem vazia" }, { status: 400 });
   }
 
+  // ─── Identity: ONLY a token-authenticated bot may load saved customer data ───
+  // The WhatsApp bot has verified the sender's number; a public web caller has
+  // not, so we must never read a stranger's address/order history from a phone
+  // they merely typed (IDOR). isBot gates all cross-customer reads.
+  const botToken = process.env.BOT_API_TOKEN;
+  const isBot = Boolean(botToken) && safeEqual(req.headers.get("x-bot-token") ?? "", botToken!);
+
   // ─── Load the live menu so the agent can never invent products/prices ───
   const [settings] = await db.select().from(storeSettings).where(eq(storeSettings.id, 1));
   const cats = await db.select().from(categories).orderBy(asc(categories.sortOrder));
@@ -62,20 +83,110 @@ export async function POST(req: NextRequest) {
     .where(eq(products.available, true))
     .orderBy(asc(products.sortOrder));
 
+  // Short-circuit an empty catalog instead of letting the agent loop on
+  // "Produto não encontrado".
+  if (prods.length === 0) {
+    return Response.json({
+      reply: "Nosso cardápio está indisponível no momento. Tente novamente em instantes! 🙏",
+      cart: [],
+      customer: body.customer ?? {},
+      paymentMethod: body.paymentMethod ?? "pix",
+      couponCode: null,
+      orderType: "delivery",
+      tableNumber: null,
+      navigate: false,
+    });
+  }
+
   const byId = new Map(prods.map((p) => [p.id, p]));
   const catName = new Map(cats.map((c) => [c.id, c.name]));
   const menuText = prods
-    .map((p) => `#${p.id} | ${p.name} | ${fmt(p.priceCents)} | ${catName.get(p.categoryId ?? -1) ?? "Outros"}`)
+    .map((p) => {
+      const cat = catName.get(p.categoryId ?? -1) ?? "Outros";
+      const desc = p.description ? ` — ${p.description}` : "";
+      if (isPromoActive(p)) {
+        return `#${p.id} | ${p.name} | ${fmt(effectivePrice(p))} (PROMO! de ${fmt(p.priceCents)}) | ${cat}${desc}`;
+      }
+      return `#${p.id} | ${p.name} | ${fmt(p.priceCents)} | ${cat}${desc}`;
+    })
     .join("\n");
 
   const storeName = settings?.storeName ?? "Barbacue";
-  const isClosed = settings?.isOpen === false;
+
+  // ─── Schedule-aware closure (same source of truth as /api/orders) ───
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const upcomingClosed = await db
+    .select({ date: closedDays.date, reason: closedDays.reason })
+    .from(closedDays)
+    .where(gte(closedDays.date, todayStr))
+    .orderBy(asc(closedDays.date));
+  const storeStatus = computeStoreStatus(settings, upcomingClosed);
+
+  // ─── Dine-in (mesa) resolution ───
+  let tableNumber: number | null = null;
+  let validTableToken: string | null = null;
+  if (body.tableToken) {
+    const [table] = await db
+      .select()
+      .from(restaurantTables)
+      .where(eq(restaurantTables.token, body.tableToken));
+    if (table && table.active) {
+      tableNumber = table.number;
+      validTableToken = table.token;
+    }
+  }
+  const isDineIn = validTableToken !== null;
 
   // Working copies the tools mutate; returned to the client as the new truth.
   let cart: AgentItem[] = (body.cart ?? []).filter((i) => byId.has(i.productId));
   const customer = { ...(body.customer ?? {}) };
   let paymentMethod = body.paymentMethod ?? "pix";
+  let couponCode: string | null = body.couponCode ?? null;
+  let couponDiscount = 0;
   let navigate = false;
+
+  // ─── Known customer ("logged in") — bot-verified phone ONLY ──────────
+  const knownPhone = isBot ? (body.customerPhone || customer.phone || "").trim() : "";
+  if (isBot && body.customerPhone) customer.phone = knownPhone;
+
+  let historyText = "";
+  const lastOrderItems: { productId: number; qty: number }[] = [];
+
+  if (knownPhone) {
+    const [record] = await db.select().from(customers).where(eq(customers.phone, knownPhone));
+    if (record) {
+      if (!customer.name) customer.name = record.name;
+      if (!customer.address && record.address) customer.address = record.address;
+    }
+    const past = await db
+      .select({ items: orders.items, createdAt: orders.createdAt, totalCents: orders.totalCents })
+      .from(orders)
+      .where(eq(orders.customerPhone, knownPhone))
+      .orderBy(desc(orders.createdAt))
+      .limit(3);
+
+    if (past.length > 0) {
+      const summarize = (items: unknown): string => {
+        const arr = Array.isArray(items) ? (items as Record<string, unknown>[]) : [];
+        return arr
+          .map((it) => {
+            const id = Number(it.productId ?? it.product_id);
+            const p = byId.get(id);
+            const name = p?.name ?? String(it.name ?? "item");
+            return `${it.qty}x ${name}`;
+          })
+          .join(", ");
+      };
+      historyText = past.map((o, idx) => `Pedido ${idx + 1}: ${summarize(o.items)}`).join("\n");
+
+      const recent = Array.isArray(past[0].items) ? (past[0].items as Record<string, unknown>[]) : [];
+      for (const it of recent) {
+        const id = Number(it.productId ?? it.product_id);
+        const qty = Math.max(1, Number(it.qty) || 1);
+        if (byId.has(id)) lastOrderItems.push({ productId: id, qty });
+      }
+    }
+  }
 
   const openai = new OpenAI({ apiKey });
 
@@ -88,17 +199,27 @@ Regras:
 - Ao adicionar/remover itens use as ferramentas (add_item, set_quantity, remove_item). Não diga que adicionou sem chamar a ferramenta.
 - NUNCA mexa em itens que já estão no carrinho se o cliente não pediu. Para adicionar um novo item use add_item; não use set_quantity para "manter" itens existentes.
 - Adicione apenas o que o cliente pediu explicitamente — nunca itens extras por conta própria.
+- Para responder dúvidas sobre os lanches use APENAS a descrição do cardápio. Se a informação (ingrediente, alérgeno) não estiver lá, diga que vai confirmar com a cozinha — NUNCA invente ingredientes.
+- Se o cliente tiver um cupom de desconto, use apply_coupon para validar e aplicar. Só confirme o desconto depois que a ferramenta retornar sucesso.
 - Sugira combinações e pergunte bebida/acompanhamento quando fizer sentido, sem ser insistente.
-- Antes de ir para o pagamento, garanta que você tem: nome e telefone do cliente, e o endereço (se for entrega). Use set_customer para salvar esses dados conforme o cliente fala.
-- Pergunte a forma de pagamento (Pix, dinheiro na entrega, ou cartão na entrega) e use set_payment_method.
-- Quando o pedido estiver completo e os dados preenchidos, confirme um resumo curto e chame go_to_payment.
+- Pergunte a forma de pagamento (Pix, dinheiro, ou cartão) e use set_payment_method.
 - Valores sempre em reais (R$).
-${isClosed ? "- ATENÇÃO: a loja está FECHADA agora. Avise o cliente que o pedido só será preparado na reabertura.\n" : ""}
-CARDÁPIO (#id | nome | preço | categoria):
+${
+  isDineIn
+    ? `- ATENDIMENTO NA MESA: o cliente está na MESA ${tableNumber}, consumo NO LOCAL. NÃO peça endereço de entrega. Antes do pagamento garanta apenas o NOME e o TELEFONE do cliente, depois chame go_to_payment.`
+    : `- ENTREGA: antes de ir para o pagamento, garanta que você tem nome, telefone E endereço de entrega do cliente. Use set_customer para salvar esses dados conforme o cliente fala.`
+}
+${
+  !storeStatus.open
+    ? `- ATENÇÃO: a loja está FECHADA agora (${storeStatus.reason}${storeStatus.nextOpen ? " " + storeStatus.nextOpen : ""}). Avise o cliente logo no começo que NÃO é possível finalizar o pedido agora e ofereça anotar para a reabertura. NÃO chame go_to_payment enquanto fechada.\n`
+    : ""
+}
+CARDÁPIO (#id | nome | preço | categoria — descrição):
 ${menuText}
 
 Estado atual do pedido: ${cartSummary(cart)}
-Cliente: ${customer.name ? `${customer.name}` : "(sem nome)"}${customer.phone ? ` / ${customer.phone}` : ""}${customer.address ? ` / ${customer.address}` : ""}`;
+${couponCode ? `Cupom aplicado: ${couponCode}\n` : ""}Cliente: ${customer.name ? `${customer.name}` : "(sem nome)"}${customer.phone ? ` / ${customer.phone}` : ""}${customer.address && !isDineIn ? ` / ${customer.address}` : ""}
+${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${historyText}\n- Se o cliente quiser repetir um pedido anterior, use a ferramenta repeat_last_order.\n` : ""}`;
 
   type Msg = OpenAI.Chat.Completions.ChatCompletionMessageParam;
   const messages: Msg[] = [
@@ -168,6 +289,18 @@ Cliente: ${customer.name ? `${customer.name}` : "(sem nome)"}${customer.phone ? 
     {
       type: "function",
       function: {
+        name: "apply_coupon",
+        description: "Valida e aplica um cupom de desconto pelo código. Retorna o desconto ou um erro.",
+        parameters: {
+          type: "object",
+          properties: { code: { type: "string", description: "Código do cupom" } },
+          required: ["code"],
+        },
+      },
+    },
+    {
+      type: "function",
+      function: {
         name: "set_payment_method",
         description: "Define a forma de pagamento.",
         parameters: {
@@ -182,13 +315,31 @@ Cliente: ${customer.name ? `${customer.name}` : "(sem nome)"}${customer.phone ? 
       function: {
         name: "go_to_payment",
         description:
-          "Leva o cliente para a página de pagamento. Só chame com itens no carrinho e nome+telefone preenchidos.",
+          "Leva o cliente para a página de pagamento. Só chame com itens no carrinho, nome e telefone preenchidos, e a loja aberta.",
         parameters: { type: "object", properties: {} },
       },
     },
   ];
 
-  function runTool(name: string, args: Record<string, unknown>): string {
+  if (lastOrderItems.length > 0) {
+    tools.push({
+      type: "function",
+      function: {
+        name: "repeat_last_order",
+        description:
+          "Recarrega o último pedido do cliente no carrinho (substitui o carrinho atual). Itens indisponíveis são ignorados e preços são atualizados.",
+        parameters: { type: "object", properties: {} },
+      },
+    });
+  }
+
+  // Basic BR phone sanity: 10–11 digits after stripping non-digits.
+  const phoneOk = (p?: string) => {
+    const digits = (p ?? "").replace(/\D/g, "");
+    return digits.length >= 10 && digits.length <= 13;
+  };
+
+  async function runTool(name: string, args: Record<string, unknown>): Promise<string> {
     switch (name) {
       case "add_item": {
         const p = byId.get(Number(args.productId));
@@ -196,15 +347,21 @@ Cliente: ${customer.name ? `${customer.name}` : "(sem nome)"}${customer.phone ? 
         const qty = Math.max(1, Number(args.qty) || 1);
         const existing = cart.find((i) => i.productId === p.id);
         if (existing) existing.qty += qty;
-        else cart.push({ productId: p.id, name: p.name, priceCents: p.priceCents, qty });
+        else cart.push({ productId: p.id, name: p.name, priceCents: effectivePrice(p), qty });
         return JSON.stringify({ ok: true, added: `${qty}x ${p.name}`, cart: cartSummary(cart) });
       }
       case "set_quantity": {
         const p = byId.get(Number(args.productId));
         if (!p) return JSON.stringify({ error: "Produto não encontrado", cart: cartSummary(cart) });
         const qty = Math.max(0, Number(args.qty) || 0);
-        cart = cart.filter((i) => i.productId !== p.id);
-        if (qty > 0) cart.push({ productId: p.id, name: p.name, priceCents: p.priceCents, qty });
+        const existing = cart.find((i) => i.productId === p.id);
+        if (qty === 0) {
+          cart = cart.filter((i) => i.productId !== p.id);
+        } else if (existing) {
+          existing.qty = qty; // mutate in place → stable cart order
+        } else {
+          cart.push({ productId: p.id, name: p.name, priceCents: effectivePrice(p), qty });
+        }
         return JSON.stringify({ ok: true, cart: cartSummary(cart) });
       }
       case "remove_item": {
@@ -214,19 +371,53 @@ Cliente: ${customer.name ? `${customer.name}` : "(sem nome)"}${customer.phone ? 
       case "set_customer": {
         if (typeof args.name === "string" && args.name.trim()) customer.name = args.name.trim();
         if (typeof args.phone === "string" && args.phone.trim()) customer.phone = args.phone.trim();
-        if (typeof args.address === "string" && args.address.trim()) customer.address = args.address.trim();
+        if (!isDineIn && typeof args.address === "string" && args.address.trim())
+          customer.address = args.address.trim();
         if (typeof args.notes === "string") customer.notes = args.notes.trim();
         return JSON.stringify({ ok: true, customer });
+      }
+      case "apply_coupon": {
+        const code = String(args.code ?? "").toUpperCase().trim();
+        if (!code) return JSON.stringify({ error: "Informe o código do cupom." });
+        const subtotal = cart.reduce((s, i) => s + i.priceCents * i.qty, 0);
+        const [c] = await db.select().from(coupons).where(eq(coupons.code, code));
+        if (!c || !c.active) return JSON.stringify({ error: "Cupom inválido." });
+        if (c.expiresAt && new Date(c.expiresAt) < new Date())
+          return JSON.stringify({ error: "Cupom expirado." });
+        if (c.maxUsages !== null && (c.usedCount ?? 0) >= c.maxUsages)
+          return JSON.stringify({ error: "Cupom esgotado." });
+        if ((c.minOrderCents ?? 0) > 0 && subtotal < (c.minOrderCents ?? 0))
+          return JSON.stringify({ error: `Pedido mínimo para o cupom: ${fmt(c.minOrderCents ?? 0)}.` });
+        couponDiscount =
+          c.discountType === "percentage"
+            ? Math.round(subtotal * (c.discountValue / 100))
+            : c.discountValue;
+        couponDiscount = Math.min(Math.max(couponDiscount, 0), subtotal);
+        couponCode = c.code;
+        return JSON.stringify({ ok: true, code: c.code, discount: fmt(couponDiscount) });
       }
       case "set_payment_method": {
         const m = String(args.method);
         if (["pix", "cash", "card_on_delivery"].includes(m)) paymentMethod = m;
         return JSON.stringify({ ok: true, paymentMethod });
       }
+      case "repeat_last_order": {
+        if (lastOrderItems.length === 0)
+          return JSON.stringify({ error: "Sem pedido anterior para repetir." });
+        cart = [];
+        for (const it of lastOrderItems) {
+          const p = byId.get(it.productId);
+          if (p) cart.push({ productId: p.id, name: p.name, priceCents: effectivePrice(p), qty: it.qty });
+        }
+        return JSON.stringify({ ok: true, repeated: true, cart: cartSummary(cart) });
+      }
       case "go_to_payment": {
+        if (!storeStatus.open)
+          return JSON.stringify({ error: `Loja fechada. ${storeStatus.reason}` });
         if (cart.length === 0) return JSON.stringify({ error: "Carrinho vazio — não dá para pagar." });
-        if (!customer.name || !customer.phone)
-          return JSON.stringify({ error: "Faltam nome e/ou telefone do cliente." });
+        if (!customer.name) return JSON.stringify({ error: "Falta o nome do cliente." });
+        if (!phoneOk(customer.phone))
+          return JSON.stringify({ error: "Falta um telefone válido (com DDD)." });
         navigate = true;
         return JSON.stringify({ ok: true, navigating: true, cart: cartSummary(cart) });
       }
@@ -261,7 +452,7 @@ Cliente: ${customer.name ? `${customer.name}` : "(sem nome)"}${customer.phone ? 
         } catch {
           /* tolerate malformed args */
         }
-        const result = runTool(call.function.name, parsed);
+        const result = await runTool(call.function.name, parsed);
         messages.push({ role: "tool", tool_call_id: call.id, content: result });
       }
     }
@@ -269,7 +460,7 @@ Cliente: ${customer.name ? `${customer.name}` : "(sem nome)"}${customer.phone ? 
     console.error("chat agent error", err);
     return Response.json(
       { error: "Não consegui processar agora. Tente novamente em instantes." },
-      { status: 502 }
+      { status: 502 },
     );
   }
 
@@ -280,6 +471,9 @@ Cliente: ${customer.name ? `${customer.name}` : "(sem nome)"}${customer.phone ? 
     cart,
     customer,
     paymentMethod,
+    couponCode,
+    orderType: isDineIn ? "dine_in" : "delivery",
+    tableNumber,
     navigate,
   });
 }
