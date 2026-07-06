@@ -7,6 +7,14 @@ import '../models/cart_item.dart';
 import '../models/chat.dart';
 import '../providers/checkout_provider.dart';
 
+/// Lightweight store-open status (no codegen needed).
+class StoreStatus {
+  final bool open;
+  final String reason;
+  final String? nextOpen;
+  const StoreStatus({required this.open, required this.reason, this.nextOpen});
+}
+
 class ApiService {
   static String get baseUrl {
     // Production: use real domain; dev: localhost differs per platform
@@ -20,6 +28,25 @@ class ApiService {
 
   static final _client = http.Client();
 
+  /// Whether the store is currently open (structured schedule + closed days +
+  /// manual override), plus a human reason. Used for the closed-store banner.
+  static Future<StoreStatus> fetchStoreStatus() async {
+    final response = await _client.get(
+      Uri.parse('$baseUrl/api/store-status'),
+      headers: {'Accept': 'application/json'},
+    );
+    if (response.statusCode != 200) {
+      // Fail open: never block the menu just because the status call failed.
+      return const StoreStatus(open: true, reason: '', nextOpen: null);
+    }
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
+    return StoreStatus(
+      open: data['open'] == true,
+      reason: data['reason']?.toString() ?? '',
+      nextOpen: data['nextOpen']?.toString(),
+    );
+  }
+
   static Future<List<Category>> fetchMenu() async {
     final response = await _client.get(
       Uri.parse('$baseUrl/api/products'),
@@ -31,7 +58,28 @@ class ApiService {
     }
 
     final List<dynamic> data = jsonDecode(response.body);
+    resolveImageUrls(data, baseUrl);
     return data.map((json) => Category.fromJson(json)).toList();
+  }
+
+  /// Rewrites root-relative product image paths to absolute URLs, in place.
+  ///
+  /// Backfilled product photos are served by the web app as root-relative paths
+  /// (e.g. "/generated/products/92.jpg"); anota.ai CDN images are already
+  /// absolute. The image widgets need absolute URLs, so this resolves relative
+  /// paths against [baseUrl] in one place — so cards, cart and order summaries
+  /// all get working URLs. Absolute (http…) and empty values are left untouched.
+  static void resolveImageUrls(List<dynamic> categories, String baseUrl) {
+    for (final cat in categories) {
+      final products = cat is Map ? cat['products'] : null;
+      if (products is! List) continue;
+      for (final p in products) {
+        final img = p is Map ? p['imageUrl'] : null;
+        if (img is String && img.startsWith('/')) {
+          p['imageUrl'] = '$baseUrl$img';
+        }
+      }
+    }
   }
 
   /// Creates the order and returns the full response (order id, payment method,
@@ -88,6 +136,8 @@ class ApiService {
           if (checkout.address.isNotEmpty) 'address': checkout.address,
           if (checkout.notes.isNotEmpty) 'notes': checkout.notes,
         },
+        // Pass the phone as identity so the agent can offer "repeat last order".
+        if (checkout.phone.isNotEmpty) 'customerPhone': checkout.phone,
         'paymentMethod': checkout.paymentMethod,
       }),
     );
