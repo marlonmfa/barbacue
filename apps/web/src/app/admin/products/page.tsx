@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { ImageUploader } from "@/components/admin/ImageUploader";
+import { parseReais } from "@/lib/pricing";
 
 interface Category { id: number; name: string; slug: string; }
 interface Product {
@@ -30,6 +32,8 @@ function fmt(cents: number) {
   return (cents / 100).toFixed(2).replace(".", ",");
 }
 
+type EditCell = { id: number; field: "price" | "description" } | null;
+
 export default function AdminProducts() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -38,7 +42,17 @@ export default function AdminProducts() {
   const [editing, setEditing] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+
+  // Inline (in-table) editing of price / description — the fast path for the
+  // owner's most common tweaks, no modal required.
+  const [editCell, setEditCell] = useState<EditCell>(null);
+  const [cellDraft, setCellDraft] = useState("");
+  const cellInputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
+  // Guards the Enter→commit / blur→commit / Escape→cancel race: once an edit is
+  // resolved, the unmount-triggered blur must not fire a second PATCH.
+  const cellResolvedRef = useRef(false);
 
   async function load() {
     const res = await fetch("/api/admin/products");
@@ -49,15 +63,18 @@ export default function AdminProducts() {
   }
 
   useEffect(() => { load(); }, []);
+  useEffect(() => { if (editCell) cellInputRef.current?.focus(); }, [editCell]);
 
   function openCreate() {
     setEditing(null);
+    setSaveError(null);
     setForm({ ...EMPTY_FORM, categoryId: categories[0]?.id ?? 0 });
     setShowForm(true);
   }
 
   function openEdit(p: Product) {
     setEditing(p.id);
+    setSaveError(null);
     setForm({
       categoryId: p.categoryId ?? 0,
       name: p.name,
@@ -76,6 +93,7 @@ export default function AdminProducts() {
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
+    setSaveError(null);
     const body = {
       ...form,
       imageUrl: form.imageUrl || null,
@@ -87,19 +105,63 @@ export default function AdminProducts() {
     };
     const url = editing ? `/api/admin/products/${editing}` : "/api/admin/products";
     const method = editing ? "PATCH" : "POST";
-    await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }).catch(() => null);
     setSaving(false);
+    // Keep the modal open and tell the owner WHY on failure — never close as if
+    // it saved (that silently discards their edits).
+    if (!res || !res.ok) {
+      setSaveError("Não foi possível salvar. Verifique os campos e tente de novo.");
+      return;
+    }
     setShowForm(false);
     load();
   }
 
-  async function toggleAvailable(p: Product) {
-    await fetch(`/api/admin/products/${p.id}`, {
+  // Optimistic PATCH: apply locally for snappy UX, then re-sync from the server
+  // on failure (a full reload, not a stale array snapshot — restoring a captured
+  // snapshot would clobber any other edit that landed in between).
+  async function patchProduct(id: number, patch: Partial<Product>) {
+    setProducts((cur) => cur.map((p) => (p.id === id ? { ...p, ...patch } : p)));
+    const res = await fetch(`/api/admin/products/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ available: !p.available }),
-    });
-    load();
+      body: JSON.stringify(patch),
+    }).catch(() => null);
+    if (!res || !res.ok) {
+      alert("Não foi possível salvar. Recarregando os dados atuais.");
+      load();
+    }
+  }
+
+  function startEdit(p: Product, field: "price" | "description") {
+    cellResolvedRef.current = false;
+    setEditCell({ id: p.id, field });
+    // Seed price in pt-BR form ("12,90") so it round-trips through parseReais.
+    setCellDraft(field === "price" ? fmt(p.priceCents) : p.description ?? "");
+  }
+
+  function cancelCell() {
+    cellResolvedRef.current = true; // stop the follow-up blur from committing
+    setEditCell(null);
+  }
+
+  function commitCell(p: Product) {
+    if (cellResolvedRef.current || !editCell) return;
+    cellResolvedRef.current = true; // idempotent: Enter then blur won't double-fire
+    if (editCell.field === "price") {
+      const cents = parseReais(cellDraft);
+      if (Number.isFinite(cents) && cents > 0 && cents !== p.priceCents) {
+        patchProduct(p.id, { priceCents: cents });
+      }
+    } else {
+      const next = cellDraft.trim() || null;
+      if (next !== (p.description ?? null)) patchProduct(p.id, { description: next });
+    }
+    setEditCell(null);
   }
 
   async function handleDelete(id: number) {
@@ -130,8 +192,13 @@ export default function AdminProducts() {
         placeholder="Buscar produto..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full bg-[#1a1512] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm mb-5 focus:outline-none focus:ring-2 focus:ring-[#ed1b24] placeholder-[#7c6f61]"
+        className="w-full bg-[#1a1512] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm mb-2 focus:outline-none focus:ring-2 focus:ring-[#ed1b24] placeholder-[#7c6f61]"
       />
+      <p className="text-xs text-[#7c6f61] mb-5">
+        Dica: clique na <span className="text-[#a89a8c]">foto</span>, no{" "}
+        <span className="text-[#a89a8c]">preço</span> ou na{" "}
+        <span className="text-[#a89a8c]">descrição</span> para editar direto na lista.
+      </p>
 
       {loading ? (
         <p className="text-[#a89a8c] text-sm">Carregando...</p>
@@ -149,36 +216,100 @@ export default function AdminProducts() {
             </thead>
             <tbody>
               {filtered.map((p) => (
-                <tr key={p.id} className="border-t border-[#352b24] hover:bg-[#241d18]">
-                  <td className="px-4 py-3 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-[#241d18] flex-shrink-0">
-                      {p.imageUrl ? (
-                        <Image src={p.imageUrl} alt={p.name} width={40} height={40} className="object-cover w-full h-full" unoptimized />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-xl">🍔</div>
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-white font-medium">{p.name}</p>
-                      {p.description && (
-                        <p className="text-[#a89a8c] text-xs line-clamp-1">{p.description}</p>
-                      )}
+                <tr key={p.id} className="border-t border-[#352b24] hover:bg-[#241d18] align-top">
+                  <td className="px-4 py-3">
+                    <div className="flex items-start gap-3">
+                      <button
+                        type="button"
+                        onClick={() => openEdit(p)}
+                        title="Trocar imagem"
+                        className="w-10 h-10 rounded-lg overflow-hidden bg-[#241d18] flex-shrink-0 relative group"
+                      >
+                        {p.imageUrl ? (
+                          <Image src={p.imageUrl} alt={p.name} width={40} height={40} className="object-cover w-full h-full" unoptimized />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-xl">🍔</div>
+                        )}
+                        <span className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-[10px] text-white transition-opacity">
+                          Trocar
+                        </span>
+                      </button>
+                      <div className="min-w-0">
+                        <p className="text-white font-medium">{p.name}</p>
+                        {editCell?.id === p.id && editCell.field === "description" ? (
+                          <textarea
+                            ref={(el) => { cellInputRef.current = el; }}
+                            rows={2}
+                            value={cellDraft}
+                            onChange={(e) => setCellDraft(e.target.value)}
+                            onBlur={() => commitCell(p)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); commitCell(p); }
+                              if (e.key === "Escape") cancelCell();
+                            }}
+                            className="mt-1 w-64 max-w-full bg-[#0e0b0a] border border-[#ed1b24] text-white rounded-lg px-2 py-1 text-xs focus:outline-none resize-y"
+                            placeholder="Descrição do produto"
+                          />
+                        ) : p.description ? (
+                          <button
+                            type="button"
+                            onClick={() => startEdit(p, "description")}
+                            title="Editar descrição"
+                            className="text-left text-[#a89a8c] text-xs line-clamp-1 hover:text-white border-b border-dotted border-transparent hover:border-[#5a4a3c] transition-colors"
+                          >
+                            {p.description}
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => startEdit(p, "description")}
+                            className="text-[#7c6f61] text-xs italic hover:text-[#a89a8c] transition-colors"
+                          >
+                            + adicionar descrição
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </td>
                   <td className="px-4 py-3 text-[#a89a8c]">{catMap[p.categoryId ?? 0] ?? "—"}</td>
                   <td className="px-4 py-3 font-semibold">
-                    {promoActive(p) ? (
-                      <span className="flex flex-col leading-tight">
-                        <span className="text-[#a89a8c] text-xs line-through">R${fmt(p.priceCents)}</span>
-                        <span className="text-red-400">R${fmt(p.promoPriceCents!)} <span className="text-[10px] uppercase">promo</span></span>
+                    {editCell?.id === p.id && editCell.field === "price" ? (
+                      <span className="flex items-center gap-1">
+                        <span className="text-[#a89a8c] text-xs">R$</span>
+                        <input
+                          ref={(el) => { cellInputRef.current = el; }}
+                          inputMode="decimal"
+                          value={cellDraft}
+                          onChange={(e) => setCellDraft(e.target.value)}
+                          onBlur={() => commitCell(p)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") { e.preventDefault(); commitCell(p); }
+                            if (e.key === "Escape") cancelCell();
+                          }}
+                          className="w-20 bg-[#0e0b0a] border border-[#ed1b24] text-white rounded-lg px-2 py-1 text-sm focus:outline-none"
+                        />
                       </span>
                     ) : (
-                      <span className="text-[#ed1b24]">R${fmt(p.priceCents)}</span>
+                      <button
+                        type="button"
+                        onClick={() => startEdit(p, "price")}
+                        title="Editar preço"
+                        className="text-left border-b border-dotted border-transparent hover:border-[#5a4a3c] transition-colors"
+                      >
+                        {promoActive(p) ? (
+                          <span className="flex flex-col leading-tight">
+                            <span className="text-[#a89a8c] text-xs line-through">R${fmt(p.priceCents)}</span>
+                            <span className="text-red-400">R${fmt(p.promoPriceCents!)} <span className="text-[10px] uppercase">promo</span></span>
+                          </span>
+                        ) : (
+                          <span className="text-[#ed1b24]">R${fmt(p.priceCents)}</span>
+                        )}
+                      </button>
                     )}
                   </td>
                   <td className="px-4 py-3">
                     <button
-                      onClick={() => toggleAvailable(p)}
+                      onClick={() => patchProduct(p.id, { available: !p.available })}
                       className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
                         p.available
                           ? "bg-green-500/20 text-green-300 hover:bg-red-500/20 hover:text-red-300"
@@ -188,19 +319,21 @@ export default function AdminProducts() {
                       {p.available ? "Disponível" : "Indisponível"}
                     </button>
                   </td>
-                  <td className="px-4 py-3 flex gap-2">
-                    <button
-                      onClick={() => openEdit(p)}
-                      className="text-[#a89a8c] hover:text-white text-xs px-3 py-1.5 rounded-lg bg-[#241d18] hover:bg-[#352b24] transition-colors"
-                    >
-                      Editar
-                    </button>
-                    <button
-                      onClick={() => handleDelete(p.id)}
-                      className="text-red-400 hover:text-red-300 text-xs px-3 py-1.5 rounded-lg bg-red-900/20 hover:bg-red-900/40 transition-colors"
-                    >
-                      Excluir
-                    </button>
+                  <td className="px-4 py-3">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => openEdit(p)}
+                        className="text-[#a89a8c] hover:text-white text-xs px-3 py-1.5 rounded-lg bg-[#241d18] hover:bg-[#352b24] transition-colors"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={() => handleDelete(p.id)}
+                        className="text-red-400 hover:text-red-300 text-xs px-3 py-1.5 rounded-lg bg-red-900/20 hover:bg-red-900/40 transition-colors"
+                      >
+                        Excluir
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -221,6 +354,13 @@ export default function AdminProducts() {
             </h2>
 
             <form onSubmit={handleSave} className="flex flex-col gap-4">
+              <Field label="Foto do produto">
+                <ImageUploader
+                  value={form.imageUrl}
+                  onChange={(url) => setForm((f) => ({ ...f, imageUrl: url }))}
+                />
+              </Field>
+
               <Field label="Nome *">
                 <input required className={inputCls} value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -267,11 +407,6 @@ export default function AdminProducts() {
                 <p className="text-xs text-[#a89a8c]">Sem datas, a promoção vale imediatamente e por tempo indeterminado.</p>
               </div>
 
-              <Field label="URL da imagem">
-                <input type="url" className={inputCls} value={form.imageUrl}
-                  onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} />
-              </Field>
-
               <Field label="Ordem">
                 <input type="number" className={inputCls} value={form.sortOrder}
                   onChange={(e) => setForm({ ...form, sortOrder: Number(e.target.value) })} />
@@ -283,6 +418,12 @@ export default function AdminProducts() {
                   className="rounded" />
                 Disponível no cardápio
               </label>
+
+              {saveError && (
+                <p className="text-sm text-red-400 bg-red-900/20 border border-red-900/40 rounded-xl px-4 py-2.5">
+                  {saveError}
+                </p>
+              )}
 
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setShowForm(false)}

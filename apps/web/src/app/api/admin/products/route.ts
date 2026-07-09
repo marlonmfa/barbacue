@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/db";
 import { products, categories } from "@/db/schema";
-import { eq, asc } from "drizzle-orm";
+import { asc } from "drizzle-orm";
 import { withStaff } from "@/lib/admin-auth";
+import { isValidImageRef } from "@/lib/upload";
 
 const ProductSchema = z.object({
   categoryId: z.number().int().positive(),
@@ -13,7 +14,10 @@ const ProductSchema = z.object({
   promoPriceCents: z.number().int().positive().optional().nullable(),
   promoStartsAt: z.string().datetime().optional().nullable(),
   promoEndsAt: z.string().datetime().optional().nullable(),
-  imageUrl: z.string().url().optional().nullable(),
+  // Accept absolute http(s) URLs AND our own root-relative paths ("/api/media/…",
+  // "/generated/…"). z.string().url() rejected the latter, silently blocking
+  // create-with-uploaded-image. The PATCH route was already permissive.
+  imageUrl: z.string().refine(isValidImageRef, "URL de imagem inválida").optional().nullable(),
   available: z.boolean().optional(),
   sortOrder: z.number().int().optional(),
 });

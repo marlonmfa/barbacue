@@ -9,7 +9,17 @@ import {
   timestamp,
   date,
   pgEnum,
+  customType,
 } from "drizzle-orm/pg-core";
+
+// Postgres `bytea` mapped to a Node Buffer. drizzle-orm has no built-in bytea, so
+// we declare one: the `pg` driver returns bytea columns as Buffer on read and
+// accepts Buffer on write, which is exactly the shape we want for image bytes.
+const bytea = customType<{ data: Buffer; driverData: Buffer }>({
+  dataType() {
+    return "bytea";
+  },
+});
 
 // ─── Enums ───────────────────────────────────────────────────────────────────
 
@@ -67,6 +77,24 @@ export const products = pgTable("products", {
   imageUrl: text("image_url"),
   available: boolean("available").default(true),
   sortOrder: integer("sort_order").default(0),
+});
+
+// ─── Media assets (owner-uploaded images) ─────────────────────────────────────
+
+// Product/category/logo photos uploaded from the admin are stored HERE as raw
+// bytes, not on the filesystem. Rationale: prod deploys via `rsync --delete`
+// from a dev machine, so any file written to the server's public/ folder would
+// be wiped on the next deploy (and never exist on the dev box). Keeping the bytes
+// in Postgres makes owner uploads survive deploys and behave identically in dev
+// and prod. Served by GET /api/media/[id]; referenced from products.imageUrl as
+// "/api/media/<uuid>". Assets are immutable (a new upload = a new row/uuid), so
+// the serving route can cache them forever.
+export const mediaAssets = pgTable("media_assets", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  mime: text("mime").notNull(),            // e.g. "image/webp", "image/jpeg"
+  data: bytea("data").notNull(),           // the image bytes
+  byteSize: integer("byte_size").notNull(), // bytes, for quick listing/quotas
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
 // ─── Staff (admin/manager accounts) ───────────────────────────────────────────
@@ -214,6 +242,7 @@ export type WeeklyHours = DayHours[];
 
 export type Category = typeof categories.$inferSelect;
 export type Product = typeof products.$inferSelect;
+export type MediaAsset = typeof mediaAssets.$inferSelect;
 export type Customer = typeof customers.$inferSelect;
 export type Coupon = typeof coupons.$inferSelect;
 export type Order = typeof orders.$inferSelect;

@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { products } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { withStaff } from "@/lib/admin-auth";
+import { isValidImageRef } from "@/lib/upload";
 
 const PatchSchema = z.object({
   categoryId: z.number().int().positive().optional(),
@@ -13,7 +14,8 @@ const PatchSchema = z.object({
   promoPriceCents: z.number().int().positive().optional().nullable(),
   promoStartsAt: z.string().datetime().optional().nullable(),
   promoEndsAt: z.string().datetime().optional().nullable(),
-  imageUrl: z.string().optional().nullable(),
+  // Same rule as create: absolute http(s) URL or our own root-relative path.
+  imageUrl: z.string().refine(isValidImageRef, "URL de imagem inválida").optional().nullable(),
   available: z.boolean().optional(),
   sortOrder: z.number().int().optional(),
 });
