@@ -64,7 +64,11 @@ flutter_launcher_icons:
   remove_alpha_ios: true
   image_path: "assets/icon/icon.png"
   min_sdk_android: 21
-  adaptive_icon_background: "#F59E0B"
+  # White adaptive background matches the barbacue-icon's own white field, so the
+  # red-on-white logo reads the same on iOS (rounded white square) and Android
+  # (masked white circle/squircle). The foreground logo is pre-padded into the
+  # safe zone so the "ESDT. 2019" edge text is never clipped by the mask.
+  adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: "assets/icon/icon_foreground.png"
 
 flutter_native_splash:
