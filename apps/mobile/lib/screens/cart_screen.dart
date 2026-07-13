@@ -93,7 +93,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.amberDark,
+                    color: AppTheme.brandDark,
                   ),
                 ),
               ],
@@ -199,14 +199,14 @@ class _CartItemRow extends ConsumerWidget {
                       imageUrl: item.imageUrl!,
                       fit: BoxFit.cover,
                       errorWidget: (_, _, _) => Container(
-                        color: AppTheme.amberLight,
+                        color: AppTheme.brandSoft,
                         child: const Center(
                           child: Text('🍔', style: TextStyle(fontSize: 24)),
                         ),
                       ),
                     )
                   : Container(
-                      color: AppTheme.amberLight,
+                      color: AppTheme.brandSoft,
                       child: const Center(
                         child: Text('🍔', style: TextStyle(fontSize: 24)),
                       ),
@@ -267,7 +267,7 @@ class _CircleButton extends StatelessWidget {
         width: 28,
         height: 28,
         decoration: const BoxDecoration(
-          color: AppTheme.amber,
+          color: AppTheme.brand,
           shape: BoxShape.circle,
         ),
         child: Icon(icon, size: 18, color: Colors.white),

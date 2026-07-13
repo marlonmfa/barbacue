@@ -1,24 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  /* ── BARBACUE brand ── */
+  /* ── BARBACUE & Co brand — red on warm white (butcher-paper identity) ── */
   --brand-red: #ed1b24;
   --brand-red-hover: #c8141c;
-  --brand-tan: #af9a7b;
-  --brand-tan-soft: #c8b89a;
+  --brand-red-soft: #fdeceb;      /* pale red wash for selected/tint states */
+  --brand-ink: #1b1613;           /* near-black warm — wordmark/headings */
+  --brand-tan: #8a6a45;           /* warm brown — secondary text/labels (≥4.5:1 on white) */
+  --brand-tan-soft: #a9855c;      /* lighter warm brown — decorative accent */
 
-  /* ── Dark "na brasa" surfaces (warm charcoal, not flat gray) ── */
-  --bg: #0e0b0a;
-  --surface: #1a1512;
-  --surface-2: #241d18;
-  --border: #352b24;
-  --border-hover: #4d3f34;
-  --text: #f6efe8;
-  /* Lifted from #a89a8c for ≥4.5:1 contrast on --bg/--surface (a11y audit). */
-  --text-muted: #bdae9d;
+  /* ── Light "butcher-paper" surfaces (warm white, not flat gray) ── */
+  --bg: #fbf7f2;                  /* warm cream page */
+  --surface: #ffffff;             /* cards / raised */
+  --surface-2: #f4ede3;           /* subtle inset / hover */
+  --border: #e9ded0;              /* warm hairline */
+  --border-hover: #d8c7b2;
+  --text: #1b1613;                /* near-black warm ink */
+  /* ≥4.5:1 contrast on --bg/--surface for body text (a11y). */
+  --text-muted: #6f6155;
 
-  /* Ember gradient for branded image fallbacks + accents (red→fire). */
-  --ember: radial-gradient(120% 120% at 50% 0%, #2a1410 0%, #1a0f0c 55%, #0e0b0a 100%);
+  /* Warm paper wash for branded image fallbacks + accents (subtle red bloom). */
+  --ember: radial-gradient(120% 120% at 50% 0%, #fdeceb 0%, #fbf7f2 55%, #f4ede3 100%);
 
   --background: var(--bg);
   --foreground: var(--text);
@@ -63,21 +65,21 @@ body {
 }
 .btn-brand:active { transform: scale(0.96); }
 
-/* Hero scrim: keeps the wordmark legible over the flame photo. */
+/* Hero wash: warm cream vignette with a faint red bloom on the light hero. */
 .hero-scrim {
   background:
-    linear-gradient(to top, var(--bg) 2%, rgba(14, 11, 10, 0.55) 38%, rgba(14, 11, 10, 0.15) 70%, rgba(14, 11, 10, 0.45) 100%),
-    radial-gradient(120% 80% at 50% 110%, rgba(237, 27, 36, 0.22), transparent 60%);
+    radial-gradient(120% 90% at 50% -10%, rgba(237, 27, 36, 0.07), transparent 55%),
+    linear-gradient(to bottom, rgba(251, 247, 242, 0) 55%, var(--bg) 100%);
 }
 
-/* Bottom scrim on product card images so the promo ribbon / dark theme blend. */
+/* Bottom scrim on product card images so an overlaid ribbon stays legible. */
 .card-scrim {
-  background: linear-gradient(to top, rgba(14, 11, 10, 0.85) 0%, rgba(14, 11, 10, 0.1) 45%, transparent 70%);
+  background: linear-gradient(to top, rgba(27, 22, 19, 0.28) 0%, rgba(27, 22, 19, 0.04) 40%, transparent 65%);
 }
 
-/* Soft ember glow behind featured elements. */
+/* Soft brand glow behind featured elements. */
 .fire-glow {
-  box-shadow: 0 0 0 1px var(--border), 0 18px 40px -20px rgba(237, 27, 36, 0.45);
+  box-shadow: 0 0 0 1px var(--border), 0 18px 40px -22px rgba(237, 27, 36, 0.28);
 }
 
 .ig-gradient {

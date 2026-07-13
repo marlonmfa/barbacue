@@ -38,7 +38,7 @@ export function TableBanner({
 
   if (mesaParam === "notfound") {
     return (
-      <div className="bg-amber-500/15 border-y border-amber-500/40 text-amber-200">
+      <div className="bg-amber-50 border-y border-amber-300 text-amber-800">
         <div className="max-w-5xl mx-auto px-4 py-2.5 text-sm font-medium">
           ⚠️ QR Code inválido ou mesa desativada. Chame um atendente ou peça para entrega.
         </div>

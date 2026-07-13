@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const amber = Color(0xFFF59E0B);
-  static const amberDark = Color(0xFFD97706);
-  static const amberLight = Color(0xFFFEF3C7);
-  static const background = Color(0xFFFAFAFA);
+  // ── BARBACUE & Co brand — red on warm white (matches the web identity) ──
+  static const brand = Color(0xFFED1B24); // primary red
+  static const brandDark = Color(0xFFC8141C); // pressed / emphasis
+  static const brandSoft = Color(0xFFFDECEB); // pale red wash (chips, placeholders, selected)
+  static const background = Color(0xFFFBF7F2); // warm cream page
   static const surface = Colors.white;
-  static const textPrimary = Color(0xFF111827);
-  static const textSecondary = Color(0xFF6B7280);
+  static const surfaceAlt = Color(0xFFF4EDE3); // subtle cream (inactive chips/inset)
+  static const border = Color(0xFFE9DED0); // warm hairline
+  static const textPrimary = Color(0xFF1B1613); // warm near-black
+  static const textSecondary = Color(0xFF6F6155); // warm gray
 
   static ThemeData get theme => ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: amber,
-          primary: amber,
-          secondary: amberDark,
+          seedColor: brand,
+          primary: brand,
+          secondary: brandDark,
           surface: surface,
         ),
         scaffoldBackgroundColor: background,
         appBarTheme: const AppBarTheme(
-          backgroundColor: amber,
+          backgroundColor: brand,
           foregroundColor: Colors.white,
           elevation: 0,
           centerTitle: false,
@@ -31,7 +34,7 @@ class AppTheme {
         ),
         filledButtonTheme: FilledButtonThemeData(
           style: FilledButton.styleFrom(
-            backgroundColor: amber,
+            backgroundColor: brand,
             foregroundColor: Colors.white,
             minimumSize: const Size.fromHeight(52),
             shape: RoundedRectangleBorder(

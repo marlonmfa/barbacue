@@ -20,7 +20,7 @@ class CartBar extends ConsumerWidget {
         child: FilledButton(
           onPressed: () => context.push('/cart'),
           style: FilledButton.styleFrom(
-            backgroundColor: AppTheme.amberDark,
+            backgroundColor: AppTheme.brandDark,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             minimumSize: const Size.fromHeight(52),
           ),

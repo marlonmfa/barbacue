@@ -122,7 +122,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                             style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: AppTheme.amberDark)),
+                                color: AppTheme.brandDark)),
                       ],
                     ),
                     if (checkout.name.isNotEmpty) ...[
@@ -147,11 +147,11 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             ..._methods.map((m) {
               final selected = checkout.paymentMethod == m.$1;
               return Card(
-                color: selected ? AppTheme.amberLight : null,
+                color: selected ? AppTheme.brandSoft : null,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                   side: BorderSide(
-                    color: selected ? AppTheme.amber : Colors.transparent,
+                    color: selected ? AppTheme.brand : Colors.transparent,
                     width: 2,
                   ),
                 ),
@@ -164,7 +164,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     selected
                         ? Icons.radio_button_checked
                         : Icons.radio_button_unchecked,
-                    color: selected ? AppTheme.amber : AppTheme.textSecondary,
+                    color: selected ? AppTheme.brand : AppTheme.textSecondary,
                   ),
                   onTap: () => ref
                       .read(checkoutProvider.notifier)
@@ -255,13 +255,13 @@ class _SuccessView extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               decoration: BoxDecoration(
-                color: AppTheme.amberLight,
+                color: AppTheme.brandSoft,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text('Pedido #$shortId',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: AppTheme.amberDark,
+                      color: AppTheme.brandDark,
                       letterSpacing: 1.5)),
             ),
             const SizedBox(height: 24),
@@ -282,7 +282,7 @@ class _SuccessView extends StatelessWidget {
                       Text('Total: ${formatPrice(order.totalCents)}',
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: AppTheme.amberDark)),
+                              color: AppTheme.brandDark)),
                     ],
                   ),
                 ),
@@ -328,7 +328,7 @@ class _PixCardState extends State<_PixCard> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.amberLight, width: 2),
+                border: Border.all(color: AppTheme.brandSoft, width: 2),
               ),
               child: QrImageView(
                 data: widget.payload,

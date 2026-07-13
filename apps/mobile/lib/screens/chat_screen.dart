@@ -116,7 +116,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.amber,
+        backgroundColor: AppTheme.brand,
         foregroundColor: Colors.white,
         title: const Row(
           children: [
@@ -156,7 +156,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           .map((s) => ActionChip(
                                 label: Text(s),
                                 onPressed: () => _send(s),
-                                backgroundColor: AppTheme.amberLight,
+                                backgroundColor: AppTheme.brandSoft,
                               ))
                           .toList(),
                     ),
@@ -171,7 +171,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         width: 24,
                         height: 24,
                         child: CircularProgressIndicator(
-                            strokeWidth: 2, color: AppTheme.amber),
+                            strokeWidth: 2, color: AppTheme.brand),
                       ),
                     ),
                   );
@@ -188,7 +188,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.78),
                     decoration: BoxDecoration(
-                      color: isUser ? AppTheme.amber : Colors.white,
+                      color: isUser ? AppTheme.brand : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       border: isUser
                           ? null
@@ -210,7 +210,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             InkWell(
               onTap: () => context.push('/cart'),
               child: Container(
-                color: AppTheme.amberLight,
+                color: AppTheme.brandSoft,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 child: Row(
@@ -219,11 +219,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     Text('🛒 $totalItems item(s) no carrinho',
                         style: const TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: AppTheme.amberDark)),
+                            color: AppTheme.brandDark)),
                     Text(formatPrice(totalCents),
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.amberDark)),
+                            color: AppTheme.brandDark)),
                   ],
                 ),
               ),
@@ -255,7 +255,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   const SizedBox(width: 8),
                   FloatingActionButton(
                     onPressed: _loading ? null : () => _send(_controller.text),
-                    backgroundColor: AppTheme.amber,
+                    backgroundColor: AppTheme.brand,
                     elevation: 0,
                     child: const Icon(Icons.send, color: Colors.white),
                   ),

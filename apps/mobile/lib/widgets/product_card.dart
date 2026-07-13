@@ -52,14 +52,47 @@ class ProductCard extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      formatPrice(product.priceCents),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: AppTheme.amberDark,
-                      ),
+                    // Flexible so a long price never pushes the button past the
+                    // card edge on narrow phones (was overflowing by ~12px).
+                    Flexible(
+                      child: product.onSale
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  formatPrice(product.priceCents),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: AppTheme.textSecondary,
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
+                                ),
+                                Text(
+                                  formatPrice(product.effectivePriceCents),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: AppTheme.brandDark,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Text(
+                              formatPrice(product.priceCents),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: AppTheme.brandDark,
+                              ),
+                            ),
                     ),
+                    const SizedBox(width: 6),
                     qty == 0
                         ? _AddButton(product: product)
                         : _QtyControls(product: product, qty: qty),
@@ -83,7 +116,7 @@ class _ProductImage extends StatelessWidget {
     if (imageUrl == null || imageUrl!.isEmpty) {
       return Container(
         height: 140,
-        color: AppTheme.amberLight,
+        color: AppTheme.brandSoft,
         child: const Center(
           child: Text('🍔', style: TextStyle(fontSize: 48)),
         ),
@@ -95,9 +128,9 @@ class _ProductImage extends StatelessWidget {
       child: CachedNetworkImage(
         imageUrl: imageUrl!,
         fit: BoxFit.cover,
-        placeholder: (_, _) => Container(color: AppTheme.amberLight),
+        placeholder: (_, _) => Container(color: AppTheme.brandSoft),
         errorWidget: (_, _, _) => Container(
-          color: AppTheme.amberLight,
+          color: AppTheme.brandSoft,
           child: const Center(
             child: Text('🍔', style: TextStyle(fontSize: 48)),
           ),
@@ -118,13 +151,15 @@ class _AddButton extends ConsumerWidget {
         ref.read(cartProvider.notifier).add(CartItem(
               productId: product.id,
               name: product.name,
-              priceCents: product.priceCents,
+              // Use the promotional price; the server re-sources prices anyway.
+              priceCents: product.effectivePriceCents,
               imageUrl: product.imageUrl,
             ));
       },
       style: FilledButton.styleFrom(
         minimumSize: Size.zero,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       child: const Text('Adicionar', style: TextStyle(fontSize: 12)),
@@ -175,7 +210,7 @@ class _CircleButton extends StatelessWidget {
         width: 28,
         height: 28,
         decoration: const BoxDecoration(
-          color: AppTheme.amber,
+          color: AppTheme.brand,
           shape: BoxShape.circle,
         ),
         child: Icon(icon, size: 18, color: Colors.white),

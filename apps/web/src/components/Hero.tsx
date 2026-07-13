@@ -11,10 +11,9 @@ interface Props {
   isClosed: boolean;
 }
 
-// Full-bleed flame-grill hero. Replaces the thin profile header — the brand promise
-// ("burguers na brasa") is now the first thing the customer sees, with a clear
-// open/closed status, key info, and social CTAs. Background art is OpenAI-generated
-// (public/generated/hero.png) — see REDESIGN_V3.md.
+// Clean "butcher-paper" hero: the Barbacue & Co engraving logo on warm white, a
+// clear open/closed status, key info, and social CTAs. Replaces the old dark
+// flame-photo hero as part of the red-on-white brand identity.
 export function Hero({
   storeName,
   tagline,
@@ -28,54 +27,42 @@ export function Hero({
   const waHref = whatsapp ? `https://wa.me/${whatsapp.replace(/\D/g, "")}` : null;
 
   return (
-    <header className="relative isolate overflow-hidden">
-      {/* Flame-grill background */}
-      <Image
-        src="/generated/hero.png"
-        alt="Hambúrguer na brasa"
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover object-center -z-10"
-      />
+    <header className="relative isolate overflow-hidden border-b border-[var(--border)]">
       <div aria-hidden className="absolute inset-0 -z-10 hero-scrim" />
 
-      <div className="max-w-5xl mx-auto px-4 pt-12 pb-10 sm:pt-20 sm:pb-14 flex flex-col items-center text-center gap-4">
-        {/* Logo badge with ember ring */}
-        <a
-          href={igUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Instagram do ${storeName}`}
-          className="p-0.5 rounded-full ig-gradient shadow-lg shadow-black/50"
-        >
-          <span className="block p-1 rounded-full bg-[var(--bg)]">
-            <span className="relative block w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden">
-              <Image src="/instagram/logo-full.png" alt={storeName} fill className="object-contain" sizes="80px" />
-            </span>
-          </span>
-        </a>
+      <div className="max-w-5xl mx-auto px-4 pt-10 pb-9 sm:pt-16 sm:pb-12 flex flex-col items-center text-center gap-4">
+        {/* Brand mark — the engraving logo framed like a printed sign. */}
+        <div className="rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-[0_12px_40px_-18px_rgba(27,22,19,0.28)] px-6 py-5 sm:px-10 sm:py-6">
+          <div className="relative w-52 h-52 sm:w-64 sm:h-64">
+            <Image
+              src="/brand/barbacue-logo-t.png"
+              alt={storeName}
+              fill
+              priority
+              sizes="256px"
+              className="object-contain"
+            />
+          </div>
+        </div>
+        {/* Accessible/SEO wordmark (the logo carries it visually). */}
+        <h1 className="sr-only">{storeName}</h1>
 
         {/* Status pill */}
         <span
-          className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm ${
+          className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full ${
             isClosed
-              ? "bg-black/50 text-[var(--text-muted)] border border-[var(--border)]"
-              : "bg-emerald-500/15 text-emerald-300 border border-emerald-500/40"
+              ? "bg-[var(--surface-2)] text-[var(--text-muted)] border border-[var(--border)]"
+              : "bg-emerald-500/12 text-emerald-700 border border-emerald-600/30"
           }`}
         >
-          <span className={`w-2 h-2 rounded-full ${isClosed ? "bg-[var(--text-muted)]" : "bg-emerald-400 animate-pulse"}`} />
+          <span className={`w-2 h-2 rounded-full ${isClosed ? "bg-[var(--text-muted)]" : "bg-emerald-500 animate-pulse"}`} />
           {isClosed ? "Fechado agora" : "Aberto agora"}
         </span>
 
-        {/* Wordmark */}
-        <h1 className="font-display text-5xl sm:text-7xl text-white leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
-          {storeName}
-        </h1>
-        <p className="text-[var(--brand-tan-soft)] text-base sm:text-lg font-medium drop-shadow">{tagline}</p>
+        <p className="text-[var(--brand-tan)] text-base sm:text-lg font-medium">{tagline}</p>
 
         {/* Info chips */}
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs sm:text-sm text-[var(--text)]/90 drop-shadow">
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs sm:text-sm text-[var(--text-muted)]">
           {openingHours && <span>🕐 {openingHours}</span>}
           {deliveryFeeText && <span>🛵 {deliveryFeeText}</span>}
           {address && <span>📍 {address}</span>}

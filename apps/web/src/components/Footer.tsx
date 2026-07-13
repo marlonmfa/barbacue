@@ -37,7 +37,7 @@ export function Footer({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           <div className="flex items-center gap-3">
             <div className="relative w-12 h-12 rounded-full overflow-hidden ring-1 ring-[var(--border)] bg-[var(--bg)] shrink-0">
-              <Image src="/instagram/logo-full.png" alt={storeName} fill className="object-contain" sizes="48px" />
+              <Image src="/brand/barbacue-logo-t.png" alt={storeName} fill className="object-contain p-0.5" sizes="48px" />
             </div>
             <div>
               <p className="font-bold text-[var(--text)] leading-tight">{storeName}</p>

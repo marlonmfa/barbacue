@@ -14,8 +14,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BARBACUE — Burguers na Brasa",
     description: "Burguers na brasa 🍔🔥 Jaraguá do Sul-SC",
-    images: [{ url: "/instagram/app-icon.png" }],
+    images: [{ url: "/brand/og.png", width: 1200, height: 630 }],
   },
+};
+
+// Warm-white browser chrome to match the light "butcher-paper" identity.
+export const viewport = {
+  themeColor: "#fbf7f2",
 };
 
 export default function RootLayout({

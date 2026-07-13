@@ -74,7 +74,7 @@ function BurgerMark() {
   return (
     <svg
       viewBox="0 0 48 48"
-      className="w-10 h-10 text-[var(--brand-tan)]"
+      className="w-10 h-10 text-[var(--brand-red)]"
       fill="none"
       stroke="currentColor"
       strokeWidth={2.2}

@@ -54,7 +54,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
     return Scaffold(
       body: menuAsync.when(
         loading: () => const Center(
-          child: CircularProgressIndicator(color: AppTheme.amber),
+          child: CircularProgressIndicator(color: AppTheme.brand),
         ),
         error: (e, _) => Center(
           child: Column(
@@ -90,6 +90,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
                 categoryScrollController: _categoryScrollController,
                 onCategoryTap: (i) => _scrollToCategory(i, populated),
               ),
+              const SliverToBoxAdapter(child: _ClosedBanner()),
               for (var i = 0; i < populated.length; i++) ...[
                 SliverToBoxAdapter(
                   key: _sectionKeys[i],
@@ -134,12 +135,57 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/chat'),
-        backgroundColor: AppTheme.amberDark,
+        backgroundColor: AppTheme.brandDark,
         icon: const Text('💬', style: TextStyle(fontSize: 18)),
         label: const Text('Pedir pelo chat',
             style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       bottomSheet: const CartBar(),
+    );
+  }
+}
+
+/// Shows a banner when the store is closed (reads /api/store-status). Renders
+/// nothing while loading, on error, or when open — so it never blocks browsing.
+class _ClosedBanner extends ConsumerWidget {
+  const _ClosedBanner();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statusAsync = ref.watch(storeStatusProvider);
+    return statusAsync.maybeWhen(
+      data: (status) {
+        if (status.open) return const SizedBox.shrink();
+        final detail = status.nextOpen != null && status.nextOpen!.isNotEmpty
+            ? '${status.reason} ${status.nextOpen}'
+            : status.reason;
+        return Container(
+          margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: AppTheme.brandSoft,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppTheme.brandDark),
+          ),
+          child: Row(
+            children: [
+              const Text('🔒', style: TextStyle(fontSize: 20)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  detail.isNotEmpty ? detail : 'A loja está fechada no momento.',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      orElse: () => const SizedBox.shrink(),
     );
   }
 }
@@ -161,42 +207,47 @@ class _AppBarSliver extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       pinned: true,
-      backgroundColor: AppTheme.amber,
-      expandedHeight: 120,
+      backgroundColor: AppTheme.surface,
+      surfaceTintColor: AppTheme.surface,
+      foregroundColor: AppTheme.textPrimary,
+      elevation: 0,
+      expandedHeight: 116,
+      // White "butcher-paper" header featuring the Barbacue & Co logo, matching
+      // the web hero — the red-on-white brand mark reads the same on both apps.
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
-          color: AppTheme.amber,
+          color: AppTheme.surface,
           alignment: Alignment.bottomLeft,
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 60),
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 58),
+          child: Row(
             children: [
-              Text(
-                '🍔 Lanches do Barba',
+              Image.asset('assets/brand/logo.png', height: 52),
+              const SizedBox(width: 12),
+              const Text(
+                'Artesanais\nfeitos com amor',
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textSecondary,
+                  fontSize: 12,
+                  height: 1.2,
+                  fontWeight: FontWeight.w500,
                 ),
-              ),
-              Text(
-                'Artesanais feitos com amor',
-                style: TextStyle(color: Colors.white70, fontSize: 13),
               ),
             ],
           ),
         ),
       ),
       bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(48),
+        preferredSize: const Size.fromHeight(50),
         child: Container(
-          color: AppTheme.amberDark,
-          height: 48,
+          height: 50,
+          decoration: const BoxDecoration(
+            color: AppTheme.surface,
+            border: Border(bottom: BorderSide(color: AppTheme.border)),
+          ),
           child: ListView.builder(
             controller: categoryScrollController,
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             itemCount: categories.length,
             itemBuilder: (context, i) {
               final isActive = i == activeCategoryIndex;
@@ -207,19 +258,20 @@ class _AppBarSliver extends StatelessWidget {
                   margin: const EdgeInsets.only(right: 8),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color:
-                        isActive ? Colors.white : Colors.white24,
+                    color: isActive ? AppTheme.brand : AppTheme.surfaceAlt,
                     borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isActive ? AppTheme.brand : AppTheme.border,
+                    ),
                   ),
                   child: Text(
                     categories[i].name,
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: isActive
-                          ? AppTheme.amberDark
-                          : Colors.white,
+                      color: isActive ? Colors.white : AppTheme.textPrimary,
                     ),
                   ),
                 ),
