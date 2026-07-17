@@ -4,9 +4,35 @@ import '../models/cart_item.dart';
 class ChatMessage {
   final String role; // "user" | "assistant"
   final String content;
-  const ChatMessage({required this.role, required this.content});
+
+  /// Marks the locally seeded opening line. The model never sent it, so it is
+  /// excluded from the outbound history — flagging the turn rather than matching
+  /// its text keeps that from also dropping a customer who types the same words.
+  final bool isGreeting;
+
+  const ChatMessage({
+    required this.role,
+    required this.content,
+    this.isGreeting = false,
+  });
 
   Map<String, dynamic> toJson() => {'role': role, 'content': content};
+}
+
+/// A failed /api/chat turn.
+///
+/// [message] carries the route's own pt-BR copy ('Mensagem vazia', 'AI
+/// indisponível…') when the failure envelope had one, and is null when the
+/// response has nothing fit to show a customer — an nginx HTML 502 against a
+/// route that wraps a 6-step LLM loop is routine. [offline] separates transport
+/// failure, which reads differently to the user than a server that answered.
+class ChatException implements Exception {
+  final String? message;
+  final bool offline;
+  const ChatException({this.message, this.offline = false});
+
+  @override
+  String toString() => 'ChatException(${message ?? (offline ? 'offline' : '-')})';
 }
 
 /// Result of a /api/chat turn: the agent's reply plus the resulting order state.
@@ -14,9 +40,19 @@ class ChatMessage {
 /// end-state model the web client uses.
 class ChatResponse {
   final String reply;
+
+  /// Image-less by design: the route answers with its own cart shape, which
+  /// carries no imageUrl. The caller re-attaches images it already holds.
   final List<CartItem> cart;
   final ChatCustomer customer;
   final String paymentMethod;
+  final String? couponCode;
+
+  /// delivery | dine_in, and the table the route resolved from the token sent
+  /// with the turn. Both are nullable so that a response without them preserves
+  /// the local session rather than dropping the guest back to delivery.
+  final String? orderType;
+  final int? tableNumber;
   final bool navigate;
 
   const ChatResponse({
@@ -24,6 +60,9 @@ class ChatResponse {
     required this.cart,
     required this.customer,
     required this.paymentMethod,
+    this.couponCode,
+    this.orderType,
+    this.tableNumber,
     required this.navigate,
   });
 
@@ -42,6 +81,9 @@ class ChatResponse {
       customer: ChatCustomer.fromJson(
           (json['customer'] as Map<String, dynamic>?) ?? const {}),
       paymentMethod: json['paymentMethod'] as String? ?? 'pix',
+      couponCode: json['couponCode'] as String?,
+      orderType: json['orderType'] as String?,
+      tableNumber: json['tableNumber'] as int?,
       navigate: json['navigate'] as bool? ?? false,
     );
   }

@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["3A3X2G4UPK.com.lanchesdobarba.barbacue"],
+        "components": [
+          {
+            "/": "/mesa/*",
+            "comment": "Table QR codes open the app straight into dine-in mode."
+          }
+        ]
+      }
+    ]
+  }
+}

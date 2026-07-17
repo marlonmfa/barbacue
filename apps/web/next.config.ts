@@ -14,6 +14,18 @@ const nextConfig: NextConfig = {
   // Low-CPU build hosts (small VPS / containers) can exceed the 60s default while
   // prerendering; give prerender more headroom so the build doesn't flake.
   staticPageGenerationTimeout: 180,
+  async headers() {
+    return [
+      {
+        // Apple fetches this extensionless file and refuses anything that is not
+        // application/json — which is what static serving infers for it. Without
+        // this, iOS silently never associates the domain and every table QR opens
+        // Safari instead of the app.
+        source: "/.well-known/apple-app-site-association",
+        headers: [{ key: "Content-Type", value: "application/json" }],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

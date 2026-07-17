@@ -1,0 +1,7 @@
+tags:
+  # Documentation captures, not pixel-regression contracts: glyph rasterization
+  # differs across machines, so running these by default would fail the suite
+  # everywhere but the box that last regenerated them. Refresh on demand with:
+  #   flutter test --run-skipped -t screenshot --update-goldens
+  screenshot:
+    skip: "run explicitly: flutter test --run-skipped -t screenshot"

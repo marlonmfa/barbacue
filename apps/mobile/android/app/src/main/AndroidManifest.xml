@@ -24,7 +24,24 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Printed table QR codes encode https://<host>/mesa/<token>. The
+                 phone's camera opens that URL; autoVerify (against the site's
+                 /.well-known/assetlinks.json) hands it to the app instead of a
+                 browser when the app is installed. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="https"
+                    android:host="barbacue.hirableaiagents.com"
+                    android:pathPrefix="/mesa"/>
+            </intent-filter>
         </activity>
+        <!-- Lets the Flutter engine hand the launch URL to go_router. -->
+        <meta-data
+            android:name="flutter_deeplinking_enabled"
+            android:value="true" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
