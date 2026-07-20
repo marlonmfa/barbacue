@@ -2,7 +2,7 @@ name: barbacue
 description: "Lanches do Barba — cardápio e pedidos"
 publish_to: 'none'
 
-version: 1.2.0+5
+version: 1.2.0+6
 
 environment:
   sdk: ^3.11.0
@@ -89,11 +89,12 @@ flutter_launcher_icons:
   remove_alpha_ios: true
   image_path: "assets/icon/icon.png"
   min_sdk_android: 21
-  # White adaptive background matches the barbacue-icon's own white field, so the
-  # red-on-white logo reads the same on iOS (rounded white square) and Android
-  # (masked white circle/squircle). The foreground logo is pre-padded into the
-  # safe zone so the "ESDT. 2019" edge text is never clipped by the mask.
-  adaptive_icon_background: "#FFFFFF"
+  # Brand red adaptive background matches the icon's own red field, so the
+  # white-on-red logo reads the same on iOS (rounded red square) and Android
+  # (masked red circle/squircle). The foreground is the full mark pre-scaled to
+  # 68% and centered, so the mask never clips the "BARBACUE & Co" wordmark and
+  # its red edges blend seamlessly into this background.
+  adaptive_icon_background: "#ED1B24"
   adaptive_icon_foreground: "assets/icon/icon_foreground.png"
 
 flutter_native_splash:
