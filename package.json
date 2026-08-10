@@ -1,13 +1,18 @@
 {
   "name": "barbacue",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "npm run dev --workspace=apps/web",
     "scrape": "npm run scrape --workspace=packages/scraper",
     "seed": "npm run seed --workspace=packages/scraper"
   },
   "devDependencies": {
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "typescript": "^5.5.0"
   }
 }

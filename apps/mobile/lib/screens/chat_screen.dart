@@ -43,8 +43,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scroll.hasClients) {
-        _scroll.animateTo(_scroll.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+        _scroll.animateTo(
+          _scroll.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+        );
       }
     });
   }
@@ -166,7 +169,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [AppTheme.brand, Color(0xFF8F0F15)],
+              colors: [AppTheme.coal, AppTheme.brandDark],
             ),
           ),
         ),
@@ -177,10 +180,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Atendente BARBACUE',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                Text('Anota seu pedido na conversa',
-                    style: TextStyle(fontSize: 11, color: Colors.white70)),
+                Text(
+                  'Atendente BARBACUE',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'Anota seu pedido na conversa',
+                  style: TextStyle(fontSize: 11, color: Colors.white70),
+                ),
               ],
             ),
           ],
@@ -192,7 +199,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             child: ListView.builder(
               controller: _scroll,
               padding: const EdgeInsets.all(16),
-              itemCount: messages.length +
+              itemCount:
+                  messages.length +
                   (loading ? 1 : 0) +
                   (messages.length == 1 ? 1 : 0),
               itemBuilder: (context, index) {
@@ -204,19 +212,26 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       spacing: 8,
                       runSpacing: 8,
                       children: _suggestions
-                          .map((s) => ActionChip(
-                                label: Text(s),
-                                onPressed: () => _send(s),
-                                backgroundColor: AppTheme.surfaceAlt,
-                                side: BorderSide(
-                                    color: AppTheme.brand.withValues(alpha: 0.4)),
-                                labelStyle: const TextStyle(
-                                    fontSize: 12, color: AppTheme.brandTan),
-                                shape: const StadiumBorder(),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 6),
-                                visualDensity: VisualDensity.compact,
-                              ))
+                          .map(
+                            (s) => ActionChip(
+                              label: Text(s),
+                              onPressed: () => _send(s),
+                              backgroundColor: AppTheme.surfaceAlt,
+                              side: BorderSide(
+                                color: AppTheme.brand.withValues(alpha: 0.4),
+                              ),
+                              labelStyle: const TextStyle(
+                                fontSize: 12,
+                                color: AppTheme.brandTan,
+                              ),
+                              shape: const StadiumBorder(),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              visualDensity: VisualDensity.compact,
+                            ),
+                          )
                           .toList(),
                     ),
                   );
@@ -226,16 +241,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 final m = messages[index];
                 final isUser = m.role == 'user';
                 return Align(
-                  alignment:
-                      isUser ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment: isUser
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
                   child: Container(
                     // ListView margins don't collapse, so this is half the 12px
                     // gap the web flex column gets from gap-3.
                     margin: const EdgeInsets.symmetric(vertical: 6),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
                     constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 0.85),
+                      maxWidth: MediaQuery.of(context).size.width * 0.85,
+                    ),
                     decoration: isUser
                         ? const BoxDecoration(
                             color: AppTheme.brand,
@@ -245,7 +264,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     child: Text(
                       m.content,
                       style: TextStyle(
-                          color: isUser ? Colors.white : AppTheme.textPrimary),
+                        color: isUser ? Colors.white : AppTheme.textPrimary,
+                      ),
                     ),
                   ),
                 );
@@ -261,22 +281,32 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 decoration: BoxDecoration(
                   color: AppTheme.brandSoft,
                   border: Border(
-                    top: BorderSide(color: AppTheme.brand.withValues(alpha: 0.3)),
+                    top: BorderSide(
+                      color: AppTheme.brand.withValues(alpha: 0.3),
+                    ),
                   ),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('🛒 $totalItems item(s) no carrinho',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: AppTheme.brandTan)),
-                    Text(formatPrice(totalCents),
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.brandTan)),
+                    Text(
+                      '🛒 $totalItems item(s) no carrinho',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: AppTheme.brandTan,
+                      ),
+                    ),
+                    Text(
+                      formatPrice(totalCents),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.brandTan,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -305,10 +335,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         onChanged: (_) => setState(() {}),
                         decoration: InputDecoration(
                           hintText: 'Escreva seu pedido...',
-                          hintStyle:
-                              const TextStyle(color: AppTheme.textSecondary),
+                          hintStyle: const TextStyle(
+                            color: AppTheme.textSecondary,
+                          ),
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
                           border: _pill(AppTheme.border, 1),
                           enabledBorder: _pill(AppTheme.border, 1),
                           focusedBorder: _pill(AppTheme.brand, 2),
@@ -325,10 +358,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           shape: const CircleBorder(),
                           child: InkWell(
                             customBorder: const CircleBorder(),
-                            onTap:
-                                canSend ? () => _send(_controller.text) : null,
-                            child: const Icon(Icons.send,
-                                color: Colors.white, size: 20),
+                            onTap: canSend
+                                ? () => _send(_controller.text)
+                                : null,
+                            child: const Icon(
+                              Icons.send,
+                              color: Colors.white,
+                              size: 20,
+                            ),
                           ),
                         ),
                       ),
@@ -345,9 +382,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 }
 
 OutlineInputBorder _pill(Color color, double width) => OutlineInputBorder(
-      borderRadius: BorderRadius.circular(24),
-      borderSide: BorderSide(color: color, width: width),
-    );
+  borderRadius: BorderRadius.circular(24),
+  borderSide: BorderSide(color: color, width: width),
+);
 
 // The corner on the speaker's side is squared off into a tail.
 const _userBubbleRadius = BorderRadius.only(

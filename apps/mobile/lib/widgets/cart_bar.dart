@@ -32,8 +32,8 @@ class CartBar extends ConsumerWidget {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.4),
-                  blurRadius: 24,
+                  color: Colors.black.withValues(alpha: 0.48),
+                  blurRadius: 28,
                   offset: const Offset(0, 8),
                 ),
               ],
@@ -41,12 +41,15 @@ class CartBar extends ConsumerWidget {
             child: FilledButton(
               onPressed: () => context.push('/cart'),
               style: FilledButton.styleFrom(
-                backgroundColor: AppTheme.brand,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                backgroundColor: AppTheme.coal,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 14,
+                ),
                 minimumSize: const Size.fromHeight(52),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
+                  side: const BorderSide(color: AppTheme.brand, width: 2),
                 ),
               ),
               child: Row(
@@ -56,13 +59,13 @@ class CartBar extends ConsumerWidget {
                     height: 28,
                     alignment: Alignment.center,
                     decoration: const BoxDecoration(
-                      color: AppTheme.brandTan,
+                      color: AppTheme.brand,
                       shape: BoxShape.circle,
                     ),
                     child: Text(
                       '$totalItems',
                       style: const TextStyle(
-                        color: AppTheme.brandTanInk,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                       ),
@@ -72,8 +75,10 @@ class CartBar extends ConsumerWidget {
                   const Expanded(
                     child: Text(
                       'Ver carrinho',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                   Text(

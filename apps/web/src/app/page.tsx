@@ -8,6 +8,7 @@ import { ChatAgent } from "@/components/ChatAgent";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { TableBanner } from "@/components/TableBanner";
+import { AppDownloadSection } from "@/components/AppDownloadSection";
 import { getTableSession } from "@/lib/table-session";
 
 export const dynamic = "force-dynamic";
@@ -106,6 +107,8 @@ export default async function HomePage({
           ))
         )}
       </main>
+
+      <AppDownloadSection />
 
       <Footer
         storeName={storeName}

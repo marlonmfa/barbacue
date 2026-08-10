@@ -79,6 +79,13 @@ export function Hero({
               <path d="M12 5v14M19 12l-7 7-7-7" />
             </svg>
           </a>
+          <a
+            href="#aplicativo"
+            className="border border-[var(--border-hover)] bg-[var(--surface)] text-[var(--text)] text-sm font-semibold px-5 py-3 rounded-xl transition-colors hover:bg-[var(--surface-2)] active:scale-95 inline-flex items-center gap-2"
+          >
+            <span aria-hidden>📱</span>
+            Baixar app
+          </a>
           {waHref && (
             <a
               href={waHref}

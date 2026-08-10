@@ -51,13 +51,14 @@ class HeroHeader extends ConsumerWidget {
 
     return DecoratedBox(
       decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: AppTheme.border)),
+        color: AppTheme.coal,
+        border: Border(bottom: BorderSide(color: AppTheme.brand, width: 3)),
       ),
       child: Stack(
         children: [
           const Positioned.fill(child: _HeroScrim()),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 40, 16, 36),
+            padding: const EdgeInsets.fromLTRB(18, 30, 18, 30),
             child: Column(
               children: [
                 _LogoSign(storeName: settings?.storeName ?? ''),
@@ -69,9 +70,10 @@ class HeroHeader extends ConsumerWidget {
                     settings.tagline,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      color: AppTheme.brandTan,
+                      color: Color(0xFFD9CEC4),
                       fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: .2,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -96,8 +98,7 @@ class HeroHeader extends ConsumerWidget {
   }
 }
 
-/// .hero-scrim: a faint red bloom off the top edge over a cream vignette that
-/// hands off to the page background.
+/// A coal-and-ember wash that gives the storefront a recognisable masthead.
 class _HeroScrim extends StatelessWidget {
   const _HeroScrim();
 
@@ -109,10 +110,10 @@ class _HeroScrim extends StatelessWidget {
           child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: RadialGradient(
-                center: Alignment(0, -1.2),
-                radius: 1.2,
-                colors: [Color(0x12ED1B24), Colors.transparent],
-                stops: [0, 0.55],
+                center: Alignment(1.1, -1.0),
+                radius: 1.35,
+                colors: [Color(0x55ED1B24), Colors.transparent],
+                stops: [0, 0.7],
               ),
             ),
           ),
@@ -121,10 +122,9 @@ class _HeroScrim extends StatelessWidget {
           child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0x00FBF7F2), AppTheme.background],
-                stops: [0.55, 1.0],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0x00181514), Color(0xCC080808)],
               ),
             ),
           ),
@@ -148,25 +148,27 @@ class _LogoSign extends StatelessWidget {
       // equivalent of the web hero's sr-only <h1>.
       child: ExcludeSemantics(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
-            color: AppTheme.surface,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppTheme.border),
+            color: AppTheme.coal,
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(color: const Color(0x33ED1B24)),
             boxShadow: const [
               BoxShadow(
-                color: Color(0x471B1613),
-                blurRadius: 40,
-                offset: Offset(0, 12),
-                spreadRadius: -18,
+                color: Color(0x66ED1B24),
+                blurRadius: 42,
+                spreadRadius: -22,
               ),
             ],
           ),
-          child: Image.asset(
-            'assets/brand/logo.png',
-            width: 208,
-            height: 208,
-            fit: BoxFit.contain,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(26),
+            child: Image.asset(
+              'assets/icon/icon.png',
+              width: 210,
+              height: 210,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),
@@ -181,7 +183,9 @@ class _StatusPill extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(storeStatusProvider).maybeWhen(
+    return ref
+        .watch(storeStatusProvider)
+        .maybeWhen(
           data: (status) {
             final open = status.open;
             return Container(
@@ -189,9 +193,7 @@ class _StatusPill extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: open ? _openFill : AppTheme.surfaceAlt,
                 borderRadius: BorderRadius.circular(999),
-                border: Border.all(
-                  color: open ? _openBorder : AppTheme.border,
-                ),
+                border: Border.all(color: open ? _openBorder : AppTheme.border),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -244,8 +246,7 @@ class _StatusDotState extends State<_StatusDot>
   }
 
   void _sync() {
-    final animate =
-        widget.open && !MediaQuery.disableAnimationsOf(context);
+    final animate = widget.open && !MediaQuery.disableAnimationsOf(context);
     if (animate) {
       if (!_controller.isAnimating) _controller.repeat(reverse: true);
     } else {
@@ -293,7 +294,7 @@ class _InfoChips extends StatelessWidget {
       if (value == null || value.isEmpty) return null;
       return Text(
         '$emoji $value',
-        style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+        style: const TextStyle(fontSize: 12, color: Colors.white70),
       );
     }
 
@@ -362,7 +363,11 @@ class _Ctas extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               label: 'Seguir',
               semanticsLabel: 'Seguir no Instagram',
-              leading: SvgPicture.string(_instagramGlyph, width: 16, height: 16),
+              leading: SvgPicture.string(
+                _instagramGlyph,
+                width: 16,
+                height: 16,
+              ),
             ),
         ],
       ),
@@ -404,7 +409,7 @@ class _CtaButtonState extends State<_CtaButton> {
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(12);
+    final radius = BorderRadius.circular(14);
     return Semantics(
       button: true,
       label: widget.semanticsLabel,

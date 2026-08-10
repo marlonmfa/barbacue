@@ -13,7 +13,7 @@ class BarbacueApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Lanches do Barba',
+      title: 'BARBACUE',
       theme: AppTheme.theme,
       routerConfig: router,
       debugShowCheckedModeBanner: false,

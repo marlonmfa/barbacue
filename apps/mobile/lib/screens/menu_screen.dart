@@ -155,7 +155,11 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.wifi_off, size: 64, color: AppTheme.textSecondary),
+              const Icon(
+                Icons.wifi_off,
+                size: 64,
+                color: AppTheme.textSecondary,
+              ),
               const SizedBox(height: 16),
               Text(
                 'Não foi possível carregar o cardápio',
@@ -170,8 +174,9 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
           ),
         ),
         data: (categories) {
-          final populated =
-              categories.where((c) => c.products.isNotEmpty).toList();
+          final populated = categories
+              .where((c) => c.products.isNotEmpty)
+              .toList();
           for (var i = 0; i < populated.length; i++) {
             _sectionKeys.putIfAbsent(i, () => GlobalKey());
             _chipKeys.putIfAbsent(i, () => GlobalKey());
@@ -219,11 +224,11 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                       sliver: SliverGrid(
                         gridDelegate:
                             const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 220,
-                          mainAxisSpacing: 12,
-                          crossAxisSpacing: 12,
-                          mainAxisExtent: kProductCardExtent,
-                        ),
+                              maxCrossAxisExtent: 220,
+                              mainAxisSpacing: 12,
+                              crossAxisSpacing: 12,
+                              mainAxisExtent: kProductCardExtent,
+                            ),
                         delegate: SliverChildBuilderDelegate(
                           (context, idx) => ProductCard(
                             product: populated[i].products[idx],
@@ -304,11 +309,7 @@ class _ClosedBanner extends ConsumerWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({
-    super.key,
-    required this.name,
-    required this.count,
-  });
+  const _SectionHeader({super.key, required this.name, required this.count});
 
   final String name;
   final int count;
@@ -345,12 +346,19 @@ class _SectionHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          Text(
-            '$count',
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: AppTheme.textSecondary,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppTheme.coal,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              '$count',
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -426,8 +434,8 @@ class _CategoryRail extends SliverPersistentHeaderDelegate {
     return Container(
       height: _railHeight,
       decoration: const BoxDecoration(
-        color: AppTheme.surface,
-        border: Border(bottom: BorderSide(color: AppTheme.border)),
+        color: AppTheme.coal,
+        border: Border(bottom: BorderSide(color: AppTheme.brand, width: 2)),
       ),
       child: ListView.builder(
         controller: categoryScrollController,
@@ -446,10 +454,10 @@ class _CategoryRail extends SliverPersistentHeaderDelegate {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: isActive ? AppTheme.brand : AppTheme.surfaceAlt,
+                color: isActive ? AppTheme.brand : AppTheme.coalSoft,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: isActive ? AppTheme.brand : AppTheme.border,
+                  color: isActive ? AppTheme.brand : const Color(0xFF3A3230),
                 ),
               ),
               child: Row(
@@ -465,7 +473,7 @@ class _CategoryRail extends SliverPersistentHeaderDelegate {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: isActive ? Colors.white : AppTheme.textPrimary,
+                      color: Colors.white,
                     ),
                   ),
                 ],
@@ -495,13 +503,13 @@ class _ChatFab extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppTheme.brand, Color(0xFFA30F15)],
+          colors: [AppTheme.coal, AppTheme.brandDark],
         ),
         borderRadius: BorderRadius.circular(999),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x331B1613),
-            blurRadius: 12,
+            color: Color(0x66000000),
+            blurRadius: 18,
             offset: Offset(0, 4),
           ),
         ],
@@ -513,8 +521,10 @@ class _ChatFab extends StatelessWidget {
         elevation: 0,
         highlightElevation: 0,
         icon: const Text('💬', style: TextStyle(fontSize: 20)),
-        label: const Text('Pedir pelo chat',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        label: const Text(
+          'Pedir pelo chat',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }

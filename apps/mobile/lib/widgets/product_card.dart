@@ -43,10 +43,13 @@ class ProductCard extends ConsumerWidget {
         .maybeWhen(data: (s) => !s.open, orElse: () => false);
 
     return Card(
+      elevation: 3,
+      shadowColor: const Color(0x33000000),
+      surfaceTintColor: Colors.transparent,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: AppTheme.border),
+        borderRadius: BorderRadius.circular(22),
+        side: const BorderSide(color: Color(0x26171311)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +61,11 @@ class ProductCard extends ConsumerWidget {
                 fallbackUrl: categorySlug == null && categoryName == null
                     ? null
                     : ApiService.baseUrl +
-                        fallbackArtPath(categorySlug, categoryName, product.id),
+                          fallbackArtPath(
+                            categorySlug,
+                            categoryName,
+                            product.id,
+                          ),
               ),
               const Positioned(
                 left: 0,
@@ -87,14 +94,14 @@ class ProductCard extends ConsumerWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   product.name,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
                     fontSize: 14,
                   ),
                   maxLines: 2,
@@ -280,7 +287,7 @@ class _EmberTile extends StatelessWidget {
               fontSize: 10,
               fontWeight: FontWeight.w600,
               letterSpacing: 1.5,
-              color: AppTheme.brandTan.withValues(alpha: 0.7),
+              color: Colors.white70,
             ),
           ),
         ],
@@ -297,15 +304,21 @@ class _AddButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return FilledButton(
       onPressed: () {
-        ref.read(cartProvider.notifier).add(CartItem(
-              productId: product.id,
-              name: product.name,
-              // Use the promotional price; the server re-sources prices anyway.
-              priceCents: product.effectivePriceCents,
-              imageUrl: product.imageUrl,
-            ));
+        ref
+            .read(cartProvider.notifier)
+            .add(
+              CartItem(
+                productId: product.id,
+                name: product.name,
+                // Use the promotional price; the server re-sources prices anyway.
+                priceCents: product.effectivePriceCents,
+                imageUrl: product.imageUrl,
+              ),
+            );
       },
       style: FilledButton.styleFrom(
+        backgroundColor: AppTheme.coal,
+        foregroundColor: Colors.white,
         minimumSize: Size.zero,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),

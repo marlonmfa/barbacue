@@ -112,7 +112,7 @@ void main() {
         checkoutProvider.overrideWith(_SeededCheckout.new),
       ],
       child: MaterialApp.router(
-        title: 'Lanches do Barba',
+        title: 'BARBACUE',
         theme: AppTheme.theme,
         routerConfig: router,
         debugShowCheckedModeBanner: false,

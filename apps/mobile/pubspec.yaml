@@ -2,7 +2,7 @@ name: barbacue
 description: "Lanches do Barba — cardápio e pedidos"
 publish_to: 'none'
 
-version: 1.2.0+6
+version: 1.2.2+10
 
 environment:
   sdk: ^3.11.0
@@ -89,12 +89,10 @@ flutter_launcher_icons:
   remove_alpha_ios: true
   image_path: "assets/icon/icon.png"
   min_sdk_android: 21
-  # Brand red adaptive background matches the icon's own red field, so the
-  # white-on-red logo reads the same on iOS (rounded red square) and Android
-  # (masked red circle/squircle). The foreground is the full mark pre-scaled to
-  # 68% and centered, so the mask never clips the "BARBACUE & Co" wordmark and
-  # its red edges blend seamlessly into this background.
-  adaptive_icon_background: "#ED1B24"
+  # The launcher mark is the approved black icon with the red pig and wordmark.
+  # Matching the adaptive background to the artwork keeps Android masks from
+  # exposing a contrasting edge around the full-bleed square.
+  adaptive_icon_background: "#050505"
   adaptive_icon_foreground: "assets/icon/icon_foreground.png"
 
 flutter_native_splash:
