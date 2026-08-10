@@ -71,7 +71,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
-                  color: AppTheme.amberLight,
+                  color: AppTheme.brandSoft,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -89,7 +89,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen>
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.amberDark,
+                        color: AppTheme.brandDark,
                         letterSpacing: 2,
                       ),
                     ),

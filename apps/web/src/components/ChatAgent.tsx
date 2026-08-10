@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart, formatPrice, type CartItem } from "@/lib/cart";
 import { useCheckout } from "@/lib/checkout";
-import type { PaymentMethod } from "@/db/schema";
+import { TABLE_COOKIE } from "@/lib/table-session-shared";
+import type { OrderType, PaymentMethod } from "@/db/schema";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -23,7 +24,25 @@ interface ChatResponse {
   cart: AgentItem[];
   customer: { name?: string; phone?: string; address?: string; notes?: string };
   paymentMethod: PaymentMethod;
+  couponCode: string | null;
+  orderType: OrderType;
+  tableNumber: number | null;
   navigate: boolean;
+}
+
+/** Read the (non-httpOnly) table-session cookie to pass the dine-in token to the
+ * agent — so a seated guest's chat order is tied to their table. */
+function readTableToken(): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.split("; ").find((c) => c.startsWith(`${TABLE_COOKIE}=`));
+  if (!match) return null;
+  try {
+    const raw = decodeURIComponent(match.split("=").slice(1).join("="));
+    const parsed = JSON.parse(atob(raw.replace(/-/g, "+").replace(/_/g, "/")));
+    return typeof parsed.token === "string" ? parsed.token : null;
+  } catch {
+    return null;
+  }
 }
 
 const GREETING =
@@ -46,6 +65,11 @@ export function ChatAgent() {
   const [messages, setMessages] = useState<ChatMessage[]>([{ role: "assistant", content: GREETING }]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  // Gate cart-derived UI (count, FAB position) until after hydration — the server
+  // renders an empty cart, so reading the persisted store on first client render
+  // would mismatch the FAB's `bottom-*` class and log a hydration error.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -81,6 +105,8 @@ export function ChatAgent() {
             notes: checkout.notes || undefined,
           },
           paymentMethod: checkout.paymentMethod,
+          couponCode: checkout.couponCode || undefined,
+          tableToken: readTableToken() || undefined,
         }),
       });
 
@@ -113,6 +139,9 @@ export function ChatAgent() {
         address: data.customer.address ?? checkout.address,
         notes: data.customer.notes ?? checkout.notes,
         paymentMethod: data.paymentMethod,
+        couponCode: data.couponCode ?? checkout.couponCode,
+        orderType: data.orderType ?? checkout.orderType,
+        tableNumber: data.tableNumber ?? checkout.tableNumber,
       });
 
       setMessages((m) => [...m, { role: "assistant", content: data.reply }]);
@@ -130,7 +159,7 @@ export function ChatAgent() {
     }
   }
 
-  const count = totalItems();
+  const count = mounted ? totalItems() : 0;
   // Lift the FAB above the "Ver carrinho" bar when it's visible.
   const fabBottom = count > 0 ? "bottom-24" : "bottom-6";
 
@@ -140,7 +169,7 @@ export function ChatAgent() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className={`fixed right-4 ${fabBottom} z-50 flex items-center gap-2 bg-gradient-to-br from-amber-500 to-orange-600 text-white pl-4 pr-5 py-3.5 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-transform`}
+          className={`fixed right-4 ${fabBottom} z-50 flex items-center gap-2 bg-gradient-to-br from-[var(--brand-red)] to-[#a30f15] text-white pl-4 pr-5 py-3.5 rounded-full shadow-xl shadow-[var(--brand-red)]/30 hover:scale-105 active:scale-95 transition-transform`}
           aria-label="Pedir pelo chat"
         >
           <span className="text-xl">💬</span>
@@ -157,13 +186,13 @@ export function ChatAgent() {
           />
           <div className="relative pointer-events-auto w-full sm:w-[400px] sm:mr-4 h-[85vh] sm:h-[600px] sm:max-h-[85vh] bg-[var(--surface)] border border-[var(--border)] rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-br from-amber-500 to-orange-600 text-white px-5 py-4 flex items-center gap-3">
-              <span className="text-2xl">🍔</span>
+            <div className="bg-gradient-to-br from-[var(--brand-red)] to-[#8f0f15] text-white px-5 py-4 flex items-center gap-3">
+              <span className="text-2xl">🔥</span>
               <div className="flex-1">
                 <p className="font-bold text-sm leading-tight">Atendente BARBACUE</p>
-                <p className="text-amber-100 text-xs">Anota seu pedido na conversa</p>
+                <p className="text-white/70 text-xs">Anota seu pedido na conversa</p>
               </div>
-              <button onClick={() => setOpen(false)} className="text-amber-100 hover:text-white text-xl" aria-label="Fechar">
+              <button onClick={() => setOpen(false)} className="text-white/70 hover:text-white text-xl" aria-label="Fechar">
                 ✕
               </button>
             </div>
@@ -175,7 +204,7 @@ export function ChatAgent() {
                   key={i}
                   className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-sm whitespace-pre-wrap ${
                     m.role === "user"
-                      ? "self-end bg-amber-500 text-white rounded-br-sm"
+                      ? "self-end bg-[var(--brand-red)] text-white rounded-br-sm"
                       : "self-start bg-[var(--surface-2)] border border-[var(--border)] text-[var(--text)] rounded-bl-sm"
                   }`}
                 >
@@ -199,7 +228,7 @@ export function ChatAgent() {
                     <button
                       key={s}
                       onClick={() => send(s)}
-                      className="text-xs bg-[var(--surface-2)] border border-amber-700/40 text-amber-300 px-3 py-1.5 rounded-full hover:border-amber-500 transition-colors"
+                      className="text-xs bg-[var(--surface-2)] border border-[var(--brand-red)]/40 text-[var(--brand-tan)] px-3 py-1.5 rounded-full hover:border-[var(--brand-red)] hover:text-[var(--text)] transition-colors"
                     >
                       {s}
                     </button>
@@ -212,7 +241,7 @@ export function ChatAgent() {
             {count > 0 && (
               <button
                 onClick={() => router.push("/cart")}
-                className="bg-amber-950/40 border-t border-amber-800/40 px-4 py-2.5 flex items-center justify-between text-sm text-amber-200"
+                className="bg-[var(--brand-red)]/15 border-t border-[var(--brand-red)]/30 px-4 py-2.5 flex items-center justify-between text-sm text-[var(--brand-tan)]"
               >
                 <span className="font-medium">🛒 {count} item(s) no carrinho</span>
                 <span className="font-bold">{formatPrice(useCart.getState().totalCents())}</span>
@@ -232,12 +261,12 @@ export function ChatAgent() {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Escreva seu pedido..."
                 disabled={loading}
-                className="flex-1 bg-[var(--surface-2)] text-[var(--text)] placeholder:text-[var(--text-muted)] border border-[var(--border)] rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-60"
+                className="flex-1 bg-[var(--surface-2)] text-[var(--text)] placeholder:text-[var(--text-muted)] border border-[var(--border)] rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-red)] disabled:opacity-60"
               />
               <button
                 type="submit"
                 disabled={loading || !input.trim()}
-                className="bg-amber-500 hover:bg-amber-600 disabled:bg-amber-200 text-white w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
+                className="bg-[var(--brand-red)] hover:bg-[var(--brand-red-hover)] disabled:opacity-40 text-white w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
                 aria-label="Enviar"
               >
                 ➤

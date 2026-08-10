@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { customers } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { isMasterPassword } from "@/lib/admin-auth";
+import { isMasterPassword, withRole } from "@/lib/admin-auth";
 import { setCustomerSession } from "@/lib/customer-session";
 
-export async function POST(req: NextRequest) {
+// Impersonation grants access to a customer's saved data — admin-only, AND still
+// gated by the master password as a second factor.
+export const POST = withRole("admin", async (req: NextRequest) => {
   const body = await req.json().catch(() => ({}));
   const { customerId, masterPassword } = body as { customerId?: number; masterPassword?: string };
 
@@ -29,4 +31,4 @@ export async function POST(req: NextRequest) {
     address: customer.address ?? undefined,
   });
   return res;
-}
+});

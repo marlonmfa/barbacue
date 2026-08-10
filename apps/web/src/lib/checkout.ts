@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { PaymentMethod } from "@/db/schema";
+import type { PaymentMethod, OrderType } from "@/db/schema";
 
 /**
  * Checkout state shared by every ordering path: the manual cart form, the AI
@@ -18,6 +18,13 @@ export interface CheckoutState {
   /** "Troco para" amount in cents (cash only). null = no change needed. */
   changeForCents: number | null;
 
+  // ─── Dine-in (mesa) ───
+  /** "delivery" (needs address) or "dine_in" (tied to a table, no address). */
+  orderType: OrderType;
+  /** When seated via QR, the table the order is tied to. null = delivery. */
+  tableToken: string | null;
+  tableNumber: number | null;
+
   set: (patch: Partial<Omit<CheckoutState, "set" | "reset" | "applyAgentPatch">>) => void;
   reset: () => void;
 }
@@ -30,6 +37,9 @@ const initial = {
   couponCode: null as string | null,
   paymentMethod: "pix" as PaymentMethod,
   changeForCents: null as number | null,
+  orderType: "delivery" as OrderType,
+  tableToken: null as string | null,
+  tableNumber: null as number | null,
 };
 
 export const useCheckout = create<CheckoutState>()(

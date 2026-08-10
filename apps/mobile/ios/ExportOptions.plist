@@ -10,8 +10,18 @@
     <false/>
     <key>uploadSymbols</key>
     <true/>
+    <!-- Manual: the associated-domains entitlement needs a profile that grants it,
+         and automatic signing can only mint one with an Apple ID logged into Xcode.
+         The profile below is managed via scripts/asc.py. -->
     <key>signingStyle</key>
-    <string>automatic</string>
+    <string>manual</string>
+    <key>signingCertificate</key>
+    <string>Apple Distribution</string>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>com.lanchesdobarba.barbacue</key>
+        <string>Barbacue AppStore AssocDomains</string>
+    </dict>
     <key>destination</key>
     <string>export</string>
 </dict>

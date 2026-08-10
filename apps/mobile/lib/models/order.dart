@@ -30,6 +30,10 @@ class CreateOrderRequest {
   final List<OrderItem> items;
   final String? notes;
 
+  /// The code only — the server re-reserves the coupon and recomputes the
+  /// discount, so a client-supplied amount would be ignored anyway.
+  final String? couponCode;
+
   /// pix | cash | card_on_delivery — mirrors the web payment options.
   final String paymentMethod;
 
@@ -39,15 +43,27 @@ class CreateOrderRequest {
   /// "click" (UI) or "chat" (AI agent) — both equally valid.
   final String channel;
 
+  /// delivery | dine_in. Only a hint: a valid [tableToken] promotes the order to
+  /// dine_in server-side whatever this says.
+  final String orderType;
+
+  /// The seated table's opaque token. The table *number* is deliberately not
+  /// part of this payload — the server re-resolves it from the token, so a
+  /// forged client cannot file its order against someone else's table.
+  final String? tableToken;
+
   const CreateOrderRequest({
     required this.customerName,
     required this.customerPhone,
     this.deliveryAddress,
     required this.items,
     this.notes,
+    this.couponCode,
     this.paymentMethod = 'pix',
     this.changeForCents,
     this.channel = 'click',
+    this.orderType = 'delivery',
+    this.tableToken,
   });
 
   factory CreateOrderRequest.fromJson(Map<String, dynamic> json) =>
@@ -74,6 +90,13 @@ class OrderResponse {
   final String orderId;
   @JsonKey(defaultValue: 'pix')
   final String paymentMethod;
+
+  /// delivery | dine_in — the server's verdict, which can differ from what the
+  /// client asked for: a valid table token promotes the order to dine_in. Only
+  /// this value may drive the confirmation copy.
+  @JsonKey(defaultValue: 'delivery')
+  final String orderType;
+  final int? tableNumber;
   @JsonKey(defaultValue: 0)
   final int totalCents;
   final PixInfo? pix;
@@ -81,6 +104,8 @@ class OrderResponse {
   const OrderResponse({
     required this.orderId,
     this.paymentMethod = 'pix',
+    this.orderType = 'delivery',
+    this.tableNumber,
     this.totalCents = 0,
     this.pix,
   });

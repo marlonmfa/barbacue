@@ -1,327 +1,176 @@
-# Guia de publicação — Lanches do Barba
+# Publicação — BARBACUE — Burguers na Brasa
 
-Este documento cobre tudo que precisa ser feito após o build inicial para publicar
-o app nas lojas. O projeto já está compilado e os artefatos de release estão prontos.
+Runbook de release do app (iOS + Android). O app é um cliente Flutter da API em
+`apps/web`; **os dois builds embutem a URL de produção via `--dart-define`**, que
+é resolvido em tempo de compilação (`String.fromEnvironment`) — não dá para trocar
+depois sem recompilar.
 
----
+| | |
+|---|---|
+| Bundle / applicationId | `com.lanchesdobarba.barbacue` |
+| Apple Team (distribuição) | `3A3X2G4UPK` — único com cert "Apple Distribution" |
+| Apple Team (pessoal, NÃO publica) | `Y5B2NQ244A` |
+| App Store Connect app id | `6782376058` |
+| API de produção | `https://barbacue.hirableaiagents.com` |
+| Play package | `com.lanchesdobarba.barbacue` |
 
-## STATUS ATUAL — v1.1.0+2 (build automatizado)
+## Credenciais (nenhuma no repositório)
 
-| Item | Estado | Observação |
+| O quê | Onde | Usado por |
 |---|---|---|
-| `flutter analyze` | ✅ 0 issues | |
-| `flutter test` | ✅ passa | |
-| **Android AAB** | ✅ PRONTO | `build/app/outputs/bundle/release/app-release.aab` — assinado c/ upload-keystore (`CN=Lanches do Barba`), URL de produção embutida, v1.1.0(2). **Pronto para upload na Play Console.** |
-| **Android APK** | ✅ PRONTO | `build/app/outputs/flutter-apk/app-release.apk` — sideload/testes |
-| **iOS archive** | ✅ PRONTO | `build/ios/archive/Runner.xcarchive` — v1.1.0(2), team `3A3X2G4UPK`, URL de produção embutida, launch image da marca |
-| **iOS IPA (App Store)** | ⛔ BLOQUEADO | Export falha com `No Accounts / No profiles`. **Requer login da conta Apple Developer no Xcode** (ação manual — credenciais do dono). Ver abaixo. |
-| Ícone do app (512 + adaptive) | ✅ PRONTO | |
-| Feature graphic (Play 1024×500) | ✅ PRONTO | `store-assets/play/feature_graphic_1024x500.png` |
-| Política de privacidade | ✅ NO AR | https://barbacue.hirableaiagents.com/privacy.html |
-| Ficha de loja (copy pt-BR) | ✅ PRONTO | `store-assets/store-listing-v1.1.md` |
-| Screenshots v1.1 (chat IA + Pix) | ⚠️ v1.0 servem | Set v1.0 (menu/carrinho/confirmação) é válido p/ submeter; recapturar p/ destacar chat/Pix é melhoria |
+| ASC API key + issuer | `~/.appstoreconnect/api_key.json` + `~/.appstoreconnect/private_keys/AuthKey_LUC9NT26C9.p8` | `scripts/asc.py`, `xcrun altool` |
+| Service account Play | `~/Downloads/play-store-credentials.json` (ou `$PLAY_CREDENTIALS`) | `scripts/play.py` |
+| Keystore de upload | `android/app/upload-keystore.jks` + `android/key.properties` | build do AAB |
 
-### ⛔ Único bloqueio para a App Store: login da conta Apple
+> O keystore e o `key.properties` estão no `.gitignore` e **não** são versionados.
+> A senha **não** fica documentada aqui — está no `key.properties` local. Faça
+> backup do `.jks` num cofre (1Password): perdê-lo significa nunca mais publicar
+> atualização neste applicationId.
+>
+> ⚠️ A senha do keystore esteve em texto puro neste arquivo até 2026-07-17 e
+> continua no histórico do git (commit `ad225d4`). O `.jks` nunca foi commitado,
+> então sozinha ela não abre nada — mas se quiser eliminar o risco, rotacione a
+> chave de upload no Play Console (Setup → App integrity → Upload key).
 
-O archive iOS está pronto, mas gerar/enviar o IPA exige uma conta Apple Developer
-logada no Xcode (nenhuma está nesta máquina — erro `exportArchive No Accounts`).
-Para destravar, **na máquina com o archive**:
+## Ferramentas
 
-1. **Xcode → Settings → Accounts → "+"** → entre com o Apple ID da conta do time
-   `3A3X2G4UPK` (a que paga os USD 99/ano e tem o cert "Apple Distribution").
-2. Depois rode o export automatizado:
-   ```bash
-   cd apps/mobile
-   flutter build ipa --release \
-     --dart-define=API_BASE_URL=https://barbacue.hirableaiagents.com \
-     --export-options-plist=ios/ExportOptions.plist
-   # IPA sai em build/ios/ipa/*.ipa
-   ```
-   **OU** distribua direto pelo Organizer (mais simples, faz login no fluxo):
-   ```bash
-   open build/ios/archive/Runner.xcarchive
-   # Organizer → Distribute App → App Store Connect → Upload
-   ```
+```bash
+python3 scripts/asc.py  status | builds | create-version <v> | attach-build <v> <build> | whatsnew <v> "txt" | submit <v>
+python3 scripts/play.py status | testers | upload <aab> [track] | promote <versionCode> <track>
+```
+
+Ambos leem as credenciais dos caminhos acima. `asc.py status` é a **fonte da
+verdade** do estado na App Store — não confie em documentação (ver histórico).
 
 ---
 
-## Artefatos gerados (não republicar sem nova versão)
+## Release passo a passo
 
-| Arquivo | Localização | Uso |
-|---|---|---|
-| `app-release.apk` | `build/app/outputs/flutter-apk/` | Sideload / testes em dispositivo |
-| `app-release.aab` | `build/app/outputs/bundle/release/` | Upload na Google Play |
-| `Runner.xcarchive` | `build/ios/archive/` | Distribuição via Xcode Organizer |
+### 1. Versão
 
----
+`pubspec.yaml` → `version: <nome>+<build>`. O build number precisa ser **maior que
+qualquer um já enviado** em cada loja (hoje: 5). Nunca reenvie o mesmo número.
 
-## Credenciais importantes — GUARDE COM SEGURANÇA
-
-```
-Keystore Android      : android/app/upload-keystore.jks
-Alias                 : upload
-Senha                 : barbacue2024
-Bundle ID             : com.lanchesdobarba.barbacue
-Apple Team (DISTRIB.) : 3A3X2G4UPK  ← usar este p/ publicar (cert "Apple Distribution")
-Apple Team (dev)      : Y5B2NQ244A  ← time pessoal/grátis, só cert "Apple Development"
-```
-
-> ⚠️ Existem DUAS contas Apple nesta máquina. A publicação na App Store **exige**
-> o time `3A3X2G4UPK` (é o único com certificado "Apple Distribution"). O projeto
-> Xcode (`DEVELOPMENT_TEAM`) e o `ios/ExportOptions.plist` já apontam para ele.
-> O time `Y5B2NQ244A` (pessoal) NÃO consegue distribuir na loja.
-
-> O keystore é irreversível. Se perder, não consegue publicar atualizações
-> na Play Store. Faça backup em local seguro (ex: 1Password, cofre criptografado).
-
----
-
-## Parte 1 — Antes de publicar (obrigatório para ambas as plataformas)
-
-### 1.1 Ícone do app ✅ FEITO
-
-Ícone definitivo criado: porquinho com chapéu de chef abraçando um hambúrguer
-flamejado, no amber da marca (gerado com a API de imagens da OpenAI a partir da
-identidade BARBACUE). Fontes em `assets/icon/icon.png` (1024², fundo amber) e
-`assets/icon/icon_foreground.png` (transparente, com safe-zone p/ adaptive).
-Ícones de todas as plataformas já regenerados com `dart run flutter_launcher_icons`.
-
-Para regenerar no futuro:
-
-```yaml
-# Adicionar em pubspec.yaml > dev_dependencies:
-flutter_launcher_icons: ^0.14.3
-
-# Adicionar ao final do pubspec.yaml:
-flutter_icons:
-  android: true
-  ios: true
-  image_path: "assets/icon/icon.png"   # PNG 1024x1024, fundo sólido
-  adaptive_icon_background: "#F59E0B"  # amber do app
-  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
-```
-
-```yaml
-# Adicionar em pubspec.yaml > dev_dependencies:
-flutter_launcher_icons: ^0.14.3
-
-# Adicionar ao final do pubspec.yaml:
-flutter_icons:
-  android: true
-  ios: true
-  image_path: "assets/icon/icon.png"   # PNG 1024x1024, fundo sólido
-  adaptive_icon_background: "#F59E0B"  # amber do app
-  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
-```
+### 2. Build
 
 ```bash
-flutter pub get
-dart run flutter_launcher_icons
-```
-
-### 1.2 Splash screen
-
-```yaml
-# dev_dependencies:
-flutter_native_splash: ^2.4.5
-
-# flutter_native_splash:
-color: "#F59E0B"
-image: assets/splash/logo.png
-android: true
-ios: true
-```
-
-```bash
-dart run flutter_native_splash:create
-```
-
-### 1.3 URL de produção da API
-
-O app aponta para `localhost` em desenvolvimento. Antes de publicar, defina a URL
-real do servidor:
-
-```bash
-# Build com a URL de produção embutida
-flutter build appbundle --release \
-  --dart-define=API_BASE_URL=https://barbacue.hirableaiagents.com
-
+cd apps/mobile
 flutter build ipa --release \
   --dart-define=API_BASE_URL=https://barbacue.hirableaiagents.com \
   --export-options-plist=ios/ExportOptions.plist
+
+flutter build appbundle --release \
+  --dart-define=API_BASE_URL=https://barbacue.hirableaiagents.com
 ```
 
----
+**Assinatura iOS é manual, de propósito.** O entitlement `associated-domains`
+(deep links da mesa) exige um provisioning profile que o conceda, e a assinatura
+automática só consegue criar um com uma conta Apple logada no Xcode — que não há
+nesta máquina. Por isso o Release config usa `CODE_SIGN_STYLE = Manual` com o
+profile **"Barbacue AppStore AssocDomains"**, criado via API.
 
-## Parte 2 — Google Play (Android)
-
-### 2.1 Criar conta de desenvolvedor
-
-1. Acesse https://play.google.com/console
-2. Pague a taxa única de **USD 25**
-3. Complete o perfil da conta
-
-### 2.2 Criar o app na Play Console
-
-1. **All apps → Create app**
-2. Preencha:
-   - App name: `Lanches do Barba`
-   - Default language: `Portuguese (Brazil)`
-   - App or game: `App`
-   - Free or paid: `Free`
-3. Aceite as políticas e crie
-
-### 2.3 Configurar o app
-
-No menu lateral, complete todas as seções marcadas com `!`:
-
-**Dashboard → Set up your app:**
-- [ ] App access → All functionality is available without special access
-- [ ] Ads → No ads
-- [ ] Content rating → Preencher questionário (resultado esperado: Everyone)
-- [ ] Target audience → 18+
-- [ ] News apps → Not a news app
-- [ ] COVID-19 → Not applicable
-
-**Store presence → Main store listing:**
-- [ ] App name: `Lanches do Barba`
-- [ ] Short description (80 chars max): `Peça hambúrgueres artesanais do Barba direto pelo app`
-- [ ] Full description (4000 chars max): descreva o cardápio e o processo
-- [ ] Screenshots: mínimo 2 por tipo de dispositivo (phone obrigatório)
-- [ ] Feature graphic: 1024×500 px (banner horizontal)
-- [ ] App icon: 512×512 px PNG
-
-### 2.4 Fazer o upload do AAB
-
-1. **Release → Production → Create new release**
-2. Em "App bundles", clique **Upload** e selecione:
-   ```
-   build/app/outputs/bundle/release/app-release.aab
-   ```
-3. Release name: `1.0.0`
-4. Release notes (pt-BR):
-   ```
-   Versão inicial do app Lanches do Barba.
-   Cardápio completo, carrinho e pedidos direto pelo celular.
-   ```
-5. Clique **Save** → **Review release** → **Start rollout to production**
-
-### 2.5 Assinatura do app (Play App Signing)
-
-A Play Console vai oferecer gerenciar a assinatura. Aceite — a Google re-assina
-o AAB com chave própria para distribuição, mas o upload ainda usa o keystore local.
-
----
-
-## Parte 3 — App Store (iOS)
-
-### 3.1 Pré-requisitos
-
-- Conta Apple Developer Program: **USD 99/ano** — https://developer.apple.com/enroll/
-- Mac com Xcode instalado (já presente nesta máquina)
-- O archive já está gerado em `build/ios/archive/Runner.xcarchive`
-
-### 3.2 Registrar o Bundle ID
-
-1. Acesse https://developer.apple.com/account → **Certificates, IDs & Profiles**
-2. **Identifiers → +**
-3. Selecione **App IDs → App**
-4. Description: `Lanches do Barba`
-5. Bundle ID (Explicit): `com.lanchesdobarba.barbacue`
-6. Capabilities: nenhuma especial necessária
-7. **Register**
-
-### 3.3 Criar o app no App Store Connect
-
-1. Acesse https://appstoreconnect.apple.com
-2. **My Apps → +  → New App**
-3. Plataformas: iOS
-4. Name: `Lanches do Barba`
-5. Primary language: Portuguese (Brazil)
-6. Bundle ID: `com.lanchesdobarba.barbacue` (vai aparecer após o passo 3.2)
-7. SKU: `barbacue-app` (identificador interno, não fica público)
-8. **Create**
-
-### 3.4 Exportar o IPA via Xcode
+Se o profile expirar ou sumir, recrie:
 
 ```bash
-# Abre o Organizer no arquivo já gerado
-open build/ios/archive/Runner.xcarchive
+python3 - <<'PY'
+import sys; sys.argv=['x']
+exec(open('scripts/asc.py').read().split('if __name__')[0])
+r = req('POST', '/profiles', {'data': {'type':'profiles',
+  'attributes': {'name':'Barbacue AppStore AssocDomains','profileType':'IOS_APP_STORE'},
+  'relationships': {'bundleId': {'data':{'type':'bundleIds','id':'VXGMA7WHHK'}},
+                    'certificates': {'data':[{'type':'certificates','id':'XRYMHZXS64'}]}}}})
+import base64; open('/tmp/p.mobileprovision','wb').write(base64.b64decode(r['data']['attributes']['profileContent']))
+print('uuid', r['data']['attributes']['uuid'])
+PY
+cp /tmp/p.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/<uuid>.mobileprovision
 ```
 
-No Xcode Organizer:
-1. Selecione o archive `Runner 1.0.0 (1)`
-2. Clique **Distribute App**
-3. Selecione **App Store Connect**
-4. Selecione **Upload** (envia direto para a App Store Connect)
-5. Assinatura: **Automatically manage signing**
-6. Revise e clique **Upload**
+Confira que o entitlement entrou no binário assinado (não confie no build passar):
 
-> Se preferir exportar um IPA local primeiro, escolha **Export** no passo 4
-> e use o `ExportOptions.plist` já configurado em `ios/ExportOptions.plist`.
+```bash
+unzip -q build/ios/ipa/barbacue.ipa -d /tmp/c && \
+  codesign -d --entitlements :- /tmp/c/Payload/*.app | grep associated-domains
+```
 
-### 3.5 Preencher os metadados na App Store Connect
+### 3. Upload
 
-Em **App Store → 1.0 Prepare for Submission:**
+```bash
+xcrun altool --upload-app --type ios -f build/ios/ipa/barbacue.ipa \
+  --apiKey LUC9NT26C9 --apiIssuer 4f4199ba-5938-4024-aa3d-7adfdf7bfbd1
 
-**App Information:**
-- [ ] Category: Food & Drink
-- [ ] Privacy Policy URL (obrigatório): crie uma página simples em `barbacue.hirableaiagents.com/privacy`
+python3 scripts/play.py upload build/app/outputs/bundle/release/app-release.aab internal
+python3 scripts/play.py promote <versionCode> alpha   # trilha do teste fechado
+```
 
-**Pricing and Availability:**
-- [ ] Price: Free
-- [ ] Availability: Brazil (ou All countries)
+Processamento na Apple: ~5–15 min. Acompanhe com `asc.py status` até `VALID`.
 
-**App Store listing (pt-BR):**
-- [ ] Screenshots: iPhone 6.9" obrigatório; iPad opcional
-- [ ] App description: texto do cardápio
-- [ ] Keywords (100 chars): `hamburguer,lanche,delivery,pedido,barba`
-- [ ] Support URL: URL de suporte (pode ser o próprio site)
+### 4. Submeter (iOS)
 
-**Build:**
-- [ ] Após o upload do passo 3.4, o build aparece aqui em ~5 min
-- [ ] Selecione o build `1.0.0 (1)`
+```bash
+python3 scripts/asc.py create-version 1.2.0
+python3 scripts/asc.py attach-build 1.2.0 5
+python3 scripts/asc.py whatsnew 1.2.0 "..."
+python3 scripts/asc.py submit 1.2.0        # releaseType=AFTER_APPROVAL
+```
 
-**Review Information:**
-- [ ] Sign-in required: No
-- [ ] Notes for reviewer: `App de pedidos para a lanchonete Lanches do Barba. Requer servidor backend em execução para funcionar.`
-
-### 3.6 Submeter para revisão
-
-1. Clique **Add for Review**
-2. Clique **Submit to App Review**
-3. Prazo de revisão da Apple: normalmente **24–48 horas**
+> **Nunca submeta com a produção fora do ar.** O app é 100% servido pela API: o
+> revisor abrindo um app sem cardápio é rejeição quase certa por 2.1 (App
+> Completeness). Cheque antes:
+> `curl -sf https://barbacue.hirableaiagents.com/api/store-status`
 
 ---
 
-## Parte 4 — Atualizações futuras
+## Deep links da mesa (dine-in)
 
-Para cada nova versão:
+O QR impresso aponta para `https://barbacue.hirableaiagents.com/mesa/<token>`. A
+câmera do próprio celular abre a URL e o SO roteia para o app — sem scanner
+embutido, sem permissão de câmera.
 
-1. Incremente a versão em `pubspec.yaml`:
-   ```yaml
-   version: 1.0.1+2   # nome+build_number
-   ```
-2. Recompile:
-   ```bash
-   flutter build appbundle --release \
-     --dart-define=API_BASE_URL=https://barbacue.hirableaiagents.com
+Para funcionar, **os dois arquivos precisam estar no ar em produção**:
 
-   flutter build ipa --release \
-     --dart-define=API_BASE_URL=https://barbacue.hirableaiagents.com \
-     --export-options-plist=ios/ExportOptions.plist
-   ```
-3. Android: faça upload do novo AAB na Play Console → crie novo release
-4. iOS: exporte via Xcode Organizer → submeta novo build na App Store Connect
-
----
-
-## Referências rápidas
-
-| Recurso | URL |
+| Arquivo | Exigência |
 |---|---|
-| Play Console | https://play.google.com/console |
-| App Store Connect | https://appstoreconnect.apple.com |
-| Apple Developer | https://developer.apple.com/account |
-| Flutter deploy docs | https://docs.flutter.dev/deployment/android |
-| Flutter iOS deploy | https://docs.flutter.dev/deployment/ios |
+| `/.well-known/apple-app-site-association` | `Content-Type: application/json` (garantido por `next.config.ts`), sem redirect, sem extensão |
+| `/.well-known/assetlinks.json` | precisa conter o SHA-256 da **chave de assinatura do Play**, não da chave de upload |
+
+> ⚠️ **Pendência conhecida:** `assetlinks.json` hoje carrega a fingerprint da
+> chave de *upload*. Com o Play App Signing ligado (padrão, e obrigatório para
+> apps criados depois de 2021) o Google **re-assina** o app com outra chave, então
+> a verificação falha **em silêncio** e todo QR abre o Chrome em vez do app.
+> Pegue o valor em Play Console → Setup → App integrity → App signing → SHA-256 e
+> acrescente ao array (ele aceita várias). O iOS não tem esse problema.
+
+Verificação depois do deploy:
+
+```bash
+curl -sI https://barbacue.hirableaiagents.com/.well-known/apple-app-site-association | grep -i content-type
+curl -s  https://barbacue.hirableaiagents.com/.well-known/assetlinks.json
+```
+
+---
+
+## Android: produção está travada por política, não por bug
+
+Rollout de produção retorna `FAILED_PRECONDITION` enquanto o Google não liberar
+**production access**. Conta pessoal exige **12+ testers com opt-in feito, rodando
+o app por 14 dias corridos** em teste fechado.
+
+Estado (ver `TESTERS_OPTIN.md`): **12 convidados, 0 opt-in** → o relógio de 14
+dias **ainda não começou**. Nenhum script destrava isso; depende de 12 pessoas
+reais entrarem em
+<https://play.google.com/apps/testing/com.lanchesdobarba.barbacue> com **a mesma
+conta Google** da lista `HirableAITesters`.
+
+Depois de liberado: Play Console → Production → Create new release → escolher o
+`versionCode` já na biblioteca → Start rollout.
+
+---
+
+## Ficha das lojas
+
+- Copy pt-BR: `store-assets/store-listing-v1.1.md`
+- Ícone 512, feature graphic 1024×500: `store-assets/play/`
+- Screenshots: `store-assets/screenshots/` e `store-assets/screenshots-v1.1/`
+  (iPhone 6.5"/6.9" + iPad 13" — o slot iPad é **obrigatório** se o app declara
+  suporte a iPad)
+- Política de privacidade: <https://barbacue.hirableaiagents.com/privacy.html>

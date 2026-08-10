@@ -2,7 +2,7 @@ name: barbacue
 description: "Lanches do Barba — cardápio e pedidos"
 publish_to: 'none'
 
-version: 1.1.0+2
+version: 1.2.2+10
 
 environment:
   sdk: ^3.11.0
@@ -36,6 +36,12 @@ dependencies:
 
   # Pix QR Code rendering (payment screen)
   qr_flutter: ^4.1.0
+  intl: ^0.20.3
+
+  # WhatsApp/Instagram brand glyphs. The exact SVG paths the web hero ships are
+  # inlined as strings, so the two clients draw the same marks without pulling in
+  # a whole icon font for two icons.
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -45,6 +51,13 @@ dev_dependencies:
   json_serializable: ^6.9.4
   riverpod_generator: ^2.6.1
   flutter_launcher_icons: ^0.14.3
+
+  # Gives cached_network_image's disk cache a working sqflite under flutter_test.
+  # The menu screenshot renders real ProductCards, which reach for the cache the
+  # moment a card has a fallback image; without this the widget test dies on
+  # "databaseFactory not initialized" instead of rendering.
+  sqflite_common_ffi: ^2.4.0+3
+
   # flutter_native_splash: only needed to (re)generate the native splash assets,
   # which are already committed (res/drawable*/launch_background.xml, iOS
   # LaunchImage). Keeping it as a runtime dep broke the release build because its
@@ -57,6 +70,18 @@ flutter:
   assets:
     - assets/icon/
     - assets/splash/
+    - assets/brand/
+
+  # Anton (OFL) is the web's display face for the wordmark and the category
+  # headings (globals.css .section-title, loaded there via next/font/google).
+  # Bundling the same TTF keeps the headings identical across clients; the
+  # alternative — approximating it with a condensed system weight — drifts per
+  # device, and the family ships a single 400 weight, so heading styles set
+  # fontFamily only and never a fontWeight.
+  fonts:
+    - family: Anton
+      fonts:
+        - asset: assets/fonts/Anton-Regular.ttf
 
 flutter_launcher_icons:
   android: true
@@ -64,14 +89,18 @@ flutter_launcher_icons:
   remove_alpha_ios: true
   image_path: "assets/icon/icon.png"
   min_sdk_android: 21
-  adaptive_icon_background: "#F59E0B"
+  # The launcher mark is the approved black icon with the red pig and wordmark.
+  # Matching the adaptive background to the artwork keeps Android masks from
+  # exposing a contrasting edge around the full-bleed square.
+  adaptive_icon_background: "#050505"
   adaptive_icon_foreground: "assets/icon/icon_foreground.png"
 
 flutter_native_splash:
-  color: "#F59E0B"
+  # White splash to match the red-on-white brand (was amber #F59E0B).
+  color: "#FFFFFF"
   image: assets/splash/logo.png
   android: true
   ios: true
   android_12:
-    color: "#F59E0B"
+    color: "#FFFFFF"
     image: assets/splash/logo.png

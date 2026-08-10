@@ -40,7 +40,7 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   confirmed: { label: "Confirmado", color: "bg-blue-500/20 text-blue-300" },
   preparing: { label: "Preparando", color: "bg-orange-500/20 text-orange-300" },
   ready:     { label: "Pronto",     color: "bg-green-500/20 text-green-300" },
-  delivered: { label: "Entregue",   color: "bg-neutral-500/20 text-neutral-400" },
+  delivered: { label: "Entregue",   color: "bg-[#241d18] text-[#a89a8c]" },
   cancelled: { label: "Cancelado",  color: "bg-red-500/20 text-red-400" },
 };
 
@@ -63,11 +63,11 @@ export default async function AdminDashboard() {
           <Link
             key={card.href}
             href={card.href}
-            className="bg-neutral-800 rounded-2xl p-5 hover:bg-neutral-700 transition-colors border border-neutral-700"
+            className="bg-[#1a1512] rounded-2xl p-5 hover:bg-[#241d18] transition-colors border border-[#352b24]"
           >
             <div className="text-3xl mb-2">{card.icon}</div>
             <div className="text-2xl font-bold text-white">{card.value}</div>
-            <div className="text-neutral-400 text-sm">{card.label}</div>
+            <div className="text-[#a89a8c] text-sm">{card.label}</div>
           </Link>
         ))}
       </div>
@@ -75,17 +75,17 @@ export default async function AdminDashboard() {
       <section>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-white">Pedidos recentes</h2>
-          <Link href="/admin/orders" className="text-amber-400 text-sm hover:underline">
+          <Link href="/admin/orders" className="text-[#c8b89a] hover:text-[#f6efe8] text-sm hover:underline">
             Ver todos →
           </Link>
         </div>
 
-        <div className="bg-neutral-800 rounded-2xl overflow-hidden border border-neutral-700">
+        <div className="bg-[#1a1512] rounded-2xl overflow-hidden border border-[#352b24]">
           {stats.recentOrders.length === 0 ? (
-            <p className="text-neutral-400 text-sm px-5 py-8 text-center">Nenhum pedido ainda.</p>
+            <p className="text-[#a89a8c] text-sm px-5 py-8 text-center">Nenhum pedido ainda.</p>
           ) : (
             <table className="w-full text-sm">
-              <thead className="bg-neutral-900 text-neutral-400 text-left">
+              <thead className="bg-[#0e0b0a] text-[#a89a8c] text-left">
                 <tr>
                   <th className="px-5 py-3">Cliente</th>
                   <th className="px-5 py-3">Total</th>
@@ -97,9 +97,9 @@ export default async function AdminDashboard() {
                 {stats.recentOrders.map((o) => {
                   const st = STATUS_LABELS[o.status ?? "pending"];
                   return (
-                    <tr key={o.id} className="border-t border-neutral-700 hover:bg-neutral-750">
+                    <tr key={o.id} className="border-t border-[#352b24] hover:bg-[#241d18]">
                       <td className="px-5 py-3 text-white font-medium">{o.customerName}</td>
-                      <td className="px-5 py-3 text-amber-400 font-semibold">
+                      <td className="px-5 py-3 text-[#ed1b24] font-semibold">
                         R${((o.totalCents ?? 0) / 100).toFixed(2).replace(".", ",")}
                       </td>
                       <td className="px-5 py-3">
@@ -107,7 +107,7 @@ export default async function AdminDashboard() {
                           {st.label}
                         </span>
                       </td>
-                      <td className="px-5 py-3 text-neutral-400">
+                      <td className="px-5 py-3 text-[#a89a8c]">
                         {o.createdAt
                           ? new Date(o.createdAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo", hour12: false, dateStyle: "short", timeStyle: "short" })
                           : "—"}

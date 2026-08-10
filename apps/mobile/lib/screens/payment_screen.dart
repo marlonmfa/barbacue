@@ -1,13 +1,23 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import '../models/coupon.dart';
 import '../models/order.dart';
 import '../providers/cart_provider.dart';
 import '../providers/checkout_provider.dart';
+import '../providers/table_session_provider.dart';
 import '../services/api_service.dart';
 import '../theme/app_theme.dart';
+import '../widgets/header_chip.dart';
+
+/// The orders API's verdict on a token whose table is gone or switched off. It
+/// is the only marker the failure carries — the route answers 422 with this
+/// prefix and no machine-readable code.
+const _staleTableError = 'Mesa inválida ou desativada.';
 
 /// Unified payment step where both the manual cart flow and the AI agent land.
 class PaymentScreen extends ConsumerStatefulWidget {
@@ -18,23 +28,116 @@ class PaymentScreen extends ConsumerStatefulWidget {
 }
 
 class _PaymentScreenState extends ConsumerState<PaymentScreen> {
+  final _changeController = TextEditingController();
+  bool _changeSeeded = false;
   bool _submitting = false;
   String? _error;
   OrderResponse? _order;
 
-  static const _methods = [
-    ('pix', '⚡', 'Pague na hora pelo QR Code ou copia e cola'),
-    ('cash', '💵', 'Pague em dinheiro quando o pedido chegar'),
-    ('card_on_delivery', '💳', 'Maquininha de cartão na entrega'),
-  ];
+  /// Preview only. /api/orders re-reserves the coupon and recomputes the
+  /// discount in its own transaction, so this never decides what is charged —
+  /// it only keeps the total on screen honest about what will be.
+  CouponResult? _coupon;
+
+  /// Monotonic ticket for the preview: the code and the cart can both change
+  /// while a request is in flight, and a slow earlier answer must not land on
+  /// top of a newer one.
+  int _previewSeq = 0;
+
+  /// The live session wins, but the checkout store is a real fallback, not a
+  /// belt-and-braces one: the AI agent pushes straight here without /cart ever
+  /// being built, and a dine-in order it arranged must still be one.
+  bool get _isDineIn =>
+      ref.read(tableSessionProvider) != null ||
+      ref.read(checkoutProvider).orderType == 'dine_in';
+
+  String? get _tableToken =>
+      ref.read(tableSessionProvider)?.token ?? ref.read(checkoutProvider).tableToken;
+
+  int? get _tableNumber =>
+      ref.read(tableSessionProvider)?.number ??
+      ref.read(checkoutProvider).tableNumber;
+
+  List<(String, String, String)> get _methods => [
+        ('pix', '⚡', 'Pague na hora pelo QR Code ou copia e cola'),
+        (
+          'cash',
+          '💵',
+          _isDineIn
+              ? 'Pague em dinheiro no caixa'
+              : 'Pague em dinheiro quando o pedido chegar'
+        ),
+        (
+          'card_on_delivery',
+          '💳',
+          _isDineIn
+              ? 'Maquininha de cartão na mesa/caixa'
+              : 'Maquininha de cartão na entrega'
+        ),
+      ];
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listenManual(
+      checkoutProvider.select((s) => s.couponCode),
+      (_, _) => _previewCoupon(),
+    );
+    ref.listenManual(cartTotalCentsProvider, (_, _) => _previewCoupon());
+    _previewCoupon();
+  }
+
+  @override
+  void dispose() {
+    _changeController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _previewCoupon() async {
+    final code = ref.read(checkoutProvider).couponCode;
+    final subtotal = ref.read(cartTotalCentsProvider);
+    final seq = ++_previewSeq;
+
+    if (code == null || subtotal == 0) {
+      if (_coupon != null) setState(() => _coupon = null);
+      return;
+    }
+
+    try {
+      final result =
+          await ApiService.validateCoupon(code: code, subtotalCents: subtotal);
+      if (!mounted || seq != _previewSeq) return;
+      setState(() => _coupon = result);
+    } catch (_) {
+      // A refused code is dropped without a word: the customer applied it in the
+      // cart, where the refusal was already explained, and the order goes
+      // through undiscounted either way.
+      if (!mounted || seq != _previewSeq) return;
+      setState(() => _coupon = null);
+    }
+  }
 
   Future<void> _placeOrder() async {
     final checkout = ref.read(checkoutProvider);
     final items = ref.read(cartProvider);
-    if (checkout.name.trim().isEmpty || checkout.phone.trim().length < 8) {
+    final total = _totalCents(ref.read(cartTotalCentsProvider));
+
+    if (checkout.name.trim().isEmpty ||
+        checkout.phone.replaceAll(RegExp(r'\D'), '').length < 8) {
       setState(() => _error = 'Preencha nome e telefone na etapa anterior.');
       return;
     }
+    final change = checkout.changeForCents;
+    // Deliberately stricter than the server, which compares the cash against the
+    // subtotal because it has not resolved the coupon yet at that point.
+    if (checkout.paymentMethod == 'cash' &&
+        change != null &&
+        change > 0 &&
+        change < total) {
+      setState(() => _error = 'O valor do troco não pode ser menor que o total.');
+      return;
+    }
+
     setState(() {
       _submitting = true;
       _error = null;
@@ -43,12 +146,17 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       final res = await ApiService.createOrder(CreateOrderRequest(
         customerName: checkout.name,
         customerPhone: checkout.phone,
-        deliveryAddress: checkout.address.isEmpty ? null : checkout.address,
+        deliveryAddress: _isDineIn || checkout.address.isEmpty
+            ? null
+            : checkout.address,
         notes: checkout.notes.isEmpty ? null : checkout.notes,
+        couponCode: _coupon?.code,
         paymentMethod: checkout.paymentMethod,
         changeForCents:
             checkout.paymentMethod == 'cash' ? checkout.changeForCents : null,
         channel: 'click',
+        orderType: _isDineIn ? 'dine_in' : 'delivery',
+        tableToken: _isDineIn ? _tableToken : null,
         items: items
             .map((e) => OrderItem(
                   productId: e.productId,
@@ -59,170 +167,389 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             .toList(),
       ));
       ref.read(cartProvider.notifier).clear();
+      // The coupon is spent — leaving the code behind would re-apply it to the
+      // next order the moment the customer opens the cart again.
+      ref.read(checkoutProvider.notifier).update(clearCoupon: true);
       if (mounted) setState(() => _order = res);
     } catch (e) {
-      setState(() => _error = e.toString().replaceAll('Exception: ', ''));
+      final message = e.toString().replaceAll('Exception: ', '');
+      // Staff rotate a table's token to retire its printed QR, which strands
+      // anyone still holding the old one. The server has just proved this
+      // session is dead, so drop it — the listener resets checkout to delivery
+      // and the guest can order without fighting a token that will never work.
+      if (message.startsWith(_staleTableError)) {
+        ref.read(tableSessionProvider.notifier).leave();
+      }
+      setState(() => _error = message);
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
   }
 
+  /// A flat coupon can exceed the cart — the customer is never owed money.
+  int _totalCents(int subtotal) =>
+      (subtotal - (_coupon?.discountCents ?? 0)).clamp(0, subtotal);
+
   @override
   Widget build(BuildContext context) {
+    // Checked before the cart: an order that just succeeded emptied the cart,
+    // and the customer must still see their confirmation.
     if (_order != null) return _SuccessView(order: _order!);
 
     final items = ref.watch(cartProvider);
-    final totalCents = ref.watch(cartTotalCentsProvider);
     final checkout = ref.watch(checkoutProvider);
+    // Watched only to rebuild — the getters below read it. Leaving the table
+    // from another screen has to re-show the delivery copy here.
+    ref.watch(tableSessionProvider);
 
-    if (items.isEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => context.go('/'));
-      return const SizedBox.shrink();
+    // Watched, not read: the store hydrates from disk asynchronously, so a
+    // persisted "troco para" lands after the first build — and it is sent with
+    // the order whether or not the field shows it.
+    if (checkout.loaded && !_changeSeeded) {
+      _changeSeeded = true;
+      final change = checkout.changeForCents;
+      if (change != null) {
+        _changeController.text =
+            (change / 100).toStringAsFixed(2).replaceAll('.', ',');
+      }
     }
+
+    final subtotal = ref.watch(cartTotalCentsProvider);
+    final discount = _coupon?.discountCents ?? 0;
+    final total = _totalCents(subtotal);
+    final tableNumber = _tableNumber;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pagamento'),
         leading: BackButton(onPressed: () => context.pop()),
+        actions: [
+          if (_isDineIn && tableNumber != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Center(
+                child: HeaderChip(
+                  label: '🍽️ Mesa $tableNumber',
+                  emphasis: true,
+                ),
+              ),
+            ),
+        ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Summary
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+      body: items.isEmpty
+          ? const _NothingToPay()
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _Section(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Resumo',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        ...items.map((i) => Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 2),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(child: Text('${i.qty}× ${i.name}')),
+                                  Text(formatPrice(i.priceCents * i.qty)),
+                                ],
+                              ),
+                            )),
+                        if (discount > 0)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Desconto (${_coupon!.code})',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppTheme.successDeep,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  '−${formatPrice(discount)}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppTheme.successDeep,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        const Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Total',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                            Text(formatPrice(total),
+                                style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppTheme.brandTan)),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        _RecapLine(
+                          isDineIn: _isDineIn,
+                          tableNumber: _tableNumber,
+                          name: checkout.name,
+                          address: checkout.address,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  _Section(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Forma de pagamento',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 12),
+                        for (final m in _methods) ...[
+                          _MethodOption(
+                            emoji: m.$2,
+                            label: paymentLabels[m.$1] ?? m.$1,
+                            hint: m.$3,
+                            selected: checkout.paymentMethod == m.$1,
+                            onTap: () => ref
+                                .read(checkoutProvider.notifier)
+                                .update(paymentMethod: m.$1),
+                          ),
+                          if (m != _methods.last) const SizedBox(height: 8),
+                        ],
+                        if (checkout.paymentMethod == 'cash') ...[
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _changeController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Troco para quanto? (opcional)',
+                              hintText: 'Ex: 50',
+                              prefixIcon: Icon(Icons.payments_outlined),
+                            ),
+                            onChanged: (v) {
+                              final value =
+                                  double.tryParse(v.replaceAll(',', '.'));
+                              ref.read(checkoutProvider.notifier).update(
+                                    changeForCents: value == null
+                                        ? null
+                                        : (value * 100).round(),
+                                    clearChange: value == null,
+                                  );
+                            },
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+                  if (_error != null) ...[
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.red.shade200),
+                      ),
+                      child: Text(_error!,
+                          style: TextStyle(color: Colors.red.shade700)),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                  FilledButton(
+                    onPressed: _submitting ? null : _placeOrder,
+                    style: FilledButton.styleFrom(
+                        minimumSize: const Size.fromHeight(52)),
+                    child: _submitting
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2, color: Colors.white))
+                        : Text(checkout.paymentMethod == 'pix'
+                            ? 'Gerar Pix · ${formatPrice(total)}'
+                            : 'Confirmar pedido · ${formatPrice(total)}'),
+                  ),
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
+    );
+  }
+}
+
+/// One panel of the payment stack — Resumo and Forma de pagamento share it.
+class _Section extends StatelessWidget {
+  const _Section({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Card(
+        child: Padding(padding: const EdgeInsets.all(20), child: child),
+      );
+}
+
+class _MethodOption extends StatelessWidget {
+  const _MethodOption({
+    required this.emoji,
+    required this.label,
+    required this.hint,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String emoji;
+  final String label;
+  final String hint;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: selected ? AppTheme.brandSoft : AppTheme.surface,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: selected ? AppTheme.brand : AppTheme.border,
+              width: selected ? 2 : 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Text(emoji, style: const TextStyle(fontSize: 24)),
+              const SizedBox(width: 12),
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Resumo',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 8),
-                    ...items.map((i) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 2),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(child: Text('${i.qty}× ${i.name}')),
-                              Text(formatPrice(i.priceCents * i.qty)),
-                            ],
-                          ),
-                        )),
-                    const Divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Total',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text(formatPrice(totalCents),
-                            style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.amberDark)),
-                      ],
-                    ),
-                    if (checkout.name.isNotEmpty) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        'Entrega para ${checkout.name}'
-                        '${checkout.address.isNotEmpty ? ' · ${checkout.address}' : ''}',
+                    Text(label,
                         style: const TextStyle(
-                            color: AppTheme.textSecondary, fontSize: 13),
-                      ),
-                    ],
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.textPrimary)),
+                    Text(hint,
+                        style: const TextStyle(
+                            fontSize: 12, color: AppTheme.textSecondary)),
                   ],
                 ),
               ),
+              Icon(
+                selected
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
+                color: selected ? AppTheme.brand : AppTheme.textSecondary,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Who the order is for. Always rendered: an anonymous cart still says so, with
+/// an em-dash, rather than quietly dropping the line.
+class _RecapLine extends StatelessWidget {
+  const _RecapLine({
+    required this.isDineIn,
+    required this.tableNumber,
+    required this.name,
+    required this.address,
+  });
+
+  final bool isDineIn;
+  final int? tableNumber;
+  final String name;
+  final String address;
+
+  @override
+  Widget build(BuildContext context) {
+    const emphasis = TextStyle(
+      fontWeight: FontWeight.w500,
+      color: AppTheme.textPrimary,
+    );
+    final who = name.isEmpty ? '—' : name;
+
+    return Text.rich(
+      TextSpan(
+        style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+        children: isDineIn
+            ? [
+                const TextSpan(text: 'Consumo na '),
+                TextSpan(text: 'Mesa ${tableNumber ?? ''}', style: emphasis),
+                TextSpan(text: ' · $who'),
+              ]
+            : [
+                const TextSpan(text: 'Entrega para '),
+                TextSpan(text: who, style: emphasis),
+                if (address.isNotEmpty) TextSpan(text: ' · $address'),
+              ],
+      ),
+    );
+  }
+}
+
+class _NothingToPay extends StatelessWidget {
+  const _NothingToPay();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('🛒', style: TextStyle(fontSize: 60)),
+            const SizedBox(height: 16),
+            const Text(
+              'Nada para pagar ainda',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: AppTheme.textSecondary,
+              ),
             ),
             const SizedBox(height: 16),
-
-            // Payment method
-            const Text('Forma de pagamento',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            ..._methods.map((m) {
-              final selected = checkout.paymentMethod == m.$1;
-              return Card(
-                color: selected ? AppTheme.amberLight : null,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(
-                    color: selected ? AppTheme.amber : Colors.transparent,
-                    width: 2,
-                  ),
-                ),
-                child: ListTile(
-                  leading: Text(m.$2, style: const TextStyle(fontSize: 26)),
-                  title: Text(paymentLabels[m.$1]!,
-                      style: const TextStyle(fontWeight: FontWeight.w600)),
-                  subtitle: Text(m.$3),
-                  trailing: Icon(
-                    selected
-                        ? Icons.radio_button_checked
-                        : Icons.radio_button_unchecked,
-                    color: selected ? AppTheme.amber : AppTheme.textSecondary,
-                  ),
-                  onTap: () => ref
-                      .read(checkoutProvider.notifier)
-                      .update(paymentMethod: m.$1),
-                ),
-              );
-            }),
-
-            if (checkout.paymentMethod == 'cash') ...[
-              const SizedBox(height: 8),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Troco para quanto? (opcional)',
-                  hintText: 'Ex: 50',
-                  prefixIcon: Icon(Icons.payments_outlined),
-                ),
-                onChanged: (v) {
-                  final value = double.tryParse(v.replaceAll(',', '.'));
-                  ref.read(checkoutProvider.notifier).update(
-                        changeForCents: value == null
-                            ? null
-                            : (value * 100).round(),
-                        clearChange: value == null,
-                      );
-                },
-              ),
-            ],
-
-            const SizedBox(height: 16),
-            if (_error != null) ...[
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.red.shade200),
-                ),
-                child: Text(_error!,
-                    style: TextStyle(color: Colors.red.shade700)),
-              ),
-              const SizedBox(height: 12),
-            ],
             FilledButton(
-              onPressed: _submitting ? null : _placeOrder,
+              onPressed: () => context.go('/'),
               style: FilledButton.styleFrom(
-                  minimumSize: const Size.fromHeight(52)),
-              child: _submitting
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white))
-                  : Text(checkout.paymentMethod == 'pix'
-                      ? 'Gerar Pix • ${formatPrice(totalCents)}'
-                      : 'Confirmar pedido • ${formatPrice(totalCents)}'),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                minimumSize: Size.zero,
+                shape: const StadiumBorder(),
+              ),
+              child: const Text(
+                'Ver cardápio',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
             ),
-            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -239,50 +566,86 @@ class _SuccessView extends StatelessWidget {
     final shortId = order.orderId.length >= 8
         ? order.orderId.substring(0, 8).toUpperCase()
         : order.orderId.toUpperCase();
+    // The server decides the order type — a valid table token promotes an order
+    // the client sent as delivery, so local checkout state cannot be trusted.
+    final isDineIn = order.orderType == 'dine_in';
+    final table = order.tableNumber;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pedido recebido'),
+        backgroundColor: AppTheme.success,
+        title: const Text('Pedido recebido! 🎉'),
         automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            const Text('🎉', style: TextStyle(fontSize: 64)),
-            const SizedBox(height: 8),
             Container(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppTheme.amberLight,
-                borderRadius: BorderRadius.circular(10),
+                color: AppTheme.surfaceAlt,
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: Text('Pedido #$shortId',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.amberDark,
-                      letterSpacing: 1.5)),
+              child: Text(
+                '#$shortId${isDineIn && table != null ? ' · Mesa $table' : ''}',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontFamily: 'monospace',
+                  color: AppTheme.textSecondary,
+                ),
+              ),
             ),
             const SizedBox(height: 24),
             if (order.pix != null)
-              _PixCard(payload: order.pix!.payload, totalCents: order.totalCents)
+              _PixCard(
+                payload: order.pix!.payload,
+                totalCents: order.totalCents,
+                isDineIn: isDineIn,
+              )
             else
               Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
                       Text(order.paymentMethod == 'cash' ? '💵' : '💳',
-                          style: const TextStyle(fontSize: 40)),
+                          style: const TextStyle(fontSize: 36)),
+                      const SizedBox(height: 12),
+                      Text(
+                        '${isDineIn ? 'Pagamento no local' : 'Pagamento na entrega'} · '
+                        '${paymentLabels[order.paymentMethod] ?? order.paymentMethod}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.textPrimary),
+                      ),
                       const SizedBox(height: 8),
-                      Text('Pagamento na entrega · '
-                          '${paymentLabels[order.paymentMethod] ?? order.paymentMethod}'),
-                      const SizedBox(height: 4),
-                      Text('Total: ${formatPrice(order.totalCents)}',
+                      Text.rich(
+                        TextSpan(
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.amberDark)),
+                              fontSize: 14, color: AppTheme.textSecondary),
+                          children: [
+                            const TextSpan(text: 'Total a pagar: '),
+                            TextSpan(
+                              text: formatPrice(order.totalCents),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.brandTan),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        isDineIn
+                            ? 'Um atendente já foi avisado do seu pedido. 🍔'
+                            : 'Estamos preparando seu pedido. 🍔',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 12, color: AppTheme.textSecondary),
+                      ),
                     ],
                   ),
                 ),
@@ -301,9 +664,14 @@ class _SuccessView extends StatelessWidget {
 }
 
 class _PixCard extends StatefulWidget {
-  const _PixCard({required this.payload, required this.totalCents});
+  const _PixCard({
+    required this.payload,
+    required this.totalCents,
+    required this.isDineIn,
+  });
   final String payload;
   final int totalCents;
+  final bool isDineIn;
 
   @override
   State<_PixCard> createState() => _PixCardState();
@@ -311,12 +679,31 @@ class _PixCard extends StatefulWidget {
 
 class _PixCardState extends State<_PixCard> {
   bool _copied = false;
+  Timer? _copyTimer;
+
+  @override
+  void dispose() {
+    _copyTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _copy() async {
+    await Clipboard.setData(ClipboardData(text: widget.payload));
+    if (!mounted) return;
+    setState(() => _copied = true);
+    // Re-copying a Pix payload is a common retry, so the affordance has to come
+    // back rather than leaving a permanent "copiado!".
+    _copyTimer?.cancel();
+    _copyTimer = Timer(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _copied = false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         child: Column(
           children: [
             Text('Pague ${formatPrice(widget.totalCents)} com Pix',
@@ -328,41 +715,61 @@ class _PixCardState extends State<_PixCard> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.amberLight, width: 2),
               ),
               child: QrImageView(
                 data: widget.payload,
                 version: QrVersions.auto,
-                size: 220,
+                size: 224,
                 gapless: false,
               ),
             ),
             const SizedBox(height: 16),
             FilledButton.icon(
-              onPressed: () async {
-                await Clipboard.setData(ClipboardData(text: widget.payload));
-                if (mounted) setState(() => _copied = true);
-              },
+              onPressed: _copy,
               style: FilledButton.styleFrom(
-                  minimumSize: const Size.fromHeight(48)),
+                minimumSize: const Size.fromHeight(48),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
               icon: Icon(_copied ? Icons.check : Icons.copy),
-              label: Text(_copied
-                  ? 'Código copiado!'
-                  : 'Copiar código Pix (copia e cola)'),
+              // Styled here rather than through styleFrom's textStyle, which
+              // would replace the button's resolved font family outright.
+              label: Text(
+                _copied
+                    ? 'Código copiado!'
+                    : 'Copiar código Pix (copia e cola)',
+                style: const TextStyle(
+                    fontSize: 14, fontWeight: FontWeight.w600),
+              ),
             ),
-            const SizedBox(height: 12),
-            SelectableText(
-              widget.payload,
-              style: const TextStyle(
-                  fontSize: 11,
+            const SizedBox(height: 16),
+            Container(
+              width: double.infinity,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: AppTheme.background,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: SelectableText(
+                widget.payload,
+                style: const TextStyle(
+                  fontSize: 12,
+                  height: 1.5,
                   fontFamily: 'monospace',
-                  color: AppTheme.textSecondary),
+                  color: AppTheme.textSecondary,
+                ),
+              ),
             ),
-            const SizedBox(height: 8),
-            const Text(
-              'Após o pagamento, enviaremos a confirmação pelo WhatsApp.',
+            const SizedBox(height: 16),
+            Text(
+              widget.isDineIn
+                  ? 'Mostre o comprovante ao atendente da sua mesa.'
+                  : 'Após o pagamento, enviaremos a confirmação pelo WhatsApp.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+              style: const TextStyle(
+                  fontSize: 12, color: AppTheme.textSecondary),
             ),
           ],
         ),

@@ -62,3 +62,36 @@ npm run db:generate         # gera nova migration após editar src/db/schema.ts
 (opcional), `ADMIN_PASSWORD`, `ADMIN_COOKIE_SECRET`, `ADMIN_MASTER_PASSWORD`.
 
 > Rotacione a chave OpenAI antes de produção — ela já esteve versionada em texto puro.
+
+## Imagens do cardápio (tabela `media_assets`) — migration 0006
+
+O admin (`/admin/products`) deixa o dono **enviar fotos** direto do dispositivo.
+Elas são guardadas como bytes na tabela `media_assets` (Postgres `bytea`) e
+servidas por `GET /api/media/<uuid>`; `products.image_url` aponta pra esse
+caminho. **Por que no banco e não em arquivo?** O deploy usa `rsync --delete` a
+partir do Mac de dev — qualquer arquivo gravado no `public/` do servidor seria
+apagado no próximo deploy. No banco, o upload do dono sobrevive a deploys.
+
+Passos de deploy pra essa migration:
+
+```bash
+# a partir de apps/web, com DATABASE_URL no ambiente
+npm run db:migrate        # aplica 0006_fancy_wallop.sql (CREATE TABLE media_assets)
+```
+
+> **Journal fora de sincronia:** se o `db:migrate` falhar tentando recriar
+> tabelas antigas (banco criado originalmente via `db:push`), aplique só a 0006
+> à mão — o conteúdo é um único `CREATE TABLE media_assets (...)`:
+> `psql "$DATABASE_URL" -c "CREATE TABLE IF NOT EXISTS media_assets (id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL, mime text NOT NULL, data bytea NOT NULL, byte_size integer NOT NULL, created_at timestamptz DEFAULT now());"`
+
+> **Dono da tabela (gotcha 42501):** se a migration rodar como **superusuário**
+> do Postgres, o role da aplicação (`barbacue`) não consegue ler/gravar e tanto o
+> upload quanto o serviço de imagem retornam 500. Depois de criar a tabela, rode:
+> `psql "$DATABASE_URL" -c "ALTER TABLE media_assets OWNER TO barbacue;"`
+> (Não fica no arquivo da migration porque o role varia por ambiente — em dev é
+> `marlonalcantara`, em prod é `barbacue`.)
+
+> **Crescimento/limpeza:** trocar ou remover a foto de um produto deixa a linha
+> antiga em `media_assets` (órfã). É desprezível pra um cardápio pequeno (poucas
+> centenas de KB por foto, já reduzidas no navegador antes do upload). Uma limpeza
+> futura pode apagar linhas cujo `id` não aparece em nenhum `products.image_url`.

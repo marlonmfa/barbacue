@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.lanchesdobarba.barbacue",
+      "sha256_cert_fingerprints": [
+        "F3:A8:61:D6:F1:D3:CC:23:C5:12:1B:1F:C7:D7:2B:FE:EF:C7:FB:49:5F:6D:2F:E4:E3:D2:4F:D6:42:CC:B5:02"
+      ]
+    }
+  }
+]

@@ -47,11 +47,37 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       ADMIN_COOKIE_SECRET: ${ADMIN_COOKIE_SECRET}
       ADMIN_MASTER_PASSWORD: ${ADMIN_MASTER_PASSWORD}
+      # Lets the admin panel proxy the bot's pairing status, and lets the bot
+      # call the protected order-history endpoint.
+      BOT_API_TOKEN: ${BOT_API_TOKEN}
+      BOT_STATUS_URL: http://whatsapp-bot:3001
     depends_on:
       postgres:
         condition: service_healthy
       migrate:
         condition: service_completed_successfully
 
+  # Long-running WhatsApp ordering bot (Baileys). Bridges WhatsApp ↔ web API.
+  whatsapp-bot:
+    build:
+      context: ./apps/whatsapp-bot
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      WEB_BASE_URL: http://web:3000
+      # Customer-facing links sent over WhatsApp must use the public URL.
+      PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-}
+      BOT_API_TOKEN: ${BOT_API_TOKEN}
+      BOT_PORT: "3001"
+      SESSIONS_DIR: /app/sessions
+      APP_DEEPLINK_BASE: ${APP_DEEPLINK_BASE:-}
+    volumes:
+      # Persist the WhatsApp pairing so it survives restarts (scan QR once).
+      - whatsapp_sessions:/app/sessions
+    depends_on:
+      web:
+        condition: service_started
+
 volumes:
   postgres_data:
+  whatsapp_sessions:
