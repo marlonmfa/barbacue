@@ -13,7 +13,7 @@ export async function proxy(req: NextRequest) {
   // Guard every other /admin page AND /api/admin endpoint. Gating the API
   // surface here is the single enforcement point — the route handlers hold the
   // data (customer PII, orders), and the page guard alone never protected them.
-  if (pathname.startsWith("/admin") || isApi) {
+  if (pathname.startsWith("/admin") || pathname.startsWith("/whatsapp") || isApi) {
     if (!(await isAdminRequest(req))) {
       if (isApi) {
         return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -28,5 +28,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*", "/whatsapp/:path*"],
 };

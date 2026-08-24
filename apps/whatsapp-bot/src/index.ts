@@ -1,5 +1,5 @@
 import { config } from "./config.js";
-import { startSocket } from "./wa/socket.js";
+import { onInboundMessage, startHub } from "./wa/hub.js";
 import { startServer } from "./server.js";
 import { handleMessage, sweepIdleSessions } from "./conversation.js";
 
@@ -9,12 +9,20 @@ async function main(): Promise<void> {
   // 1) Status/QR HTTP server for the admin pairing page.
   startServer();
 
-  // 2) WhatsApp socket; each inbound message is bridged to the AI ordering agent.
-  await startSocket(handleMessage);
+  // 2) Bridge inbound WhatsApp text to the AI ordering agent. Registered before
+  //    startHub so a session that resumes instantly already has a handler.
+  onInboundMessage(handleMessage);
 
-  // 3) Periodically drop idle in-memory conversations.
+  // 3) WhatsApp sockets for every paired restaurant.
+  await startHub();
+
+  // 4) Periodically drop idle in-memory conversations.
   setInterval(sweepIdleSessions, 60_000);
 }
+
+// Baileys rejects from event handlers used to vanish silently, which is why the
+// pairing failures left no trace in the PM2 logs.
+process.on("unhandledRejection", (reason) => console.error("[bot] unhandledRejection", reason));
 
 main().catch((err) => {
   console.error("[bot] fatal", err);
