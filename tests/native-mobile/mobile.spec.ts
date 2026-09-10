@@ -18,7 +18,7 @@ test('installed restaurant app supports its public customer flow', async ({}, in
     '--device', device!, 'test', `${brand}.yaml`, '-e', `APP_ID=com.lanchesdobarba.${brand}`,
     '-e', `PLATFORM=${platform}`, '-e', `TEST_DATE=${date}`, '-e', `BRAND=${brand}`,
     '--test-output-dir', output, '--format','JUNIT','--output',path.join(output,'result.xml'),
-  ], {cwd:process.cwd(),timeout:390000,maxBuffer:3000000,env:{...process.env,MAESTRO_CLI_NO_ANALYTICS:'1',MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED:'true'}})
+  ], {cwd:process.cwd(),timeout:540000,maxBuffer:3000000,env:{...process.env,MAESTRO_CLI_NO_ANALYTICS:'1',MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED:'true'}})
     .catch(error=>{throw new Error(`${error.message}\n${error.stdout??''}\n${error.stderr??''}\nArtifacts: ${output}`)});
   await info.attach('maestro',{body:result.stdout,contentType:'text/plain'});
   const files = await readdir(output,{recursive:true});

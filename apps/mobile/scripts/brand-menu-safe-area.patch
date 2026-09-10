@@ -1,0 +1,212 @@
+--- a/apps/mobile/lib/screens/brand_menu_screen.dart
++++ b/apps/mobile/lib/screens/brand_menu_screen.dart
+@@ -48,108 +48,113 @@
+     final menu = ref.watch(menuProvider);
+ 
+     return Scaffold(
+-      body: menu.when(
+-        loading: () => _LoadingView(brand: brand),
+-        error: (_, _) => _ErrorView(
+-          brand: brand,
+-          onRetry: () => ref.invalidate(menuProvider),
+-        ),
+-        data: (allCategories) {
+-          final categories = allCategories
+-              .where((c) => c.products.isNotEmpty)
+-              .toList();
+-          for (var i = 0; i < categories.length; i++) {
+-            _categoryKeys.putIfAbsent(i, GlobalKey.new);
+-          }
+-
+-          return RefreshIndicator(
+-            color: brand.primary,
+-            onRefresh: _refresh,
+-            child: CustomScrollView(
+-              controller: _scrollController,
+-              physics: const AlwaysScrollableScrollPhysics(
+-                parent: BouncingScrollPhysics(),
+-              ),
+-              slivers: [
+-                SliverToBoxAdapter(
+-                  child: _MobileHero(
+-                    brand: brand,
+-                    itemCount: categories.fold(
+-                      0,
+-                      (sum, c) => sum + c.products.length,
+-                    ),
+-                  ),
+-                ),
+-                SliverPersistentHeader(
+-                  pinned: true,
+-                  delegate: _BrandCategoryRail(
+-                    brand: brand,
+-                    categories: categories,
+-                    onTap: _goToCategory,
+-                  ),
+-                ),
+-                SliverPadding(
+-                  padding: const EdgeInsets.fromLTRB(16, 28, 16, 12),
+-                  sliver: SliverToBoxAdapter(
+-                    child: Column(
+-                      crossAxisAlignment: CrossAxisAlignment.start,
+-                      children: [
+-                        Text(
+-                          'DO IFOOD PARA VOCÊ',
+-                          style: TextStyle(
+-                            color: brand.primary,
+-                            fontSize: 11,
+-                            fontWeight: FontWeight.w900,
+-                            letterSpacing: 1.7,
+-                          ),
+-                        ),
+-                        const SizedBox(height: 5),
+-                        Text(
+-                          'CARDÁPIO COMPLETO',
+-                          style: Theme.of(
+-                            context,
+-                          ).textTheme.headlineMedium?.copyWith(fontSize: 38),
+-                        ),
+-                        const SizedBox(height: 8),
+-                        Text(
+-                          'Preços e disponibilidade são confirmados no iFood.',
+-                          style: TextStyle(
+-                            color: brand.ink.withValues(alpha: .62),
+-                            fontSize: 13,
+-                          ),
+-                        ),
+-                      ],
+-                    ),
+-                  ),
+-                ),
+-                for (var i = 0; i < categories.length; i++) ...[
++      body: SafeArea(
++        bottom: false,
++        child: menu.when(
++          loading: () => _LoadingView(brand: brand),
++          error: (_, _) => _ErrorView(
++            brand: brand,
++            onRetry: () => ref.invalidate(menuProvider),
++          ),
++          data: (allCategories) {
++            final categories = allCategories
++                .where((c) => c.products.isNotEmpty)
++                .toList();
++            for (var i = 0; i < categories.length; i++) {
++              _categoryKeys.putIfAbsent(i, GlobalKey.new);
++            }
++
++            return RefreshIndicator(
++              color: brand.primary,
++              onRefresh: _refresh,
++              child: CustomScrollView(
++                controller: _scrollController,
++                physics: const AlwaysScrollableScrollPhysics(
++                  parent: BouncingScrollPhysics(),
++                ),
++                slivers: [
+                   SliverToBoxAdapter(
+-                    child: _CategoryHeading(
+-                      key: _categoryKeys[i],
++                    child: _MobileHero(
+                       brand: brand,
+-                      category: categories[i],
+-                    ),
+-                  ),
+-                  SliverPadding(
+-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+-                    sliver: SliverList.separated(
+-                      itemCount: categories[i].products.length,
+-                      separatorBuilder: (_, _) => const SizedBox(height: 12),
+-                      itemBuilder: (_, index) => _IfoodProductCard(
+-                        brand: brand,
+-                        product: categories[i].products[index],
+-                        category: categories[i].name,
++                      itemCount: categories.fold(
++                        0,
++                        (sum, c) => sum + c.products.length,
+                       ),
+                     ),
+                   ),
++                  SliverPersistentHeader(
++                    pinned: true,
++                    delegate: _BrandCategoryRail(
++                      brand: brand,
++                      categories: categories,
++                      onTap: _goToCategory,
++                    ),
++                  ),
++                  SliverPadding(
++                    padding: const EdgeInsets.fromLTRB(16, 28, 16, 12),
++                    sliver: SliverToBoxAdapter(
++                      child: Column(
++                        crossAxisAlignment: CrossAxisAlignment.start,
++                        children: [
++                          Text(
++                            'DO IFOOD PARA VOCÊ',
++                            style: TextStyle(
++                              color: brand.primary,
++                              fontSize: 11,
++                              fontWeight: FontWeight.w900,
++                              letterSpacing: 1.7,
++                            ),
++                          ),
++                          const SizedBox(height: 5),
++                          Text(
++                            'CARDÁPIO COMPLETO',
++                            style: Theme.of(
++                              context,
++                            ).textTheme.headlineMedium?.copyWith(fontSize: 38),
++                          ),
++                          const SizedBox(height: 8),
++                          Text(
++                            'Preços e disponibilidade são confirmados no iFood.',
++                            style: TextStyle(
++                              color: brand.ink.withValues(alpha: .62),
++                              fontSize: 13,
++                            ),
++                          ),
++                        ],
++                      ),
++                    ),
++                  ),
++                  for (var i = 0; i < categories.length; i++) ...[
++                    SliverToBoxAdapter(
++                      child: _CategoryHeading(
++                        key: _categoryKeys[i],
++                        brand: brand,
++                        category: categories[i],
++                      ),
++                    ),
++                    SliverPadding(
++                      padding: const EdgeInsets.symmetric(horizontal: 16),
++                      sliver: SliverList.separated(
++                        itemCount: categories[i].products.length,
++                        separatorBuilder: (_, _) => const SizedBox(height: 12),
++                        itemBuilder: (_, index) => _IfoodProductCard(
++                          brand: brand,
++                          product: categories[i].products[index],
++                          category: categories[i].name,
++                        ),
++                      ),
++                    ),
++                  ],
++                  const SliverToBoxAdapter(
++                    child: Center(child: PrivacyButton()),
++                  ),
++                  SliverToBoxAdapter(child: _BrandFooter(brand: brand)),
++                  const SliverToBoxAdapter(child: SizedBox(height: 86)),
+                 ],
+-                const SliverToBoxAdapter(child: Center(child: PrivacyButton())),
+-                SliverToBoxAdapter(child: _BrandFooter(brand: brand)),
+-                const SliverToBoxAdapter(child: SizedBox(height: 86)),
+-              ],
+-            ),
+-          );
+-        },
++              ),
++            );
++          },
++        ),
+       ),
+       bottomNavigationBar: SafeArea(
+         minimum: const EdgeInsets.fromLTRB(14, 7, 14, 10),
