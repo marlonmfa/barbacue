@@ -1,0 +1,46 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+    permissions:
+      all: deny
+- extendedWaitUntil:
+    visible: "(?s).*Aberto agora.*"
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: barbacue-${PLATFORM}-inicio-${TEST_DATE}
+- scrollUntilVisible:
+    element: "Adicionar"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: barbacue-${PLATFORM}-cardapio-${TEST_DATE}
+- tapOn:
+    text: "Adicionar"
+    index: 0
+- tapOn: "(?s).*Ver carrinho.*"
+- assertVisible: "Seu pedido"
+- waitForAnimationToEnd
+- takeScreenshot: barbacue-${PLATFORM}-carrinho-${TEST_DATE}
+- scrollUntilVisible:
+    element: "(?s).*Ir para pagamento.*"
+    direction: DOWN
+    centerElement: true
+- tapOn: "(?s).*Ir para pagamento.*"
+- scrollUntilVisible:
+    element: "(?s).*mínimo 2 caracteres.*"
+    direction: UP
+    centerElement: true
+- assertVisible: "Digite um número válido"
+- waitForAnimationToEnd
+- takeScreenshot: barbacue-${PLATFORM}-validacao-${TEST_DATE}
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: "(?s).*Ver carrinho.*"
+    timeout: 60000
+- tapOn: "(?s).*Ver carrinho.*"
+- assertVisible: "Seu pedido"
+- tapOn: "(?s).*Diminuir .*"
+- assertVisible: "Seu carrinho está vazio"
