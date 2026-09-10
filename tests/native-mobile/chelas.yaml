@@ -37,3 +37,10 @@ appId: ${APP_ID}
 - extendedWaitUntil:
     visible: "(?s).*66 ITENS.*"
     timeout: 60000
+- scrollUntilVisible:
+    element: "(?s).*Quesadilla de Frango.*"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: chelas-${PLATFORM}-cardapio-${TEST_DATE}
