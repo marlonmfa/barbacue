@@ -1,0 +1,46 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+    permissions:
+      all: deny
+- extendedWaitUntil:
+    visible: "(?s).*71 ITENS.*"
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: barbadog-${PLATFORM}-inicio-${TEST_DATE}
+- scrollUntilVisible:
+    element: "(?s).*Doguinho.*"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- assertVisible: "PEDIR NO IFOOD"
+- waitForAnimationToEnd
+- takeScreenshot: barbadog-${PLATFORM}-cardapio-${TEST_DATE}
+- repeat:
+    times: 65
+    while:
+      notVisible: "Privacidade e ajuda"
+    commands:
+      - swipe:
+          start: "50%, 82%"
+          end: "50%, 20%"
+          duration: 180
+          waitToSettleTimeoutMs: 200
+- tapOn: "Privacidade e ajuda"
+- assertVisible: "Barbadog"
+- assertVisible: "Política de privacidade"
+- assertVisible: "Suporte e contato"
+- takeScreenshot: barbadog-${PLATFORM}-privacidade-${TEST_DATE}
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: "(?s).*71 ITENS.*"
+    timeout: 60000
+- scrollUntilVisible:
+    element: "(?s).*Doguinho.*"
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: barbadog-${PLATFORM}-cardapio-${TEST_DATE}
