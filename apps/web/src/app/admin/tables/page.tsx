@@ -97,6 +97,11 @@ export default function AdminTables() {
         </button>
       </div>
 
+      <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-[#352b24] p-4 no-print">
+        <p className="flex-1 text-sm text-[#c8b89a]">Abra o autoatendimento no tablet. No balcão, o cliente informa o nome para retirar; nas mesas, use o link de cada mesa.</p>
+        <a href="/totem" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-[#ed1b24] px-4 py-3 text-sm font-semibold text-white">Abrir totem do balcão</a>
+      </div>
+
       {error && <p className="text-red-400 text-sm bg-red-950/40 rounded-xl px-4 py-2.5 mb-4 no-print">{error}</p>}
 
       {/* Create */}
@@ -156,6 +161,7 @@ export default function AdminTables() {
 
               {/* Controls */}
               <div className="w-full flex flex-wrap gap-2 no-print">
+                {t.active && <a href={`/totem?mesa=${t.token}`} target="_blank" rel="noopener noreferrer" className="w-full rounded-lg border border-[#352b24] px-3 py-3 text-center text-sm">Abrir tablet nesta mesa</a>}
                 <button onClick={() => patch(t.id, { active: !t.active })}
                   className="flex-1 text-xs border border-[#352b24] hover:bg-[#241d18] rounded-lg px-2 py-1.5">
                   {t.active ? "Desativar" : "Ativar"}

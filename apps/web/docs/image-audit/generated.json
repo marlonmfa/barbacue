@@ -1,0 +1,534 @@
+[
+  {
+    "key": "maionese",
+    "ids": [
+      96,
+      118,
+      127,
+      156
+    ],
+    "prompt": "Use case: product-mockup. Create one photorealistic restaurant menu photograph of a small matte ivory ramekin containing thick ivory seasoned mayonnaise with very fine herb specks. Only the ramekin and mayonnaise, no meal or extra ingredients. Warm cream tabletop background, soft daylight, realistic appetizing texture, three-quarter overhead view, centered entire bowl with generous margins, square composition. No text, logos, watermark or hands. This represents an individual sauce add-on, not a full dish.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-a86d870f-b4b4-4a0f-8354-2edb0dcb204a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "maionese-verde",
+    "ids": [
+      97,
+      162
+    ],
+    "prompt": "Use case: product-mockup. Asset: individual restaurant menu product photograph. Subject: A small ivory ramekin of smooth pale green herb mayonnaise; visibly green creamy sauce, nothing else. Style: photorealistic food catalog, natural textures, soft daylight, warm off-white cream tabletop and background. Composition: square, three-quarter overhead view, entire subject centered with 15 percent empty margins on all sides, restrained portion. No text, logos, watermark, hands, collage, or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-fa6947bd-99bd-4904-96ab-5d1ae9fa40eb.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "sweet-chilli",
+    "ids": [
+      98,
+      157
+    ],
+    "prompt": "Use case: product-mockup. Asset: individual restaurant menu product photograph. Subject: A small ivory ramekin of glossy translucent orange-red sweet chilli sauce with tiny red chili flakes. Style: photorealistic food catalog, natural textures, soft daylight, warm off-white cream tabletop and background. Composition: square, three-quarter overhead view, entire subject centered with 15 percent empty margins on all sides, restrained portion. No text, logos, watermark, hands, collage, or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-eb056d09-4d18-49a1-8ef1-982b7135ce58.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "chipotle",
+    "ids": [
+      100,
+      124,
+      126,
+      159
+    ],
+    "prompt": "Use case: product-mockup. Asset: individual restaurant menu product photograph. Subject: A small ivory ramekin of smooth smoky pale terracotta-orange chipotle mayonnaise. Style: photorealistic food catalog, natural textures, soft daylight, warm off-white cream tabletop and background. Composition: square, three-quarter overhead view, entire subject centered with 15 percent empty margins on all sides, restrained portion. No text, logos, watermark, hands, collage, or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-3543221d-cc0c-4276-84cd-db8bc635e017.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "barbecue",
+    "ids": [
+      99,
+      121,
+      158
+    ],
+    "prompt": "Use case: product-mockup. Asset: individual restaurant menu product photograph. Subject: A small ivory ramekin of thick smooth dark reddish-brown barbecue sauce. Style: photorealistic food catalog, natural textures, soft daylight, warm off-white cream tabletop and background. Composition: square, three-quarter overhead view, entire subject centered with 15 percent empty margins on all sides, restrained portion. No text, logos, watermark, hands, collage, or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-44430b40-0094-41fe-9769-9e453a61879a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "creme-queijos",
+    "ids": [
+      101,
+      161,
+      180
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small ivory ramekin of smooth warm ivory melted cheese cream, creamy and flowing, not shredded cheese. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-922cd6ea-5d76-4579-93c6-b7a44cc33437.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "entrecot",
+    "ids": [
+      104,
+      130
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One cooked grilled entrecote steak on an ivory plate, browned exterior, a few slices showing juicy medium center. No raw meat and no side dishes. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-be17e9f2-e3b4-475c-8024-ac36f01242c3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "alface",
+    "ids": [
+      112,
+      137
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small arrangement of fresh crisp pale-green iceberg lettuce leaves on an ivory plate. Only lettuce, no salad dressing or other vegetables. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-d143ebe8-113e-4aff-a6e1-c4ff49c4ac05.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "hamburguer-extra",
+    "ids": [
+      102,
+      119,
+      145
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One cooked thick flame-grilled beef burger patty, browned crust and char lines, on a small ivory plate. No bread, no vegetables, no cheese, no raw meat. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-1eceb127-3f34-4cef-922b-f8208f2107bd.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "bacon",
+    "ids": [
+      114,
+      142,
+      179
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small ivory plate of crisp cooked bacon strips with natural golden fat and reddish-brown edges. Only bacon; no pasta, eggs or bread. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-9d780b09-9263-4357-9175-df98b84e679e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "costela",
+    "ids": [
+      122,
+      146
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small ivory bowl of moist shredded slow-cooked beef short ribs, rich brown meat fibers with lightly charred edges. Only shredded beef, no bread or side dishes. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-a40720c8-7fe9-469c-b6ef-c9078a1f70c7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "brie",
+    "ids": [
+      117,
+      143
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small wedge of brie cheese with white bloomy rind and creamy interior plus two thin slices, on an ivory plate. No bread or eggs. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-ed75584c-6508-4f0a-b94e-2d9ae75ab17c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "combo-semana",
+    "ids": [
+      17
+    ],
+    "prompt": "Use case: product-mockup. New photorealistic menu photograph for Barbacue. Input images are identity references for the burgers, preserve their characteristic bun, patty and fillings. Subject: One Barba Burguer (reference image 1: sesame house bun, one beef patty, ivory cheese cream and mayonnaise only, no lettuce, tomato or sliced cheddar), one small portion straight fries, one small clear cup of walnut milk-cream dessert, and one Coca-Cola 200ml miniature plastic bottle. Exactly these four components. Warm cream tabletop, soft natural side lighting, appetizing realistic food photography, three-quarter view. Landscape 4:3 composition, all items fully visible with generous margins. No collage, price text, headlines, watermarks or additional dishes. Beverage packaging where requested should be recognizable and correctly proportioned.",
+    "refs": [
+      3
+    ],
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-f18b023f-5010-4a66-a058-574c82b27c46.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "combo-supreme",
+    "ids": [
+      21
+    ],
+    "prompt": "Use case: product-mockup. New photorealistic menu photograph for Barbacue. Input images are identity references for the burgers, preserve their characteristic bun, patty and fillings. Subject: One Supreme burger matching reference image 1: house bun, green mayonnaise, single grilled beef patty, ivory cheese cream, golden fried tapioca cheese strips and caramelized bacon, NO lettuce or tomato. With one small portion straight fries and one Coca-Cola red 350ml can. Exactly these three components. Warm cream tabletop, soft natural side lighting, appetizing realistic food photography, three-quarter view. Landscape 4:3 composition, all items fully visible with generous margins. No collage, price text, headlines, watermarks or additional dishes. Beverage packaging where requested should be recognizable and correctly proportioned.",
+    "refs": [
+      2
+    ],
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-2e5ab3ee-145b-42a8-8307-76912d31c6fa.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "combo-crunch",
+    "ids": [
+      22
+    ],
+    "prompt": "Use case: product-mockup. New photorealistic menu photograph for Barbacue. Input images are identity references for the burgers, preserve their characteristic bun, patty and fillings. Subject: One Crunch burger matching reference image 1: house bun, white mayonnaise, iceberg lettuce, one grilled beef patty, one thick round golden breaded fried white cream-cheese disk and barbecue sauce. NO sliced cheddar or tomato. One small portion straight fries and one Coca-Cola red 350ml can. Exactly these three components. Warm cream tabletop, soft natural side lighting, appetizing realistic food photography, three-quarter view. Landscape 4:3 composition, all items fully visible with generous margins. No collage, price text, headlines, watermarks or additional dishes. Beverage packaging where requested should be recognizable and correctly proportioned.",
+    "refs": [
+      1
+    ],
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-da433f01-a8be-4e72-ad89-19df40042f8e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "combo-cordeiro",
+    "ids": [
+      32
+    ],
+    "prompt": "Use case: product-mockup. New photorealistic menu photograph for Barbacue. Input images are identity references for the burgers, preserve their characteristic bun, patty and fillings. Subject: One lamb burger matching reference image 1: house bun, iceberg lettuce, arugula, one grilled lamb patty, grilled mozzarella, chimichurri and white mayonnaise. With one small portion straight fries and one Coca-Cola red 350ml can. Exactly these three components. Warm cream tabletop, soft natural side lighting, appetizing realistic food photography, three-quarter view. Landscape 4:3 composition, all items fully visible with generous margins. No collage, price text, headlines, watermarks or additional dishes. Beverage packaging where requested should be recognizable and correctly proportioned.",
+    "refs": [
+      15
+    ],
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-fe6f3d29-3cce-4f9b-8c9f-4b66a1cee146.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "combo-1",
+    "ids": [
+      34
+    ],
+    "prompt": "Use case: product-mockup. New photorealistic menu photograph for Barbacue. Input images are identity references for the burgers, preserve their characteristic bun, patty and fillings. Subject: Exactly two distinct burgers: reference image 1 Barba Burguer (house bun, beef patty, cheese cream and mayo, NO vegetables); reference image 2 Barba Salada (house bun, beef patty, iceberg lettuce, arugula, red onion, pickles, tomato jam and cheese cream). One shared portion straight fries and exactly one Coca-Cola 600ml plastic bottle. No other food. Warm cream tabletop, soft natural side lighting, appetizing realistic food photography, three-quarter view. Landscape 4:3 composition, all items fully visible with generous margins. No collage, price text, headlines, watermarks or additional dishes. Beverage packaging where requested should be recognizable and correctly proportioned.",
+    "refs": [
+      3,
+      5
+    ],
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-874201d4-a40d-49ef-8d1d-39f19738a51a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "combo-2",
+    "ids": [
+      35
+    ],
+    "prompt": "Use case: product-mockup. New photorealistic menu photograph for Barbacue. Input images are identity references for the burgers, preserve their characteristic bun, patty and fillings. Subject: Exactly THREE burgers and NOTHING else: reference image 1 El Cocinero with dark Australian bun, beef patty, red onion chutney, white cheese cream and mayo; reference image 2 Barba Salada with house bun, beef patty, iceberg lettuce, arugula, pickles, red onion, tomato jam and cheese cream; reference image 3 Do Barba with house bun, beef patty, iceberg lettuce, bacon strips, ivory gorgonzola cream and mayo. No fries, drinks, onions rings or side dishes. Warm cream tabletop, soft natural side lighting, appetizing realistic food photography, three-quarter view. Landscape 4:3 composition, all items fully visible with generous margins. No collage, price text, headlines, watermarks or additional dishes. Beverage packaging where requested should be recognizable and correctly proportioned.",
+    "refs": [
+      7,
+      5,
+      9
+    ],
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-548e8d27-c143-4b83-8579-7bc49ea68ef9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "combo-3",
+    "ids": [
+      36
+    ],
+    "prompt": "Use case: product-mockup. New photorealistic menu photograph for Barbacue. Input images are identity references for the burgers, preserve their characteristic bun, patty and fillings. Subject: Exactly two identical Barba Burguer sandwiches matching reference image 1: house sesame bun, single thick beef patty, ivory cheese cream and mayonnaise ONLY, no vegetables or cheddar slices. Exactly two separate small portions straight fries, and exactly two Coca-Cola 200ml miniature plastic bottles. No other food. Warm cream tabletop, soft natural side lighting, appetizing realistic food photography, three-quarter view. Landscape 4:3 composition, all items fully visible with generous margins. No collage, price text, headlines, watermarks or additional dishes. Beverage packaging where requested should be recognizable and correctly proportioned.\nFinal edit: Use case: precise-object-edit. Edit target: the attached combo photograph. Change ONLY the small printed volume marking on the right-hand Coca-Cola bottle label to the exact text '200 ml'. Both bottles are 200 ml. Keep the bottles, burgers, fries, plate-free arrangement, lighting, camera perspective and every other part of the photograph unchanged. Do not add anything.",
+    "refs": [
+      3
+    ],
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-da80644d-3459-41de-a8cf-51ebf599ceb7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "combo-tex-mex",
+    "ids": [
+      37
+    ],
+    "prompt": "Use case: product-mockup. New photorealistic menu photograph for Barbacue. Input images are identity references for the burgers, preserve their characteristic bun, patty and fillings. Subject: Exactly two example Barbacue burgers based on references 1 and 2 (El Cocinero and Barba Salada), one bowl of beef chilli topped with melted cheese cream, and one plate of plain yellow corn tortilla chips. No fries, drinks, guacamole, sour cream or pico de gallo because those are extra options. No text or promotion artwork. Warm cream tabletop, soft natural side lighting, appetizing realistic food photography, three-quarter view. Landscape 4:3 composition, all items fully visible with generous margins. No collage, price text, headlines, watermarks or additional dishes. Beverage packaging where requested should be recognizable and correctly proportioned.",
+    "refs": [
+      7,
+      5
+    ],
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-cd99cbae-5d38-4637-9c26-f18d7a0deb0c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "geleia-tomate",
+    "ids": [
+      123,
+      140,
+      160
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small ivory ramekin of glossy deep red tomato jam with small pieces of tomato. Only jam, no meal, packaging or cheese. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-60a71895-5913-4ad1-ad66-99afb09d8178.png by default"
+  },
+  {
+    "key": "chutney-cebola",
+    "ids": [
+      125,
+      141
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small ivory ramekin of glossy dark purple caramelized red onion chutney; fine soft onion strands clearly visible. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-57e8682d-7226-4f05-9ff1-75603b6e0ebd.png by default"
+  },
+  {
+    "key": "gorgonzola",
+    "ids": [
+      129
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small ivory ramekin of smooth creamy pale ivory gorgonzola sauce with a few tiny blue cheese flecks. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-5b90b31e-886a-4636-8f05-02d93d0a258c.png by default"
+  },
+  {
+    "key": "chimichurri",
+    "ids": [
+      131
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small ivory ramekin of authentic chimichurri: finely chopped green parsley and garlic in olive oil with tiny red chili flakes. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-8d81ab26-7672-4094-b3d5-fc34038d317a.png by default"
+  },
+  {
+    "key": "farofa",
+    "ids": [
+      128
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small ivory bowl of golden toasted Brazilian cassava flour farofa, fine dry crumbly texture. No meat, sausages, eggs or other dishes. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-70508a88-cf93-4e0d-ab73-a2c45245b9d2.png by default"
+  },
+  {
+    "key": "ovomaltine",
+    "ids": [
+      132,
+      178,
+      193
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small ivory ramekin of thick glossy chocolate malt spread with fine crunchy malt crumbs mixed in. Only chocolate malt cream, no cake or ice cream. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-4d877231-df6b-4c8a-b09c-b54a24f1e929.png by default"
+  },
+  {
+    "key": "doce-leite",
+    "ids": [
+      133,
+      184,
+      194
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small ivory ramekin of thick glossy caramel-brown dulce de leche, swirled with a spoon. Only the cream, no cakes or biscuits. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-be3cb30e-8a2e-44c0-a6f6-eb582024122e.png by default"
+  },
+  {
+    "key": "creme-avela",
+    "ids": [
+      134,
+      185,
+      192
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small ivory ramekin of smooth glossy chocolate hazelnut spread. Only the spread, no jars, packaging, bread or cookies. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-4390888b-aaad-4c41-80f4-bac600b9b5a7.png by default"
+  },
+  {
+    "key": "agua-com-gas",
+    "ids": [
+      136
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One clear straight drinking glass filled with sparkling mineral water, many tiny bubbles rising visibly, no ice or garnish. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-4a749aed-4e9e-4b89-9329-cd032926dd71.png by default"
+  },
+  {
+    "key": "agua-sem-gas",
+    "ids": [
+      135
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One clear straight drinking glass filled with still mineral water, no bubbles, no ice or garnish. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-4b3e341a-f828-4777-a6b1-5400ecbd832d.png by default"
+  },
+  {
+    "key": "rucula",
+    "ids": [
+      139
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small handful of fresh dark green arugula leaves, distinctly long lobed rocket leaves, on a small ivory plate. No flowers, no lettuce or other ingredients. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-4c35dcab-67eb-4308-a0ec-c5f720efde43.png by default"
+  },
+  {
+    "key": "cheddar",
+    "ids": [
+      144
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: Exactly two square slices of orange-yellow processed cheddar cheese, slightly overlapping on an ivory plate. No packaging, fork, bread or other ingredients. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-281a442c-d542-42fb-ab74-19513aa7e336.png by default"
+  },
+  {
+    "key": "catupiry",
+    "ids": [
+      150
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One round golden breaded fried cream-cheese disk on a small ivory plate, cut in half to show thick creamy white filling. Not a burger or shredded cheese. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-fe3b5f1f-63b3-45a2-a2f3-15075031cffc.png by default"
+  },
+  {
+    "key": "pessego",
+    "ids": [
+      165
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One ripe peach and one halved peach with pit visible on warm cream tabletop. Ingredient illustration for peach juice flavor, no can or glass. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-5b31a380-f0fc-4620-87e1-a2bec7e7a206.png by default"
+  },
+  {
+    "key": "manga",
+    "ids": [
+      163
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One ripe mango with an orange cheek sliced into cubes beside it, whole fruit and cut fruit on warm cream tabletop. Ingredient illustration for mango juice flavor, no can or glass. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-9508c013-f90e-40a4-88ea-e8372aa1795c.png by default"
+  },
+  {
+    "key": "uva",
+    "ids": [
+      166
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: A small bunch of ripe purple grapes with one green leaf on warm cream tabletop. Ingredient illustration for grape juice flavor, no candy, can or glass. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-ed9f6bb8-0669-4b6a-aa0e-a2fe119e5226.png by default"
+  },
+  {
+    "key": "maracuja",
+    "ids": [
+      164
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: Two passionfruits, one whole and one halved showing golden pulp with black seeds on warm cream tabletop. Ingredient illustration for passionfruit juice flavor, no can or glass. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-d01683b8-c65a-4938-8089-9d357226ee1f.png by default"
+  },
+  {
+    "key": "caipirinha-abacaxi",
+    "ids": [
+      171
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One short clear rocks glass of pineapple and mint caipirinha with pale yellow liquid, pineapple chunks, crushed ice and fresh mint leaves. No lime, no straw. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-665921eb-a226-4102-ae30-fd2ab1e6da31.png by default"
+  },
+  {
+    "key": "caipirinha-morango",
+    "ids": [
+      170
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One short clear rocks glass of strawberry caipirinha with red strawberry pieces, crushed ice and pink-red liquid. No lime or other fruit, no straw. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-8912b2ff-ed7e-4746-8300-9fbc05c3ecbb.png by default"
+  },
+  {
+    "key": "strogonoff-nozes",
+    "ids": [
+      172
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One small clear dessert cup filled with creamy pale caramel walnut dessert, visible walnut pieces and a few walnuts on top. Chilled Brazilian strogonoff de nozes, no meat. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-170143d8-417c-408d-92e2-74e705f68627.png by default"
+  },
+  {
+    "key": "gelado-uva",
+    "ids": [
+      173
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One clear dessert cup with layers of thick white milk cream, green grape halves, and a thin chocolate topping. Brazilian gelado de uva dessert, no candy packaging. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-367b0cca-c9d1-4d6e-a999-859a7c7a0486.png by default"
+  },
+  {
+    "key": "gelado-morango",
+    "ids": [
+      174
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One clear dessert cup with white milk cream, a layer of red strawberry jam and a thin chocolate topping. Brazilian gelado de morango dessert, not a drink. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-7e3c8df0-52ab-4cda-ae77-d85f358c0ddc.png by default"
+  },
+  {
+    "key": "brigadeiro-negresco",
+    "ids": [
+      177
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One small ivory dessert ramekin of thick spoonable dark chocolate brigadeiro topped with crumbled dark chocolate sandwich cookies. No ice cream or cake. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-0b4eaa78-6e35-480a-bce4-61e3153f05fb.png by default"
+  },
+  {
+    "key": "gin-melancia",
+    "ids": [
+      106
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One clear stemmed balloon glass of pale pink watermelon gin cocktail, ice, fresh mint and a thin lime slice. No orange, no whiskey glass. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-8b5003ec-6ef5-4f20-b0e7-f2d3c0a554e7.png by default"
+  },
+  {
+    "key": "brigadeiro",
+    "ids": [
+      195
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One small ivory ramekin of thick glossy dark chocolate brigadeiro cream with chocolate sprinkles. Spoonable filling, no cake, no truffles. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-8d29e3f9-ac14-4f64-9a32-190241ceb6ab.png by default"
+  },
+  {
+    "key": "beef-melt-fries",
+    "ids": [
+      38
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: An ivory shallow bowl of golden straight fries topped with shredded braised beef ribs, melted ivory cheese cream, dark barbecue sauce and a small dollop of sour cream. Only those ingredients; no burger. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-0a2e568b-4cd1-4ef9-948a-b38a40db8966.png by default"
+  },
+  {
+    "key": "gin-tropical",
+    "ids": [
+      105
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One clear stemmed balloon glass containing golden yellow tropical gin cocktail, ice cubes and two thin lime slices. No orange slices, no whiskey glass, no branded packaging. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-c4f15674-dd10-4d57-ad23-96762e8e5c04.png by default"
+  },
+  {
+    "key": "salada",
+    "ids": [
+      40
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: An ivory bowl of iceberg lettuce, arugula, cherry tomato halves and golden croutons with a small ramekin of pale seasoned mayonnaise beside it. No spinach, cucumber, cheese or olives. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-9b329a1d-aaa2-4cbc-a18f-826ec753df6d.png by default"
+  },
+  {
+    "key": "quesadilla-doce",
+    "ids": [
+      58
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One lightly toasted closed folded flour tortilla on an ivory plate, subtle cinnamon sugar dusting, sweet quesadilla. Filling not visible because the menu does not specify it. No meat, vegetables, chocolate drizzle, side dishes or extra toppings. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins, modest portion. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-0a0f73cc-3917-4c15-b75e-710a5bdc95ca.png by default"
+  },
+  {
+    "key": "tortillas",
+    "ids": [
+      49
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: An ivory plate of crisp triangular yellow corn tortilla chips, with three small ramekins containing green guacamole, white sour cream and red pico de gallo. No watermark or other dishes. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins. Respect exact item count, all units intact and separated so they can be counted. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-2ca7e87a-bc83-4fd8-8aa8-fac2100f03de.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "onion-rings",
+    "ids": [
+      149,
+      155
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: Exactly four golden breaded fried onion rings on an ivory plate. Only four rings, no sauce or other food. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins. Respect exact item count, all units intact and separated so they can be counted. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-9f11fa29-0ed6-4f19-ac8a-77c317d0e10c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "mini-churros",
+    "ids": [
+      186
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: Exactly six short bite-size mini churros dusted with cinnamon sugar on an ivory plate. Only six mini churros, no dips or other desserts. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with 15 percent empty margins. Respect exact item count, all units intact and separated so they can be counted. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-9270851a-28a9-4dd0-bd12-85ed50c966aa.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "vegetariano-couve",
+    "ids": [
+      110
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One cooked golden cauliflower and leek vegetarian burger patty, visible cauliflower texture and tiny leek pieces, on an ivory plate. Only the patty, no bun, meat or cheese. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter view, entire subject centered with 15 percent empty margins. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-e6397ebd-90e8-4b59-8be7-f177c1f80aab.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "vegetariano-cevada",
+    "ids": [
+      111
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One cooked brown barley and mushroom vegetarian burger patty with visible grains and mushroom pieces on an ivory plate. Only the patty, no bun, meat or cheese. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter view, entire subject centered with 15 percent empty margins. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-1c946967-958c-4800-8663-43e93f815f54.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "white-rose",
+    "ids": [
+      86
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One slender tall wheat beer glass containing cloudy pale golden wheat beer with a white foam head. This represents White Rose wheat beer; do not invent a bottle label or show a pilsner bottle. No packaging or garnish. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter view, entire subject centered with 15 percent empty margins. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-68d89e41-1b85-43da-a611-a9bb2adb9350.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "entrecot-fritas",
+    "ids": [
+      47
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: Exactly two flame-grilled cooked entrecote steaks, browned and juicy, with one portion golden straight French fries on an ivory platter. No raw meat, sauces or other sides. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter view, entire subject centered with 15 percent empty margins. No text, logos, watermark, hands, collage or unrelated food.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-2416e63c-87ed-474f-ba3f-97fe4e6a5299.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "gouda-empanado",
+    "ids": [
+      93,
+      115,
+      154
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: Exactly FOUR intact golden breaded gouda cheese sticks, arranged in a two-by-two layout on one ivory plate. All four sticks whole and individually countable; none broken, none cut, none hidden. Only four sticks, no sauce. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with generous margins. No text, logos, watermark, hands or collage.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-056b875d-81bc-49b1-a355-646f621edc3c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "prestigio",
+    "ids": [
+      175
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One small clear cup of chilled coconut milk cream with a thin dark chocolate topping and a little shredded coconut. Brazilian coconut chocolate dessert, no cake, no candy bar. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with generous margins. No text, logos, watermark, hands or collage.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-4fb32a6e-7104-4c2b-8cd3-1501f3f71b05.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "creme-maracuja",
+    "ids": [
+      176
+    ],
+    "prompt": "Use case: product-mockup. Individual restaurant menu photograph. Subject: One small clear cup of smooth pale yellow passionfruit dessert cream, topped with a little golden passionfruit pulp and black seeds. No cake or extra dishes. Photorealistic natural food texture, soft daylight, warm cream tabletop and background. Square, three-quarter overhead view, entire subject centered with generous margins. No text, logos, watermark, hands or collage.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030 as /Users/marlonalcantara/.codex/generated_images/01a07858-65e8-7b73-a97b-2237205d4030/exec-f72031b9-9b34-4207-b6a1-de7f6c6408f5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  }
+]

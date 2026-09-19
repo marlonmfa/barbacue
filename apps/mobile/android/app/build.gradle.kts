@@ -35,6 +35,28 @@ android {
         versionName = flutter.versionName
     }
 
+    flavorDimensions += "restaurant"
+    productFlavors {
+        create("barbacue") {
+            dimension = "restaurant"
+            applicationId = "com.lanchesdobarba.barbacue"
+            resValue("string", "app_name", "BARBACUE")
+            manifestPlaceholders["appHost"] = "barbacue.cog.ia.br"
+        }
+        create("chelas") {
+            dimension = "restaurant"
+            applicationId = "com.lanchesdobarba.chelas"
+            resValue("string", "app_name", "Chelas")
+            manifestPlaceholders["appHost"] = "chelas.hirableaiagents.com"
+        }
+        create("barbadog") {
+            dimension = "restaurant"
+            applicationId = "com.lanchesdobarba.barbadog"
+            resValue("string", "app_name", "Barbadog")
+            manifestPlaceholders["appHost"] = "barbadog.hirableaiagents.com"
+        }
+    }
+
     signingConfigs {
         create("release") {
             keyAlias = keyProperties["keyAlias"] as String?

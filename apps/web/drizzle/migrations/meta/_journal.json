@@ -50,6 +50,55 @@
       "when": 1783618748273,
       "tag": "0006_fancy_wallop",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1788724800007,
+      "tag": "0007_employees",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1788724800008,
+      "tag": "0008_brand_catalog_products",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1788724800009,
+      "tag": "0009_orders_brand",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1788724800010,
+      "tag": "0010_access_permissions",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1788724800011,
+      "tag": "0011_self_service_printing",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1788811200012,
+      "tag": "0012_delivery_and_roles",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1788998400013,
+      "tag": "0013_all_channel_printing",
+      "breakpoints": true
     }
   ]
 }

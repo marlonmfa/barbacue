@@ -90,6 +90,9 @@ void main() {
   }) {
     final sent = <http.Request>[];
     ApiService.client = MockClient((req) async {
+      if (req.url.path == '/api/delivery/quote' && req.method == 'GET') {
+        return http.Response('{"enabled":false}', 200);
+      }
       sent.add(req);
       if (req.url.path == '/api/coupons') {
         return coupon ?? http.Response('{"error":"Cupom inválido"}', 404);

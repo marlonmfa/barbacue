@@ -1,0 +1,297 @@
+[
+  {
+    "key": "agua-com-gas",
+    "ok": true,
+    "bytes": 60272
+  },
+  {
+    "key": "agua-sem-gas",
+    "ok": true,
+    "bytes": 51146
+  },
+  {
+    "key": "alface",
+    "ok": true,
+    "bytes": 50820
+  },
+  {
+    "key": "bacon",
+    "ok": true,
+    "bytes": 100264
+  },
+  {
+    "key": "barbecue",
+    "ok": true,
+    "bytes": 74558
+  },
+  {
+    "key": "beef-melt-fries",
+    "ok": true,
+    "bytes": 97344
+  },
+  {
+    "key": "brie",
+    "ok": true,
+    "bytes": 34280
+  },
+  {
+    "key": "brigadeiro",
+    "ok": true,
+    "bytes": 79200
+  },
+  {
+    "key": "brigadeiro-negresco",
+    "ok": true,
+    "bytes": 76124
+  },
+  {
+    "key": "caipirinha-abacaxi",
+    "ok": true,
+    "bytes": 78028
+  },
+  {
+    "key": "caipirinha-morango",
+    "ok": true,
+    "bytes": 67052
+  },
+  {
+    "key": "catupiry",
+    "ok": true,
+    "bytes": 78112
+  },
+  {
+    "key": "cheddar",
+    "ok": true,
+    "bytes": 31492
+  },
+  {
+    "key": "chimichurri",
+    "ok": true,
+    "bytes": 92238
+  },
+  {
+    "key": "chipotle",
+    "ok": true,
+    "bytes": 50998
+  },
+  {
+    "key": "chutney-cebola",
+    "ok": true,
+    "bytes": 80830
+  },
+  {
+    "key": "combo-1",
+    "ok": true,
+    "bytes": 67386
+  },
+  {
+    "key": "combo-2",
+    "ok": true,
+    "bytes": 92814
+  },
+  {
+    "key": "combo-3",
+    "ok": true,
+    "bytes": 90150
+  },
+  {
+    "key": "combo-cordeiro",
+    "ok": true,
+    "bytes": 72176
+  },
+  {
+    "key": "combo-crunch",
+    "ok": true,
+    "bytes": 72584
+  },
+  {
+    "key": "combo-semana",
+    "ok": true,
+    "bytes": 57244
+  },
+  {
+    "key": "combo-supreme",
+    "ok": true,
+    "bytes": 58306
+  },
+  {
+    "key": "combo-tex-mex",
+    "ok": true,
+    "bytes": 105976
+  },
+  {
+    "key": "costela",
+    "ok": true,
+    "bytes": 94250
+  },
+  {
+    "key": "creme-avela",
+    "ok": true,
+    "bytes": 61142
+  },
+  {
+    "key": "creme-maracuja",
+    "ok": true,
+    "bytes": 54438
+  },
+  {
+    "key": "creme-queijos",
+    "ok": true,
+    "bytes": 30346
+  },
+  {
+    "key": "doce-leite",
+    "ok": true,
+    "bytes": 56658
+  },
+  {
+    "key": "entrecot",
+    "ok": true,
+    "bytes": 96620
+  },
+  {
+    "key": "entrecot-fritas",
+    "ok": true,
+    "bytes": 126436
+  },
+  {
+    "key": "farofa",
+    "ok": true,
+    "bytes": 136572
+  },
+  {
+    "key": "gelado-morango",
+    "ok": true,
+    "bytes": 57912
+  },
+  {
+    "key": "gelado-uva",
+    "ok": true,
+    "bytes": 39602
+  },
+  {
+    "key": "geleia-tomate",
+    "ok": true,
+    "bytes": 66934
+  },
+  {
+    "key": "gin-melancia",
+    "ok": true,
+    "bytes": 67042
+  },
+  {
+    "key": "gin-tropical",
+    "ok": true,
+    "bytes": 61404
+  },
+  {
+    "key": "gorgonzola",
+    "ok": true,
+    "bytes": 31286
+  },
+  {
+    "key": "gouda-empanado",
+    "ok": true,
+    "bytes": 54458
+  },
+  {
+    "key": "hamburguer-extra",
+    "ok": true,
+    "bytes": 110540
+  },
+  {
+    "key": "maionese",
+    "ok": true,
+    "bytes": 39390
+  },
+  {
+    "key": "maionese-verde",
+    "ok": true,
+    "bytes": 60256
+  },
+  {
+    "key": "manga",
+    "ok": true,
+    "bytes": 62914
+  },
+  {
+    "key": "maracuja",
+    "ok": true,
+    "bytes": 70320
+  },
+  {
+    "key": "mini-churros",
+    "ok": true,
+    "bytes": 91978
+  },
+  {
+    "key": "onion-rings",
+    "ok": true,
+    "bytes": 76944
+  },
+  {
+    "key": "ovomaltine",
+    "ok": true,
+    "bytes": 94588
+  },
+  {
+    "key": "pessego",
+    "ok": true,
+    "bytes": 74592
+  },
+  {
+    "key": "prestigio",
+    "ok": true,
+    "bytes": 35032
+  },
+  {
+    "key": "quesadilla-doce",
+    "ok": true,
+    "bytes": 95224
+  },
+  {
+    "key": "rucula",
+    "ok": true,
+    "bytes": 67796
+  },
+  {
+    "key": "salada",
+    "ok": true,
+    "bytes": 95850
+  },
+  {
+    "key": "strogonoff-nozes",
+    "ok": true,
+    "bytes": 50966
+  },
+  {
+    "key": "sweet-chilli",
+    "ok": true,
+    "bytes": 52864
+  },
+  {
+    "key": "tortillas",
+    "ok": true,
+    "bytes": 110966
+  },
+  {
+    "key": "uva",
+    "ok": true,
+    "bytes": 58726
+  },
+  {
+    "key": "vegetariano-cevada",
+    "ok": true,
+    "bytes": 122874
+  },
+  {
+    "key": "vegetariano-couve",
+    "ok": true,
+    "bytes": 82712
+  },
+  {
+    "key": "white-rose",
+    "ok": true,
+    "bytes": 37406
+  }
+]

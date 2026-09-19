@@ -1,0 +1,3 @@
+{
+  "/api/print-agent/jobs/[id]/complete/route": "app/api/print-agent/jobs/[id]/complete/route.js"
+}

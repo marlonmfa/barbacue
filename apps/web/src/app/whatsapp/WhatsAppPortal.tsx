@@ -5,14 +5,14 @@ import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./whatsapp.module.css";
 
-type Brand = "barbacue" | "chelas" | "barbadogs";
+type Brand = "barbacue" | "chelas" | "barbadog";
 type Filter = Brand | "all";
-type Account = { id: Brand; status: "disconnected" | "connecting" | "qr_ready" | "connected"; qrDataUrl: string | null; phoneNumber: string | null; pairingCode: string | null; lastError?: string | null };
+type Account = { id: "central"; status: "disconnected" | "connecting" | "qr_ready" | "connected"; qrDataUrl: string | null; phoneNumber: string | null; pairingCode: string | null; lastError?: string | null };
 type Chat = { account: Brand; jid: string; name: string; avatar: string | null; lastMessage: string; lastType: string; timestamp: number; unread: number; isGroup: boolean };
 type Message = { id: string; account: Brand; jid: string; fromMe: boolean; type: string; text: string; timestamp: number; mediaUrl: string | null };
 
 const brands: Record<Brand, { name: string; short: string }> = {
-  barbacue: { name: "Barbacue", short: "B" }, chelas: { name: "Chelas", short: "C" }, barbadogs: { name: "Barbadogs", short: "D" },
+  barbacue: { name: "Barbacue", short: "B" }, chelas: { name: "Chelas", short: "C" }, barbadog: { name: "Barbadog", short: "D" },
 };
 
 function Icon({ name, size = 20 }: { name: string; size?: number }) {
@@ -41,7 +41,7 @@ export function WhatsAppPortal() {
   const [active, setActive] = useState<Chat | null>(null);
   const [search, setSearch] = useState("");
   const [draft, setDraft] = useState("");
-  const [pairing, setPairing] = useState<Brand | null>(null);
+  const [pairing, setPairing] = useState<"central" | null>(null);
   const [method, setMethod] = useState<"qr" | "phone">("qr");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
@@ -78,9 +78,9 @@ export function WhatsAppPortal() {
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
   const visible = useMemo(() => chats.filter((chat) => `${chat.name} ${chat.lastMessage}`.toLowerCase().includes(search.toLowerCase())), [chats, search]);
-  const currentAccount = pairing ? accounts.find((item) => item.id === pairing) : null;
+  const currentAccount = accounts[0] ?? null;
 
-  function openPairModal(id: Brand) { setPairError(""); setPairing(id); }
+  function openPairModal() { setPairError(""); setPairing("central"); }
   function switchMethod(next: "qr" | "phone") { setPairError(""); setMethod(next); }
 
   // Leaving the modal tells the bot to stop refreshing the QR. Without it the
@@ -126,11 +126,11 @@ export function WhatsAppPortal() {
       <header className={styles.topbar}>
         <div className={styles.identity}><span className={styles.mark}>B</span><div><b>Central WhatsApp</b><span>Barbacue & Co.</span></div></div>
         <nav className={styles.brandTabs} aria-label="Restaurantes">
-          {(["all", "barbacue", "chelas", "barbadogs"] as Filter[]).map((id) => <button key={id} onClick={() => { setFilter(id); setActive(null); }} className={filter === id ? styles.selectedTab : ""}><span className={id === "all" ? styles.allDot : styles[id]}>{id === "all" ? "3" : brands[id].short}</span>{id === "all" ? "Todos" : brands[id].name}</button>)}
+          {(["all", "barbacue", "barbadog", "chelas"] as Filter[]).map((id) => <button key={id} onClick={() => { setFilter(id); setActive(null); }} className={filter === id ? styles.selectedTab : ""}><span className={id === "all" ? styles.allDot : styles[id]}>{id === "all" ? "3" : brands[id].short}</span>{id === "all" ? "Todos" : brands[id].name}</button>)}
         </nav>
         <div className={styles.accountActions}>
-          <div className={styles.connectionSummary}>{accounts.filter((a) => a.status === "connected").length}<span>/ 3 online</span></div>
-          <button className={styles.pairButton} onClick={() => openPairModal(filter === "all" ? "barbacue" : filter)}><Icon name="plus" size={17}/> Parear número</button>
+          <div className={styles.connectionSummary}>{accounts.filter((a) => a.status === "connected").length}<span>/ 1 número online</span></div>
+          <button className={styles.pairButton} onClick={openPairModal}><Icon name="plus" size={17}/> Parear número</button>
           <Link href="/admin" className={styles.adminLink} aria-label="Voltar ao painel"><Icon name="dots"/></Link>
         </div>
       </header>
@@ -146,7 +146,7 @@ export function WhatsAppPortal() {
               <div className={styles.avatar}>{chat.avatar ? <span className={styles.profilePhoto} style={{ backgroundImage: `url(${chat.avatar})` }}/> : chat.name.slice(0, 1).toUpperCase()}<i className={styles[chat.account]}/></div>
               <div className={styles.chatCopy}><div><strong>{chat.name}</strong><time>{time(chat.timestamp)}</time></div><div><span>{chat.lastType !== "text" ? "▧ " : ""}{chat.lastMessage}</span>{chat.unread > 0 && <b>{Math.min(chat.unread, 99)}</b>}</div><small>{brands[chat.account].name}</small></div>
             </button>)}
-            {!visible.length && <div className={styles.emptyList}><span>◌</span><b>Nenhuma conversa por aqui</b><p>As mensagens aparecem assim que os números conectados recebem um contato.</p></div>}
+            {!visible.length && <div className={styles.emptyList}><span>◌</span><b>Nenhuma conversa por aqui</b><p>As mensagens aparecem assim que o número central recebe um contato.</p></div>}
           </div>
         </aside>
 
@@ -166,11 +166,11 @@ export function WhatsAppPortal() {
               <div ref={endRef}/>
             </div>
             <form className={styles.composer} onSubmit={send}><button type="button" aria-label="Emoji" onClick={() => setDraft((value) => `${value} 🙂`)}><Icon name="smile"/></button><button type="button" aria-label="Anexar foto, vídeo, áudio ou documento" onClick={() => fileRef.current?.click()}><Icon name="clip"/></button><input ref={fileRef} className={styles.fileInput} type="file" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt" onChange={(event) => sendFile(event.target.files?.[0])}/><input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Digite uma mensagem"/><button className={styles.send} disabled={!draft.trim()} aria-label="Enviar"><Icon name="send" size={19}/></button></form>
-          </> : <div className={styles.welcome}><div className={styles.rings}><span>B</span></div><h2>Atendimento, sem trocar de janela.</h2><p>Escolha uma conversa para responder clientes de qualquer restaurante. Fotos, vídeos, áudios e documentos ficam dentro do atendimento.</p><div>{accounts.map((account) => <button key={account.id} onClick={() => account.status === "connected" ? setFilter(account.id) : openPairModal(account.id)}><i className={styles[account.id]}/><span><b>{brands[account.id].name}</b><small>{account.status === "connected" ? `+${account.phoneNumber}` : "Parear número"}</small></span><em className={account.status === "connected" ? styles.online : ""}>{account.status === "connected" ? "Online" : "Offline"}</em></button>)}</div></div>}
+          </> : <div className={styles.welcome}><div className={styles.rings}><span>B</span></div><h2>Um número, três agentes.</h2><p>O cliente escolhe Barbacue, Barbadog ou Chelas. A conversa é entregue ao agente certo e continua nesta mesma caixa de entrada.</p><div>{accounts.map((account) => <button key={account.id} onClick={() => account.status === "connected" ? setFilter("all") : openPairModal()}><i className={styles.allDot}/><span><b>Número central</b><small>{account.status === "connected" ? `+${account.phoneNumber}` : "Parear número"}</small></span><em className={account.status === "connected" ? styles.online : ""}>{account.status === "connected" ? "Online" : "Offline"}</em></button>)}</div></div>}
         </article>
       </section>
 
-      {pairing && <div className={styles.modalBackdrop} onMouseDown={(e) => e.target === e.currentTarget && closePairModal()}><section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="pair-title"><button className={styles.modalClose} onClick={closePairModal}><Icon name="close"/></button><span className={`${styles.modalBrand} ${styles[pairing]}`}>{brands[pairing].short}</span><h2 id="pair-title">Conectar {brands[pairing].name}</h2><p>Use um número exclusivo para identificar as conversas deste restaurante.</p><div className={styles.methodTabs}><button className={method === "qr" ? styles.methodActive : ""} onClick={() => switchMethod("qr")}>Escanear QR code</button><button className={method === "phone" ? styles.methodActive : ""} onClick={() => switchMethod("phone")}>Usar número</button></div>
+      {pairing && <div className={styles.modalBackdrop} onMouseDown={(e) => e.target === e.currentTarget && closePairModal()}><section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="pair-title"><button className={styles.modalClose} onClick={closePairModal}><Icon name="close"/></button><span className={`${styles.modalBrand} ${styles.allDot}`}>3</span><h2 id="pair-title">Conectar número central</h2><p>Este único número atende clientes das três marcas e encaminha cada conversa ao agente especializado.</p><div className={styles.methodTabs}><button className={method === "qr" ? styles.methodActive : ""} onClick={() => switchMethod("qr")}>Escanear QR code</button><button className={method === "phone" ? styles.methodActive : ""} onClick={() => switchMethod("phone")}>Usar número</button></div>
         {method === "qr" ? <div className={styles.qrArea}>{currentAccount?.qrDataUrl ? <><div className={styles.qr}><Image src={currentAccount.qrDataUrl} alt="QR code de pareamento" width={230} height={230} unoptimized/></div><ol><li>Abra o WhatsApp no celular</li><li>Toque em <b>Aparelhos conectados</b></li><li>Escaneie este código</li></ol></> : <><div className={styles.qrPlaceholder}><span>▦</span></div><button className={styles.modalAction} disabled={pairBusy} onClick={startPairing}>{pairBusy ? "Gerando QR code…" : "Gerar QR code"}</button></>}</div> : <div className={styles.phoneArea}><label>Número com DDD<input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="55 11 99999 9999" inputMode="tel"/></label>{currentAccount?.pairingCode ? <div className={styles.code}><span>Código de pareamento</span><b>{currentAccount.pairingCode}</b><small>No celular, escolha “Conectar com número de telefone”.</small></div> : <button className={styles.modalAction} disabled={pairBusy || phone.replace(/\D/g, "").length < 10} onClick={startPairing}>{pairBusy ? "Enviando código…" : "Enviar código"}</button>}</div>}
         {(pairError || currentAccount?.lastError) && <p className={styles.modalError} role="alert">{pairError || currentAccount?.lastError}</p>}
         <div className={styles.modalFoot}><span>As credenciais ficam salvas no servidor.</span><button onClick={() => { setPairing((current) => current); refresh(); }}><Icon name="refresh" size={15}/> Atualizar</button></div>

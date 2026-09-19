@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import type { StaffRole } from "@/db/schema";
+import { STAFF_ROLES, canAccessPath, type Permission } from "@/lib/permissions";
 
 const COOKIE_NAME = "barbacue_admin";
 const MAX_AGE = 60 * 60 * 8; // 8 hours
@@ -11,12 +12,14 @@ const MAX_AGE = 60 * 60 * 8; // 8 hours
 export interface AdminSession {
   userId: number;
   role: StaffRole;
+  name?: string;
+  jobTitle?: string | null;
+  permissions?: Permission[] | null;
 }
 
-// IMPORTANT: this module is imported by proxy.ts (Edge runtime). Keep it free of
-// node:crypto — only Web Crypto (crypto.subtle) and Buffer (polyfilled in Edge).
-// Password hashing (scrypt) lives in lib/staff-auth.ts, imported only by Node
-// route handlers.
+// Token signing uses Web Crypto. Current roles and permissions are resolved
+// from the database in Node (including Next.js 16 Proxy); password hashing
+// remains in staff-auth.ts.
 
 // Constant-time string compare. Leaks only length, which is acceptable for
 // fixed-length HMAC outputs and operator-chosen env-var passwords.
@@ -77,7 +80,7 @@ export function isValidAdminPassword(pw: string): boolean {
   return isMasterPassword(pw);
 }
 
-const ROLES: readonly StaffRole[] = ["admin", "manager"];
+const ROLES: readonly StaffRole[] = STAFF_ROLES;
 
 /** Build a signed session token. Expiry is embedded INSIDE the signed payload
  * so a copied cookie can't outlive it by changing MaxAge client-side. */
@@ -99,7 +102,7 @@ export async function parseSession(token: string): Promise<AdminSession | null> 
   if (!Number.isFinite(expiresAt) || Date.now() >= expiresAt) return null;
   if (!ROLES.includes(role as StaffRole)) return null;
   const userId = Number(userIdStr);
-  if (!Number.isFinite(userId)) return null;
+  if (!Number.isSafeInteger(userId) || userId < 0) return null;
   return { userId, role: role as StaffRole };
 }
 
@@ -109,13 +112,25 @@ export async function requireStaff(): Promise<AdminSession> {
   const store = await cookies();
   const session = await parseSession(store.get(COOKIE_NAME)?.value ?? "");
   if (!session) throw new Error("unauthorized");
-  return session;
+  const current = await resolveStaffSession(session);
+  if (!current) throw new Error("unauthorized");
+  return current;
+}
+
+/** Resolve current permissions so revocations apply to existing sessions. */
+export async function resolveStaffSession(session: AdminSession): Promise<AdminSession | null> {
+  if (session.userId === 0) return { userId: 0, role: "admin", name: "Administrador" };
+  const { db } = await import("@/db");
+  const { staffUsers } = await import("@/db/schema");
+  const { eq } = await import("drizzle-orm");
+  const [user] = await db.select({ userId: staffUsers.id, role: staffUsers.role, name: staffUsers.name, jobTitle: staffUsers.jobTitle, permissions: staffUsers.permissions, active: staffUsers.active }).from(staffUsers).where(eq(staffUsers.id, session.userId));
+  return user?.active ? user : null;
 }
 
 /** Require a minimum role. admin satisfies everything; manager satisfies manager. */
 export async function requireRole(role: StaffRole): Promise<AdminSession> {
   const session = await requireStaff();
-  if (role === "admin" && session.role !== "admin") {
+  if (session.role !== "admin" && session.role !== role) {
     throw new Error("forbidden");
   }
   return session;
@@ -143,14 +158,14 @@ export function clearAdminCookie(response: NextResponse): void {
 /** Middleware (proxy.ts, Edge) helper — any valid staff session passes. */
 export async function isAdminRequest(req: NextRequest): Promise<boolean> {
   const token = req.cookies.get(COOKIE_NAME)?.value ?? "";
-  return (await parseSession(token)) !== null;
+  const session = await parseSession(token);
+  return session !== null && (await resolveStaffSession(session)) !== null;
 }
 
 // ─── In-handler guards ─────────────────────────────────────────────────────────
-// The proxy authenticates the session but performs NO role check, so every admin
-// route MUST gate itself. Wrap a handler with withStaff (admin OR manager) or
-// withRole("admin"). The wrapped handler receives the resolved session as its 3rd
-// argument. These are Edge-safe (no node:crypto) but only used in Node routes.
+// Both the proxy and each handler enforce current permissions. Every new
+// admin route needs a catalog mapping; unmapped routes fail closed.
+// withRole adds a role restriction to the normal permission check.
 
 type AdminHandler<Ctx> = (
   req: NextRequest,
@@ -162,6 +177,7 @@ export function withStaff<Ctx>(handler: AdminHandler<Ctx>) {
   return async (req: NextRequest, ctx: Ctx): Promise<Response> => {
     const session = await requireStaff().catch(() => null);
     if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+    if (!canAccessPath(session, req.nextUrl.pathname)) return NextResponse.json({ error: "Você não tem permissão para esta função." }, { status: 403 });
     return handler(req, ctx, session);
   };
 }
@@ -170,12 +186,13 @@ export function withRole<Ctx>(role: StaffRole, handler: AdminHandler<Ctx>) {
   return async (req: NextRequest, ctx: Ctx): Promise<Response> => {
     const session = await requireStaff().catch(() => null);
     if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
-    if (role === "admin" && session.role !== "admin") {
+    if (session.role !== "admin" && session.role !== role) {
       return NextResponse.json(
         { error: "Apenas administradores podem fazer isso." },
         { status: 403 },
       );
     }
+    if (!canAccessPath(session, req.nextUrl.pathname)) return NextResponse.json({ error: "Você não tem permissão para esta função." }, { status: 403 });
     return handler(req, ctx, session);
   };
 }

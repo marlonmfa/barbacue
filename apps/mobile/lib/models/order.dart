@@ -27,6 +27,8 @@ class CreateOrderRequest {
   final String customerName;
   final String customerPhone;
   final String? deliveryAddress;
+  final String? deliveryQuoteId;
+  final String? brand;
   final List<OrderItem> items;
   final String? notes;
 
@@ -56,6 +58,8 @@ class CreateOrderRequest {
     required this.customerName,
     required this.customerPhone,
     this.deliveryAddress,
+    this.deliveryQuoteId,
+    this.brand,
     required this.items,
     this.notes,
     this.couponCode,
@@ -99,6 +103,10 @@ class OrderResponse {
   final int? tableNumber;
   @JsonKey(defaultValue: 0)
   final int totalCents;
+  @JsonKey(defaultValue: 0)
+  final int deliveryFeeCents;
+  final int? deliveryDistanceMeters;
+  final int? deliveryDurationSeconds;
   final PixInfo? pix;
 
   const OrderResponse({
@@ -107,6 +115,9 @@ class OrderResponse {
     this.orderType = 'delivery',
     this.tableNumber,
     this.totalCents = 0,
+    this.deliveryFeeCents = 0,
+    this.deliveryDistanceMeters,
+    this.deliveryDurationSeconds,
     this.pix,
   });
 

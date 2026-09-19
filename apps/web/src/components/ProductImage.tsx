@@ -9,24 +9,17 @@ interface Props {
   sizes?: string;
   priority?: boolean;
   className?: string;
-  /** Category-appropriate generated photo, used when `src` is missing/dead. */
+  /** Optional reviewed image of this exact product, never a random category photo. */
   fallbackSrc?: string | null;
 }
 
-/**
- * Product image with a layered fallback:
- *   1. the product's own imageUrl (anota.ai CDN; kept `unoptimized` — the CDN is
- *      flaky from non-browser contexts and Next's optimizer adds a failure point),
- *   2. on error / when null → a category-appropriate generated photo (object-cover),
- *      so 107 image-less products look intentional instead of "missing",
- *   3. if even that fails → the branded ember SVG mark.
- */
+/** Preserve the full product and packaging; failed images show a neutral mark. */
 export function ProductImage({ src, alt, sizes, priority, className, fallbackSrc }: Props) {
-  const [primaryErr, setPrimaryErr] = useState(false);
-  const [fallbackErr, setFallbackErr] = useState(false);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const [failedFallbackSrc, setFailedFallbackSrc] = useState<string | null>(null);
 
-  const showPrimary = src && !primaryErr;
-  const showFallbackPhoto = !showPrimary && fallbackSrc && !fallbackErr;
+  const showPrimary = src && src !== failedSrc;
+  const showFallbackPhoto = !showPrimary && fallbackSrc && fallbackSrc !== failedFallbackSrc;
 
   if (showPrimary) {
     return (
@@ -37,8 +30,8 @@ export function ProductImage({ src, alt, sizes, priority, className, fallbackSrc
         sizes={sizes ?? "(max-width: 640px) 100vw, 320px"}
         priority={priority}
         unoptimized
-        className={`object-cover ${className ?? ""}`}
-        onError={() => setPrimaryErr(true)}
+        className={`object-contain ${className ?? ""}`}
+        onError={() => setFailedSrc(src!)}
       />
     );
   }
@@ -50,8 +43,9 @@ export function ProductImage({ src, alt, sizes, priority, className, fallbackSrc
         alt={alt}
         fill
         sizes={sizes ?? "(max-width: 640px) 100vw, 320px"}
-        className={`object-cover ${className ?? ""}`}
-        onError={() => setFallbackErr(true)}
+        unoptimized
+        className={`object-contain ${className ?? ""}`}
+        onError={() => setFailedFallbackSrc(fallbackSrc!)}
       />
     );
   }
@@ -59,12 +53,12 @@ export function ProductImage({ src, alt, sizes, priority, className, fallbackSrc
   return (
     <div
       className={`ember-bg w-full h-full flex flex-col items-center justify-center gap-1 ${className ?? ""}`}
-      aria-label={alt}
+      aria-label={`${alt}: foto indisponível`}
       role="img"
     >
       <BurgerMark />
       <span className="text-[10px] font-semibold tracking-widest uppercase text-[var(--brand-tan)]/70">
-        Barbacue
+        Foto indisponível
       </span>
     </div>
   );

@@ -1,0 +1,3 @@
+{
+  "/api/print-agent/jobs/claim/route": "app/api/print-agent/jobs/claim/route.js"
+}

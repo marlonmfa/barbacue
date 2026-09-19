@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { PaymentMethod, OrderType } from "@/db/schema";
+import type { CheckoutDeliveryQuote } from "./delivery-checkout";
 
 /**
  * Checkout state shared by every ordering path: the manual cart form, the AI
@@ -13,6 +14,8 @@ export interface CheckoutState {
   phone: string;
   address: string;
   notes: string;
+  /** Transient: never restore a stale route/fee from localStorage. */
+  deliveryQuote: CheckoutDeliveryQuote | null;
   couponCode: string | null;
   paymentMethod: PaymentMethod;
   /** "Troco para" amount in cents (cash only). null = no change needed. */
@@ -34,6 +37,7 @@ const initial = {
   phone: "",
   address: "",
   notes: "",
+  deliveryQuote: null as CheckoutDeliveryQuote | null,
   couponCode: null as string | null,
   paymentMethod: "pix" as PaymentMethod,
   changeForCents: null as number | null,
@@ -46,10 +50,21 @@ export const useCheckout = create<CheckoutState>()(
   persist(
     (set) => ({
       ...initial,
-      set: (patch) => set(patch),
+      set: (patch) => set((state) => ({
+        ...patch,
+        // Address or fulfillment changes revoke the quote synchronously, even
+        // when edits come from the cart or the conversational assistant.
+        ...((patch.address !== undefined && patch.address !== state.address) ||
+          (patch.orderType !== undefined && patch.orderType !== state.orderType)
+          ? { deliveryQuote: null } : {}),
+      })),
       reset: () => set(initial),
     }),
-    { name: "barbacue-checkout" }
+    {
+      name: "barbacue-checkout",
+      partialize: (state) => ({ ...state, deliveryQuote: null }),
+      merge: (persisted, current) => ({ ...current, ...(persisted as Partial<CheckoutState>), deliveryQuote: null }),
+    }
   )
 );
 

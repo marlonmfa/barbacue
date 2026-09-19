@@ -1,34 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { useCart, formatPrice } from "@/lib/cart";
 import { isPromoActive, effectivePrice } from "@/lib/pricing";
 import { ProductImage } from "@/components/ProductImage";
-import { fallbackArt } from "@/lib/category-art";
 import type { Product } from "@/db/schema";
 
 interface Props {
   product: Product;
-  /** Category context → picks the generated fallback photo when imageUrl is null. */
+  /** Category context retained for callers; fallback photos must be product-specific. */
   categorySlug?: string | null;
   categoryName?: string | null;
   /** When the store is closed, ordering is disabled (badge shown instead). */
   isClosed?: boolean;
 }
 
-export function ProductCard({ product, categorySlug, categoryName, isClosed = false }: Props) {
+const subscribeToHydration = () => () => {};
+const clientSnapshot = () => true;
+const serverSnapshot = () => false;
+
+export function ProductCard({ product, isClosed = false }: Props) {
   const { add, items, setQty } = useCart();
   // Gate cart-derived UI until after hydration so the server (empty cart) and the
   // first client render agree — otherwise the qty stepper pops in / flashes.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(subscribeToHydration, clientSnapshot, serverSnapshot);
 
   const cartItem = mounted ? items.find((i) => i.productId === product.id) : undefined;
   const onSale = isPromoActive(product);
   const price = effectivePrice(product);
-  // product.id seeds a stable per-product variant so a grid of image-less items
-  // in one category shows varied (not identical) appetizing photos.
-  const fallbackSrc = fallbackArt(categorySlug, categoryName, product.id);
+  const illustrative = product.imageUrl?.startsWith("/menu/review-2026-09/");
 
   function handleAdd() {
     add({
@@ -41,22 +41,24 @@ export function ProductCard({ product, categorySlug, categoryName, isClosed = fa
 
   return (
     <div className="group bg-[var(--surface)] rounded-2xl border border-[var(--border)] overflow-hidden flex flex-col transition-all duration-200 hover:border-[var(--brand-red)] hover:-translate-y-1 hover:shadow-xl hover:shadow-black/40">
-      <div className="relative w-full h-44 bg-[var(--surface-2)] overflow-hidden">
+      <div className="relative w-full aspect-[4/3] bg-[var(--surface-2)] overflow-hidden">
         {onSale && (
           <span className="absolute top-2.5 left-2.5 z-10 bg-[var(--brand-red)] text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide shadow-lg shadow-black/40">
             🔥 Promo
           </span>
         )}
-        <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-110">
+        <div className="absolute inset-0">
           <ProductImage
             src={product.imageUrl}
-            fallbackSrc={fallbackSrc}
             alt={product.name}
             sizes="(max-width: 640px) 100vw, 320px"
           />
         </div>
-        {/* Scrim keeps the dark theme cohesive at the image's lower edge. */}
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-2/5 card-scrim pointer-events-none" />
+        {illustrative && (
+          <span className="absolute bottom-1.5 right-2 rounded bg-white/90 px-1.5 py-0.5 text-[10px] text-stone-600">
+            Imagem ilustrativa
+          </span>
+        )}
       </div>
 
       <div className="p-4 flex flex-col flex-1 gap-1.5">

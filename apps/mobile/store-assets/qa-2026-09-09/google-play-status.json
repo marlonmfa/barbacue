@@ -1,0 +1,39 @@
+{
+  "observedDate": "2026-09-09",
+  "barbacue": {
+    "version": "1.2.4 (15)",
+    "track": "Alpha",
+    "status": "Available to selected testers",
+    "released": "2026-09-08 19:24"
+  },
+  "chelas": {
+    "appId": "4973223313204667125",
+    "version": "1.0.0 (3)",
+    "bundleUploaded": true,
+    "releaseSaved": true,
+    "submittedForReview": true,
+    "blockingIssue": null,
+    "status": "Changes in review",
+    "submittedChanges": 14,
+    "contentRatingBrazil": "Livre (All ages)",
+    "quickChecks": "In progress; proceeds automatically after successful checks"
+  },
+  "barbadog": {
+    "appId": "4975194471537268191",
+    "version": "1.0.0 (3)",
+    "bundleUploaded": true,
+    "releaseSaved": true,
+    "submittedForReview": true,
+    "blockingIssue": null,
+    "status": "Changes in review",
+    "submittedChanges": 14,
+    "contentRatingBrazil": "Livre (All ages)",
+    "quickChecks": "In progress; proceeds automatically after successful checks"
+  },
+  "closedTesting": {
+    "country": "Brazil",
+    "testerList": "HirableAITesters",
+    "listedAddresses": 14,
+    "listedAddressesAreNotOptIns": true
+  }
+}

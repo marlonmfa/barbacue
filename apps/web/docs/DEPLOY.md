@@ -34,7 +34,7 @@ docker run -d --name barbacue-web -p 3000:3000 \
   barbacue-web
 ```
 
-## VPS (`barbacue.hirableaiagents.com`)
+## VPS (`barbacue.cog.ia.br`)
 
 1. Instale Docker no host (`HOST_VPS`).
 2. Copie o repositório + `.env` para o host.
@@ -95,3 +95,11 @@ npm run db:migrate        # aplica 0006_fancy_wallop.sql (CREATE TABLE media_ass
 > antiga em `media_assets` (órfã). É desprezível pra um cardápio pequeno (poucas
 > centenas de KB por foto, já reduzidas no navegador antes do upload). Uma limpeza
 > futura pode apagar linhas cujo `id` não aparece em nenhum `products.image_url`.
+
+## Download privado do programa Windows
+
+Antes de montar/publicar a imagem web, execute `npm run stage:web --workspace=@barbacue/desktop` na raiz (o instalador já deve existir em `apps/desktop/release`). `npm run desktop:windows` também prepara esse arquivo automaticamente ao concluir o build.
+
+O download aparece somente para administradores em **Sistema → Programa Windows** (`/admin/downloads`). O arquivo e o manifesto ficam em `apps/web/private-downloads`, fora de `public`. O Dockerfile inclui essa pasta no servidor final. Em publicação standalone manual, copie a pasta ao lado do `server.js` web. Nunca configure uma rota estática/Nginx para essa pasta: a entrega deve passar por `/api/admin/downloads/windows`, que valida a sessão e o perfil em cada solicitação, sem cache público.
+
+A pasta de artefatos não é versionada. Caso o deploy use apenas arquivos do Git, forneça os artefatos no pipeline antes do build da imagem ou monte um volume privado; a página exibe indisponibilidade quando faltarem. Não é necessário rebuild do programa Windows para publicar o download no painel.

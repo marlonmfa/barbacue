@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" colorMatched="YES" initialViewController="chel-vc">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+    </dependencies>
+    <scenes>
+        <scene sceneID="chel-scene">
+            <objects>
+                <viewController id="chel-vc" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="chel-view">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="CH" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="chel-mark">
+                                <rect key="frame" x="147" y="351" width="120" height="120"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="chel-w"/>
+                                    <constraint firstAttribute="height" constant="120" id="chel-h"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="42"/>
+                                <color key="textColor" red="0.047" green="0.145" blue="0.105" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="1" green="0.776" blue="0.157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="CHELAS" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="chel-title">
+                                <rect key="frame" x="57" y="493" width="300" height="50"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="38"/>
+                                <color key="textColor" red="1" green="0.96" blue="0.84" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.72" green="0.055" blue="0.12" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="chel-mark" firstAttribute="centerX" secondItem="chel-view" secondAttribute="centerX" id="chel-cx"/>
+                            <constraint firstItem="chel-mark" firstAttribute="centerY" secondItem="chel-view" secondAttribute="centerY" constant="-36" id="chel-cy"/>
+                            <constraint firstItem="chel-title" firstAttribute="top" secondItem="chel-mark" secondAttribute="bottom" constant="22" id="chel-gap"/>
+                            <constraint firstItem="chel-title" firstAttribute="leading" secondItem="chel-view" secondAttribute="leading" constant="40" id="chel-l"/>
+                            <constraint firstAttribute="trailing" secondItem="chel-title" secondAttribute="trailing" constant="40" id="chel-r"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="chel-first" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+</document>

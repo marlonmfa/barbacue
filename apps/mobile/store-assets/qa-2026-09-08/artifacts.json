@@ -1,0 +1,44 @@
+[
+  {
+    "brand": "barbacue",
+    "platform": "android",
+    "path": "build/app/outputs/bundle/barbacueRelease/app-barbacue-release.aab",
+    "bytes": 48705906,
+    "sha256": "34ecc947f38b51e74f664d6fe98594ae382062fd8b937a7c18fe0aa11449cffc"
+  },
+  {
+    "brand": "barbacue",
+    "platform": "ios",
+    "path": "build/ios/ipa/barbacue/barbacue.ipa",
+    "bytes": 24810761,
+    "sha256": "d0fff879c36037961a4249f79a3be35201c5e4036b13b867d58795682c737241"
+  },
+  {
+    "brand": "chelas",
+    "platform": "android",
+    "path": "build/app/outputs/bundle/chelasRelease/app-chelas-release.aab",
+    "bytes": 48678935,
+    "sha256": "15e4703d17dd7ecaf2fe805a46295c2da8fb711f6d3145eea02bc8dc7cc2a59b"
+  },
+  {
+    "brand": "chelas",
+    "platform": "ios",
+    "path": "build/ios/ipa/chelas/barbacue.ipa",
+    "bytes": 23695392,
+    "sha256": "39fdad1ff1cd989fcaddfd288722328b1f83feaa3c18b228c61f59868a1924d1"
+  },
+  {
+    "brand": "barbadog",
+    "platform": "android",
+    "path": "build/app/outputs/bundle/barbadogRelease/app-barbadog-release.aab",
+    "bytes": 48670645,
+    "sha256": "ba1f258462a589ca9a4148ab37c6fbef5419210c4a34900e717f77b163e52097"
+  },
+  {
+    "brand": "barbadog",
+    "platform": "ios",
+    "path": "build/ios/ipa/barbadog/barbacue.ipa",
+    "bytes": 23652338,
+    "sha256": "2db39b73f28486697b5a0917593158105b81b1adfe96e471ef14f8c25f1aa942"
+  }
+]

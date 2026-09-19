@@ -1,0 +1,22 @@
+{
+  "observedDate": "2026-09-08",
+  "package": "com.lanchesdobarba.barbacue",
+  "version": "1.2.4",
+  "versionCode": 15,
+  "track": "Closed testing - Alpha",
+  "publishingState": "Changes in review",
+  "quickChecks": "Running; changes proceed to review when checks complete successfully",
+  "submittedChanges": [
+    "Start full rollout of 1.2.4 (15) to closed testing",
+    "Privacy policy URL https://barbacue.cog.ia.br/legal/barbacue/privacy.html"
+  ],
+  "productionEligibility": {
+    "optedInTesters": 1,
+    "requiredTesters": 12,
+    "requiredConsecutiveDays": 14
+  },
+  "newAndroidApps": {
+    "chelas": "Registration pending explicit authorization for mandatory legal declarations; pt-BR form prepared",
+    "barbadog": "Registration pending explicit authorization for mandatory legal declarations"
+  }
+}

@@ -4,16 +4,19 @@ import 'dart:io';
 // Narrowed: foundation also exports a `Category`, which would otherwise clash
 // with the menu model of the same name.
 import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import '../models/product.dart';
 import '../models/coupon.dart';
 import '../models/order.dart';
+import '../models/delivery_quote.dart';
 import '../models/cart_item.dart';
 import '../models/chat.dart';
 import '../models/instagram_post.dart';
 import '../models/store_settings.dart';
 import '../models/table_session.dart';
 import '../providers/checkout_provider.dart';
+import '../config/app_brand.dart';
 
 /// Lightweight store-open status (no codegen needed).
 ///
@@ -38,6 +41,11 @@ class ApiService {
     // Production: use real domain; dev: localhost differs per platform
     const prod = String.fromEnvironment('API_BASE_URL');
     if (prod.isNotEmpty) return prod;
+
+    // Release flavor entrypoints carry their own immutable domain. Local
+    // debug via main.dart keeps the emulator localhost behavior below.
+    const releaseBrand = bool.fromEnvironment('RELEASE_BRAND_ENDPOINT');
+    if (releaseBrand) return 'https://${currentBrand.domain}';
 
     // Android emulator routes host via 10.0.2.2; iOS sim uses localhost
     if (Platform.isAndroid) return 'http://10.0.2.2:3000';
@@ -132,19 +140,99 @@ class ApiService {
   }
 
   static Future<List<Category>> fetchMenu() async {
-    final response = await _client.get(
-      Uri.parse('$baseUrl/api/products'),
-      headers: {'Accept': 'application/json'},
-    );
+    // Chelas and Barbadog are iFood-powered storefronts. Their bundled,
+    // versioned snapshots make the first screen instant and keep the menu
+    // usable on weak mobile connections; each product still opens its live
+    // iFood URL for availability and checkout.
+    if (!currentBrand.hasNativeCheckout) return _bundledBrandMenu();
 
-    if (response.statusCode != 200) {
-      throw Exception('Falha ao carregar o cardápio: ${response.statusCode}');
+    try {
+      final response = await _client.get(
+        Uri.parse('$baseUrl/api/products'),
+        headers: {'Accept': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        resolveImageUrls(data, baseUrl);
+        final parsed = data.map((json) => Category.fromJson(json)).toList();
+        return parsed;
+      }
+    } catch (_) {
+      rethrow;
     }
 
-    final List<dynamic> data = jsonDecode(response.body);
-    resolveImageUrls(data, baseUrl);
-    return data.map((json) => Category.fromJson(json)).toList();
+    throw Exception('Falha ao carregar o cardápio.');
   }
+
+  /// Offline-safe snapshot made from the same iFood scrape that feeds the site.
+  /// It is also a rollout guard: Chelas/Barbadog remain correct even before a
+  /// new API bundle reaches every production edge.
+  static Future<List<Category>> _bundledBrandMenu() async {
+    final raw = await rootBundle.loadString(
+      'assets/brands/${currentBrand.slug}-menu.json',
+    );
+    final decoded = jsonDecode(raw) as Map<String, dynamic>;
+    final items = (decoded['items'] as List<dynamic>?) ?? const [];
+    final names = <String>[];
+    for (final item in items) {
+      final name = (item as Map<String, dynamic>)['category'].toString();
+      if (!names.contains(name)) names.add(name);
+    }
+
+    return [
+      for (var categoryIndex = 0; categoryIndex < names.length; categoryIndex++)
+        Category(
+          id: categoryIndex + 1,
+          name: names[categoryIndex],
+          slug: _slugify(names[categoryIndex]),
+          sortOrder: categoryIndex,
+          products: [
+            for (final entry in items.indexed)
+              if ((entry.$2 as Map<String, dynamic>)['category'] ==
+                  names[categoryIndex])
+                _brandProduct(
+                  entry.$2 as Map<String, dynamic>,
+                  categoryIndex,
+                  entry.$1,
+                ),
+          ],
+        ),
+    ];
+  }
+
+  static Product _brandProduct(
+    Map<String, dynamic> json,
+    int categoryIndex,
+    int productIndex,
+  ) {
+    final salePrice = (json['priceCents'] as num).toInt();
+    final original = (json['originalPriceCents'] as num?)?.toInt();
+    return Product(
+      id: (categoryIndex + 1) * 1000 + productIndex + 1,
+      externalId: json['id']?.toString(),
+      categoryId: categoryIndex + 1,
+      name: json['name'].toString(),
+      description: json['description']?.toString(),
+      priceCents: original ?? salePrice,
+      promoPriceCents: original == null ? null : salePrice,
+      imageUrl: json['imageUrl']?.toString(),
+      available: true,
+      sortOrder: productIndex,
+      ifoodUrl: json['ifoodUrl']?.toString(),
+    );
+  }
+
+  static String _slugify(String value) => value
+      .toLowerCase()
+      .replaceAll(RegExp('[áàãâä]'), 'a')
+      .replaceAll(RegExp('[éèêë]'), 'e')
+      .replaceAll(RegExp('[íìîï]'), 'i')
+      .replaceAll(RegExp('[óòõôö]'), 'o')
+      .replaceAll(RegExp('[úùûü]'), 'u')
+      .replaceAll('ç', 'c')
+      .replaceAll(RegExp('[^a-z0-9]+'), '-')
+      .replaceAll(RegExp(r'^-|-$'), '');
 
   /// Rewrites root-relative product image paths to absolute URLs, in place.
   ///
@@ -177,8 +265,9 @@ class ApiService {
     final http.Response response;
     try {
       response = await _client.get(
-        Uri.parse('$baseUrl/api/tables/resolve')
-            .replace(queryParameters: {'token': token}),
+        Uri.parse(
+          '$baseUrl/api/tables/resolve',
+        ).replace(queryParameters: {'token': token}),
         headers: {'Accept': 'application/json'},
       );
     } on SocketException {
@@ -198,6 +287,51 @@ class ApiService {
       return TableSession.fromJson(jsonDecode(response.body));
     } catch (_) {
       throw Exception(_tableUnavailable);
+    }
+  }
+
+  /// An unavailable configuration is not permission to deliver without a fee.
+  static Future<bool> fetchDeliveryEnabled() async {
+    try {
+      final response = await _client.get(
+        Uri.parse('$baseUrl/api/delivery/quote'),
+        headers: {'Accept': 'application/json'},
+      ).timeout(const Duration(seconds: 15));
+      if (response.statusCode != 200) {
+        throw DeliveryApiException(_apiMessage(response.body) ?? 'Não foi possível verificar a entrega.');
+      }
+      final data = jsonDecode(response.body);
+      if (data is! Map<String, dynamic> || data['enabled'] is! bool) {
+        throw const DeliveryApiException('Não foi possível verificar a entrega.');
+      }
+      return data['enabled'] as bool;
+    } on DeliveryApiException {
+      rethrow;
+    } catch (_) {
+      throw const DeliveryApiException('Não foi possível verificar a entrega. Confira sua conexão e tente novamente.');
+    }
+  }
+
+  static Future<DeliveryQuote> quoteDelivery({required String address}) async {
+    try {
+      final response = await _client.post(
+        Uri.parse('$baseUrl/api/delivery/quote'),
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+        body: jsonEncode({'address': address.trim(), 'brand': currentBrand.slug}),
+      ).timeout(const Duration(seconds: 30));
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        String? code;
+        try {
+          final data = jsonDecode(response.body);
+          if (data is Map<String, dynamic>) code = (data['code'] ?? data['error']) is String ? (data['code'] ?? data['error']) as String : null;
+        } catch (_) {}
+        throw DeliveryApiException(_apiMessage(response.body) ?? 'Não foi possível calcular o frete. Confira o endereço e tente novamente.', code: code);
+      }
+      return DeliveryQuote.fromJson(jsonDecode(response.body) as Map<String, dynamic>, requestedAddress: address, brand: currentBrand.slug);
+    } on DeliveryApiException {
+      rethrow;
+    } catch (_) {
+      throw const DeliveryApiException('Não foi possível confirmar o valor do frete. Calcule novamente.');
     }
   }
 
@@ -226,6 +360,15 @@ class ApiService {
       return OrderResponse.fromJson(jsonDecode(response.body));
     }
 
+    try {
+      final data = jsonDecode(response.body);
+      if (data is Map<String, dynamic> && data['code'] is String &&
+          (data['code'] as String).startsWith('delivery_')) {
+        throw DeliveryApiException(_apiMessage(response.body) ?? 'Confira o frete antes de enviar o pedido.', code: data['code'] as String);
+      }
+    } on DeliveryApiException {
+      rethrow;
+    } catch (_) {}
     throw Exception(
       _apiMessage(response.body) ??
           'Não foi possível enviar o pedido. Tente novamente.',

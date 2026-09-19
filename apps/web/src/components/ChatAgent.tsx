@@ -1,5 +1,6 @@
 "use client";
 
+import { ChatAudio } from "./ChatAudio";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart, formatPrice, type CartItem } from "@/lib/cart";
@@ -247,6 +248,8 @@ export function ChatAgent() {
                 <span className="font-bold">{formatPrice(useCart.getState().totalCents())}</span>
               </button>
             )}
+
+            <ChatAudio disabled={loading} onText={(text) => setInput((current) => [current, text].filter(Boolean).join(" "))} />
 
             {/* Input */}
             <form

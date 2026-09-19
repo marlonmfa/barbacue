@@ -10,6 +10,9 @@ import {
   date,
   pgEnum,
   customType,
+  unique,
+  index,
+  doublePrecision,
 } from "drizzle-orm/pg-core";
 
 // Postgres `bytea` mapped to a Node Buffer. drizzle-orm has no built-in bytea, so
@@ -27,7 +30,7 @@ export const discountTypeEnum = pgEnum("discount_type", ["flat", "percentage"]);
 // Staff roles. "admin" manages everything (incl. staff accounts + Pix secrets);
 // "manager" (gerente) runs day-to-day ops (catalog, prices, promos, coupons,
 // customers, orders, hours) but cannot manage staff or sensitive secrets.
-export const staffRoleEnum = pgEnum("staff_role", ["admin", "manager"]);
+export const staffRoleEnum = pgEnum("staff_role", ["admin", "manager", "cashier", "kitchen", "employee", "waiter", "driver"]);
 export const orderStatusEnum = pgEnum("order_status", [
   "pending",
   "confirmed",
@@ -49,7 +52,7 @@ export const paymentStatusEnum = pgEnum("payment_status", [
 ]);
 // Where the order is consumed. "delivery" needs an address; "dine_in" is tied to
 // a restaurant table (orders.table_id) and never carries a delivery address.
-export const orderTypeEnum = pgEnum("order_type", ["delivery", "dine_in"]);
+export const orderTypeEnum = pgEnum("order_type", ["delivery", "dine_in", "pickup"]);
 // Device platform a beta tester will install the app on.
 export const betaPlatformEnum = pgEnum("beta_platform", ["ios", "android"]);
 
@@ -79,6 +82,30 @@ export const products = pgTable("products", {
   sortOrder: integer("sort_order").default(0),
 });
 
+// Chelas and Barbadog started as versioned iFood snapshots. Keeping their
+// managed catalog in a separate table lets the admin override availability,
+// edit imported items and add native products without disturbing Barbacue's
+// existing numeric catalog or checkout identifiers.
+export const brandCatalogProducts = pgTable("brand_catalog_products", {
+  id: serial("id").primaryKey(),
+  brand: text("brand").notNull(),
+  externalId: text("external_id").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  category: text("category").notNull(),
+  priceCents: integer("price_cents").notNull(),
+  originalPriceCents: integer("original_price_cents"),
+  imageUrl: text("image_url"),
+  ifoodUrl: text("ifood_url"),
+  available: boolean("available").notNull().default(true),
+  source: text("source").notNull().default("custom"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+}, (table) => [
+  unique("brand_catalog_products_brand_external_unique").on(table.brand, table.externalId),
+]);
+
 // ─── Media assets (owner-uploaded images) ─────────────────────────────────────
 
 // Product/category/logo photos uploaded from the admin are stored HERE as raw
@@ -105,8 +132,31 @@ export const staffUsers = pgTable("staff_users", {
   username: text("username").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   role: staffRoleEnum("role").notNull().default("manager"),
+  jobTitle: text("job_title"),
+  permissions: jsonb("permissions").$type<import("@/lib/permissions").Permission[]>(),
   active: boolean("active").default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+});
+
+// ─── Employees (HR records, separate from system logins) ─────────────────────
+// An employee does not automatically receive access to the admin. `staffUsers`
+// above is authentication; this table is the operational HR record used for
+// payroll and schedules across the three restaurant brands.
+export const employees = pgTable("employees", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  jobTitle: text("job_title").notNull(),
+  brand: text("brand").notNull().default("barbacue"),
+  phone: text("phone"),
+  email: text("email"),
+  employmentType: text("employment_type").notNull().default("clt"),
+  salaryCents: integer("salary_cents").notNull().default(0),
+  weeklyHours: integer("weekly_hours").notNull().default(44),
+  workSchedule: jsonb("work_schedule").$type<EmployeeSchedule>(),
+  hireDate: date("hire_date"),
+  active: boolean("active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
 // ─── Restaurant tables (dine-in / QR "mesa") ──────────────────────────────────
@@ -152,7 +202,16 @@ export const betaSignups = pgTable("beta_signups", {
 
 // ─── Coupons ──────────────────────────────────────────────────────────────────
 
+export const customerAccounts = pgTable("customer_accounts", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+});
+
 export const coupons = pgTable("coupons", {
+  audience: text("audience").$type<import("@/lib/permissions").Audience>().notNull().default("all"),
   id: serial("id").primaryKey(),
   code: text("code").notNull().unique(),
   description: text("description"),
@@ -201,10 +260,49 @@ export const closedDays = pgTable("closed_days", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
+// Delivery quotes preserve the route and price the customer reviewed. Settings
+// are separate from public store metadata; provider credentials stay in env.
+export const deliverySettings = pgTable("delivery_settings", {
+  id: integer("id").primaryKey().default(1),
+  enabled: boolean("enabled").notNull().default(false),
+  provider: text("provider").$type<"osm">().notNull().default("osm"),
+  originAddress: text("origin_address"),
+  originLatitude: doublePrecision("origin_latitude"),
+  originLongitude: doublePrecision("origin_longitude"),
+  baseFeeCents: integer("base_fee_cents").notNull().default(0),
+  feePerKmCents: integer("fee_per_km_cents").notNull().default(0),
+  minFeeCents: integer("min_fee_cents").notNull().default(0),
+  maxDistanceMeters: integer("max_distance_meters").notNull().default(10000),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const deliveryQuotes = pgTable("delivery_quotes", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  brand: text("brand").notNull(),
+  address: text("address").notNull(),
+  addressKey: text("address_key").notNull(),
+  provider: text("provider").$type<"osm">().notNull(),
+  distanceMeters: integer("distance_meters").notNull(),
+  durationSeconds: integer("duration_seconds").notNull(),
+  feeCents: integer("fee_cents").notNull(),
+  originLatitude: doublePrecision("origin_latitude").notNull(),
+  originLongitude: doublePrecision("origin_longitude").notNull(),
+  destinationLatitude: doublePrecision("destination_latitude").notNull(),
+  destinationLongitude: doublePrecision("destination_longitude").notNull(),
+  routeLinks: jsonb("route_links").$type<import("@/lib/delivery").DeliveryRouteLinks>().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+}, table => [index("delivery_quotes_expiry_idx").on(table.expiresAt)]);
+
 // ─── Orders ──────────────────────────────────────────────────────────────────
 
 export const orders = pgTable("orders", {
   id: uuid("id").defaultRandom().primaryKey(),
+  // Dedicated self-service idempotency; legacy channels leave these null.
+  selfServiceRequestId: uuid("self_service_request_id").unique(),
+  selfServiceRequestHash: text("self_service_request_hash"),
+  selfServiceResponse: jsonb("self_service_response").$type<import("@/lib/self-service").SelfServiceReceipt>(),
+  brand: text("brand").notNull().default("barbacue"),
   customerId: integer("customer_id").references(() => customers.id),
   customerName: text("customer_name").notNull(),
   customerPhone: text("customer_phone").notNull(),
@@ -212,6 +310,15 @@ export const orders = pgTable("orders", {
   orderType: orderTypeEnum("order_type").notNull().default("delivery"),
   tableId: integer("table_id").references(() => restaurantTables.id),
   deliveryAddress: text("delivery_address"),
+  deliveryQuoteId: uuid("delivery_quote_id").references(() => deliveryQuotes.id),
+  deliveryFeeCents: integer("delivery_fee_cents").notNull().default(0),
+  deliveryDistanceMeters: integer("delivery_distance_meters"),
+  deliveryDurationSeconds: integer("delivery_duration_seconds"),
+  deliveryRoute: jsonb("delivery_route").$type<import("@/lib/delivery").DeliveryRouteLinks>(),
+  deliveryDriverId: integer("delivery_driver_id").references(() => staffUsers.id),
+  deliveryStatus: text("delivery_status").$type<"assigned" | "out_for_delivery" | "delivered">(),
+  dispatchedAt: timestamp("dispatched_at", { withTimezone: true }),
+  deliveredAt: timestamp("delivered_at", { withTimezone: true }),
   // [{product_id, name, price_cents, qty}]
   items: jsonb("items").notNull(),
   subtotalCents: integer("subtotal_cents").notNull(),
@@ -228,6 +335,28 @@ export const orders = pgTable("orders", {
   channel: text("channel").default("click"),
   notes: text("notes"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+}, table => [index("orders_driver_delivery_idx").on(table.deliveryDriverId, table.deliveryStatus)]);
+
+// One durable kitchen ticket per accepted self-service order. Expired leases
+// require review because the paper may already have left the printer.
+export const kitchenPrintJobs = pgTable("kitchen_print_jobs", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  orderId: uuid("order_id").notNull().references(() => orders.id).unique(),
+  ticket: jsonb("ticket").$type<import("@/lib/kitchen-print").KitchenTicket>().notNull(),
+  status: text("status").$type<import("@/lib/kitchen-print").KitchenPrintStatus>().notNull().default("queued"),
+  attempts: integer("attempts").notNull().default(0),
+  leaseToken: uuid("lease_token"),
+  leaseExpiresAt: timestamp("lease_expires_at", { withTimezone: true }),
+  nextAttemptAt: timestamp("next_attempt_at", { withTimezone: true }).notNull().defaultNow(),
+  lastError: text("last_error"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  printedAt: timestamp("printed_at", { withTimezone: true }),
+}, table => [index("kitchen_print_jobs_ready_idx").on(table.status, table.nextAttemptAt)]);
+
+export const kitchenPrintAgentState = pgTable("kitchen_print_agent_state", {
+  id: integer("id").primaryKey().default(1),
+  lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -240,8 +369,15 @@ export interface DayHours {
 }
 export type WeeklyHours = DayHours[];
 
+export interface EmployeeSchedule {
+  days: number[]; // 0=Sunday … 6=Saturday
+  start: string;  // HH:MM
+  end: string;    // HH:MM
+}
+
 export type Category = typeof categories.$inferSelect;
 export type Product = typeof products.$inferSelect;
+export type BrandCatalogProduct = typeof brandCatalogProducts.$inferSelect;
 export type MediaAsset = typeof mediaAssets.$inferSelect;
 export type Customer = typeof customers.$inferSelect;
 export type Coupon = typeof coupons.$inferSelect;
@@ -249,6 +385,7 @@ export type Order = typeof orders.$inferSelect;
 export type NewOrder = typeof orders.$inferInsert;
 export type StoreSettings = typeof storeSettings.$inferSelect;
 export type StaffUser = typeof staffUsers.$inferSelect;
+export type Employee = typeof employees.$inferSelect;
 export type ClosedDay = typeof closedDays.$inferSelect;
 export type StaffRole = (typeof staffRoleEnum.enumValues)[number];
 export type PaymentMethod = (typeof paymentMethodEnum.enumValues)[number];

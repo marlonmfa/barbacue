@@ -1,0 +1,30 @@
+import { _electron as electron } from 'playwright';
+import { mkdtemp, mkdir, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { fileURLToPath } from 'node:url';
+import assert from 'node:assert/strict';
+const directory = await mkdtemp(`${tmpdir()}/barbacue-desktop-smoke-`);
+const root = fileURLToPath(new URL('../', import.meta.url));
+const output = fileURLToPath(new URL('../../../output/windows/', import.meta.url));
+await mkdir(output, { recursive: true });
+const env = { ...process.env, BARBACUE_DESKTOP_TEST_DATA: directory }; delete env.ELECTRON_RUN_AS_NODE;
+const application = await electron.launch({ args: [root], env });
+try {
+  const page = await application.firstWindow();
+  await page.getByRole('heading', { name: 'Pronto para o próximo pedido.' }).waitFor();
+  await page.getByRole('button', { name: 'Salvar configuração' }).waitFor({ state: 'visible' });
+  await page.locator('#serverUrl').fill('http://127.0.0.1:3099');
+  await page.getByRole('button', { name: 'Salvar configuração' }).click();
+  await page.getByText('Configuração salva. Use Abrir pedidos para entrar no sistema.').waitFor();
+  await page.screenshot({ path: `${output}/configuracao-windows.png`, fullPage: true });
+  const next = application.waitForEvent('window');
+  await page.getByRole('button', { name: 'Abrir pedidos' }).click();
+  const panel = await next;
+  await panel.waitForURL('**/admin/login');
+  assert.equal(await panel.evaluate(() => typeof window.desktop), 'undefined');
+  assert.equal(await panel.evaluate(() => typeof require), 'undefined');
+  assert.equal(await panel.evaluate(() => typeof process), 'undefined');
+  const exposed = await page.evaluate(async () => (await window.desktop.state()).value.settings);
+  assert.equal(exposed.token, undefined);
+  console.log('PASS: real Electron setup, IPC save, configured dashboard login, remote sandbox and no secret exposure.');
+} finally { await application.close(); await rm(directory, { recursive: true, force: true }); }

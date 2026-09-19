@@ -50,7 +50,7 @@ export function CartClient({
   }, [table, setCheckout]);
 
   const subtotal = totalCents();
-  const discount = coupon?.discountCents ?? 0;
+  const discount = Math.min(subtotal, coupon?.discountCents ?? 0);
   const total = Math.max(0, subtotal - discount);
 
   if (items.length === 0) {
@@ -166,8 +166,9 @@ export function CartClient({
               </div>
             )}
             <div className="flex justify-between font-bold text-lg text-[var(--text)] pt-1 border-t border-[var(--border)] mt-1">
-              <span>Total</span><span className="text-[var(--brand-tan)]">{formatPrice(total)}</span>
+              <span>{isDineIn ? "Total" : "Total dos itens"}</span><span className="text-[var(--brand-tan)]">{formatPrice(total)}</span>
             </div>
+            {!isDineIn && <p className="text-xs text-[var(--text-muted)] mt-1">Confira o frete e o total da entrega na próxima etapa.</p>}
           </div>
         </section>
 
@@ -237,7 +238,7 @@ export function CartClient({
             <div className="flex flex-col gap-1">
               <label className="text-sm font-medium text-[var(--text-muted)]" htmlFor="address">Endereço de entrega *</label>
               <input id="address" type="text" value={address}
-                onChange={(e) => setAddress(e.target.value)} placeholder="Rua, número, bairro"
+                onChange={(e) => setAddress(e.target.value)} placeholder="Rua, número, bairro, cidade e CEP"
                 className="bg-[var(--surface-2)] text-[var(--text)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand-red)]" />
             </div>
           )}

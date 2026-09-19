@@ -12,7 +12,7 @@
 // so an env-based switch silently no-ops — a file is the reliable channel.)
 //
 //   flutter build ios --simulator --debug \
-//     --dart-define=API_BASE_URL=https://barbacue.hirableaiagents.com \
+//     --dart-define=API_BASE_URL=https://barbacue.cog.ia.br \
 //     -t lib/main_screenshot.dart
 //   xcrun simctl install <udid> build/ios/iphonesimulator/Runner.app
 //   C=$(xcrun simctl get_app_container <udid> <bundle> data)

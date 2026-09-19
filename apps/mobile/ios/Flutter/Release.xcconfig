@@ -1,2 +1,7 @@
 #include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
 #include "Generated.xcconfig"
+APP_DISPLAY_NAME=BARBACUE
+APP_HOST=barbacue.cog.ia.br
+APP_ICON=AppIcon
+APP_BUNDLE_ID=com.lanchesdobarba.barbacue
+APP_LAUNCH_STORYBOARD=LaunchScreen

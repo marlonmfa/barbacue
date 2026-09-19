@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-09-08T20:24:40.463880+00:00",
+  "apps": [
+    {
+      "brand": "barbacue",
+      "appId": "6782376058",
+      "bundleId": "com.lanchesdobarba.barbacue",
+      "version": "1.2.4",
+      "state": "WAITING_FOR_REVIEW",
+      "releaseType": "AFTER_APPROVAL",
+      "build": "14",
+      "buildState": "VALID"
+    },
+    {
+      "brand": "chelas",
+      "appId": "6807118144",
+      "bundleId": "com.lanchesdobarba.chelas",
+      "version": "1.0",
+      "state": "WAITING_FOR_REVIEW",
+      "releaseType": "AFTER_APPROVAL",
+      "build": "3",
+      "buildState": "VALID"
+    },
+    {
+      "brand": "barbadog",
+      "appId": "6807118285",
+      "bundleId": "com.lanchesdobarba.barbadog",
+      "version": "1.0",
+      "state": "WAITING_FOR_REVIEW",
+      "releaseType": "AFTER_APPROVAL",
+      "build": "3",
+      "buildState": "VALID"
+    }
+  ]
+}

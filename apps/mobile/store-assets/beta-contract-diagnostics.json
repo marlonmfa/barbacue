@@ -1,0 +1,83 @@
+{
+  "checkedAt": "2026-09-10T02:21:07.628840+00:00",
+  "apps": {
+    "barbacue": {
+      "appId": "6782376058",
+      "buildId": "eb182444-9231-48ce-8ffa-33b2f55f255a",
+      "version": "14",
+      "processingState": "VALID",
+      "betaState": {
+        "autoNotifyEnabled": true,
+        "internalBuildState": "IN_BETA_TESTING",
+        "externalBuildState": "READY_FOR_BETA_SUBMISSION"
+      },
+      "existingReviews": [],
+      "submission": {
+        "status": 422,
+        "body": {
+          "errors": [
+            {
+              "id": "1d16b1a1-39e5-4ced-a556-6944fdb424de",
+              "status": "422",
+              "code": "ENTITY_UNPROCESSABLE.BETA_CONTRACT_MISSING",
+              "title": "Beta contract is missing for the app.",
+              "detail": "Beta Contract is missing."
+            }
+          ]
+        }
+      }
+    },
+    "chelas": {
+      "appId": "6807118144",
+      "buildId": "1bf81396-d6e6-4da2-9b79-e85b65666588",
+      "version": "3",
+      "processingState": "VALID",
+      "betaState": {
+        "autoNotifyEnabled": true,
+        "internalBuildState": "IN_BETA_TESTING",
+        "externalBuildState": "READY_FOR_BETA_SUBMISSION"
+      },
+      "existingReviews": [],
+      "submission": {
+        "status": 422,
+        "body": {
+          "errors": [
+            {
+              "id": "555537b2-6665-4168-9d1c-ea2a4d665d6f",
+              "status": "422",
+              "code": "ENTITY_UNPROCESSABLE.BETA_CONTRACT_MISSING",
+              "title": "Beta contract is missing for the app.",
+              "detail": "Beta Contract is missing."
+            }
+          ]
+        }
+      }
+    },
+    "barbadog": {
+      "appId": "6807118285",
+      "buildId": "33e5d155-abec-49c2-a8b2-5a28790d8bce",
+      "version": "3",
+      "processingState": "VALID",
+      "betaState": {
+        "autoNotifyEnabled": true,
+        "internalBuildState": "IN_BETA_TESTING",
+        "externalBuildState": "READY_FOR_BETA_SUBMISSION"
+      },
+      "existingReviews": [],
+      "submission": {
+        "status": 422,
+        "body": {
+          "errors": [
+            {
+              "id": "ce47b545-8960-4195-947b-09fbcee42718",
+              "status": "422",
+              "code": "ENTITY_UNPROCESSABLE.BETA_CONTRACT_MISSING",
+              "title": "Beta contract is missing for the app.",
+              "detail": "Beta Contract is missing."
+            }
+          ]
+        }
+      }
+    }
+  }
+}

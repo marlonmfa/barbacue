@@ -4,7 +4,7 @@
 	<dict>
 		<key>com.apple.developer.associated-domains</key>
 		<array>
-			<string>applinks:barbacue.hirableaiagents.com</string>
+			<string>applinks:$(APP_HOST)</string>
 		</array>
 	</dict>
 </plist>

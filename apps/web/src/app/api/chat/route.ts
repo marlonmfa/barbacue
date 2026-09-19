@@ -1,3 +1,4 @@
+import { isBrand } from "@/lib/brands";
 import { NextRequest } from "next/server";
 import OpenAI from "openai";
 import { db } from "@/db";
@@ -10,11 +11,13 @@ import {
   closedDays,
   coupons,
   restaurantTables,
+  brandCatalogProducts,
 } from "@/db/schema";
-import { eq, asc, desc, gte } from "drizzle-orm";
+import { and, eq, asc, desc, gte } from "drizzle-orm";
 import { effectivePrice, isPromoActive } from "@/lib/pricing";
 import { computeStoreStatus } from "@/lib/store-hours";
 import { safeEqual } from "@/lib/admin-auth";
+import { ensureBrandCatalogs } from "@/lib/managed-catalog";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -26,6 +29,15 @@ interface AgentItem {
   name: string;
   priceCents: number;
   qty: number;
+}
+
+interface AgentProduct {
+  id: number;
+  name: string;
+  description: string | null;
+  category: string;
+  priceCents: number;
+  originalPriceCents: number | null;
 }
 
 const fmt = (cents: number) =>
@@ -55,6 +67,7 @@ export async function POST(req: NextRequest) {
     customerPhone?: string;
     // When seated via QR, the dining table's opaque token (dine-in mode).
     tableToken?: string;
+    brand?: "barbacue" | "barbadog" | "chelas";
   };
   try {
     body = await req.json();
@@ -62,6 +75,8 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
+  if (body.brand !== undefined && !isBrand(body.brand)) return Response.json({ error: "Restaurante inválido." }, { status: 400 });
+  if (!Array.isArray(body.messages) || body.messages.some((message) => !message || !["user", "assistant"].includes(message.role) || typeof message.content !== "string" || message.content.length > 8000) || (body.cart !== undefined && !Array.isArray(body.cart))) return Response.json({ error: "Pedido inválido." }, { status: 400 });
   const history = (body.messages ?? []).slice(-20);
   if (history.length === 0) {
     return Response.json({ error: "Mensagem vazia" }, { status: 400 });
@@ -76,12 +91,41 @@ export async function POST(req: NextRequest) {
 
   // ─── Load the live menu so the agent can never invent products/prices ───
   const [settings] = await db.select().from(storeSettings).where(eq(storeSettings.id, 1));
-  const cats = await db.select().from(categories).orderBy(asc(categories.sortOrder));
-  const prods = await db
-    .select()
-    .from(products)
-    .where(eq(products.available, true))
-    .orderBy(asc(products.sortOrder));
+  const brand = body.brand ?? "barbacue";
+  const brandName = brand === "barbadog" ? "Barbadog" : brand === "chelas" ? "Chelas" : settings?.storeName ?? "Barbacue";
+  let prods: AgentProduct[] = [];
+  if (brand === "barbacue") {
+    const cats = await db.select().from(categories).orderBy(asc(categories.sortOrder));
+    const categoryName = new Map(cats.map((category) => [category.id, category.name]));
+    const native = await db
+      .select()
+      .from(products)
+      .where(eq(products.available, true))
+      .orderBy(asc(products.sortOrder));
+    prods = native.map((product) => ({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      category: categoryName.get(product.categoryId ?? -1) ?? "Outros",
+      priceCents: effectivePrice(product),
+      originalPriceCents: isPromoActive(product) ? product.priceCents : null,
+    }));
+  } else {
+    await ensureBrandCatalogs();
+    const managed = await db
+      .select()
+      .from(brandCatalogProducts)
+      .where(and(eq(brandCatalogProducts.brand, brand), eq(brandCatalogProducts.available, true)))
+      .orderBy(asc(brandCatalogProducts.sortOrder));
+    prods = managed.map((product) => ({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      category: product.category,
+      priceCents: product.priceCents,
+      originalPriceCents: product.originalPriceCents,
+    }));
+  }
 
   // Short-circuit an empty catalog instead of letting the agent loop on
   // "Produto não encontrado".
@@ -94,24 +138,21 @@ export async function POST(req: NextRequest) {
       couponCode: null,
       orderType: "delivery",
       tableNumber: null,
+      brand,
       navigate: false,
     });
   }
 
   const byId = new Map(prods.map((p) => [p.id, p]));
-  const catName = new Map(cats.map((c) => [c.id, c.name]));
   const menuText = prods
     .map((p) => {
-      const cat = catName.get(p.categoryId ?? -1) ?? "Outros";
       const desc = p.description ? ` — ${p.description}` : "";
-      if (isPromoActive(p)) {
-        return `#${p.id} | ${p.name} | ${fmt(effectivePrice(p))} (PROMO! de ${fmt(p.priceCents)}) | ${cat}${desc}`;
+      if (p.originalPriceCents && p.originalPriceCents > p.priceCents) {
+        return `#${p.id} | ${p.name} | ${fmt(p.priceCents)} (PROMO! de ${fmt(p.originalPriceCents)}) | ${p.category}${desc}`;
       }
-      return `#${p.id} | ${p.name} | ${fmt(p.priceCents)} | ${cat}${desc}`;
+      return `#${p.id} | ${p.name} | ${fmt(p.priceCents)} | ${p.category}${desc}`;
     })
     .join("\n");
-
-  const storeName = settings?.storeName ?? "Barbacue";
 
   // ─── Schedule-aware closure (same source of truth as /api/orders) ───
   const todayStr = new Date().toISOString().slice(0, 10);
@@ -138,7 +179,10 @@ export async function POST(req: NextRequest) {
   const isDineIn = validTableToken !== null;
 
   // Working copies the tools mutate; returned to the client as the new truth.
-  let cart: AgentItem[] = (body.cart ?? []).filter((i) => byId.has(i.productId));
+  let cart: AgentItem[] = (body.cart ?? []).filter((i) => i && byId.has(i.productId) && Number.isSafeInteger(i.qty) && i.qty > 0 && i.qty <= 99).map((i) => {
+    const product = byId.get(i.productId)!;
+    return { productId: product.id, name: product.name, priceCents: product.priceCents, qty: i.qty };
+  });
   const customer = { ...(body.customer ?? {}) };
   let paymentMethod = body.paymentMethod ?? "pix";
   let couponCode: string | null = body.couponCode ?? null;
@@ -161,7 +205,7 @@ export async function POST(req: NextRequest) {
     const past = await db
       .select({ items: orders.items, createdAt: orders.createdAt, totalCents: orders.totalCents })
       .from(orders)
-      .where(eq(orders.customerPhone, knownPhone))
+      .where(and(eq(orders.customerPhone, knownPhone), eq(orders.brand, brand)))
       .orderBy(desc(orders.createdAt))
       .limit(3);
 
@@ -190,7 +234,7 @@ export async function POST(req: NextRequest) {
 
   const openai = new OpenAI({ apiKey });
 
-  const system = `Você é o atendente virtual da hamburgueria "${storeName}". Atende em português brasileiro, de forma calorosa, breve e objetiva — como um atendente de WhatsApp.
+  const system = `Você é o atendente virtual do restaurante "${brandName}". Atende em português brasileiro, de forma calorosa, breve e objetiva — como um atendente de WhatsApp.
 
 Seu trabalho: anotar o pedido do cliente conversando e, quando ele estiver pronto, levá-lo direto para a página de pagamento usando a ferramenta go_to_payment. O cliente pode misturar livremente clicar no cardápio e escrever — os dois valem igual.
 
@@ -347,7 +391,7 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
         const qty = Math.max(1, Number(args.qty) || 1);
         const existing = cart.find((i) => i.productId === p.id);
         if (existing) existing.qty += qty;
-        else cart.push({ productId: p.id, name: p.name, priceCents: effectivePrice(p), qty });
+        else cart.push({ productId: p.id, name: p.name, priceCents: p.priceCents, qty });
         return JSON.stringify({ ok: true, added: `${qty}x ${p.name}`, cart: cartSummary(cart) });
       }
       case "set_quantity": {
@@ -360,7 +404,7 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
         } else if (existing) {
           existing.qty = qty; // mutate in place → stable cart order
         } else {
-          cart.push({ productId: p.id, name: p.name, priceCents: effectivePrice(p), qty });
+          cart.push({ productId: p.id, name: p.name, priceCents: p.priceCents, qty });
         }
         return JSON.stringify({ ok: true, cart: cartSummary(cart) });
       }
@@ -407,7 +451,7 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
         cart = [];
         for (const it of lastOrderItems) {
           const p = byId.get(it.productId);
-          if (p) cart.push({ productId: p.id, name: p.name, priceCents: effectivePrice(p), qty: it.qty });
+          if (p) cart.push({ productId: p.id, name: p.name, priceCents: p.priceCents, qty: it.qty });
         }
         return JSON.stringify({ ok: true, repeated: true, cart: cartSummary(cart) });
       }
@@ -474,6 +518,7 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
     couponCode,
     orderType: isDineIn ? "dine_in" : "delivery",
     tableNumber,
+    brand,
     navigate,
   });
 }

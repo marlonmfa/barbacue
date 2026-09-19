@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Isolated Next.js verification builds
+/.next-*/
+
+# Authenticated desktop downloads, staged with the release pipeline
+/private-downloads/*
+!/private-downloads/README.md

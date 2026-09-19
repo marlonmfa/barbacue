@@ -1,6 +1,8 @@
 import { db } from "@/db";
 import { storeSettings } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
+import { brandFromHost, getBrandStorefront } from "@/lib/brand-storefront";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +11,22 @@ export const dynamic = "force-dynamic";
 // — a `select().from()` here would leak pixKey to anyone hitting the endpoint.
 // Open/closed state is deliberately absent: /api/store-status owns it.
 export async function GET() {
+  const requestHeaders = await headers();
+  const brandSlug = brandFromHost(requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host"));
+  if (brandSlug) {
+    const brand = getBrandStorefront(brandSlug);
+    return Response.json({
+      storeName: brand.name,
+      tagline: brand.tagline,
+      phone: null,
+      whatsapp: null,
+      address: "Jaraguá do Sul · Santa Catarina",
+      instagramUrl: null,
+      openingHours: null,
+      deliveryFeeText: brand.delivery,
+    });
+  }
+
   const [settings] = await db
     .select({
       storeName: storeSettings.storeName,

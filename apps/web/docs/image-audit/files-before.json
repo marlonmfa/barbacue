@@ -1,0 +1,1562 @@
+[
+  {
+    "id": 1,
+    "name": "Barba crunch",
+    "category": "HAMBÚRGUERES",
+    "width": 133,
+    "height": 200,
+    "size": 5562
+  },
+  {
+    "id": 2,
+    "name": "Barba Supreme",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 9564
+  },
+  {
+    "id": 3,
+    "name": "Barba Burguer",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 7807
+  },
+  {
+    "id": 4,
+    "name": "Barba Onion Bbq",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 9215
+  },
+  {
+    "id": 5,
+    "name": "Barba salada",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 9707
+  },
+  {
+    "id": 6,
+    "name": "Barba Chicken Pickles",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 11568
+  },
+  {
+    "id": 7,
+    "name": "El Cocinero",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 10127
+  },
+  {
+    "id": 8,
+    "name": "Barba Tex Mex",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 9586
+  },
+  {
+    "id": 9,
+    "name": "Do Barba",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 8058
+  },
+  {
+    "id": 10,
+    "name": "Campeiro",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 9873
+  },
+  {
+    "id": 11,
+    "name": "Pulled Pork",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 9124
+  },
+  {
+    "id": 12,
+    "name": "Barba Double Cheddar",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 133,
+    "size": 5920
+  },
+  {
+    "id": 13,
+    "name": "Barbíssimo",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 8967
+  },
+  {
+    "id": 14,
+    "name": "Barba Shrimp 🦐",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 8408
+  },
+  {
+    "id": 15,
+    "name": "Barba Cordeiro",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 9823
+  },
+  {
+    "id": 16,
+    "name": "Wonderful life (vegetariano)",
+    "category": "HAMBÚRGUERES",
+    "width": 200,
+    "height": 200,
+    "size": 10481
+  },
+  {
+    "id": 17,
+    "name": "Combo da Semana - Hambúrguer + Fritas + Refrigerante + Sobremesa",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 1024,
+    "height": 1024,
+    "size": 1450794
+  },
+  {
+    "id": 18,
+    "name": "Barba Burguer + Adicional de Fritas Palito + Coca-Cola Lata 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 101479
+  },
+  {
+    "id": 19,
+    "name": "Barba Onion Bbq + Adicional de Fritas Palito + Coca-Cola 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 102934
+  },
+  {
+    "id": 20,
+    "name": "Barba salada + Adicional de Fritas Palito + Coca-Cola Lata 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 103199
+  },
+  {
+    "id": 21,
+    "name": "Barba supreme + Adicional de Fritas Palito + Coca-Cola Lata 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 1024,
+    "height": 1024,
+    "size": 1435986
+  },
+  {
+    "id": 22,
+    "name": "Barba crunch + Adicional de Fritas Palito + Coca-Cola Lata 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 1024,
+    "height": 1024,
+    "size": 1516311
+  },
+  {
+    "id": 23,
+    "name": "Barba chicken pickles + Adicional fritas Palito + Coca-Cola 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 103402
+  },
+  {
+    "id": 24,
+    "name": "El Cocinero + Adicional Batata Palito + Coca-Cola 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 102542
+  },
+  {
+    "id": 25,
+    "name": "Do Barba + Adicional Batata Palito + Coca-Cola 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 103183
+  },
+  {
+    "id": 26,
+    "name": "Barba Tex Mex + Adicional Batata Palito + Coca-Cola 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 103307
+  },
+  {
+    "id": 27,
+    "name": "Campeiro + Adicional Batata Palito + Coca-Cola 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 103106
+  },
+  {
+    "id": 28,
+    "name": "Pulled Pork + Adicional Batata Palito + Coca-Cola 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 102820
+  },
+  {
+    "id": 29,
+    "name": "Barba Double Cheddar + Adicional Batata Palito + Coca-Cola 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 103399
+  },
+  {
+    "id": 30,
+    "name": "Barbíssimo + Adicional Batata Palito + Coca-Cola 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 102969
+  },
+  {
+    "id": 31,
+    "name": "Barba Shrimp 🦐 + Adicional Batata Palito + Coca-Cola 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 104189
+  },
+  {
+    "id": 32,
+    "name": "Barba Cordeiro + Adicional Batata Palito + Coca-Cola 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 200,
+    "size": 9823
+  },
+  {
+    "id": 33,
+    "name": "Wonderful life (vegetariano) + Adicional Batata Palito + Coca-Cola 350ml",
+    "category": "COMBOS INDIVIDUAIS",
+    "width": 200,
+    "height": 183,
+    "size": 103002
+  },
+  {
+    "id": 34,
+    "name": "Combo 1",
+    "category": "COMBOS PARA COMPARTILHAR",
+    "width": 796,
+    "height": 597,
+    "size": 79891
+  },
+  {
+    "id": 35,
+    "name": "Combo 2",
+    "category": "COMBOS PARA COMPARTILHAR",
+    "width": 796,
+    "height": 597,
+    "size": 107718
+  },
+  {
+    "id": 36,
+    "name": "Combo 3",
+    "category": "COMBOS PARA COMPARTILHAR",
+    "width": 796,
+    "height": 597,
+    "size": 97994
+  },
+  {
+    "id": 37,
+    "name": "Combo TEX MEX",
+    "category": "COMBOS PARA COMPARTILHAR",
+    "width": 200,
+    "height": 200,
+    "size": 13781
+  },
+  {
+    "id": 38,
+    "name": "Beef Melt Fries",
+    "category": "Porções",
+    "width": 600,
+    "height": 401,
+    "size": 30253
+  },
+  {
+    "id": 39,
+    "name": "Batata frita palito",
+    "category": "Porções",
+    "width": 900,
+    "height": 675,
+    "size": 422188
+  },
+  {
+    "id": 40,
+    "name": "Salada do Barba",
+    "category": "Porções",
+    "width": 600,
+    "height": 400,
+    "size": 13572
+  },
+  {
+    "id": 41,
+    "name": "Waffle's Fries",
+    "category": "Porções",
+    "width": 900,
+    "height": 675,
+    "size": 419599
+  },
+  {
+    "id": 42,
+    "name": "Porção de Batata - Crinkle",
+    "category": "Porções",
+    "width": 200,
+    "height": 133,
+    "size": 8817
+  },
+  {
+    "id": 43,
+    "name": "Barba Chicken Popcorn",
+    "category": "Porções",
+    "width": 900,
+    "height": 675,
+    "size": 431337
+  },
+  {
+    "id": 44,
+    "name": "Empanado de queijo Gouda",
+    "category": "Porções",
+    "width": 500,
+    "height": 375,
+    "size": 73544
+  },
+  {
+    "id": 45,
+    "name": "Dadinhos de Tapioca",
+    "category": "Porções",
+    "width": 200,
+    "height": 113,
+    "size": 8376
+  },
+  {
+    "id": 46,
+    "name": "Onions Rings",
+    "category": "Porções",
+    "width": 200,
+    "height": 200,
+    "size": 9596
+  },
+  {
+    "id": 47,
+    "name": "Porção de Entrecot e fritas.",
+    "category": "Porções",
+    "width": 200,
+    "height": 200,
+    "size": 16080
+  },
+  {
+    "id": 48,
+    "name": "Entrecot Completo",
+    "category": "Porções",
+    "width": 112,
+    "height": 200,
+    "size": 7864
+  },
+  {
+    "id": 49,
+    "name": "Tortilhas de milho crocante",
+    "category": "Porções",
+    "width": 500,
+    "height": 317,
+    "size": 39652
+  },
+  {
+    "id": 50,
+    "name": "Brigadeiro de Colher",
+    "category": "SOBREMESAS",
+    "width": 900,
+    "height": 675,
+    "size": 277679
+  },
+  {
+    "id": 51,
+    "name": "Sobremesas de Ninho",
+    "category": "SOBREMESAS",
+    "width": 133,
+    "height": 200,
+    "size": 6740
+  },
+  {
+    "id": 52,
+    "name": "Sweet Barba",
+    "category": "SOBREMESAS",
+    "width": 900,
+    "height": 675,
+    "size": 546436
+  },
+  {
+    "id": 53,
+    "name": "Barba Dream",
+    "category": "SOBREMESAS",
+    "width": 200,
+    "height": 200,
+    "size": 10204
+  },
+  {
+    "id": 54,
+    "name": "Croissant Nutella",
+    "category": "SOBREMESAS",
+    "width": 112,
+    "height": 200,
+    "size": 6099
+  },
+  {
+    "id": 55,
+    "name": "Croissant Creme de Ovomaltine",
+    "category": "SOBREMESAS",
+    "width": 112,
+    "height": 200,
+    "size": 5578
+  },
+  {
+    "id": 56,
+    "name": "Croissant Doce de Leite",
+    "category": "SOBREMESAS",
+    "width": 112,
+    "height": 200,
+    "size": 6579
+  },
+  {
+    "id": 57,
+    "name": "Mini Churros de doce de leite",
+    "category": "SOBREMESAS",
+    "width": 200,
+    "height": 200,
+    "size": 6179
+  },
+  {
+    "id": 58,
+    "name": "Quesadilha doce",
+    "category": "SOBREMESAS",
+    "width": 600,
+    "height": 407,
+    "size": 62635
+  },
+  {
+    "id": 59,
+    "name": "Coca-Cola 200ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 34634
+  },
+  {
+    "id": 60,
+    "name": "Coca-Cola 200ml Zero",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 2504
+  },
+  {
+    "id": 61,
+    "name": "Coca-Cola Original 350ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 500,
+    "height": 500,
+    "size": 46539
+  },
+  {
+    "id": 62,
+    "name": "Coca-Cola Zero 350ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 5085
+  },
+  {
+    "id": 63,
+    "name": "Coca-Cola 600ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 500,
+    "height": 375,
+    "size": 25911
+  },
+  {
+    "id": 64,
+    "name": "Coca cola ZERO 600ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 3573
+  },
+  {
+    "id": 65,
+    "name": "Coca-Cola Original 2L",
+    "category": "BEBIDAS DELIVERY",
+    "width": 500,
+    "height": 500,
+    "size": 29839
+  },
+  {
+    "id": 66,
+    "name": "Coca-Cola Zero 2L",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 25101
+  },
+  {
+    "id": 67,
+    "name": "Sprite 350ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 44669
+  },
+  {
+    "id": 68,
+    "name": "Schweppes Citrus 350ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 3476
+  },
+  {
+    "id": 69,
+    "name": "Fanta Laranja 350ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 54928
+  },
+  {
+    "id": 70,
+    "name": "Fanta Uva 350ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 42088
+  },
+  {
+    "id": 71,
+    "name": "Itubaína Long 355ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 4391
+  },
+  {
+    "id": 72,
+    "name": "Refrigerante Guaraná Antarctica 350ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 500,
+    "height": 500,
+    "size": 48357
+  },
+  {
+    "id": 73,
+    "name": "Guaraná zero",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 113,
+    "size": 8595
+  },
+  {
+    "id": 74,
+    "name": "Guaraná Antartica 1,5l",
+    "category": "BEBIDAS DELIVERY",
+    "width": 900,
+    "height": 900,
+    "size": 148015
+  },
+  {
+    "id": 75,
+    "name": "Água Tônica",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 19030
+  },
+  {
+    "id": 76,
+    "name": "Aguá mineral",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 4904
+  },
+  {
+    "id": 77,
+    "name": "Suco Del Valle Lata 290ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 4210
+  },
+  {
+    "id": 78,
+    "name": "Suco de Laranja Natural 400ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 106,
+    "size": 2152
+  },
+  {
+    "id": 79,
+    "name": "SUCO DE MORANGO 400ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 164,
+    "size": 3726
+  },
+  {
+    "id": 80,
+    "name": "Suco de Framboesa 400ml",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 112,
+    "size": 6137
+  },
+  {
+    "id": 81,
+    "name": "Heineken Zero",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 3478
+  },
+  {
+    "id": 82,
+    "name": "chá mate leão",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 4176
+  },
+  {
+    "id": 83,
+    "name": "ICE TEA",
+    "category": "BEBIDAS DELIVERY",
+    "width": 200,
+    "height": 200,
+    "size": 3926
+  },
+  {
+    "id": 84,
+    "name": "Cerveja Stannis Pilsner 355ml",
+    "category": "CERVEJAS STANNIS",
+    "width": 200,
+    "height": 200,
+    "size": 2946
+  },
+  {
+    "id": 85,
+    "name": "Combo Stannis Pilsen Long",
+    "category": "CERVEJAS STANNIS",
+    "width": 200,
+    "height": 200,
+    "size": 8649
+  },
+  {
+    "id": 86,
+    "name": "Cerveja Stannis White Rose 355ml",
+    "category": "CERVEJAS STANNIS",
+    "width": 200,
+    "height": 200,
+    "size": 7272
+  },
+  {
+    "id": 87,
+    "name": "Cerveja Stannis Gold Amélia 355ml",
+    "category": "CERVEJAS STANNIS",
+    "width": 200,
+    "height": 200,
+    "size": 3795
+  },
+  {
+    "id": 88,
+    "name": "Cerveja Stannis Red Sonja 355ml",
+    "category": "CERVEJAS STANNIS",
+    "width": 200,
+    "height": 200,
+    "size": 3724
+  },
+  {
+    "id": 89,
+    "name": "Cerveja Stannis Brigit Ale 355ml",
+    "category": "CERVEJAS STANNIS",
+    "width": 200,
+    "height": 200,
+    "size": 6324
+  },
+  {
+    "id": 90,
+    "name": "Cerveja Stannis - Dear Paula 355ml",
+    "category": "CERVEJAS STANNIS",
+    "width": 200,
+    "height": 200,
+    "size": 2884
+  },
+  {
+    "id": 91,
+    "name": "Chope em Growler - Pilsner - 1lt",
+    "category": "CERVEJAS STANNIS",
+    "width": 200,
+    "height": 200,
+    "size": 5662
+  },
+  {
+    "id": 92,
+    "name": "Adicional de Batata Frita",
+    "category": "ACOMPANHAMENTOS",
+    "width": 600,
+    "height": 400,
+    "size": 34902
+  },
+  {
+    "id": 93,
+    "name": "Adicional de Queijo Gouda",
+    "category": "ACOMPANHAMENTOS",
+    "width": 600,
+    "height": 449,
+    "size": 45120
+  },
+  {
+    "id": 94,
+    "name": "Adicional de Batata Waffle",
+    "category": "ACOMPANHAMENTOS",
+    "width": 500,
+    "height": 375,
+    "size": 36999
+  },
+  {
+    "id": 95,
+    "name": "Adicional de Batata Crinkle Temperada",
+    "category": "ACOMPANHAMENTOS",
+    "width": 600,
+    "height": 337,
+    "size": 46729
+  },
+  {
+    "id": 96,
+    "name": "Adicional de maionese temperada",
+    "category": "ACOMPANHAMENTOS",
+    "width": 600,
+    "height": 400,
+    "size": 21250
+  },
+  {
+    "id": 97,
+    "name": "Adicional de maionese verde temperada",
+    "category": "ACOMPANHAMENTOS",
+    "width": 600,
+    "height": 400,
+    "size": 21250
+  },
+  {
+    "id": 98,
+    "name": "Adicional de Sweet Chilli",
+    "category": "ACOMPANHAMENTOS",
+    "width": 600,
+    "height": 449,
+    "size": 44636
+  },
+  {
+    "id": 99,
+    "name": "Adicional de Barbacue",
+    "category": "ACOMPANHAMENTOS",
+    "width": 600,
+    "height": 399,
+    "size": 41788
+  },
+  {
+    "id": 100,
+    "name": "Adicional de Chipotle",
+    "category": "ACOMPANHAMENTOS",
+    "width": 600,
+    "height": 490,
+    "size": 45998
+  },
+  {
+    "id": 101,
+    "name": "Adicional de creme de queijos",
+    "category": "ACOMPANHAMENTOS",
+    "width": 600,
+    "height": 449,
+    "size": 44473
+  },
+  {
+    "id": 102,
+    "name": "Adicional de hamburguer",
+    "category": "ACOMPANHAMENTOS",
+    "width": 600,
+    "height": 449,
+    "size": 33979
+  },
+  {
+    "id": 103,
+    "name": "Adicional pimenta jalapeño",
+    "category": "ACOMPANHAMENTOS",
+    "width": 600,
+    "height": 449,
+    "size": 46716
+  },
+  {
+    "id": 104,
+    "name": "Adicional de Entrecot",
+    "category": "ACOMPANHAMENTOS",
+    "width": 600,
+    "height": 449,
+    "size": 37045
+  },
+  {
+    "id": 105,
+    "name": "Gin Tropical",
+    "category": "Drinks",
+    "width": 600,
+    "height": 400,
+    "size": 20359
+  },
+  {
+    "id": 106,
+    "name": "Gin melancia",
+    "category": "Drinks",
+    "width": 600,
+    "height": 400,
+    "size": 20359
+  },
+  {
+    "id": 107,
+    "name": "Gin Tônica",
+    "category": "Drinks",
+    "width": 600,
+    "height": 899,
+    "size": 53310
+  },
+  {
+    "id": 108,
+    "name": "Mojito",
+    "category": "Drinks",
+    "width": 600,
+    "height": 378,
+    "size": 40267
+  },
+  {
+    "id": 109,
+    "name": "Piña Colada",
+    "category": "Drinks",
+    "width": 200,
+    "height": 175,
+    "size": 5089
+  },
+  {
+    "id": 110,
+    "name": "Couve flor com alho poró",
+    "category": "Hambúrguer vegetariano",
+    "width": 1024,
+    "height": 1024,
+    "size": 1403208
+  },
+  {
+    "id": 111,
+    "name": "Cevadinha com cogumelos",
+    "category": "Hambúrguer vegetariano",
+    "width": 1024,
+    "height": 1024,
+    "size": 1470425
+  },
+  {
+    "id": 112,
+    "name": "Alface americana",
+    "category": "Adicionais",
+    "width": 500,
+    "height": 500,
+    "size": 54408
+  },
+  {
+    "id": 113,
+    "name": "Cebola roxa",
+    "category": "Adicionais",
+    "width": 500,
+    "height": 375,
+    "size": 24652
+  },
+  {
+    "id": 114,
+    "name": "Bacon",
+    "category": "Adicionais",
+    "width": 600,
+    "height": 401,
+    "size": 33608
+  },
+  {
+    "id": 115,
+    "name": "Queijo gouda empanado",
+    "category": "Adicionais",
+    "width": 600,
+    "height": 449,
+    "size": 45120
+  },
+  {
+    "id": 116,
+    "name": "Batata-frita Palito",
+    "category": "Adicionais",
+    "width": 600,
+    "height": 400,
+    "size": 34902
+  },
+  {
+    "id": 117,
+    "name": "Queijo brie",
+    "category": "Adicionais",
+    "width": 500,
+    "height": 500,
+    "size": 37773
+  },
+  {
+    "id": 118,
+    "name": "Maionese temperada extra",
+    "category": "Adicionais",
+    "width": 600,
+    "height": 400,
+    "size": 21250
+  },
+  {
+    "id": 119,
+    "name": "Hambúrguer extra",
+    "category": "Adicionais",
+    "width": 600,
+    "height": 449,
+    "size": 33979
+  },
+  {
+    "id": 120,
+    "name": "Batata waffle",
+    "category": "Adicionais",
+    "width": 500,
+    "height": 375,
+    "size": 36999
+  },
+  {
+    "id": 121,
+    "name": "Molho barbecue",
+    "category": "Adicionais",
+    "width": 600,
+    "height": 399,
+    "size": 41788
+  },
+  {
+    "id": 122,
+    "name": "Costela na brasa desfiada",
+    "category": "Adicionais",
+    "width": 600,
+    "height": 449,
+    "size": 48017
+  },
+  {
+    "id": 123,
+    "name": "Geleia de Tomate",
+    "category": "Adicionais",
+    "width": 600,
+    "height": 901,
+    "size": 69745
+  },
+  {
+    "id": 124,
+    "name": "Molho chipotle",
+    "category": "Adicionais",
+    "width": 600,
+    "height": 490,
+    "size": 45998
+  },
+  {
+    "id": 125,
+    "name": "Chutney de cebola Roxa",
+    "category": "Adicionais",
+    "width": 600,
+    "height": 401,
+    "size": 29463
+  },
+  {
+    "id": 126,
+    "name": "Molho Chipotle",
+    "category": "Porções",
+    "width": 600,
+    "height": 490,
+    "size": 45998
+  },
+  {
+    "id": 127,
+    "name": "Maionese temperada extra",
+    "category": "Porções",
+    "width": 600,
+    "height": 400,
+    "size": 21250
+  },
+  {
+    "id": 128,
+    "name": "Farofa",
+    "category": "Adicionais Entrecot",
+    "width": 600,
+    "height": 399,
+    "size": 32684
+  },
+  {
+    "id": 129,
+    "name": "Creme de Gorgonzola",
+    "category": "Adicionais Entrecot",
+    "width": 600,
+    "height": 399,
+    "size": 30780
+  },
+  {
+    "id": 130,
+    "name": "Steak de Entrecot Extra",
+    "category": "Adicionais Entrecot",
+    "width": 600,
+    "height": 449,
+    "size": 37045
+  },
+  {
+    "id": 131,
+    "name": "Chimichurri",
+    "category": "Adicionais Entrecot",
+    "width": 600,
+    "height": 380,
+    "size": 59923
+  },
+  {
+    "id": 132,
+    "name": "Creme de Ovomaltine",
+    "category": "Sweet Barba",
+    "width": 600,
+    "height": 401,
+    "size": 24217
+  },
+  {
+    "id": 133,
+    "name": "Doce de leite",
+    "category": "Sweet Barba",
+    "width": 500,
+    "height": 333,
+    "size": 21055
+  },
+  {
+    "id": 134,
+    "name": "Nutella",
+    "category": "Sweet Barba",
+    "width": 600,
+    "height": 657,
+    "size": 50680
+  },
+  {
+    "id": 135,
+    "name": "Sem gás",
+    "category": "Gás/sem",
+    "width": 600,
+    "height": 485,
+    "size": 52184
+  },
+  {
+    "id": 136,
+    "name": "Gás",
+    "category": "Gás/sem",
+    "width": 600,
+    "height": 485,
+    "size": 52184
+  },
+  {
+    "id": 137,
+    "name": "Alface Americana",
+    "category": "Turbine seu Lanche",
+    "width": 500,
+    "height": 500,
+    "size": 54408
+  },
+  {
+    "id": 138,
+    "name": "Cebola Roxa",
+    "category": "Turbine seu Lanche",
+    "width": 500,
+    "height": 375,
+    "size": 24652
+  },
+  {
+    "id": 139,
+    "name": "Rúcula",
+    "category": "Turbine seu Lanche",
+    "width": 600,
+    "height": 400,
+    "size": 12208
+  },
+  {
+    "id": 140,
+    "name": "Geleia de Tomate",
+    "category": "Turbine seu Lanche",
+    "width": 600,
+    "height": 901,
+    "size": 69745
+  },
+  {
+    "id": 141,
+    "name": "Chutney de Cebola Roxa",
+    "category": "Turbine seu Lanche",
+    "width": 600,
+    "height": 401,
+    "size": 29463
+  },
+  {
+    "id": 142,
+    "name": "Bacon",
+    "category": "Turbine seu Lanche",
+    "width": 600,
+    "height": 401,
+    "size": 33608
+  },
+  {
+    "id": 143,
+    "name": "Queijo Brie",
+    "category": "Turbine seu Lanche",
+    "width": 500,
+    "height": 500,
+    "size": 37773
+  },
+  {
+    "id": 144,
+    "name": "Queijo Cheddar Pollenghi (2 fatias)",
+    "category": "Turbine seu Lanche",
+    "width": 4096,
+    "height": 3072,
+    "size": 1910123
+  },
+  {
+    "id": 145,
+    "name": "Hambúrguer Extra",
+    "category": "Turbine seu Lanche",
+    "width": 600,
+    "height": 449,
+    "size": 33979
+  },
+  {
+    "id": 146,
+    "name": "Costela Bovina Desfiada (100g)",
+    "category": "Turbine seu Lanche",
+    "width": 600,
+    "height": 449,
+    "size": 48017
+  },
+  {
+    "id": 147,
+    "name": "Picles",
+    "category": "Turbine seu Lanche",
+    "width": 322,
+    "height": 480,
+    "size": 29601
+  },
+  {
+    "id": 148,
+    "name": "Pimenta Jalapenõ",
+    "category": "Turbine seu Lanche",
+    "width": 600,
+    "height": 449,
+    "size": 46716
+  },
+  {
+    "id": 149,
+    "name": "Anel de Cebola (4 und dentro do burguer)",
+    "category": "Turbine seu Lanche",
+    "width": 600,
+    "height": 337,
+    "size": 33285
+  },
+  {
+    "id": 150,
+    "name": "Catupiry empanado",
+    "category": "Turbine seu Lanche",
+    "width": 600,
+    "height": 449,
+    "size": 44473
+  },
+  {
+    "id": 151,
+    "name": "Adicional Batata Palito",
+    "category": "Para Acompanhar",
+    "width": 600,
+    "height": 400,
+    "size": 34902
+  },
+  {
+    "id": 152,
+    "name": "Adicional Batata Waffle",
+    "category": "Para Acompanhar",
+    "width": 500,
+    "height": 375,
+    "size": 36999
+  },
+  {
+    "id": 153,
+    "name": "Adicional Batata Crinkles temperada",
+    "category": "Para Acompanhar",
+    "width": 600,
+    "height": 337,
+    "size": 46729
+  },
+  {
+    "id": 154,
+    "name": "Adicional queijo Gouda (4und)",
+    "category": "Para Acompanhar",
+    "width": 600,
+    "height": 449,
+    "size": 45120
+  },
+  {
+    "id": 155,
+    "name": "Adicional Anel de cebola (4und)",
+    "category": "Para Acompanhar",
+    "width": 600,
+    "height": 337,
+    "size": 33285
+  },
+  {
+    "id": 156,
+    "name": "Maionese Temperada",
+    "category": "Molhos",
+    "width": 600,
+    "height": 400,
+    "size": 21250
+  },
+  {
+    "id": 157,
+    "name": "Sweet Chilli",
+    "category": "Molhos",
+    "width": 600,
+    "height": 449,
+    "size": 44636
+  },
+  {
+    "id": 158,
+    "name": "Molho Barbecue",
+    "category": "Molhos",
+    "width": 600,
+    "height": 399,
+    "size": 41788
+  },
+  {
+    "id": 159,
+    "name": "Molho Chipotle",
+    "category": "Molhos",
+    "width": 600,
+    "height": 490,
+    "size": 45998
+  },
+  {
+    "id": 160,
+    "name": "Geleia de Tomate",
+    "category": "Molhos",
+    "width": 600,
+    "height": 901,
+    "size": 69745
+  },
+  {
+    "id": 161,
+    "name": "Creme de Queijos",
+    "category": "Molhos",
+    "width": 600,
+    "height": 449,
+    "size": 44473
+  },
+  {
+    "id": 162,
+    "name": "Maionese verde temperada",
+    "category": "Molhos",
+    "width": 600,
+    "height": 400,
+    "size": 21250
+  },
+  {
+    "id": 163,
+    "name": "Sabor Manga",
+    "category": "Suco Lata",
+    "width": 600,
+    "height": 800,
+    "size": 55161
+  },
+  {
+    "id": 164,
+    "name": "Sabor Maracujá",
+    "category": "Suco Lata",
+    "width": 600,
+    "height": 800,
+    "size": 55161
+  },
+  {
+    "id": 165,
+    "name": "Sabor Pêssego",
+    "category": "Suco Lata",
+    "width": 600,
+    "height": 800,
+    "size": 55161
+  },
+  {
+    "id": 166,
+    "name": "Sabor Uva",
+    "category": "Suco Lata",
+    "width": 600,
+    "height": 800,
+    "size": 55161
+  },
+  {
+    "id": 167,
+    "name": "Limão",
+    "category": "Sabores Caipirinhas",
+    "width": 600,
+    "height": 664,
+    "size": 44651
+  },
+  {
+    "id": 168,
+    "name": "Vinho",
+    "category": "Sabores Caipirinhas",
+    "width": 600,
+    "height": 796,
+    "size": 24099
+  },
+  {
+    "id": 169,
+    "name": "Vinho Branco",
+    "category": "Sabores Caipirinhas",
+    "width": 600,
+    "height": 900,
+    "size": 59138
+  },
+  {
+    "id": 170,
+    "name": "Morango",
+    "category": "Sabores Caipirinhas",
+    "width": 600,
+    "height": 664,
+    "size": 44651
+  },
+  {
+    "id": 171,
+    "name": "Abacaxi com Hortelã",
+    "category": "Sabores Caipirinhas",
+    "width": 600,
+    "height": 664,
+    "size": 44651
+  },
+  {
+    "id": 172,
+    "name": "Strogonoff de nozes",
+    "category": "Sobremesa gelada",
+    "width": 600,
+    "height": 800,
+    "size": 55314
+  },
+  {
+    "id": 173,
+    "name": "Gelado de Uva",
+    "category": "Sobremesa gelada",
+    "width": 500,
+    "height": 500,
+    "size": 47614
+  },
+  {
+    "id": 174,
+    "name": "Gelado de Morango",
+    "category": "Sobremesa gelada",
+    "width": 600,
+    "height": 664,
+    "size": 44651
+  },
+  {
+    "id": 177,
+    "name": "Negresco",
+    "category": "Brigadeiro de Colher",
+    "width": 600,
+    "height": 398,
+    "size": 40204
+  },
+  {
+    "id": 178,
+    "name": "Ovomaltine",
+    "category": "Brigadeiro de Colher",
+    "width": 600,
+    "height": 401,
+    "size": 24217
+  },
+  {
+    "id": 179,
+    "name": "Bacon",
+    "category": "Turbinar Porção",
+    "width": 600,
+    "height": 401,
+    "size": 33608
+  },
+  {
+    "id": 180,
+    "name": "Creme de queijos",
+    "category": "Turbinar Porção",
+    "width": 600,
+    "height": 449,
+    "size": 44473
+  },
+  {
+    "id": 181,
+    "name": "Milkshake de Ovomaltine",
+    "category": "Sabores",
+    "width": 200,
+    "height": 133,
+    "size": 4333
+  },
+  {
+    "id": 182,
+    "name": "Milkshake de Frutas vermelhas",
+    "category": "Sabores",
+    "width": 122,
+    "height": 200,
+    "size": 5397
+  },
+  {
+    "id": 183,
+    "name": "Milkshake de Baunilha",
+    "category": "Sabores",
+    "width": 200,
+    "height": 200,
+    "size": 4341
+  },
+  {
+    "id": 184,
+    "name": "Adicional de Doce de Leite extra",
+    "category": "Mini Churros",
+    "width": 500,
+    "height": 333,
+    "size": 21055
+  },
+  {
+    "id": 185,
+    "name": "Adicional de Nutella",
+    "category": "Mini Churros",
+    "width": 600,
+    "height": 657,
+    "size": 50680
+  },
+  {
+    "id": 186,
+    "name": "Adicione + 6 mini churros",
+    "category": "Mini Churros",
+    "width": 500,
+    "height": 375,
+    "size": 40343
+  },
+  {
+    "id": 187,
+    "name": "Maça verde",
+    "category": "Sabores",
+    "width": 200,
+    "height": 138,
+    "size": 4468
+  },
+  {
+    "id": 188,
+    "name": "Frutas Vermelhas",
+    "category": "Sabores",
+    "width": 200,
+    "height": 132,
+    "size": 3330
+  },
+  {
+    "id": 189,
+    "name": "Barba Salada",
+    "category": "Combos",
+    "width": 1024,
+    "height": 1024,
+    "size": 1491913
+  },
+  {
+    "id": 190,
+    "name": "Do Barba",
+    "category": "Combos",
+    "width": 1024,
+    "height": 1024,
+    "size": 1656848
+  },
+  {
+    "id": 191,
+    "name": "El Cocinero",
+    "category": "Combos",
+    "width": 1024,
+    "height": 1024,
+    "size": 1449975
+  },
+  {
+    "id": 192,
+    "name": "Nutella",
+    "category": "Sabores",
+    "width": 600,
+    "height": 657,
+    "size": 50680
+  },
+  {
+    "id": 193,
+    "name": "Ovomaltine",
+    "category": "Sabores",
+    "width": 600,
+    "height": 401,
+    "size": 24217
+  },
+  {
+    "id": 194,
+    "name": "Doce de leite",
+    "category": "Sabores",
+    "width": 500,
+    "height": 333,
+    "size": 21055
+  },
+  {
+    "id": 195,
+    "name": "Brigadeiro",
+    "category": "Sabores",
+    "width": 2592,
+    "height": 1728,
+    "size": 1440800
+  },
+  {
+    "id": 196,
+    "name": "Tinto",
+    "category": "Vinhos",
+    "width": 600,
+    "height": 796,
+    "size": 24099
+  },
+  {
+    "id": 197,
+    "name": "Branco",
+    "category": "Vinhos",
+    "width": 600,
+    "height": 900,
+    "size": 59138
+  }
+]

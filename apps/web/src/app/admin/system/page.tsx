@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 interface SystemHealth {
   openai: { configured: boolean; model: string };
   whatsappBot: { configured: boolean };
+  gmail: { configured: boolean; address: string | null };
   sessionSecret: { configured: boolean };
   masterPassword: { configured: boolean };
   pix: { configured: boolean };
@@ -46,6 +47,11 @@ export default function AdminSystem() {
           {[
             { label: "IA do atendente (OpenAI)", ok: health.openai.configured, extra: `Modelo: ${health.openai.model}` },
             { label: "Bot do WhatsApp (token)", ok: health.whatsappBot.configured },
+            {
+              label: "Gmail do Barbacue",
+              ok: health.gmail.configured,
+              extra: health.gmail.address ?? "Defina GMAIL_USER e uma senha de app no servidor",
+            },
             { label: "Segredo da sessão (cookie HMAC)", ok: health.sessionSecret.configured },
             { label: "Senha mestra / admin", ok: health.masterPassword.configured },
             { label: "Pagamento Pix", ok: health.pix.configured, extra: "Configure a chave em Configurações" },
@@ -65,6 +71,18 @@ export default function AdminSystem() {
               <p className="mt-1">Site público: <span className="text-[#f6efe8] font-mono break-all">{health.publicSiteUrl}</span></p>
             )}
           </div>
+
+          {!health.gmail.configured && (
+            <div className="bg-[#171c1e] border border-[#2c3436] rounded-xl px-5 py-4 text-sm">
+              <p className="font-semibold text-[#f6efe8]">Como conectar o Gmail com segurança</p>
+              <ol className="mt-3 list-decimal pl-5 space-y-2 text-xs leading-relaxed text-[#a89a8c]">
+                <li>Ative a verificação em duas etapas na conta Google do restaurante.</li>
+                <li>Crie uma senha de app exclusiva para o sistema Barbacue.</li>
+                <li>Adicione o endereço em <code className="text-[#c8b89a]">GMAIL_USER</code> e a senha em <code className="text-[#c8b89a]">GMAIL_APP_PASSWORD</code> no servidor.</li>
+              </ol>
+              <p className="mt-3 text-[11px] text-[#737d7f]">A senha nunca é enviada ao navegador nem aparece neste painel.</p>
+            </div>
+          )}
         </div>
       )}
     </div>

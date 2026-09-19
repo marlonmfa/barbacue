@@ -1,3 +1,4 @@
+import { getMember } from "@/lib/member-auth";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 import { db } from "@/db";
@@ -9,11 +10,19 @@ import {
   storeSettings,
   closedDays,
   restaurantTables,
+  brandCatalogProducts,
+  deliverySettings,
+  deliveryQuotes,
 } from "@/db/schema";
 import { and, eq, inArray, isNull, lt, or, sql, gte, asc } from "drizzle-orm";
 import { buildPixPayload } from "@/lib/pix";
 import { effectivePrice } from "@/lib/pricing";
 import { computeStoreStatus } from "@/lib/store-hours";
+import { brandFromHost } from "@/lib/brand-storefront";
+import { requireStaff } from "@/lib/admin-auth";
+import { can } from "@/lib/permissions";
+import { deliveryAddressKey, type DeliveryRouteLinks } from "@/lib/delivery";
+import { orderTotalCents } from "@/lib/order-totals";
 
 // Only productId + qty are trusted from the client. Name and priceCents are
 // resolved from the products table server-side to prevent price tampering.
@@ -29,17 +38,19 @@ const OrderSchema = z.object({
   customerName: z.string().min(2),
   customerPhone: z.string().min(8),
   deliveryAddress: z.string().optional(),
+  deliveryQuoteId: z.string().uuid().optional(),
   items: z.array(OrderItemSchema).min(1),
   notes: z.string().optional(),
   couponCode: z.string().optional(),
   paymentMethod: z.enum(["pix", "cash", "card_on_delivery"]).default("pix"),
   changeForCents: z.number().int().nonnegative().optional(),
-  channel: z.enum(["click", "chat"]).default("click"),
+  channel: z.enum(["click", "chat", "test"]).default("click"),
   // ─── Dine-in (mesa) ───
   orderType: z.enum(["delivery", "dine_in"]).default("delivery"),
   // When seated via QR, the table's opaque token. Re-validated against the DB —
   // the server never trusts a client-supplied table number.
   tableToken: z.string().uuid().optional(),
+  brand: z.enum(["barbacue", "barbadog", "chelas"]).optional(),
 });
 
 // One JSON helper so every failure path returns a human pt-BR `message` the UI
@@ -68,6 +79,7 @@ export async function POST(request: NextRequest) {
     customerName,
     customerPhone,
     deliveryAddress,
+    deliveryQuoteId,
     items: requestedItems,
     notes,
     couponCode,
@@ -76,7 +88,20 @@ export async function POST(request: NextRequest) {
     channel,
     orderType: requestedType,
     tableToken,
+    brand: requestedBrand,
   } = parsed.data;
+
+  const hostBrand = brandFromHost(request.headers.get("x-forwarded-host") ?? request.headers.get("host"));
+  const brand = requestedBrand ?? hostBrand ?? "barbacue";
+  const isTestOrder = channel === "test";
+
+  // Test orders can bypass store hours, but only from an authenticated admin
+  // session. A public caller cannot turn this into a back door for closed-store
+  // checkout by merely changing the channel value.
+  const staff = isTestOrder ? await requireStaff().catch(() => null) : null;
+  if (isTestOrder && (!staff || !can(staff, "service"))) {
+    return fail("Apenas a equipe pode registrar pedidos de teste.", 403);
+  }
 
   // ─── Resolve the table (dine-in) ───────────────────────────────────
   // A valid, active token wins: it forces dine_in and ties the order to the
@@ -109,14 +134,32 @@ export async function POST(request: NextRequest) {
     tableId = null;
     tableNumber = null;
   }
+  if (orderType !== "delivery" && deliveryQuoteId) return fail("Pedidos na mesa não têm frete. Atualize o pedido.", 422);
 
   // ─── Re-source every line item from the products table ──────────────
   const requestedIds = Array.from(new Set(requestedItems.map((i) => i.productId)));
-  const dbProducts = await db
-    .select()
-    .from(products)
-    .where(inArray(products.id, requestedIds));
-  const byId = new Map(dbProducts.map((p) => [p.id, p]));
+  const canonicalProducts: { id: number; name: string; priceCents: number; available: boolean }[] = [];
+  if (brand === "barbacue") {
+    const nativeProducts = await db.select().from(products).where(inArray(products.id, requestedIds));
+    canonicalProducts.push(...nativeProducts.map((product) => ({
+      id: product.id,
+      name: product.name,
+      priceCents: effectivePrice(product),
+      available: Boolean(product.available),
+    })));
+  } else {
+    const managedProducts = await db
+      .select()
+      .from(brandCatalogProducts)
+      .where(and(eq(brandCatalogProducts.brand, brand), inArray(brandCatalogProducts.id, requestedIds)));
+    canonicalProducts.push(...managedProducts.map((product) => ({
+      id: product.id,
+      name: product.name,
+      priceCents: product.priceCents,
+      available: product.available,
+    })));
+  }
+  const byId = new Map(canonicalProducts.map((p) => [p.id, p]));
 
   const canonicalItems: { productId: number; name: string; priceCents: number; qty: number }[] = [];
   for (const i of requestedItems) {
@@ -127,7 +170,7 @@ export async function POST(request: NextRequest) {
     canonicalItems.push({
       productId: p.id,
       name: p.name,
-      priceCents: effectivePrice(p),
+      priceCents: p.priceCents,
       qty: i.qty,
     });
   }
@@ -142,7 +185,7 @@ export async function POST(request: NextRequest) {
       .where(gte(closedDays.date, todayStr))
       .orderBy(asc(closedDays.date));
     const status = computeStoreStatus(settings, upcoming);
-    if (!status.open) {
+    if (!status.open && !isTestOrder) {
       return fail(
         status.nextOpen ? `${status.reason} ${status.nextOpen}` : status.reason,
         422,
@@ -153,26 +196,41 @@ export async function POST(request: NextRequest) {
 
   const subtotalCents = canonicalItems.reduce((sum, i) => sum + i.priceCents * i.qty, 0);
 
-  // ─── changeFor sanity (cash only): can't ask change for less than the total ──
-  if (paymentMethod === "cash" && changeForCents != null && changeForCents > 0) {
-    // total may shrink with a coupon, but if the customer's cash is already below
-    // the subtotal it's certainly below the total — reject early with a clear msg.
-    if (changeForCents < subtotalCents) {
-      return fail("O valor do troco não pode ser menor que o total do pedido.", 422);
-    }
-  }
-
   // ─── Atomic: reserve coupon, enforce minimum, upsert customer, insert order ──
   // Wrapping all four in one transaction means a failed insert (or a sub-minimum
   // coupon) rolls back the usedCount increment — a single-use coupon is never
   // burned by a failed order.
   let discountCents = 0;
+  const member = couponCode ? await getMember() : null;
   let couponId: number | null = null;
   let appliedCode: string | null = null;
   let orderId: string;
+  let deliveryFeeCents = 0;
+  let deliveryDistanceMeters: number | null = null;
+  let deliveryDurationSeconds: number | null = null;
+  let deliveryRoute: DeliveryRouteLinks | null = null;
 
   try {
     orderId = await db.transaction(async (tx) => {
+      if (orderType === "delivery") {
+        const [deliveryConfig] = await tx.select({ enabled: deliverySettings.enabled }).from(deliverySettings).where(eq(deliverySettings.id, 1)).for("share");
+        if (deliveryConfig?.enabled && !deliveryQuoteId) {
+          throw new DeliveryCheckoutError("Calcule o frete para este endereço antes de confirmar o pedido.", "delivery_quote_required");
+        }
+        if (!deliveryConfig?.enabled && deliveryQuoteId) {
+          throw new DeliveryCheckoutError("O cálculo automático de frete foi desativado. Atualize o pedido antes de confirmar.", "delivery_disabled");
+        }
+        if (deliveryQuoteId) {
+          const [quote] = await tx.select().from(deliveryQuotes).where(eq(deliveryQuotes.id, deliveryQuoteId)).for("share");
+          if (!quote || quote.brand !== brand || quote.addressKey !== deliveryAddressKey(trimmedAddress) || quote.expiresAt.getTime() <= Date.now()) {
+            throw new DeliveryCheckoutError("O cálculo de frete expirou ou corresponde a outro endereço. Calcule novamente.", "delivery_quote_invalid");
+          }
+          deliveryFeeCents = quote.feeCents;
+          deliveryDistanceMeters = quote.distanceMeters;
+          deliveryDurationSeconds = quote.durationSeconds;
+          deliveryRoute = quote.routeLinks;
+        }
+      }
       if (couponCode) {
         const code = couponCode.toUpperCase().trim();
         const reserved = await tx
@@ -182,6 +240,7 @@ export async function POST(request: NextRequest) {
             and(
               eq(coupons.code, code),
               eq(coupons.active, true),
+              or(eq(coupons.audience, "all"), eq(coupons.audience, member ? "member" : "visitor")),
               or(isNull(coupons.expiresAt), sql`${coupons.expiresAt} >= now()`),
               or(isNull(coupons.maxUsages), lt(coupons.usedCount, coupons.maxUsages)),
             ),
@@ -206,7 +265,10 @@ export async function POST(request: NextRequest) {
         // A non-matching code is silently ignored (no discount) — not an error.
       }
 
-      const totalCents = Math.max(0, subtotalCents - discountCents);
+      const totalCents = orderTotalCents(subtotalCents, discountCents, deliveryFeeCents);
+      if (paymentMethod === "cash" && changeForCents != null && changeForCents > 0 && changeForCents < totalCents) {
+        throw new DeliveryCheckoutError("O valor para troco deve cobrir o total, incluindo o frete.", "insufficient_change");
+      }
 
       // Upsert customer (best-effort, but inside the tx so a hard failure rolls back).
       let customerId: number | null = null;
@@ -228,11 +290,17 @@ export async function POST(request: NextRequest) {
         .insert(orders)
         .values({
           customerId,
+          brand,
           customerName,
           customerPhone,
           orderType,
           tableId,
           deliveryAddress: finalAddress,
+          deliveryQuoteId: orderType === "delivery" ? deliveryQuoteId ?? null : null,
+          deliveryFeeCents,
+          deliveryDistanceMeters,
+          deliveryDurationSeconds,
+          deliveryRoute,
           items: canonicalItems,
           subtotalCents,
           discountCents,
@@ -251,6 +319,8 @@ export async function POST(request: NextRequest) {
       return order.id;
     });
   } catch (err) {
+    if (err instanceof DeliveryCheckoutError) return fail(err.message, 422, { code: err.code });
+    if (err instanceof RangeError) return fail(err.message, 422);
     if (err instanceof CouponMinError) {
       return fail(
         `Pedido mínimo para esse cupom: ${brl(err.minCents)}.`,
@@ -261,7 +331,7 @@ export async function POST(request: NextRequest) {
     return fail("Não foi possível registrar o pedido. Tente novamente.", 500);
   }
 
-  const totalCents = Math.max(0, subtotalCents - discountCents);
+  const totalCents = orderTotalCents(subtotalCents, discountCents, deliveryFeeCents);
 
   // For Pix, build the offline BR Code ("copia e cola") tied to this order.
   let pix: { payload: string } | null = null;
@@ -283,12 +353,17 @@ export async function POST(request: NextRequest) {
   return Response.json(
     {
       orderId,
+      brand,
       paymentMethod,
       orderType,
       tableNumber,
       subtotalCents,
       discountCents,
       totalCents,
+      deliveryFeeCents,
+      deliveryDistanceMeters,
+      deliveryDurationSeconds,
+      deliveryRoute,
       items: canonicalItems,
       pix,
     },
@@ -302,6 +377,11 @@ class CouponMinError extends Error {
   constructor(public minCents: number) {
     super("coupon-min-not-met");
   }
+}
+
+class DeliveryCheckoutError extends Error {
+  code: string;
+  constructor(message: string, code: string) { super(message); this.code = code; }
 }
 
 const brl = (cents: number) =>

@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../models/coupon.dart';
 import '../models/order.dart';
+import '../models/delivery_quote.dart';
+import '../config/app_brand.dart';
 import '../providers/cart_provider.dart';
 import '../providers/checkout_provider.dart';
 import '../providers/table_session_provider.dart';
@@ -29,6 +31,31 @@ class PaymentScreen extends ConsumerStatefulWidget {
 
 class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   final _changeController = TextEditingController();
+  final _addressController = TextEditingController();
+  bool _addressSeeded = false;
+  bool? _deliveryEnabled;
+  bool _deliveryLoading = true;
+  bool _quoting = false;
+  String? _deliveryError;
+  DeliveryQuote? _deliveryQuote;
+  Timer? _quoteExpiry;
+  int _quoteSeq = 0;
+
+  DeliveryQuote? get _currentQuote {
+    final quote = _deliveryQuote;
+    return !_isDineIn &&
+            _deliveryEnabled == true &&
+            quote != null &&
+            quote.isValidFor(
+              ref.read(checkoutProvider).address,
+              currentBrand.slug,
+            )
+        ? quote
+        : null;
+  }
+
+  bool get _deliveryReady =>
+      _isDineIn || _deliveryEnabled == false || _currentQuote != null;
   bool _changeSeeded = false;
   bool _submitting = false;
   String? _error;
@@ -52,29 +79,30 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       ref.read(checkoutProvider).orderType == 'dine_in';
 
   String? get _tableToken =>
-      ref.read(tableSessionProvider)?.token ?? ref.read(checkoutProvider).tableToken;
+      ref.read(tableSessionProvider)?.token ??
+      ref.read(checkoutProvider).tableToken;
 
   int? get _tableNumber =>
       ref.read(tableSessionProvider)?.number ??
       ref.read(checkoutProvider).tableNumber;
 
   List<(String, String, String)> get _methods => [
-        ('pix', '⚡', 'Pague na hora pelo QR Code ou copia e cola'),
-        (
-          'cash',
-          '💵',
-          _isDineIn
-              ? 'Pague em dinheiro no caixa'
-              : 'Pague em dinheiro quando o pedido chegar'
-        ),
-        (
-          'card_on_delivery',
-          '💳',
-          _isDineIn
-              ? 'Maquininha de cartão na mesa/caixa'
-              : 'Maquininha de cartão na entrega'
-        ),
-      ];
+    ('pix', '⚡', 'Pague na hora pelo QR Code ou copia e cola'),
+    (
+      'cash',
+      '💵',
+      _isDineIn
+          ? 'Pague em dinheiro no caixa'
+          : 'Pague em dinheiro quando o pedido chegar',
+    ),
+    (
+      'card_on_delivery',
+      '💳',
+      _isDineIn
+          ? 'Maquininha de cartão na mesa/caixa'
+          : 'Maquininha de cartão na entrega',
+    ),
+  ];
 
   @override
   void initState() {
@@ -85,12 +113,106 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     );
     ref.listenManual(cartTotalCentsProvider, (_, _) => _previewCoupon());
     _previewCoupon();
+    ref.listenManual(checkoutProvider.select((s) => s.address), (_, address) {
+      _quoteSeq++;
+      _quoteExpiry?.cancel();
+      if (_addressController.text != address) _addressController.text = address;
+      if (mounted) {
+        setState(() {
+          _deliveryQuote = null;
+          _quoting = false;
+          _deliveryError = null;
+        });
+      }
+    });
+    ref.listenManual(checkoutProvider.select((s) => s.orderType), (_, _) {
+      _quoteSeq++;
+      _quoteExpiry?.cancel();
+      if (mounted) {
+        setState(() {
+          _deliveryQuote = null;
+          _quoting = false;
+        });
+      }
+      if (!_isDineIn && _deliveryEnabled == null) _checkDelivery();
+    });
+    if (!_isDineIn) _checkDelivery();
   }
 
   @override
   void dispose() {
     _changeController.dispose();
+    _addressController.dispose();
+    _quoteExpiry?.cancel();
+    _quoteSeq++;
     super.dispose();
+  }
+
+  Future<void> _checkDelivery() async {
+    setState(() {
+      _deliveryLoading = true;
+      _deliveryError = null;
+    });
+    try {
+      final enabled = await ApiService.fetchDeliveryEnabled();
+      if (!mounted) return;
+      setState(() => _deliveryEnabled = enabled);
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          _deliveryEnabled = null;
+          _deliveryError = error.toString();
+        });
+      }
+    } finally {
+      if (mounted) setState(() => _deliveryLoading = false);
+    }
+  }
+
+  Future<void> _calculateDelivery() async {
+    if (_quoting || _submitting) return;
+    final address = ref.read(checkoutProvider).address.trim();
+    if (address.isEmpty) {
+      setState(() => _deliveryError = 'Informe o endereço de entrega.');
+      return;
+    }
+    final sequence = ++_quoteSeq;
+    _quoteExpiry?.cancel();
+    setState(() {
+      _quoting = true;
+      _deliveryQuote = null;
+      _deliveryError = null;
+    });
+    try {
+      final quote = await ApiService.quoteDelivery(address: address);
+      if (!mounted || sequence != _quoteSeq) return;
+      if (!quote.isValidFor(
+        ref.read(checkoutProvider).address,
+        currentBrand.slug,
+      )) {
+        return;
+      }
+      setState(() => _deliveryQuote = quote);
+      _quoteExpiry = Timer(quote.expiresAt.difference(DateTime.now()), () {
+        if (!mounted) return;
+        setState(() {
+          _deliveryQuote = null;
+          _deliveryError = 'A cotação expirou. Calcule o frete novamente.';
+        });
+      });
+    } catch (error) {
+      if (!mounted || sequence != _quoteSeq) return;
+      setState(() {
+        if (error is DeliveryApiException &&
+            error.code == 'delivery_disabled') {
+          _deliveryEnabled = false;
+        } else {
+          _deliveryError = error.toString();
+        }
+      });
+    } finally {
+      if (mounted && sequence == _quoteSeq) setState(() => _quoting = false);
+    }
   }
 
   Future<void> _previewCoupon() async {
@@ -104,8 +226,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     }
 
     try {
-      final result =
-          await ApiService.validateCoupon(code: code, subtotalCents: subtotal);
+      final result = await ApiService.validateCoupon(
+        code: code,
+        subtotalCents: subtotal,
+      );
       if (!mounted || seq != _previewSeq) return;
       setState(() => _coupon = result);
     } catch (_) {
@@ -118,6 +242,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   }
 
   Future<void> _placeOrder() async {
+    if (_submitting) return;
     final checkout = ref.read(checkoutProvider);
     final items = ref.read(cartProvider);
     final total = _totalCents(ref.read(cartTotalCentsProvider));
@@ -127,14 +252,26 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       setState(() => _error = 'Preencha nome e telefone na etapa anterior.');
       return;
     }
+    if (!_isDineIn && checkout.address.trim().isEmpty) {
+      setState(() => _error = 'Informe o endereço de entrega.');
+      return;
+    }
+    if (!_deliveryReady) {
+      setState(
+        () => _error =
+            'Calcule o frete para confirmar o total antes de enviar o pedido.',
+      );
+      return;
+    }
     final change = checkout.changeForCents;
-    // Deliberately stricter than the server, which compares the cash against the
-    // subtotal because it has not resolved the coupon yet at that point.
+    // Cash covers discounted items plus the confirmed delivery fee.
     if (checkout.paymentMethod == 'cash' &&
         change != null &&
         change > 0 &&
         change < total) {
-      setState(() => _error = 'O valor do troco não pode ser menor que o total.');
+      setState(
+        () => _error = 'O valor do troco não pode ser menor que o total.',
+      );
       return;
     }
 
@@ -143,35 +280,58 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       _error = null;
     });
     try {
-      final res = await ApiService.createOrder(CreateOrderRequest(
-        customerName: checkout.name,
-        customerPhone: checkout.phone,
-        deliveryAddress: _isDineIn || checkout.address.isEmpty
-            ? null
-            : checkout.address,
-        notes: checkout.notes.isEmpty ? null : checkout.notes,
-        couponCode: _coupon?.code,
-        paymentMethod: checkout.paymentMethod,
-        changeForCents:
-            checkout.paymentMethod == 'cash' ? checkout.changeForCents : null,
-        channel: 'click',
-        orderType: _isDineIn ? 'dine_in' : 'delivery',
-        tableToken: _isDineIn ? _tableToken : null,
-        items: items
-            .map((e) => OrderItem(
+      final res = await ApiService.createOrder(
+        CreateOrderRequest(
+          brand: currentBrand.slug,
+          deliveryQuoteId: _currentQuote?.quoteId,
+          customerName: checkout.name,
+          customerPhone: checkout.phone,
+          deliveryAddress: _isDineIn || checkout.address.isEmpty
+              ? null
+              : checkout.address,
+          notes: checkout.notes.isEmpty ? null : checkout.notes,
+          couponCode: _coupon?.code,
+          paymentMethod: checkout.paymentMethod,
+          changeForCents: checkout.paymentMethod == 'cash'
+              ? checkout.changeForCents
+              : null,
+          channel: 'click',
+          orderType: _isDineIn ? 'dine_in' : 'delivery',
+          tableToken: _isDineIn ? _tableToken : null,
+          items: items
+              .map(
+                (e) => OrderItem(
                   productId: e.productId,
                   name: e.name,
                   priceCents: e.priceCents,
                   qty: e.qty,
-                ))
-            .toList(),
-      ));
+                ),
+              )
+              .toList(),
+        ),
+      );
+      if (!mounted) return;
+      _quoteExpiry?.cancel();
       ref.read(cartProvider.notifier).clear();
       // The coupon is spent — leaving the code behind would re-apply it to the
       // next order the moment the customer opens the cart again.
       ref.read(checkoutProvider.notifier).update(clearCoupon: true);
       if (mounted) setState(() => _order = res);
     } catch (e) {
+      if (!mounted) return;
+      if (e is DeliveryApiException &&
+          [
+            'delivery_quote_required',
+            'delivery_quote_invalid',
+            'delivery_disabled',
+          ].contains(e.code)) {
+        _quoteExpiry?.cancel();
+        setState(() {
+          _deliveryQuote = null;
+          _deliveryEnabled = e.code != 'delivery_disabled';
+          _deliveryLoading = false;
+        });
+      }
       final message = e.toString().replaceAll('Exception: ', '');
       // Staff rotate a table's token to retire its printed QR, which strands
       // anyone still holding the old one. The server has just proved this
@@ -188,7 +348,98 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
   /// A flat coupon can exceed the cart — the customer is never owed money.
   int _totalCents(int subtotal) =>
-      (subtotal - (_coupon?.discountCents ?? 0)).clamp(0, subtotal);
+      (subtotal - (_coupon?.discountCents ?? 0)).clamp(0, subtotal) +
+      (_currentQuote?.feeCents ?? 0);
+
+  Widget _deliverySection() {
+    final quote = _currentQuote;
+    return _Section(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Entrega no seu endereço',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 14),
+          TextField(
+            key: const ValueKey('delivery-address'),
+            controller: _addressController,
+            enabled: !_submitting,
+            minLines: 1,
+            maxLines: 3,
+            keyboardType: TextInputType.streetAddress,
+            decoration: const InputDecoration(
+              labelText: 'Endereço de entrega',
+              hintText: 'Rua, número, bairro, cidade e CEP',
+            ),
+            onChanged: (address) =>
+                ref.read(checkoutProvider.notifier).update(address: address),
+          ),
+          const SizedBox(height: 10),
+          if (_deliveryLoading)
+            const Text(
+              'Verificando as condições de entrega…',
+              style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+            ),
+          if (!_deliveryLoading && _deliveryEnabled == null)
+            OutlinedButton(
+              onPressed: _submitting ? null : _checkDelivery,
+              child: const Text('Verificar entrega'),
+            ),
+          if (_deliveryEnabled == true && quote == null)
+            FilledButton(
+              onPressed: _quoting || _submitting ? null : _calculateDelivery,
+              child: Text(_quoting ? 'Calculando frete…' : 'Calcular frete'),
+            ),
+          if (quote != null) ...[
+            const Divider(height: 26),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Frete para este endereço',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                Text(
+                  formatPrice(quote.feeCents),
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.brand,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(
+              '${(quote.distanceMeters / 1000).toStringAsFixed(1).replaceAll('.', ',')} km · cerca de ${(quote.durationSeconds / 60).ceil().clamp(1, 99999)} min de trajeto',
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              'Estimativa de deslocamento. O preparo do pedido é contado à parte.',
+              style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              '© OpenStreetMap contributors',
+              style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+            ),
+          ],
+          if (_deliveryError != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(
+                _deliveryError!,
+                style: TextStyle(color: Colors.red.shade700, fontSize: 13),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,17 +456,22 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     // Watched, not read: the store hydrates from disk asynchronously, so a
     // persisted "troco para" lands after the first build — and it is sent with
     // the order whether or not the field shows it.
+    if (checkout.loaded && !_addressSeeded) {
+      _addressSeeded = true;
+      _addressController.text = checkout.address;
+    }
     if (checkout.loaded && !_changeSeeded) {
       _changeSeeded = true;
       final change = checkout.changeForCents;
       if (change != null) {
-        _changeController.text =
-            (change / 100).toStringAsFixed(2).replaceAll('.', ',');
+        _changeController.text = (change / 100)
+            .toStringAsFixed(2)
+            .replaceAll('.', ',');
       }
     }
 
     final subtotal = ref.watch(cartTotalCentsProvider);
-    final discount = _coupon?.discountCents ?? 0;
+    final discount = (_coupon?.discountCents ?? 0).clamp(0, subtotal);
     final total = _totalCents(subtotal);
     final tableNumber = _tableNumber;
 
@@ -243,25 +499,42 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (!_isDineIn && _deliveryEnabled != false) ...[
+                    _deliverySection(),
+                    const SizedBox(height: 24),
+                  ],
                   _Section(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Resumo',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        const Text(
+                          'Resumo',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         const SizedBox(height: 8),
-                        ...items.map((i) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 2),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(child: Text('${i.qty}× ${i.name}')),
-                                  Text(formatPrice(i.priceCents * i.qty)),
-                                ],
-                              ),
-                            )),
+                        ...items.map(
+                          (i) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(child: Text('${i.qty}× ${i.name}')),
+                                Text(formatPrice(i.priceCents * i.qty)),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Subtotal dos itens'),
+                            Text(formatPrice(subtotal)),
+                          ],
+                        ),
                         if (discount > 0)
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2),
@@ -289,18 +562,38 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                               ],
                             ),
                           ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Frete'),
+                            Text(
+                              _isDineIn
+                                  ? 'Não se aplica'
+                                  : _deliveryReady
+                                  ? formatPrice(_currentQuote?.feeCents ?? 0)
+                                  : 'A calcular',
+                            ),
+                          ],
+                        ),
                         const Divider(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Total',
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold)),
-                            Text(formatPrice(total),
-                                style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppTheme.brandTan)),
+                            Text(
+                              _deliveryReady ? 'Total' : 'Total parcial',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              formatPrice(total),
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.brandTan,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 12),
@@ -319,9 +612,13 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Forma de pagamento',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        const Text(
+                          'Forma de pagamento',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         const SizedBox(height: 12),
                         for (final m in _methods) ...[
                           _MethodOption(
@@ -346,9 +643,12 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                               prefixIcon: Icon(Icons.payments_outlined),
                             ),
                             onChanged: (v) {
-                              final value =
-                                  double.tryParse(v.replaceAll(',', '.'));
-                              ref.read(checkoutProvider.notifier).update(
+                              final value = double.tryParse(
+                                v.replaceAll(',', '.'),
+                              );
+                              ref
+                                  .read(checkoutProvider.notifier)
+                                  .update(
                                     changeForCents: value == null
                                         ? null
                                         : (value * 100).round(),
@@ -370,24 +670,36 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.red.shade200),
                       ),
-                      child: Text(_error!,
-                          style: TextStyle(color: Colors.red.shade700)),
+                      child: Text(
+                        _error!,
+                        style: TextStyle(color: Colors.red.shade700),
+                      ),
                     ),
                     const SizedBox(height: 12),
                   ],
                   FilledButton(
-                    onPressed: _submitting ? null : _placeOrder,
+                    onPressed: _submitting || !_deliveryReady
+                        ? null
+                        : _placeOrder,
                     style: FilledButton.styleFrom(
-                        minimumSize: const Size.fromHeight(52)),
+                      minimumSize: const Size.fromHeight(52),
+                    ),
                     child: _submitting
                         ? const SizedBox(
                             height: 20,
                             width: 20,
                             child: CircularProgressIndicator(
-                                strokeWidth: 2, color: Colors.white))
-                        : Text(checkout.paymentMethod == 'pix'
-                            ? 'Gerar Pix · ${formatPrice(total)}'
-                            : 'Confirmar pedido · ${formatPrice(total)}'),
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            !_deliveryReady
+                                ? 'Calcule o frete para continuar'
+                                : checkout.paymentMethod == 'pix'
+                                ? 'Gerar Pix · ${formatPrice(total)}'
+                                : 'Confirmar pedido · ${formatPrice(total)}',
+                          ),
                   ),
                   const SizedBox(height: 32),
                 ],
@@ -404,8 +716,8 @@ class _Section extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        child: Padding(padding: const EdgeInsets.all(20), child: child),
-      );
+    child: Padding(padding: const EdgeInsets.all(20), child: child),
+  );
 }
 
 class _MethodOption extends StatelessWidget {
@@ -442,20 +754,35 @@ class _MethodOption extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Text(emoji, style: const TextStyle(fontSize: 24)),
+              Icon(
+                switch (emoji) {
+                  '⚡' => Icons.qr_code_2,
+                  '💵' => Icons.payments_outlined,
+                  _ => Icons.credit_card,
+                },
+                size: 24,
+                color: selected ? AppTheme.brand : AppTheme.textSecondary,
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(label,
-                        style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.textPrimary)),
-                    Text(hint,
-                        style: const TextStyle(
-                            fontSize: 12, color: AppTheme.textSecondary)),
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                    Text(
+                      hint,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -540,8 +867,10 @@ class _NothingToPay extends StatelessWidget {
             FilledButton(
               onPressed: () => context.go('/'),
               style: FilledButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 10,
+                ),
                 minimumSize: Size.zero,
                 shape: const StadiumBorder(),
               ),
@@ -582,8 +911,7 @@ class _SuccessView extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: AppTheme.surfaceAlt,
                 borderRadius: BorderRadius.circular(8),
@@ -610,29 +938,35 @@ class _SuccessView extends StatelessWidget {
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
-                      Text(order.paymentMethod == 'cash' ? '💵' : '💳',
-                          style: const TextStyle(fontSize: 36)),
+                      Text(
+                        order.paymentMethod == 'cash' ? '💵' : '💳',
+                        style: const TextStyle(fontSize: 36),
+                      ),
                       const SizedBox(height: 12),
                       Text(
                         '${isDineIn ? 'Pagamento no local' : 'Pagamento na entrega'} · '
                         '${paymentLabels[order.paymentMethod] ?? order.paymentMethod}',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.textPrimary),
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textPrimary,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text.rich(
                         TextSpan(
                           style: const TextStyle(
-                              fontSize: 14, color: AppTheme.textSecondary),
+                            fontSize: 14,
+                            color: AppTheme.textSecondary,
+                          ),
                           children: [
                             const TextSpan(text: 'Total a pagar: '),
                             TextSpan(
                               text: formatPrice(order.totalCents),
                               style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppTheme.brandTan),
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.brandTan,
+                              ),
                             ),
                           ],
                         ),
@@ -644,7 +978,9 @@ class _SuccessView extends StatelessWidget {
                             : 'Estamos preparando seu pedido. 🍔',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                            fontSize: 12, color: AppTheme.textSecondary),
+                          fontSize: 12,
+                          color: AppTheme.textSecondary,
+                        ),
                       ),
                     ],
                   ),
@@ -706,9 +1042,10 @@ class _PixCardState extends State<_PixCard> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            Text('Pague ${formatPrice(widget.totalCents)} com Pix',
-                style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(
+              'Pague ${formatPrice(widget.totalCents)} com Pix',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(8),
@@ -740,14 +1077,15 @@ class _PixCardState extends State<_PixCard> {
                     ? 'Código copiado!'
                     : 'Copiar código Pix (copia e cola)',
                 style: const TextStyle(
-                    fontSize: 14, fontWeight: FontWeight.w600),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             const SizedBox(height: 16),
             Container(
               width: double.infinity,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: AppTheme.background,
                 borderRadius: BorderRadius.circular(8),
@@ -769,7 +1107,9 @@ class _PixCardState extends State<_PixCard> {
                   : 'Após o pagamento, enviaremos a confirmação pelo WhatsApp.',
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  fontSize: 12, color: AppTheme.textSecondary),
+                fontSize: 12,
+                color: AppTheme.textSecondary,
+              ),
             ),
           ],
         ),

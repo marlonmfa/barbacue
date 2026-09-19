@@ -1,0 +1,14 @@
+"use client";
+import Link from "next/link";
+import { useState } from "react";
+export default function AccountPage() {
+  const [mode, setMode] = useState<"login" | "register">("login");
+  const [error, setError] = useState(""); const [busy, setBusy] = useState(false);
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setBusy(true); setError(""); const data = new FormData(event.currentTarget);
+    try { const res = await fetch("/api/account", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mode, email: data.get("email"), password: data.get("password"), ...(mode === "register" ? { name: data.get("name") } : {}) }) }); if (!res.ok) { const result = await res.json(); throw new Error(result.error); } window.location.assign("/"); }
+    catch(e) { setError(e instanceof Error ? e.message : "Falha de conexão. Tente novamente."); setBusy(false); }
+  }
+  return <main className="w-full max-w-lg mx-auto px-6 py-14"><Link href="/" className="underline text-sm">Voltar ao cardápio</Link><h1 className="font-display text-4xl mt-8 mb-3">Cliente da casa</h1><p className="text-[var(--text-muted)] mb-7">Entre para encontrar as ofertas para clientes cadastrados.</p><div className="flex gap-3 mb-6">{(["login", "register"] as const).map(value => <button key={value} onClick={() => { setMode(value); setError(""); }} aria-pressed={mode === value} className={`px-5 py-3 rounded-lg border ${mode === value ? "bg-[var(--brand-ink)] text-white" : "border-[var(--border)]"}`}>{value === "login" ? "Entrar" : "Criar conta"}</button>)}</div><form onSubmit={submit} className="flex flex-col gap-5">{mode === "register" && <label className="flex flex-col gap-2">Seu nome<input name="name" autoComplete="name" required minLength={2} maxLength={100} className={input} /></label>}<label className="flex flex-col gap-2">E-mail<input className={input} name="email" type="email" required autoComplete="email" /></label><label className="flex flex-col gap-2">Senha<input className={input} name="password" type="password" required minLength={8} maxLength={128} autoComplete={mode === "login" ? "current-password" : "new-password"} /><span className="text-sm text-[var(--text-muted)]">Pelo menos 8 caracteres.</span></label>{error && <p role="alert" className="text-red-700">{error}</p>}<button disabled={busy} className="btn-brand rounded-lg p-3 font-semibold disabled:opacity-50">{busy ? "Aguarde…" : mode === "login" ? "Entrar na minha conta" : "Criar minha conta"}</button></form><div className="mt-8 flex flex-wrap gap-5 text-sm"><Link href="/" className="underline">Continuar como visitante</Link><Link href="/admin/login" className="underline">Sou da equipe</Link></div></main>;
+}
+const input = "border border-[var(--border-hover)] rounded-lg p-3 bg-white focus:outline-2 focus:outline-[var(--brand-red)]";

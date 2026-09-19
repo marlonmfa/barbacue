@@ -1,3 +1,5 @@
+import { getMember } from "@/lib/member-auth";
+import { offerApplies } from "@/lib/permissions";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { coupons } from "@/db/schema";
@@ -18,6 +20,7 @@ export async function POST(req: NextRequest) {
   if (!coupon) {
     return NextResponse.json({ error: "Cupom não encontrado" }, { status: 404 });
   }
+  if (!offerApplies(coupon.audience, !!(await getMember()))) return NextResponse.json({ error: "Este cupom não está disponível para o seu perfil de cliente." }, { status: 403 });
   if (!coupon.active) {
     return NextResponse.json({ error: "Cupom inativo" }, { status: 400 });
   }

@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "functions": {
+    "/_middleware": {
+      "runtime": "nodejs",
+      "matchers": [
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/admin(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json|\\.rsc|\\.segments\\/.+\\.segment\\.rsc)?[\\/#\\?]?$",
+          "originalSource": "/admin/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/api\\/admin(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json|\\.rsc|\\.segments\\/.+\\.segment\\.rsc)?[\\/#\\?]?$",
+          "originalSource": "/api/admin/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/whatsapp(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json|\\.rsc|\\.segments\\/.+\\.segment\\.rsc)?[\\/#\\?]?$",
+          "originalSource": "/whatsapp/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/teste_pedido(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json|\\.rsc|\\.segments\\/.+\\.segment\\.rsc)?[\\/#\\?]?$",
+          "originalSource": "/teste_pedido/:path*"
+        }
+      ]
+    },
+    "/api/admin/delivery-settings": {},
+    "/api/admin/delivery-settings/geocode": {},
+    "/api/admin/downloads/windows": {},
+    "/api/admin/kitchen/printing": {},
+    "/api/admin/orders/import": {},
+    "/api/admin/upload": {},
+    "/api/chat": {
+      "maxDuration": 30
+    },
+    "/api/delivery/quote": {},
+    "/api/media/[id]": {},
+    "/api/print-agent/jobs/[id]/complete": {},
+    "/api/print-agent/jobs/[id]/fail": {},
+    "/api/print-agent/jobs/claim": {},
+    "/api/print-agent/status": {},
+    "/api/self-service/orders": {}
+  }
+}

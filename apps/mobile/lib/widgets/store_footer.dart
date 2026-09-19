@@ -1,3 +1,4 @@
+import 'privacy_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -75,6 +76,7 @@ class StoreFooter extends ConsumerWidget {
           const _InstagramBlock(),
           const SizedBox(height: 32),
           _Contact(settings: settings),
+          const PrivacyButton(),
           const SizedBox(height: 32),
           Text(
             '© ${settings.storeName} · Burguers na brasa 🔥',

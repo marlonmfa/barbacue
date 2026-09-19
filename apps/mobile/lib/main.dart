@@ -1,22 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'router.dart';
-import 'theme/app_theme.dart';
+import 'app.dart';
+import 'config/app_brand.dart';
 
-void main() {
-  runApp(const ProviderScope(child: BarbacueApp()));
-}
+// Backwards-compatible default entrypoint. Store builds use the explicit
+// main_<brand>.dart targets so every artifact is impossible to misbrand.
+void main() => runBrandApp(AppBrand.barbacue);
 
-class BarbacueApp extends StatelessWidget {
+/// Kept for existing widget tests and integrations that import main.dart.
+class BarbacueApp extends RestaurantApp {
   const BarbacueApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'BARBACUE',
-      theme: AppTheme.theme,
-      routerConfig: router,
-      debugShowCheckedModeBanner: false,
-    );
-  }
 }

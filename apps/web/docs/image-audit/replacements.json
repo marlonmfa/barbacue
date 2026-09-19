@@ -1,0 +1,818 @@
+[
+  {
+    "id": 17,
+    "name": "Combo da Semana - Hambúrguer + Fritas + Refrigerante + Sobremesa",
+    "before": "/generated/products/17.png",
+    "after": "/menu/review-2026-09/combo-semana.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 21,
+    "name": "Barba supreme + Adicional de Fritas Palito + Coca-Cola Lata 350ml",
+    "before": "/generated/products/21.png",
+    "after": "/menu/review-2026-09/combo-supreme.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 22,
+    "name": "Barba crunch + Adicional de Fritas Palito + Coca-Cola Lata 350ml",
+    "before": "/generated/products/22.png",
+    "after": "/menu/review-2026-09/combo-crunch.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 32,
+    "name": "Barba Cordeiro + Adicional Batata Palito + Coca-Cola 350ml",
+    "before": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1748467426553blob",
+    "after": "/menu/review-2026-09/combo-cordeiro.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 34,
+    "name": "Combo 1",
+    "before": "https://legacy-assets.anota.ai/produtos/16788858380632371f789-f6ce-4496-9fe2-ddd892b07047",
+    "after": "/menu/review-2026-09/combo-1.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 35,
+    "name": "Combo 2",
+    "before": "https://legacy-assets.anota.ai/produtos/16788858398705af9c46c-ab8f-4568-9f3e-7571b032bacc",
+    "after": "/menu/review-2026-09/combo-2.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 36,
+    "name": "Combo 3",
+    "before": "https://legacy-assets.anota.ai/produtos/16788858420394576461b-e67e-44f8-8a12-8b89ef4318a9",
+    "after": "/menu/review-2026-09/combo-3.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 37,
+    "name": "Combo TEX MEX",
+    "before": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/-1718223637871blob",
+    "after": "/menu/review-2026-09/combo-tex-mex.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 38,
+    "name": "Beef Melt Fries",
+    "before": "/generated/products/38.jpg",
+    "after": "/menu/review-2026-09/beef-melt-fries.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 40,
+    "name": "Salada do Barba",
+    "before": "/generated/products/40.jpg",
+    "after": "/menu/review-2026-09/salada.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 47,
+    "name": "Porção de Entrecot e fritas.",
+    "before": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/-1713044695462blob",
+    "after": "/menu/review-2026-09/entrecot-fritas.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 49,
+    "name": "Tortilhas de milho crocante",
+    "before": "/generated/products/49.jpg",
+    "after": "/menu/review-2026-09/tortillas.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 58,
+    "name": "Quesadilha doce",
+    "before": "/generated/products/58.jpg",
+    "after": "/menu/review-2026-09/quesadilla-doce.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 86,
+    "name": "Cerveja Stannis White Rose 355ml",
+    "before": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727996018230blob",
+    "after": "/menu/review-2026-09/white-rose.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 92,
+    "name": "Adicional de Batata Frita",
+    "before": "/generated/products/92.jpg",
+    "after": "https://legacy-assets.anota.ai/produtos/1678885865055da27fbf9-10ad-4c0d-87a8-de4c0a569db0",
+    "kind": "restaurant-photo",
+    "sourceId": 39
+  },
+  {
+    "id": 93,
+    "name": "Adicional de Queijo Gouda",
+    "before": "/generated/products/93.jpg",
+    "after": "/menu/review-2026-09/gouda-empanado.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 94,
+    "name": "Adicional de Batata Waffle",
+    "before": "/generated/products/94.jpg",
+    "after": "https://legacy-assets.anota.ai/produtos/1678885867984f1877c91-ae3e-4367-93c0-e96bde258a4d",
+    "kind": "restaurant-photo",
+    "sourceId": 41
+  },
+  {
+    "id": 95,
+    "name": "Adicional de Batata Crinkle Temperada",
+    "before": "/generated/products/95.jpg",
+    "after": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1757538132602blob",
+    "kind": "restaurant-photo",
+    "sourceId": 42
+  },
+  {
+    "id": 96,
+    "name": "Adicional de maionese temperada",
+    "before": "/generated/products/96.jpg",
+    "after": "/menu/review-2026-09/maionese.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 97,
+    "name": "Adicional de maionese verde temperada",
+    "before": "/generated/products/97.jpg",
+    "after": "/menu/review-2026-09/maionese-verde.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 98,
+    "name": "Adicional de Sweet Chilli",
+    "before": "/generated/products/98.jpg",
+    "after": "/menu/review-2026-09/sweet-chilli.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 99,
+    "name": "Adicional de Barbacue",
+    "before": "/generated/products/99.jpg",
+    "after": "/menu/review-2026-09/barbecue.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 100,
+    "name": "Adicional de Chipotle",
+    "before": "/generated/products/100.jpg",
+    "after": "/menu/review-2026-09/chipotle.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 101,
+    "name": "Adicional de creme de queijos",
+    "before": "/generated/products/101.jpg",
+    "after": "/menu/review-2026-09/creme-queijos.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 102,
+    "name": "Adicional de hamburguer",
+    "before": "/generated/products/102.jpg",
+    "after": "/menu/review-2026-09/hamburguer-extra.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 104,
+    "name": "Adicional de Entrecot",
+    "before": "/generated/products/104.jpg",
+    "after": "/menu/review-2026-09/entrecot.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 105,
+    "name": "Gin Tropical",
+    "before": "/generated/products/105.jpg",
+    "after": "/menu/review-2026-09/gin-tropical.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 106,
+    "name": "Gin melancia",
+    "before": "/generated/products/106.jpg",
+    "after": "/menu/review-2026-09/gin-melancia.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 110,
+    "name": "Couve flor com alho poró",
+    "before": "/generated/products/110.png",
+    "after": "/menu/review-2026-09/vegetariano-couve.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 111,
+    "name": "Cevadinha com cogumelos",
+    "before": "/generated/products/111.png",
+    "after": "/menu/review-2026-09/vegetariano-cevada.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 112,
+    "name": "Alface americana",
+    "before": "/generated/products/112.jpg",
+    "after": "/menu/review-2026-09/alface.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 114,
+    "name": "Bacon",
+    "before": "/generated/products/114.jpg",
+    "after": "/menu/review-2026-09/bacon.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 115,
+    "name": "Queijo gouda empanado",
+    "before": "/generated/products/115.jpg",
+    "after": "/menu/review-2026-09/gouda-empanado.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 116,
+    "name": "Batata-frita Palito",
+    "before": "/generated/products/116.jpg",
+    "after": "https://legacy-assets.anota.ai/produtos/1678885865055da27fbf9-10ad-4c0d-87a8-de4c0a569db0",
+    "kind": "restaurant-photo",
+    "sourceId": 39
+  },
+  {
+    "id": 117,
+    "name": "Queijo brie",
+    "before": "/generated/products/117.jpg",
+    "after": "/menu/review-2026-09/brie.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 118,
+    "name": "Maionese temperada extra",
+    "before": "/generated/products/118.jpg",
+    "after": "/menu/review-2026-09/maionese.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 119,
+    "name": "Hambúrguer extra",
+    "before": "/generated/products/119.jpg",
+    "after": "/menu/review-2026-09/hamburguer-extra.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 120,
+    "name": "Batata waffle",
+    "before": "/generated/products/120.jpg",
+    "after": "https://legacy-assets.anota.ai/produtos/1678885867984f1877c91-ae3e-4367-93c0-e96bde258a4d",
+    "kind": "restaurant-photo",
+    "sourceId": 41
+  },
+  {
+    "id": 121,
+    "name": "Molho barbecue",
+    "before": "/generated/products/121.jpg",
+    "after": "/menu/review-2026-09/barbecue.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 122,
+    "name": "Costela na brasa desfiada",
+    "before": "/generated/products/122.jpg",
+    "after": "/menu/review-2026-09/costela.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 123,
+    "name": "Geleia de Tomate",
+    "before": "/generated/products/123.jpg",
+    "after": "/menu/review-2026-09/geleia-tomate.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 124,
+    "name": "Molho chipotle",
+    "before": "/generated/products/124.jpg",
+    "after": "/menu/review-2026-09/chipotle.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 125,
+    "name": "Chutney de cebola Roxa",
+    "before": "/generated/products/125.jpg",
+    "after": "/menu/review-2026-09/chutney-cebola.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 126,
+    "name": "Molho Chipotle",
+    "before": "/generated/products/126.jpg",
+    "after": "/menu/review-2026-09/chipotle.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 127,
+    "name": "Maionese temperada extra",
+    "before": "/generated/products/127.jpg",
+    "after": "/menu/review-2026-09/maionese.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 128,
+    "name": "Farofa",
+    "before": "/generated/products/128.jpg",
+    "after": "/menu/review-2026-09/farofa.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 129,
+    "name": "Creme de Gorgonzola",
+    "before": "/generated/products/129.jpg",
+    "after": "/menu/review-2026-09/gorgonzola.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 130,
+    "name": "Steak de Entrecot Extra",
+    "before": "/generated/products/130.jpg",
+    "after": "/menu/review-2026-09/entrecot.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 131,
+    "name": "Chimichurri",
+    "before": "/generated/products/131.jpg",
+    "after": "/menu/review-2026-09/chimichurri.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 132,
+    "name": "Creme de Ovomaltine",
+    "before": "/generated/products/132.jpg",
+    "after": "/menu/review-2026-09/ovomaltine.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 133,
+    "name": "Doce de leite",
+    "before": "/generated/products/133.jpg",
+    "after": "/menu/review-2026-09/doce-leite.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 134,
+    "name": "Nutella",
+    "before": "/generated/products/134.jpg",
+    "after": "/menu/review-2026-09/creme-avela.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 135,
+    "name": "Sem gás",
+    "before": "/generated/products/135.jpg",
+    "after": "/menu/review-2026-09/agua-sem-gas.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 136,
+    "name": "Gás",
+    "before": "/generated/products/136.jpg",
+    "after": "/menu/review-2026-09/agua-com-gas.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 137,
+    "name": "Alface Americana",
+    "before": "/generated/products/137.jpg",
+    "after": "/menu/review-2026-09/alface.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 139,
+    "name": "Rúcula",
+    "before": "/generated/products/139.jpg",
+    "after": "/menu/review-2026-09/rucula.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 140,
+    "name": "Geleia de Tomate",
+    "before": "/generated/products/140.jpg",
+    "after": "/menu/review-2026-09/geleia-tomate.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 141,
+    "name": "Chutney de Cebola Roxa",
+    "before": "/generated/products/141.jpg",
+    "after": "/menu/review-2026-09/chutney-cebola.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 142,
+    "name": "Bacon",
+    "before": "/generated/products/142.jpg",
+    "after": "/menu/review-2026-09/bacon.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 143,
+    "name": "Queijo Brie",
+    "before": "/generated/products/143.jpg",
+    "after": "/menu/review-2026-09/brie.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 144,
+    "name": "Queijo Cheddar Pollenghi (2 fatias)",
+    "before": "/generated/products/144.jpg",
+    "after": "/menu/review-2026-09/cheddar.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 145,
+    "name": "Hambúrguer Extra",
+    "before": "/generated/products/145.jpg",
+    "after": "/menu/review-2026-09/hamburguer-extra.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 146,
+    "name": "Costela Bovina Desfiada (100g)",
+    "before": "/generated/products/146.jpg",
+    "after": "/menu/review-2026-09/costela.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 149,
+    "name": "Anel de Cebola (4 und dentro do burguer)",
+    "before": "/generated/products/149.jpg",
+    "after": "/menu/review-2026-09/onion-rings.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 150,
+    "name": "Catupiry empanado",
+    "before": "/generated/products/150.jpg",
+    "after": "/menu/review-2026-09/catupiry.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 151,
+    "name": "Adicional Batata Palito",
+    "before": "/generated/products/151.jpg",
+    "after": "https://legacy-assets.anota.ai/produtos/1678885865055da27fbf9-10ad-4c0d-87a8-de4c0a569db0",
+    "kind": "restaurant-photo",
+    "sourceId": 39
+  },
+  {
+    "id": 152,
+    "name": "Adicional Batata Waffle",
+    "before": "/generated/products/152.jpg",
+    "after": "https://legacy-assets.anota.ai/produtos/1678885867984f1877c91-ae3e-4367-93c0-e96bde258a4d",
+    "kind": "restaurant-photo",
+    "sourceId": 41
+  },
+  {
+    "id": 153,
+    "name": "Adicional Batata Crinkles temperada",
+    "before": "/generated/products/153.jpg",
+    "after": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1757538132602blob",
+    "kind": "restaurant-photo",
+    "sourceId": 42
+  },
+  {
+    "id": 154,
+    "name": "Adicional queijo Gouda (4und)",
+    "before": "/generated/products/154.jpg",
+    "after": "/menu/review-2026-09/gouda-empanado.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 155,
+    "name": "Adicional Anel de cebola (4und)",
+    "before": "/generated/products/155.jpg",
+    "after": "/menu/review-2026-09/onion-rings.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 156,
+    "name": "Maionese Temperada",
+    "before": "/generated/products/156.jpg",
+    "after": "/menu/review-2026-09/maionese.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 157,
+    "name": "Sweet Chilli",
+    "before": "/generated/products/157.jpg",
+    "after": "/menu/review-2026-09/sweet-chilli.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 158,
+    "name": "Molho Barbecue",
+    "before": "/generated/products/158.jpg",
+    "after": "/menu/review-2026-09/barbecue.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 159,
+    "name": "Molho Chipotle",
+    "before": "/generated/products/159.jpg",
+    "after": "/menu/review-2026-09/chipotle.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 160,
+    "name": "Geleia de Tomate",
+    "before": "/generated/products/160.jpg",
+    "after": "/menu/review-2026-09/geleia-tomate.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 161,
+    "name": "Creme de Queijos",
+    "before": "/generated/products/161.jpg",
+    "after": "/menu/review-2026-09/creme-queijos.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 162,
+    "name": "Maionese verde temperada",
+    "before": "/generated/products/162.jpg",
+    "after": "/menu/review-2026-09/maionese-verde.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 163,
+    "name": "Sabor Manga",
+    "before": "/generated/products/163.jpg",
+    "after": "/menu/review-2026-09/manga.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 164,
+    "name": "Sabor Maracujá",
+    "before": "/generated/products/164.jpg",
+    "after": "/menu/review-2026-09/maracuja.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 165,
+    "name": "Sabor Pêssego",
+    "before": "/generated/products/165.jpg",
+    "after": "/menu/review-2026-09/pessego.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 166,
+    "name": "Sabor Uva",
+    "before": "/generated/products/166.jpg",
+    "after": "/menu/review-2026-09/uva.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 170,
+    "name": "Morango",
+    "before": "/generated/products/170.jpg",
+    "after": "/menu/review-2026-09/caipirinha-morango.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 171,
+    "name": "Abacaxi com Hortelã",
+    "before": "/generated/products/171.jpg",
+    "after": "/menu/review-2026-09/caipirinha-abacaxi.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 172,
+    "name": "Strogonoff de nozes",
+    "before": "/generated/products/172.jpg",
+    "after": "/menu/review-2026-09/strogonoff-nozes.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 173,
+    "name": "Gelado de Uva",
+    "before": "/generated/products/173.jpg",
+    "after": "/menu/review-2026-09/gelado-uva.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 174,
+    "name": "Gelado de Morango",
+    "before": "/generated/products/174.jpg",
+    "after": "/menu/review-2026-09/gelado-morango.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 175,
+    "name": "Prestigio",
+    "before": "/generated/products/175.jpg",
+    "after": "/menu/review-2026-09/prestigio.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 176,
+    "name": "Creme de Maracujá",
+    "before": "/generated/products/176.jpg",
+    "after": "/menu/review-2026-09/creme-maracuja.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 177,
+    "name": "Negresco",
+    "before": "/generated/products/177.jpg",
+    "after": "/menu/review-2026-09/brigadeiro-negresco.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 178,
+    "name": "Ovomaltine",
+    "before": "/generated/products/178.jpg",
+    "after": "/menu/review-2026-09/ovomaltine.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 179,
+    "name": "Bacon",
+    "before": "/generated/products/179.jpg",
+    "after": "/menu/review-2026-09/bacon.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 180,
+    "name": "Creme de queijos",
+    "before": "/generated/products/180.jpg",
+    "after": "/menu/review-2026-09/creme-queijos.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 184,
+    "name": "Adicional de Doce de Leite extra",
+    "before": "/generated/products/184.jpg",
+    "after": "/menu/review-2026-09/doce-leite.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 185,
+    "name": "Adicional de Nutella",
+    "before": "/generated/products/185.jpg",
+    "after": "/menu/review-2026-09/creme-avela.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 186,
+    "name": "Adicione + 6 mini churros",
+    "before": "/generated/products/186.jpg",
+    "after": "/menu/review-2026-09/mini-churros.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 189,
+    "name": "Barba Salada",
+    "before": "/generated/products/189.png",
+    "after": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b0455-1694220678290blob",
+    "kind": "restaurant-photo",
+    "sourceId": 5
+  },
+  {
+    "id": 190,
+    "name": "Do Barba",
+    "before": "/generated/products/190.png",
+    "after": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b045a-1694220808818blob",
+    "kind": "restaurant-photo",
+    "sourceId": 9
+  },
+  {
+    "id": 191,
+    "name": "El Cocinero",
+    "before": "/generated/products/191.png",
+    "after": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b0457-1694220781377blob",
+    "kind": "restaurant-photo",
+    "sourceId": 7
+  },
+  {
+    "id": 192,
+    "name": "Nutella",
+    "before": "/generated/products/192.jpg",
+    "after": "/menu/review-2026-09/creme-avela.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 193,
+    "name": "Ovomaltine",
+    "before": "/generated/products/193.jpg",
+    "after": "/menu/review-2026-09/ovomaltine.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 194,
+    "name": "Doce de leite",
+    "before": "/generated/products/194.jpg",
+    "after": "/menu/review-2026-09/doce-leite.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  },
+  {
+    "id": 195,
+    "name": "Brigadeiro",
+    "before": "/generated/products/195.jpg",
+    "after": "/menu/review-2026-09/brigadeiro.webp",
+    "kind": "illustrative",
+    "sourceId": null
+  }
+]

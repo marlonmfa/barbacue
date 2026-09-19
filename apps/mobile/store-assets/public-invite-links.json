@@ -1,0 +1,36 @@
+{
+  "barbacue": {
+    "android": "https://play.google.com/apps/testing/com.lanchesdobarba.barbacue",
+    "androidAccess": "Currently requires membership in the configured email list. Public group creation awaiting CAPTCHA.",
+    "ios": "https://testflight.apple.com/join/HQyz3ugU",
+    "iosPublicLinkEnabled": true,
+    "iosGroupId": "97ba624e-3e83-42ff-9419-7bc3d8e6fef7",
+    "iosBuilds": [
+      "eb182444-9231-48ce-8ffa-33b2f55f255a",
+      "5a4ef1ae-5f54-42ef-a4b4-4f86ddfe295d"
+    ],
+    "iosStatus": "Blocked: Apple returns 422 Beta Contract is missing when submitting external beta review."
+  },
+  "chelas": {
+    "android": "https://play.google.com/apps/testing/com.lanchesdobarba.chelas",
+    "androidAccess": "Currently requires membership in the configured email list. Public group creation awaiting CAPTCHA.",
+    "ios": "https://testflight.apple.com/join/7FHxwmba",
+    "iosPublicLinkEnabled": true,
+    "iosGroupId": "2b876a76-243e-4411-883b-f27212f7ec11",
+    "iosBuilds": [
+      "1bf81396-d6e6-4da2-9b79-e85b65666588"
+    ],
+    "iosStatus": "Blocked: Apple returns 422 Beta Contract is missing when submitting external beta review."
+  },
+  "barbadog": {
+    "android": "https://play.google.com/apps/testing/com.lanchesdobarba.barbadog",
+    "androidAccess": "Currently requires membership in the configured email list. Public group creation awaiting CAPTCHA.",
+    "ios": "https://testflight.apple.com/join/E2FmjpVA",
+    "iosPublicLinkEnabled": true,
+    "iosGroupId": "779ebdb6-7fe1-4396-8e6a-7e272ee5d84c",
+    "iosBuilds": [
+      "33e5d155-abec-49c2-a8b2-5a28790d8bce"
+    ],
+    "iosStatus": "Blocked: Apple returns 422 Beta Contract is missing when submitting external beta review."
+  }
+}

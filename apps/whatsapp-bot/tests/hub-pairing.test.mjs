@@ -1,11 +1,11 @@
-// Regression tests for the multi-account WhatsApp pairing hub.
+// Regression tests for the central WhatsApp pairing hub.
 //
 // The bug these pin down: `connection.update` handlers were bound to the
 // *session* rather than the *socket*. Baileys keeps emitting events after a
 // socket is replaced, so the old socket's `close` event nulled the brand-new
 // socket, flipped the status to "disconnected", wiped the fresh QR and
 // scheduled a duplicate reconnect. In production this made all three accounts
-// impossible to pair and left barbacue with a half-written creds.json
+// impossible to pair and left the central account with a half-written creds.json
 // (registered:false + me + pairingCode) that bricked every later attempt.
 //
 //   node --experimental-test-module-mocks --test tests/hub-pairing.test.mjs
@@ -76,22 +76,22 @@ const closeWith = (sock, statusCode) =>
 const settle = (ms) => new Promise((done) => setTimeout(done, ms));
 
 test("THE regression: a superseded socket's close event cannot touch the live session", async () => {
-  await hub.pair("barbacue", "qr");
+  await hub.pair("central", "qr");
   assert.equal(sockets.length, 1, "first pair should open exactly one socket");
   const stale = sockets[0];
-  const firstQr = account("barbacue").qrDataUrl;
+  const firstQr = account("central").qrDataUrl;
   assert.ok(firstQr, "first pair should surface a QR");
 
-  await hub.pair("barbacue", "qr");
+  await hub.pair("central", "qr");
   assert.equal(sockets.length, 2, "re-pair should open a second socket");
-  const liveQr = account("barbacue").qrDataUrl;
+  const liveQr = account("central").qrDataUrl;
   assert.notEqual(liveQr, firstQr, "the panel must show the new socket's QR");
 
   // Baileys emits this late, after the replacement is already in place.
   closeWith(stale, 428);
   await settle(50);
 
-  const after = account("barbacue");
+  const after = account("central");
   assert.equal(after.status, "qr_ready", "stale close must not flip the live session to disconnected");
   assert.equal(after.qrDataUrl, liveQr, "stale close must not wipe the live QR");
 
@@ -101,47 +101,47 @@ test("THE regression: a superseded socket's close event cannot touch the live se
 });
 
 test("re-pairing wipes half-written creds so a partial pairing cannot poison it", async () => {
-  const dir = join(SESSIONS, "chelas");
+  const dir = join(SESSIONS, "central");
   mkdirSync(dir, { recursive: true });
   // Exactly the shape found on the production box after the failed attempt.
   writeFileSync(join(dir, "creds.json"), JSON.stringify({ registered: false, pairingCode: "ABCD1234", me: { id: "47997056624@s.whatsapp.net" } }));
 
-  await hub.pair("chelas", "qr");
+  await hub.pair("central", "qr");
 
   assert.equal(existsSync(join(dir, "creds.json")), false, "pair() must start from a clean auth folder");
 });
 
 test("phone pairing waits for the socket instead of a fixed sleep, and returns the code", async () => {
-  const result = await hub.pair("barbadogs", "phone", "+55 (47) 99705-6624");
+  const result = await hub.pair("central", "phone", "+55 (47) 99705-6624");
 
   const sock = sockets.at(-1);
   assert.equal(sock.waitForSocketOpen.mock.callCount(), 1, "must await the real handshake");
   assert.equal(sock.requestPairingCode.mock.calls[0].arguments[0], "5547997056624", "digits only");
   assert.equal(result.pairingCode, "PAIR6624");
-  assert.equal(account("barbadogs").pairingCode, "PAIR6624");
+  assert.equal(account("central").pairingCode, "PAIR6624");
 });
 
 test("a malformed number is rejected before any socket is opened", async () => {
-  await assert.rejects(() => hub.pair("barbacue", "phone", "123"), /DDI e DDD/);
+  await assert.rejects(() => hub.pair("central", "phone", "123"), /DDI e DDD/);
   assert.equal(sockets.length, 0, "no socket should be opened for an invalid number");
 });
 
 test("an unwatched account stops retrying instead of looping for days", async () => {
-  await hub.pair("barbacue", "qr");
+  await hub.pair("central", "qr");
   assert.equal(sockets.length, 1);
 
   // Force the pairing window shut, then drop the connection the way an expired
   // QR does (408). Nobody is watching, so the hub must stand down.
-  hub.closePairingWindow("barbacue");
+  hub.closePairingWindow("central");
   closeWith(sockets[0], 408);
   await settle(2_600);
 
   assert.equal(sockets.length, 1, "no reconnect should be scheduled outside the pairing window");
-  assert.match(account("barbacue").lastError, /parear novamente/);
+  assert.match(account("central").lastError, /parear novamente/);
 });
 
 test("515 after pair-success reconnects immediately and is not counted as a failure", async () => {
-  await hub.pair("chelas", "qr");
+  await hub.pair("central", "qr");
   assert.equal(sockets.length, 1);
 
   closeWith(sockets[0], 515);
@@ -151,16 +151,16 @@ test("515 after pair-success reconnects immediately and is not counted as a fail
 });
 
 test("logout (401) clears credentials and asks for a fresh pairing", async () => {
-  const dir = join(SESSIONS, "barbadogs");
-  await hub.pair("barbadogs", "qr");
+  const dir = join(SESSIONS, "central");
+  await hub.pair("central", "qr");
   assert.equal(existsSync(dir), true);
 
   closeWith(sockets[0], 401);
   await settle(100);
 
   assert.equal(existsSync(join(dir, "creds.json")), false);
-  assert.equal(account("barbadogs").status, "disconnected");
-  assert.match(account("barbadogs").lastError, /Pareie novamente/);
+  assert.equal(account("central").status, "disconnected");
+  assert.match(account("central").lastError, /Pareie novamente/);
 });
 
 test("startHub does not open sockets for accounts that were never paired", async () => {

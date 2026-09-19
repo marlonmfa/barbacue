@@ -25,7 +25,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 
-PACKAGE = "com.lanchesdobarba.barbacue"
+PACKAGE = os.environ.get("PLAY_PACKAGE", "com.lanchesdobarba.barbacue")
 SCOPES = ["https://www.googleapis.com/auth/androidpublisher"]
 
 CANDIDATES = [

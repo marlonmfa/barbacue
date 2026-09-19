@@ -43,10 +43,18 @@ services:
       # Container-internal DB host is the service name "postgres".
       DATABASE_URL: postgresql://barbacue:barbacue@postgres:5432/barbacue
       OPENAI_API_KEY: ${OPENAI_API_KEY}
+      DOMAIN_BARBA: ${DOMAIN_BARBA:-barbacue.cog.ia.br}
+      DOMAIN_CHELAS: ${DOMAIN_CHELAS:-chelas.hirableaiagents.com}
+      DOMAIN_HOTDOG: ${DOMAIN_HOTDOG:-barbadog.hirableaiagents.com}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       ADMIN_COOKIE_SECRET: ${ADMIN_COOKIE_SECRET}
       ADMIN_MASTER_PASSWORD: ${ADMIN_MASTER_PASSWORD}
+      PRINT_AGENT_TOKEN: ${PRINT_AGENT_TOKEN:-}
+      DELIVERY_NOMINATIM_URL: ${DELIVERY_NOMINATIM_URL:-}
+      DELIVERY_OSRM_URL: ${DELIVERY_OSRM_URL:-}
+      DELIVERY_OSM_USER_AGENT: ${DELIVERY_OSM_USER_AGENT:-}
+      DELIVERY_PROVIDER_TIMEOUT_MS: ${DELIVERY_PROVIDER_TIMEOUT_MS:-8000}
       # Lets the admin panel proxy the bot's pairing status, and lets the bot
       # call the protected order-history endpoint.
       BOT_API_TOKEN: ${BOT_API_TOKEN}

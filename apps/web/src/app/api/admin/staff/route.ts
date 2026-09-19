@@ -9,12 +9,16 @@ import { hashPassword } from "@/lib/staff-auth";
 // Staff account management is admin-only. The proxy gate only checks for a valid
 // session (any role), so role enforcement happens here in the Node handler.
 
+import { STAFF_ROLES, PERMISSION_IDS } from "@/lib/permissions";
+
 const StaffSchema = z.object({
   name: z.string().min(1),
   username: z.string().min(3).transform((s) => s.trim().toLowerCase()),
   password: z.string().min(6),
-  role: z.enum(["admin", "manager"]),
+  role: z.enum(STAFF_ROLES),
   active: z.boolean().optional(),
+  jobTitle: z.string().trim().max(100).optional().nullable(),
+  permissions: z.array(z.enum(PERMISSION_IDS)).max(PERMISSION_IDS.length).optional().nullable(),
 });
 
 export const GET = withRole("admin", async () => {
@@ -25,6 +29,8 @@ export const GET = withRole("admin", async () => {
       name: staffUsers.name,
       username: staffUsers.username,
       role: staffUsers.role,
+      jobTitle: staffUsers.jobTitle,
+      permissions: staffUsers.permissions,
       active: staffUsers.active,
       createdAt: staffUsers.createdAt,
     })
@@ -38,16 +44,18 @@ export const POST = withRole("admin", async (req: NextRequest) => {
   const parsed = StaffSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
 
-  const { name, username, password, role, active } = parsed.data;
+  const { name, username, password, role, active, jobTitle, permissions } = parsed.data;
   try {
     const [user] = await db
       .insert(staffUsers)
-      .values({ name, username, role, active: active ?? true, passwordHash: await hashPassword(password) })
+      .values({ name, username, role, jobTitle, permissions, active: active ?? true, passwordHash: await hashPassword(password) })
       .returning({
         id: staffUsers.id,
         name: staffUsers.name,
         username: staffUsers.username,
         role: staffUsers.role,
+      jobTitle: staffUsers.jobTitle,
+      permissions: staffUsers.permissions,
         active: staffUsers.active,
         createdAt: staffUsers.createdAt,
       });

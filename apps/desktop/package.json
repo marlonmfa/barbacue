@@ -1,0 +1,64 @@
+{
+  "name": "@barbacue/desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gest\u00e3o de pedidos e impress\u00e3o para Windows",
+  "author": "Grupo Barbacue",
+  "type": "module",
+  "main": "src/main.mjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.mjs",
+    "prepare:agent": "node scripts/prepare-agent.mjs",
+    "dist:win": "npm run prepare:agent && electron-builder --win nsis --x64 --publish never && npm run stage:web",
+    "pack": "npm run prepare:agent && electron-builder --dir --publish never",
+    "smoke": "node scripts/smoke.mjs",
+    "stage:web": "node scripts/stage-web-download.mjs"
+  },
+  "devDependencies": {
+    "electron": "44.3.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "br.com.barbacue.pedidos",
+    "productName": "Barbacue Pedidos",
+    "asar": true,
+    "npmRebuild": false,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "src/**",
+      "ui/**",
+      "assets/**",
+      "vendor/**",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "signExecutable": false
+    },
+    "nsis": {
+      "artifactName": "Barbacue-Pedidos-${version}-Windows-${arch}-Setup.${ext}",
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerLanguages": [
+        "pt_BR"
+      ],
+      "language": "1046",
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}

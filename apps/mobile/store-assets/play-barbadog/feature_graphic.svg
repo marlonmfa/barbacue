@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" viewBox="0 0 1024 500"><rect width="1024" height="500" fill="#22345B"/><path d="M760 0H1024V500H920Z" fill="#F4C93D"/><g transform="translate(674 98) scale(.28)">
+  <rect width="1024" height="1024" rx="220" fill="#182448"/>
+  <path d="M158 235h708v554c-83 42-201 66-354 66s-271-24-354-66V235Z" fill="#FFD34E"/>
+  <path d="M158 235h708v112H158z" fill="#E52F2B"/>
+  <path d="M283 480c67-61 145-91 229-91s162 30 229 91l-51 57c-55-44-114-66-178-66s-123 22-178 66l-51-57Z" fill="#E52F2B"/>
+  <path d="M304 518h121c68 0 104 27 104 73 0 27-14 48-40 60 36 11 54 35 54 70 0 53-40 82-116 82H304V518Zm76 59v48h37c23 0 35-8 35-24s-12-24-35-24h-37Zm0 103v61h43c27 0 41-10 41-31 0-20-14-30-41-30h-43Z" fill="#182448"/>
+  <path d="M563 518h100c89 0 145 53 145 142s-56 143-145 143H563V518Zm78 65v154h20c43 0 68-28 68-77 0-48-25-77-68-77h-20Z" fill="#182448"/>
+  <circle cx="286" cy="283" r="22" fill="#FFD34E"/><circle cx="738" cy="283" r="22" fill="#FFD34E"/>
+
+</g><text x="64" y="103" fill="#F4C93D" font-family="Helvetica,Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="3">JARAGUÁ DO SUL · SC</text><text x="60" y="239" fill="#FFF7DE" font-family="Helvetica,Arial,sans-serif" font-size="82" font-weight="900">BARBADOG</text><text x="64" y="292" fill="#F4C93D" font-family="Helvetica,Arial,sans-serif" font-size="20" font-weight="700">HOT DOGS, SANDUÍCHES E PORÇÕES</text><text x="64" y="390" fill="#FFF7DE" font-family="Helvetica,Arial,sans-serif" font-size="24">Seu próximo pedido começa aqui.</text></svg>

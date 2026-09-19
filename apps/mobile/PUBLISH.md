@@ -1,5 +1,10 @@
 # Publicação — BARBACUE — Burguers na Brasa
 
+> Atualização de 08/09/2026: os releases atuais das três marcas usam
+> `scripts/build_brand.sh <marca> <android|ios>`. Consulte
+> [BRANDS.md](BRANDS.md) e [estado confirmado nas lojas](store-assets/RELEASE_STATUS.md).
+> As instruções históricas abaixo não substituem as versões e os perfis do script.
+
 Runbook de release do app (iOS + Android). O app é um cliente Flutter da API em
 `apps/web`; **os dois builds embutem a URL de produção via `--dart-define`**, que
 é resolvido em tempo de compilação (`String.fromEnvironment`) — não dá para trocar
@@ -11,7 +16,7 @@ depois sem recompilar.
 | Apple Team (distribuição) | `3A3X2G4UPK` — único com cert "Apple Distribution" |
 | Apple Team (pessoal, NÃO publica) | `Y5B2NQ244A` |
 | App Store Connect app id | `6782376058` |
-| API de produção | `https://barbacue.hirableaiagents.com` |
+| API de produção | `https://barbacue.cog.ia.br` |
 | Play package | `com.lanchesdobarba.barbacue` |
 
 ## Credenciais (nenhuma no repositório)
@@ -56,11 +61,11 @@ qualquer um já enviado** em cada loja (hoje: 5). Nunca reenvie o mesmo número.
 ```bash
 cd apps/mobile
 flutter build ipa --release \
-  --dart-define=API_BASE_URL=https://barbacue.hirableaiagents.com \
+  --dart-define=API_BASE_URL=https://barbacue.cog.ia.br \
   --export-options-plist=ios/ExportOptions.plist
 
 flutter build appbundle --release \
-  --dart-define=API_BASE_URL=https://barbacue.hirableaiagents.com
+  --dart-define=API_BASE_URL=https://barbacue.cog.ia.br
 ```
 
 **Assinatura iOS é manual, de propósito.** O entitlement `associated-domains`
@@ -116,13 +121,13 @@ python3 scripts/asc.py submit 1.2.0        # releaseType=AFTER_APPROVAL
 > **Nunca submeta com a produção fora do ar.** O app é 100% servido pela API: o
 > revisor abrindo um app sem cardápio é rejeição quase certa por 2.1 (App
 > Completeness). Cheque antes:
-> `curl -sf https://barbacue.hirableaiagents.com/api/store-status`
+> `curl -sf https://barbacue.cog.ia.br/api/store-status`
 
 ---
 
 ## Deep links da mesa (dine-in)
 
-O QR impresso aponta para `https://barbacue.hirableaiagents.com/mesa/<token>`. A
+O QR impresso aponta para `https://barbacue.cog.ia.br/mesa/<token>`. A
 câmera do próprio celular abre a URL e o SO roteia para o app — sem scanner
 embutido, sem permissão de câmera.
 
@@ -143,8 +148,8 @@ Para funcionar, **os dois arquivos precisam estar no ar em produção**:
 Verificação depois do deploy:
 
 ```bash
-curl -sI https://barbacue.hirableaiagents.com/.well-known/apple-app-site-association | grep -i content-type
-curl -s  https://barbacue.hirableaiagents.com/.well-known/assetlinks.json
+curl -sI https://barbacue.cog.ia.br/.well-known/apple-app-site-association | grep -i content-type
+curl -s  https://barbacue.cog.ia.br/.well-known/assetlinks.json
 ```
 
 ---
@@ -173,4 +178,4 @@ Depois de liberado: Play Console → Production → Create new release → escol
 - Screenshots: `store-assets/screenshots/` e `store-assets/screenshots-v1.1/`
   (iPhone 6.5"/6.9" + iPad 13" — o slot iPad é **obrigatório** se o app declara
   suporte a iPad)
-- Política de privacidade: <https://barbacue.hirableaiagents.com/privacy.html>
+- Política de privacidade: <https://barbacue.cog.ia.br/privacy.html>

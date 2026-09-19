@@ -12,6 +12,7 @@ const PatchSchema = z.object({
   discountValue: z.number().int().positive().optional(),
   minOrderCents: z.number().int().min(0).optional(),
   maxUsages: z.number().int().positive().optional().nullable(),
+  audience: z.enum(["all", "visitor", "member"]).optional(),
   active: z.boolean().optional(),
   expiresAt: z.string().datetime().optional().nullable(),
 });

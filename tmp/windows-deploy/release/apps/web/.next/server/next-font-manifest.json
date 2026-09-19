@@ -1,0 +1,139 @@
+{
+  "app": {
+    "[project]/apps/web/src/app/_not-found/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/beta/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/catalogs/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/categories/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/coupons/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/customers/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/delivery-settings/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/delivery/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/downloads/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/impersonate/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/kitchen/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/login/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/orders/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/products/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/settings/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/staff/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/system/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/tables/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/team/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/waiter/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/whatsapp/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/admin/workspace/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/beta/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/cart/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/confirmation/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/conta/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/payment/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/pedir/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/teste_pedido/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/totem/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ],
+    "[project]/apps/web/src/app/whatsapp/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/9e9f04e3c37952ab-s.p.07uvnuj.ona6k.woff2"
+    ]
+  },
+  "appUsingSizeAdjust": true,
+  "pages": {},
+  "pagesUsingSizeAdjust": false
+}

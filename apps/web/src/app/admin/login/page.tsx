@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +18,10 @@ export default function AdminLoginPage() {
       body: JSON.stringify({ username, password }),
     });
     if (res.ok) {
-      router.push("/admin");
+      // Use a full navigation after authentication. This guarantees the new
+      // httpOnly session cookie is applied before the protected admin request
+      // and avoids a stuck client transition after production redeploys.
+      window.location.assign("/admin");
     } else {
       const data = await res.json();
       setError(data.error ?? "Erro ao entrar");
@@ -33,7 +34,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-sm bg-[#1a1512] rounded-2xl shadow-xl p-8">
         <div className="text-center mb-8">
           <span className="text-4xl">🔥</span>
-          <h1 className="text-xl font-bold text-white mt-3">Painel Admin</h1>
+          <h1 className="text-xl font-bold text-white mt-3">Acesso da equipe</h1>
           <p className="text-[#a89a8c] text-sm mt-1">Barbacue</p>
         </div>
 

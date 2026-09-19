@@ -14,7 +14,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-API_URL="${API_BASE_URL:-https://barbacue.hirableaiagents.com}"
+API_URL="${API_BASE_URL:-https://barbacue.cog.ia.br}"
 
 echo "==> 1/5 flutter pub get"
 flutter pub get

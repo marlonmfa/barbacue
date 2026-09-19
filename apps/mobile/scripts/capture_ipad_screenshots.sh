@@ -18,7 +18,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-API_URL="${API_BASE_URL:-https://barbacue.hirableaiagents.com}"
+API_URL="${API_BASE_URL:-https://barbacue.cog.ia.br}"
 OUT_DIR="store-assets/screenshots-v1.1/ipad-13"
 BUNDLE_ID="com.lanchesdobarba.barbacue"
 mkdir -p "$OUT_DIR"

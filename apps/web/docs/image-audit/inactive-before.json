@@ -1,0 +1,30 @@
+[
+  {
+    "id": 175,
+    "external_id": "6a121412ce1a637e9f2e2d69",
+    "category_id": 21,
+    "name": "Prestigio",
+    "description": null,
+    "price_cents": 0,
+    "image_url": "/generated/products/175.jpg",
+    "available": false,
+    "sort_order": 3,
+    "promo_price_cents": null,
+    "promo_starts_at": null,
+    "promo_ends_at": null
+  },
+  {
+    "id": 176,
+    "external_id": "6a121412ce1a637e9f2e2d6a",
+    "category_id": 21,
+    "name": "Creme de Maracujá",
+    "description": null,
+    "price_cents": 0,
+    "image_url": "/generated/products/176.jpg",
+    "available": false,
+    "sort_order": 4,
+    "promo_price_cents": null,
+    "promo_starts_at": null,
+    "promo_ends_at": null
+  }
+]

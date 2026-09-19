@@ -71,6 +71,7 @@ flutter:
     - assets/icon/
     - assets/splash/
     - assets/brand/
+    - assets/brands/
 
   # Anton (OFL) is the web's display face for the wordmark and the category
   # headings (globals.css .section-title, loaded there via next/font/google).

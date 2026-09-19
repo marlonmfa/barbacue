@@ -14,14 +14,19 @@ import QRCode from "qrcode";
 import pino from "pino";
 import { config } from "../config.js";
 
-export const RESTAURANTS = ["barbacue", "chelas", "barbadogs"] as const;
+export const RESTAURANTS = ["barbacue", "barbadog", "chelas"] as const;
 export type RestaurantId = (typeof RESTAURANTS)[number];
+const ACCOUNTS = ["central"] as const;
+type AccountId = (typeof ACCOUNTS)[number];
 export type ConnectionStatus = "disconnected" | "connecting" | "qr_ready" | "connected";
 
-type InboundHandler = (phone: string, text: string) => Promise<string[]>;
+type InboundHandler = (phone: string, text: string) => Promise<{
+  messages: string[];
+  brand: RestaurantId | null;
+}>;
 
 type Session = {
-  id: RestaurantId;
+  id: AccountId;
   socket: WASocket | null;
   status: ConnectionStatus;
   qrDataUrl: string | null;
@@ -31,6 +36,7 @@ type Session = {
   messages: Map<string, WAMessage[]>;
   names: Map<string, string>;
   unread: Map<string, number>;
+  assignments: Map<string, RestaurantId>;
   reconnects: number;
   retryTimer: NodeJS.Timeout | null;
   /** Bumped on every connect attempt. Handlers from superseded sockets self-ignore. */
@@ -54,9 +60,10 @@ const RECONNECT_CAP_MS = 60_000;
 const MAX_CHATS = 200;
 const MAX_MESSAGES_PER_CHAT = 300;
 
-const sessions = new Map<RestaurantId, Session>(RESTAURANTS.map((id) => [id, {
+const sessions = new Map<AccountId, Session>(ACCOUNTS.map((id) => [id, {
   id, socket: null, status: "disconnected", qrDataUrl: null, phoneNumber: null,
   pairingCode: null, lastError: null, messages: new Map(), names: new Map(), unread: new Map(),
+  assignments: new Map(),
   reconnects: 0, retryTimer: null, generation: 0, pairingUntil: 0,
 }]));
 
@@ -74,11 +81,12 @@ async function waVersion() {
 const phoneFromJid = (jid: string) => jid.split("@")[0].split(":")[0];
 const isChatJid = (jid: string) => Boolean(jid) && jid !== "status@broadcast" && !jid.endsWith("@newsletter");
 const digits = (value: string) => value.replace(/\D/g, "");
-const sessionDir = (id: RestaurantId) => resolve(config.sessionsDir, id);
+const sessionDir = (id: AccountId) => resolve(config.sessionsDir, id);
 const log = (id: string, message: string) => console.log(`[wa:${id}] ${message}`);
 
 function session(id: string): Session {
-  const found = sessions.get(id as RestaurantId);
+  // Brand-specific chat routes all point to the one physical WhatsApp account.
+  const found = sessions.get("central");
   if (!found) throw new Error("Restaurante inválido");
   return found;
 }
@@ -139,7 +147,7 @@ function stop(s: Session) {
 }
 
 /** Wipe the Baileys auth folder so a re-pair never inherits half-written creds. */
-async function clearCreds(id: RestaurantId) {
+async function clearCreds(id: AccountId) {
   await rm(sessionDir(id), { recursive: true, force: true });
 }
 
@@ -151,8 +159,9 @@ async function replyTo(s: Session, sock: WASocket, message: WAMessage) {
   if (body.type !== "text" || !body.text.trim()) return;
   try {
     await sock.sendPresenceUpdate("composing", jid);
-    const replies = await onInbound(phoneFromJid(jid), body.text.trim());
-    for (const reply of replies) {
+    const routed = await onInbound(phoneFromJid(jid), body.text.trim());
+    if (routed.brand) s.assignments.set(jid, routed.brand);
+    for (const reply of routed.messages) {
       const sent = await sock.sendMessage(jid, { text: reply });
       if (sent) remember(s, sent);
     }
@@ -162,7 +171,7 @@ async function replyTo(s: Session, sock: WASocket, message: WAMessage) {
   }
 }
 
-async function connect(id: RestaurantId, phone?: string) {
+async function connect(id: AccountId, phone?: string) {
   const s = session(id);
   const gen = ++s.generation;
   /** True while this socket is still the session's current one. */
@@ -297,7 +306,7 @@ export function onInboundMessage(handler: InboundHandler) {
 
 export async function startHub() {
   await mkdir(config.sessionsDir, { recursive: true });
-  await Promise.all(RESTAURANTS.map(async (id) => {
+  await Promise.all(ACCOUNTS.map(async (id) => {
     // Only resume accounts that are actually paired. Opening a socket for an
     // unpaired account produces a QR nobody scans and an endless retry loop.
     const { state } = await useMultiFileAuthState(sessionDir(id));
@@ -310,7 +319,7 @@ export async function startHub() {
 }
 
 export function accountList() {
-  return RESTAURANTS.map((id) => {
+  return ACCOUNTS.map((id) => {
     const s = session(id);
     return { id, status: s.status, qrDataUrl: s.qrDataUrl, phoneNumber: s.phoneNumber, pairingCode: s.pairingCode, lastError: s.lastError };
   });
@@ -368,18 +377,20 @@ export async function disconnect(id: string) {
 }
 
 export async function chatList(account = "all") {
-  const ids = account === "all" ? RESTAURANTS : [session(account).id];
+  const ids = ACCOUNTS;
   const rows = [];
   for (const id of ids) {
     const s = session(id);
     for (const [jid, messages] of s.messages) {
+      const assigned = s.assignments.get(jid) ?? "barbacue";
+      if (account !== "all" && account !== assigned) continue;
       const last = messages.at(-1);
       if (!last) continue;
       const body = bodyOf(last);
       let avatar: string | null = null;
       try { avatar = await s.socket?.profilePictureUrl(jid, "preview") ?? null; } catch { /* private avatar */ }
       rows.push({
-        account: id, jid, name: s.names.get(jid) ?? (jid.endsWith("@g.us") ? "Grupo" : `+${phoneFromJid(jid)}`),
+        account: assigned, jid, name: s.names.get(jid) ?? (jid.endsWith("@g.us") ? "Grupo" : `+${phoneFromJid(jid)}`),
         avatar, lastMessage: body.text, lastType: body.type, timestamp: Number(last.messageTimestamp ?? 0) * 1000,
         unread: s.unread.get(jid) ?? 0,
         isGroup: jid.endsWith("@g.us"),

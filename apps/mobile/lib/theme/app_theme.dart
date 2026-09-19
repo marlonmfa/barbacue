@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../config/app_brand.dart';
 
 class AppTheme {
   // ── BARBACUE & Co — butcher-paper, coal and ember ──────────────────────
@@ -149,6 +150,57 @@ class AppTheme {
         backgroundColor: coal,
         contentTextStyle: TextStyle(color: Colors.white),
         behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  static ThemeData forBrand(BrandConfig brandConfig) {
+    if (brandConfig.brand == AppBrand.barbacue) return theme;
+    final scheme = ColorScheme.fromSeed(
+      seedColor: brandConfig.primary,
+      primary: brandConfig.primary,
+      secondary: brandConfig.accent,
+      surface: brandConfig.surface,
+      brightness: Brightness.light,
+    );
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: scheme,
+      scaffoldBackgroundColor: brandConfig.background,
+      fontFamily: 'Roboto',
+      textTheme: TextTheme(
+        headlineLarge: TextStyle(
+          fontFamily: 'Anton',
+          color: brandConfig.ink,
+          height: .95,
+        ),
+        headlineMedium: TextStyle(
+          fontFamily: 'Anton',
+          color: brandConfig.ink,
+          height: 1,
+        ),
+        titleLarge: TextStyle(
+          color: brandConfig.ink,
+          fontWeight: FontWeight.w900,
+        ),
+        titleMedium: TextStyle(
+          color: brandConfig.ink,
+          fontWeight: FontWeight.w800,
+        ),
+        bodyLarge: TextStyle(color: brandConfig.ink, height: 1.4),
+        bodyMedium: TextStyle(color: brandConfig.ink, height: 1.35),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: brandConfig.accent,
+          foregroundColor: brandConfig.ink,
+          minimumSize: const Size.fromHeight(54),
+          textStyle: const TextStyle(fontWeight: FontWeight.w900),
+          shape: const StadiumBorder(),
+        ),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: brandConfig.primary,
       ),
     );
   }

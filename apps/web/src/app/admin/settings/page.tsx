@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Range { open: string; close: string }
 interface DayHours { day: number; closed: boolean; ranges: Range[] }
@@ -137,7 +138,8 @@ export default function AdminSettings() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-6">Configurações da loja</h1>
+      <h1 className="text-2xl font-bold text-white mb-4">Configurações da loja</h1>
+      <p className="text-sm text-neutral-400 mb-6">Para definir a origem, a área atendida e o valor por distância, acesse <Link href="/admin/delivery-settings" className="text-amber-200 underline underline-offset-4">Entrega e frete</Link>.</p>
 
       <form onSubmit={handleSave} className="max-w-2xl flex flex-col gap-6">
         <Section title="Informações gerais">

@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:barbacue/models/cart_item.dart';
 import 'package:barbacue/models/chat.dart';
+import 'package:barbacue/services/privacy_consent.dart';
 import 'package:barbacue/providers/cart_provider.dart';
 import 'package:barbacue/providers/chat_provider.dart';
 import 'package:barbacue/providers/checkout_provider.dart';
@@ -34,26 +35,36 @@ String chatBody(List<Map<String, dynamic>> cart, {String? couponCode}) =>
       'navigate': false,
     });
 
-Map<String, dynamic> agentItem(int id, String name, int qty) =>
-    {'productId': id, 'name': name, 'priceCents': 2500, 'qty': qty};
+Map<String, dynamic> agentItem(int id, String name, int qty) => {
+  'productId': id,
+  'name': name,
+  'priceCents': 2500,
+  'qty': qty,
+};
 
 void main() {
-  setUp(() => SharedPreferences.setMockInitialValues({}));
+  setUp(
+    () => SharedPreferences.setMockInitialValues({
+      PrivacyConsent.key: PrivacyConsent.version,
+    }),
+  );
   tearDown(() => ApiService.client = http.Client());
 
   final seeded = <CartItem>[
     CartItem(
-        productId: 1,
-        name: 'X-Burguer',
-        priceCents: 2500,
-        qty: 1,
-        imageUrl: 'https://cdn/1.jpg'),
+      productId: 1,
+      name: 'X-Burguer',
+      priceCents: 2500,
+      qty: 1,
+      imageUrl: 'https://cdn/1.jpg',
+    ),
     CartItem(
-        productId: 2,
-        name: 'Batata',
-        priceCents: 2500,
-        qty: 1,
-        imageUrl: 'https://cdn/2.jpg'),
+      productId: 2,
+      name: 'Batata',
+      priceCents: 2500,
+      qty: 1,
+      imageUrl: 'https://cdn/2.jpg',
+    ),
   ];
 
   Future<ProviderContainer> pumpChat(
@@ -61,16 +72,20 @@ void main() {
     List<CartItem>? cart,
     CheckoutState checkout = const CheckoutState(loaded: true),
   }) async {
-    final container = ProviderContainer(overrides: [
-      cartProvider.overrideWith(() => _StubCart(cart ?? const [])),
-      checkoutProvider.overrideWith(() => _StubCheckout(checkout)),
-    ]);
+    final container = ProviderContainer(
+      overrides: [
+        cartProvider.overrideWith(() => _StubCart(cart ?? const [])),
+        checkoutProvider.overrideWith(() => _StubCheckout(checkout)),
+      ],
+    );
     addTearDown(container.dispose);
 
-    await tester.pumpWidget(UncontrolledProviderScope(
-      container: container,
-      child: MaterialApp(theme: AppTheme.theme, home: const ChatScreen()),
-    ));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(theme: AppTheme.theme, home: const ChatScreen()),
+      ),
+    );
     return container;
   }
 
@@ -83,17 +98,20 @@ void main() {
   }
 
   group('cart image preservation', () {
-    testWidgets('a chat turn keeps images for items already in the cart',
-        (tester) async {
-      ApiService.client = MockClient((_) async => http.Response(
-            // The agent bumped item 1 and added item 3.
-            chatBody([
-              agentItem(1, 'X-Burguer', 3),
-              agentItem(2, 'Batata', 1),
-              agentItem(3, 'Refri', 1),
-            ]),
-            200,
-          ));
+    testWidgets('a chat turn keeps images for items already in the cart', (
+      tester,
+    ) async {
+      ApiService.client = MockClient(
+        (_) async => http.Response(
+          // The agent bumped item 1 and added item 3.
+          chatBody([
+            agentItem(1, 'X-Burguer', 3),
+            agentItem(2, 'Batata', 1),
+            agentItem(3, 'Refri', 1),
+          ]),
+          200,
+        ),
+      );
 
       final container = await pumpChat(tester, cart: seeded);
       await sendText(tester, 'mais dois burguers e um refri');
@@ -110,7 +128,9 @@ void main() {
 
     testWidgets('the image-less agent cart is never persisted', (tester) async {
       ApiService.client = MockClient(
-          (_) async => http.Response(chatBody([agentItem(1, 'X-Burguer', 1)]), 200));
+        (_) async =>
+            http.Response(chatBody([agentItem(1, 'X-Burguer', 1)]), 200),
+      );
 
       await pumpChat(tester, cart: seeded);
       await sendText(tester, 'só o burguer');
@@ -124,8 +144,9 @@ void main() {
 
   group('coupon plumbing', () {
     testWidgets('an accepted coupon lands in checkout', (tester) async {
-      ApiService.client = MockClient((_) async =>
-          http.Response(chatBody([], couponCode: 'BEMVINDO10'), 200));
+      ApiService.client = MockClient(
+        (_) async => http.Response(chatBody([], couponCode: 'BEMVINDO10'), 200),
+      );
 
       final container = await pumpChat(tester);
       await sendText(tester, 'tenho cupom BEMVINDO10');
@@ -182,8 +203,9 @@ void main() {
       expect(messages.single['content'], 'oi');
     });
 
-    testWidgets('a user turn matching the greeting text still goes out',
-        (tester) async {
+    testWidgets('a user turn matching the greeting text still goes out', (
+      tester,
+    ) async {
       late http.Request sent;
       ApiService.client = MockClient((req) async {
         sent = req;
@@ -206,39 +228,54 @@ void main() {
     }
 
     testWidgets("the route's own pt-BR error shows verbatim", (tester) async {
-      ApiService.client = MockClient((_) async => http.Response(
-          jsonEncode({'error': 'AI indisponível (sem chave configurada).'}), 503));
+      ApiService.client = MockClient(
+        (_) async => http.Response(
+          jsonEncode({'error': 'AI indisponível (sem chave configurada).'}),
+          503,
+        ),
+      );
       await expectBubble(tester, 'AI indisponível (sem chave configurada).');
     });
 
     testWidgets('an HTML 502 does not leak a FormatException', (tester) async {
-      ApiService.client =
-          MockClient((_) async => http.Response('<html>502 Bad Gateway</html>', 502));
+      ApiService.client = MockClient(
+        (_) async => http.Response('<html>502 Bad Gateway</html>', 502),
+      );
       await expectBubble(tester, 'Ops, tive um problema. Pode repetir?');
     });
 
-    testWidgets('a socket failure reads as offline, not as an exception',
-        (tester) async {
-      ApiService.client =
-          MockClient((_) async => throw const SocketException('down'));
-      await expectBubble(tester, 'Sem conexão agora. Tente de novo num instante.');
+    testWidgets('a socket failure reads as offline, not as an exception', (
+      tester,
+    ) async {
+      ApiService.client = MockClient(
+        (_) async => throw const SocketException('down'),
+      );
+      await expectBubble(
+        tester,
+        'Sem conexão agora. Tente de novo num instante.',
+      );
       expect(find.textContaining('SocketException'), findsNothing);
     });
   });
 
   group('composer', () {
-    testWidgets('send is disabled until the field has non-blank text',
-        (tester) async {
+    testWidgets('send is disabled until the field has non-blank text', (
+      tester,
+    ) async {
       await pumpChat(tester);
 
-      Opacity sendOpacity() => tester.widget<Opacity>(find.ancestor(
-            of: find.byIcon(Icons.send),
-            matching: find.byType(Opacity),
-          ));
-      InkWell sendInk() => tester.widget<InkWell>(find.ancestor(
-            of: find.byIcon(Icons.send),
-            matching: find.byType(InkWell),
-          ));
+      Opacity sendOpacity() => tester.widget<Opacity>(
+        find.ancestor(
+          of: find.byIcon(Icons.send),
+          matching: find.byType(Opacity),
+        ),
+      );
+      InkWell sendInk() => tester.widget<InkWell>(
+        find.ancestor(
+          of: find.byIcon(Icons.send),
+          matching: find.byType(InkWell),
+        ),
+      );
 
       expect(sendOpacity().opacity, 0.4);
       expect(sendInk().onTap, isNull);
@@ -267,7 +304,9 @@ void main() {
       // The back arrow disposes the screen while the request is in flight; the
       // conversation now outlives it, so the reply must still arrive.
       await tester.pumpWidget(const MaterialApp(home: SizedBox()));
-      gate.complete(http.Response(chatBody([agentItem(1, 'X-Burguer', 1)]), 200));
+      gate.complete(
+        http.Response(chatBody([agentItem(1, 'X-Burguer', 1)]), 200),
+      );
       await tester.pumpAndSettle();
 
       final chat = container.read(chatProvider);
@@ -295,7 +334,10 @@ void main() {
 
     test('the greeting is flagged, not identified by its text', () {
       const seed = ChatMessage(
-          role: 'assistant', content: chatGreeting, isGreeting: true);
+        role: 'assistant',
+        content: chatGreeting,
+        isGreeting: true,
+      );
       // The flag is local bookkeeping — the model has no field for it.
       expect(seed.toJson().containsKey('isGreeting'), isFalse);
     });

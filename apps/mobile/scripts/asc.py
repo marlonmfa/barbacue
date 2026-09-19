@@ -27,7 +27,7 @@ import jwt
 import urllib.request
 import urllib.error
 
-BUNDLE_ID = "com.lanchesdobarba.barbacue"
+BUNDLE_ID = os.environ.get("ASC_BUNDLE_ID", "com.lanchesdobarba.barbacue")
 API = "https://api.appstoreconnect.apple.com/v1"
 CONFIG = Path.home() / ".appstoreconnect" / "api_key.json"
 
@@ -182,24 +182,40 @@ def cmd_whatsnew(version: str, text: str) -> None:
 
 
 def cmd_submit(version: str) -> None:
+    """Submit via the current Review Submissions API; reuse a matching draft."""
     app = app_id()
     v = find_version(app, version) or sys.exit(f"no version {version}")
     state = v["attributes"]["appStoreState"]
-    if state != "PREPARE_FOR_SUBMISSION":
-        sys.exit(f"version {version} is {state} — only PREPARE_FOR_SUBMISSION can be submitted")
-    req(
-        "POST",
-        "/appStoreVersionSubmissions",
-        {
-            "data": {
-                "type": "appStoreVersionSubmissions",
-                "relationships": {
-                    "appStoreVersion": {"data": {"type": "appStoreVersions", "id": v["id"]}}
-                },
+    if state in ("WAITING_FOR_REVIEW", "IN_REVIEW", "READY_FOR_SALE"):
+        print(f"{version} already {state}; no duplicate submission")
+        return
+    if state not in ("PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "REJECTED"):
+        sys.exit(f"version {version} is {state}; cannot submit")
+    submissions = req("GET", f"/apps/{app}/reviewSubmissions")["data"]
+    draft = next((r for r in submissions
+                  if r["attributes"]["state"] == "READY_FOR_REVIEW"), None)
+    if draft is None:
+        draft = req("POST", "/reviewSubmissions", {"data": {
+            "type": "reviewSubmissions", "attributes": {"platform": "IOS"},
+            "relationships": {"app": {"data": {"type": "apps", "id": app}}}
+        }})["data"]
+    sid = draft["id"]
+    items = req("GET", f"/reviewSubmissions/{sid}/items?include=appStoreVersion")["data"]
+    version_ids = [i.get("relationships", {}).get("appStoreVersion", {}).get("data", {}).get("id")
+                   for i in items if i.get("relationships", {}).get("appStoreVersion", {}).get("data")]
+    if items and v["id"] not in version_ids:
+        sys.exit("Existing review draft contains other items; inspect before submitting")
+    if v["id"] not in version_ids:
+        req("POST", "/reviewSubmissionItems", {"data": {
+            "type": "reviewSubmissionItems", "relationships": {
+                "reviewSubmission": {"data": {"type": "reviewSubmissions", "id": sid}},
+                "appStoreVersion": {"data": {"type": "appStoreVersions", "id": v["id"]}}
             }
-        },
-    )
-    print(f"submitted {version} for review (auto-release on approval)")
+        }})
+    req("PATCH", f"/reviewSubmissions/{sid}", {"data": {
+        "type": "reviewSubmissions", "id": sid, "attributes": {"submitted": True}
+    }})
+    print(f"submitted {version} for review; submission={sid}")
 
 
 COMMANDS = {

@@ -1,3 +1,8 @@
+import { BrandNavigation } from "@/components/BrandNavigation";
+import { redirect } from "next/navigation";
+import { requireStaff } from "@/lib/admin-auth";
+import { landingPath } from "@/lib/permissions";
+import { CustomerEntry } from "@/components/CustomerEntry";
 import { db } from "@/db";
 import { categories, products, storeSettings } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
@@ -10,6 +15,10 @@ import { Hero } from "@/components/Hero";
 import { TableBanner } from "@/components/TableBanner";
 import { AppDownloadSection } from "@/components/AppDownloadSection";
 import { getTableSession } from "@/lib/table-session";
+import { headers } from "next/headers";
+import { BrandStorefront } from "@/components/BrandStorefront";
+import { brandFromHost } from "@/lib/brand-storefront";
+import { getManagedBrandStorefront } from "@/lib/managed-catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -36,8 +45,19 @@ async function getMenu() {
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ mesa?: string }>;
+  searchParams: Promise<{ mesa?: string; loja?: string }>;
 }) {
+  const [staff, query] = await Promise.all([requireStaff().catch(() => null), searchParams]);
+  if (staff && query.loja !== "1") redirect(landingPath(staff));
+  const requestHeaders = await headers();
+  const brandSlug = brandFromHost(
+    requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host")
+  );
+
+  if (brandSlug) {
+    return <><BrandNavigation active={brandSlug} /><CustomerEntry /><BrandStorefront brand={await getManagedBrandStorefront(brandSlug)} /></>;
+  }
+
   const [{ menu, settings }, table, { mesa }] = await Promise.all([
     getMenu(),
     getTableSession(),
@@ -51,6 +71,8 @@ export default async function HomePage({
 
   return (
     <>
+      <BrandNavigation active="barbacue" />
+      <CustomerEntry />
       {/* ── Flame-grill hero (replaces the thin profile header) ── */}
       <Hero
         storeName={storeName}

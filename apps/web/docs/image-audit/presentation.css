@@ -1,0 +1,41 @@
+/* Compatibility stylesheet for the deployed September 2 bundle.
+   ProductCard.tsx / ProductImage.tsx implement this in the source application. */
+section[id^="cat-"] .group > .relative.w-full:has(img) {
+  height: auto;
+  aspect-ratio: 4 / 3;
+  background: #f7f2eb;
+}
+section[id^="cat-"] .group > .relative.w-full > .absolute.inset-0 {
+  transform: none;
+  scale: 1;
+}
+section[id^="cat-"] .group > .relative.w-full img {
+  object-fit: contain;
+}
+section[id^="cat-"] .card-scrim { display: none; }
+section[id^="cat-"] .group > .relative.w-full:has(img[src*="/menu/review-2026-09/"])::after {
+  content: "Imagem ilustrativa";
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: #57534e;
+  background: rgb(255 255 255 / 90%);
+  font: 10px/1.5 Arial, sans-serif;
+  pointer-events: none;
+}
+/* A failed photo must not silently become a different dish. */
+section[id^="cat-"] img[src*="fallback-"] { visibility: hidden; }
+section[id^="cat-"] .group > .relative.w-full:has(img[src*="fallback-"]) {
+  background: #f7f2eb url('/brand/barbacue-logo-t.png') center / 100px no-repeat;
+}
+section[id^="cat-"] .group > .relative.w-full:has(img[src*="fallback-"])::after {
+  content: "Foto indisponível";
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  color: #57534e;
+  font: 11px/1.5 Arial, sans-serif;
+}

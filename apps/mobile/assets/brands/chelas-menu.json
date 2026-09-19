@@ -1,0 +1,668 @@
+{
+  "merchant": "Chelas Cocina Mexicana",
+  "slug": "chelas",
+  "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/",
+  "scrapedAt": "2026-08-13T20:11:54.516Z",
+  "items": [
+    {
+      "id": "1d200124-faa2-4ce9-b4aa-c587d34ea35f",
+      "name": "Quesadilla de Frango",
+      "description": "Tortilla de trigo, 200g de peito de frango com pimentões, creme de queijo e barbecue.",
+      "priceCents": 5200,
+      "originalPriceCents": 5350,
+      "imageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/991532f5-0400-4efe-b38a-b2b37f8bd9b0/202409231958_721R_i.jpg",
+      "category": "Quesadillas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=1d200124-faa2-4ce9-b4aa-c587d34ea35f"
+    },
+    {
+      "id": "28334ecb-d7f1-4131-8955-6a0999aa1b2d",
+      "name": "Combo Chicano",
+      "description": "Neste especial preparamos um combo com... 1 Quesadilla pulled Pork 1 Chilli Nachos (acompanha tortilhas de milho e molhos) 1 Quesadilla de Nutella",
+      "priceCents": 16599,
+      "originalPriceCents": 16990,
+      "imageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/991532f5-0400-4efe-b38a-b2b37f8bd9b0/202409232145_55PD_i.jpg",
+      "category": "Combos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=28334ecb-d7f1-4131-8955-6a0999aa1b2d"
+    },
+    {
+      "id": "f8c2e0a0-77fb-4870-8afd-606a50a782fa",
+      "name": "Quesadilla Veggie Chilli",
+      "description": "Tortilla de trigo, 200g de chilli veggie (proteina de soja), sour cream, guacamole e creme de queijos.",
+      "priceCents": 4899,
+      "originalPriceCents": 4999,
+      "imageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/991532f5-0400-4efe-b38a-b2b37f8bd9b0/202409231959_J462_i.jpg",
+      "category": "Quesadillas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=f8c2e0a0-77fb-4870-8afd-606a50a782fa"
+    },
+    {
+      "id": "25802c18-2d90-448e-8455-58071104040a",
+      "name": "Quesadilla Chillicious",
+      "description": "Tortilla de trigo, 200g de chilli beans cozido lentamente, creme de queijos e guacamole.",
+      "priceCents": 5399,
+      "originalPriceCents": 5490,
+      "imageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/991532f5-0400-4efe-b38a-b2b37f8bd9b0/202409232000_2P03_i.jpg",
+      "category": "Quesadillas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=25802c18-2d90-448e-8455-58071104040a"
+    },
+    {
+      "id": "602f51e4-e722-4619-a7a7-1fd7eaf0f9bf",
+      "name": "Combo Caliente",
+      "description": "1 Quesadilla Pulled pork 1 Quesadilla Carne de Panela 1 Quesadilla Nutella 1 Porção de Tortilhas Crocantes (acompanha molhos) 1 Coca Cola 600ml",
+      "priceCents": 19400,
+      "originalPriceCents": null,
+      "imageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/991532f5-0400-4efe-b38a-b2b37f8bd9b0/202506112203_6355_i.jpg",
+      "category": "Combos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=602f51e4-e722-4619-a7a7-1fd7eaf0f9bf"
+    },
+    {
+      "id": "96e34f21-8fb4-46a4-8c26-641175f6a431",
+      "name": "Tacos Do Chelas",
+      "description": "Monte seus próprios tacos em casa com o kit completo do Chelas! Tudo fresquinho e pronto pra você criar o seu taco perfeito Escolha uma proteína: • Pulled Pork desfiado • Carne de Panela suculenta • Chilli da casa ️ Acompanha: • Cheddar cremoso • Pico de Gallo fresco • Sour Cream da casa • Guacamole • Alface crocante • 4 tacos crocantes • 1 pacote de Doritos Original Tudo vem na caixinha pra montar em casa e viver o crunch mais crocante do Chelas!",
+      "priceCents": 12999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Combos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=96e34f21-8fb4-46a4-8c26-641175f6a431"
+    },
+    {
+      "id": "5488dc1c-26b3-458f-b8bc-de227010fb2f",
+      "name": "Quesadilla de Mussarela",
+      "description": "Quesadilla de queijo mussarela. 4 fatias",
+      "priceCents": 3400,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Quesadillas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=5488dc1c-26b3-458f-b8bc-de227010fb2f"
+    },
+    {
+      "id": "b5a0f4ba-18cf-49ce-98ba-a3fd4ba2c3ec",
+      "name": "Quesadilla de Pulled Pork",
+      "description": "Tortilla de trigo, 180g de carne suína desfiada, creme de queijo, molho chipotle, creme de queijos e molho barbecue.",
+      "priceCents": 5690,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Quesadillas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=b5a0f4ba-18cf-49ce-98ba-a3fd4ba2c3ec"
+    },
+    {
+      "id": "288e74de-e70e-40aa-83ce-607d916ac263",
+      "name": "Quesadilla Carne de Panela",
+      "description": "Tortilla de trigo, 200g de carne de panela desfiada, creme de queijo, pico de galo.",
+      "priceCents": 5899,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Quesadillas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=288e74de-e70e-40aa-83ce-607d916ac263"
+    },
+    {
+      "id": "d45ee388-8732-4111-8714-d07266257f5f",
+      "name": "Quesadilla de Frango com Catupiry",
+      "description": "Tortilla de trigo, frango, Catupiry cremoso e orégano.",
+      "priceCents": 5300,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Quesadillas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=d45ee388-8732-4111-8714-d07266257f5f"
+    },
+    {
+      "id": "f1f3fd37-6801-4223-afe6-a3efb67f9c80",
+      "name": "Burrito Chillicious",
+      "description": "Tortilla de trigo, alface americana, aproximadamente 200g de chilli beans cozido lentamente, creme de queijos, arroz mexicano, guacamole.",
+      "priceCents": 5799,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Burritos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=f1f3fd37-6801-4223-afe6-a3efb67f9c80"
+    },
+    {
+      "id": "6f3cd5d1-7501-4c3c-8326-19da8d749ec1",
+      "name": "Burrito de Frango",
+      "description": "Tortilla de trigo, 200g de frango com pimentões, alface, arroz mexicano, creme de queijos e sour cream.",
+      "priceCents": 5600,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Burritos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=6f3cd5d1-7501-4c3c-8326-19da8d749ec1"
+    },
+    {
+      "id": "44272453-d415-4c15-9c6d-5a9882350c1b",
+      "name": "Burrito Burguer",
+      "description": "Tortilla de trigo, hamburguer de 185g assado na brasa, arroz mexicano, alface, creme de queijos, molho chipottle e cebola roxa.",
+      "priceCents": 5899,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Burritos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=44272453-d415-4c15-9c6d-5a9882350c1b"
+    },
+    {
+      "id": "fe1d13dc-1354-426e-80fe-ff3635119845",
+      "name": "Burrito Chilli Veggie",
+      "description": "Tortilla de trigo, 200g chilli de proteína de soja, alface, arroz mexicano, creme de queijo e guacamole.",
+      "priceCents": 4999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Burritos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=fe1d13dc-1354-426e-80fe-ff3635119845"
+    },
+    {
+      "id": "df1fdf20-3d0a-42de-97d7-67bef381ce23",
+      "name": "Burrito Carne de Panela",
+      "description": "Tortilla de trigo, 200g de carne de panela desfiada, alface, arroz mexicano, creme de queijos, guacamole, pico de galo.",
+      "priceCents": 5999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Burritos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=df1fdf20-3d0a-42de-97d7-67bef381ce23"
+    },
+    {
+      "id": "5d0f578f-a181-484e-a62e-963814792d33",
+      "name": "Burrito Pulled Pork",
+      "description": "Tortilla de trigo, 180g pulled pork, alface, arroz mexicano, creme de queijos, sour cream e molho barbecue.",
+      "priceCents": 5899,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Burritos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=5d0f578f-a181-484e-a62e-963814792d33"
+    },
+    {
+      "id": "a0673099-cf87-452a-89d6-28cb7c81d2bd",
+      "name": "Chicken Sweet Crispy",
+      "description": "Tortilla de trigo, creme de queijos, arroz, alface americana, filé de sassami marinado e frito, barbecue e sweet chilli.",
+      "priceCents": 5500,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Burritos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=a0673099-cf87-452a-89d6-28cb7c81d2bd"
+    },
+    {
+      "id": "d166f89f-70e9-46cb-9b7a-b796b9312fec",
+      "name": "Burrito de Camarão",
+      "description": "Tortilla de trigo, creme de queijos, alface americana, arroz, camarão empanado com chipotle e sour cream.",
+      "priceCents": 6900,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Burritos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=d166f89f-70e9-46cb-9b7a-b796b9312fec"
+    },
+    {
+      "id": "7704e335-8566-48f5-9668-b22eb6ebdbb1",
+      "name": "Chilli Nachos",
+      "description": "Nachos crocante (140g), creme de queijo, chillicious (420g de chilli cozido lentamente). Acompanha molhos, pico de galo, guacamole e sour cream.",
+      "priceCents": 9599,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Nachos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=7704e335-8566-48f5-9668-b22eb6ebdbb1"
+    },
+    {
+      "id": "d1d4d536-d0d6-483a-947a-97db53efeb07",
+      "name": "Nacho Pulled Pork",
+      "description": "Nachos crocante (140g), 400g de pulled pork, creme de queijos. Acompanha molhos, guacamole, sour cream e pico de galo.",
+      "priceCents": 9599,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Nachos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=d1d4d536-d0d6-483a-947a-97db53efeb07"
+    },
+    {
+      "id": "d18fe304-028f-4344-bba1-23135771555e",
+      "name": "Chilli Bowl",
+      "description": "Bowl com 420 g de chilli cozido lentamente + creme de queijo. *Acompanha nachos crocante (140g)",
+      "priceCents": 7999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Nachos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=d18fe304-028f-4344-bba1-23135771555e"
+    },
+    {
+      "id": "41586c5f-78d3-4465-9ff2-7001e0cb473c",
+      "name": "Nachos Chilli Vegetariano",
+      "description": "Nachos crocante (140g), 420g de chillicious vegetariano (proteina de soja) e creme de queijos. Acompanha molhos pico de galo, guacamole e sour cream.",
+      "priceCents": 7799,
+      "originalPriceCents": 7890,
+      "imageUrl": null,
+      "category": "Nachos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=41586c5f-78d3-4465-9ff2-7001e0cb473c"
+    },
+    {
+      "id": "22733db3-0412-4a77-b171-caa1d363779c",
+      "name": "Croissant Double Smash",
+      "description": "Croissant folhado amanteigado, com 2 smashes de 90g cada, queijo cheddar, bacon crocante e ketchup",
+      "priceCents": 5200,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Croissant",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=22733db3-0412-4a77-b171-caa1d363779c"
+    },
+    {
+      "id": "97121428-8d4c-4c0a-a89f-22144298914b",
+      "name": "Tortilhas de Milho crocante",
+      "description": "140g de tortilhas crocante. *Acompanha Guacamole Sour Cream Pico de Galo",
+      "priceCents": 3690,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=97121428-8d4c-4c0a-a89f-22144298914b"
+    },
+    {
+      "id": "5fda2bd5-fb0c-4e5e-bc05-03a28d1f82f1",
+      "name": "Batata frita",
+      "description": "",
+      "priceCents": 3500,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=5fda2bd5-fb0c-4e5e-bc05-03a28d1f82f1"
+    },
+    {
+      "id": "b9f215e4-901c-4c98-8e50-8c67f3d14b96",
+      "name": "Batata Waffles",
+      "description": "Batata fritas estilo waffles. Acompanha 1 maionese temperada.",
+      "priceCents": 3500,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=b9f215e4-901c-4c98-8e50-8c67f3d14b96"
+    },
+    {
+      "id": "f2fd8601-bf7a-492f-8545-0e5ed7838f43",
+      "name": "Queijo Gouda empanado",
+      "description": "10 unidades de Queijo Gouda empanado, acompanha molho sweet chilli.",
+      "priceCents": 3600,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=f2fd8601-bf7a-492f-8545-0e5ed7838f43"
+    },
+    {
+      "id": "e7af1c8e-31f1-4363-ac2f-fd1f61d00112",
+      "name": "Pollo loko",
+      "description": "Nuggets de frango crocante! Acompanha molho sweet chilli e molho barbecue.",
+      "priceCents": 4500,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=e7af1c8e-31f1-4363-ac2f-fd1f61d00112"
+    },
+    {
+      "id": "e647e039-7b05-47c9-a848-7beb255a51aa",
+      "name": "Porção de batata Crinkle",
+      "description": "",
+      "priceCents": 3500,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=e647e039-7b05-47c9-a848-7beb255a51aa"
+    },
+    {
+      "id": "8b30199f-0552-4cbc-b4d4-75c5248d8d31",
+      "name": "Dadinhos de Tapioca",
+      "description": "8 Unidades de Dadinhos de Tapioca (Acompanha Geleia de Tomates)",
+      "priceCents": 4400,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=8b30199f-0552-4cbc-b4d4-75c5248d8d31"
+    },
+    {
+      "id": "32cb5f89-6c95-4ef7-8b3d-a9a6603cafcd",
+      "name": "Beef Melt Fries",
+      "description": "Batata frita, carne de panela desfiada com barbecue, creme de queijos derretido. Acompanha sour cream.",
+      "priceCents": 5900,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=32cb5f89-6c95-4ef7-8b3d-a9a6603cafcd"
+    },
+    {
+      "id": "3775ff95-50b9-4545-a032-40da9606e5d6",
+      "name": "Salada",
+      "description": "Alface americana, rúcula, tomate cereja e crouton. Acompanha maionese temperada.",
+      "priceCents": 3700,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=3775ff95-50b9-4545-a032-40da9606e5d6"
+    },
+    {
+      "id": "a9480073-8e48-4cc0-a4e1-f55f9261e458",
+      "name": "Mini Churros",
+      "description": "Acompanha doce de leite. *8 unidades.",
+      "priceCents": 2990,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=a9480073-8e48-4cc0-a4e1-f55f9261e458"
+    },
+    {
+      "id": "544bc890-6c60-4cec-907f-cb199e2d4ce2",
+      "name": "Quesadilla de Nutella",
+      "description": "",
+      "priceCents": 3990,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=544bc890-6c60-4cec-907f-cb199e2d4ce2"
+    },
+    {
+      "id": "7f057442-4bbe-47ec-905d-a6af40bb8131",
+      "name": "Quesadilla de Ovomaltine",
+      "description": "",
+      "priceCents": 3990,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=7f057442-4bbe-47ec-905d-a6af40bb8131"
+    },
+    {
+      "id": "d4d43402-1901-40a5-acc3-1a476cab8127",
+      "name": "Quesadilla doce de leite",
+      "description": "4 unidades de quesadilla recheada com doce de leite.",
+      "priceCents": 3290,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=d4d43402-1901-40a5-acc3-1a476cab8127"
+    },
+    {
+      "id": "a164bd8b-dfa5-4885-bb26-3dc9733d3e60",
+      "name": "Brigadeiro de colher",
+      "description": "",
+      "priceCents": 2000,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=a164bd8b-dfa5-4885-bb26-3dc9733d3e60"
+    },
+    {
+      "id": "7777bd26-9884-4a38-a49e-6f8ac6e4aca3",
+      "name": "Sobremesas de Ninho",
+      "description": "Gelado de leite Ninho com cobertura de chocolate. Sabores -Geleia de Frutas Vermelhas -Surpresa de Uva -Strogonoff de nozes -Frutas Vermelhas",
+      "priceCents": 2900,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=7777bd26-9884-4a38-a49e-6f8ac6e4aca3"
+    },
+    {
+      "id": "de235239-2df5-434b-a4e1-303c3a433ddd",
+      "name": "Croissant Nutella",
+      "description": "Croissant com Nutella e farofa de Negresco",
+      "priceCents": 3599,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=de235239-2df5-434b-a4e1-303c3a433ddd"
+    },
+    {
+      "id": "a56b305d-03fe-4c8d-b1f1-9a9eba9b3f4a",
+      "name": "Croissant Creme de Ovomaltine",
+      "description": "",
+      "priceCents": 3599,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=a56b305d-03fe-4c8d-b1f1-9a9eba9b3f4a"
+    },
+    {
+      "id": "14094b42-674f-4a62-a038-ad65e10f9329",
+      "name": "Croissant Doce de Leite",
+      "description": "Croissant com doce de leite e bolacha waffle",
+      "priceCents": 2999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=14094b42-674f-4a62-a038-ad65e10f9329"
+    },
+    {
+      "id": "6c18c3b6-63a3-41bc-8b44-bf881b4be861",
+      "name": "Coca Cola 200ml",
+      "description": "",
+      "priceCents": 499,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=6c18c3b6-63a3-41bc-8b44-bf881b4be861"
+    },
+    {
+      "id": "3f4d0c22-a176-4650-baa9-234345c38b13",
+      "name": "Coca Cola 200ml Zero",
+      "description": "",
+      "priceCents": 499,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=3f4d0c22-a176-4650-baa9-234345c38b13"
+    },
+    {
+      "id": "0e8af084-3451-4f8f-af95-2397dfc90c15",
+      "name": "Coca-Cola Original 350ml",
+      "description": "Lata 350ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=0e8af084-3451-4f8f-af95-2397dfc90c15"
+    },
+    {
+      "id": "8d3baea3-c9fb-4ee7-9ae2-c73a7d0e07d8",
+      "name": "Refrigerante Coca Cola Lata Zero",
+      "description": "Lata 350ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=8d3baea3-c9fb-4ee7-9ae2-c73a7d0e07d8"
+    },
+    {
+      "id": "ba0c5ffb-15a0-450f-8233-2945d14d8e1e",
+      "name": "Coca-Cola Original 600ml",
+      "description": "Garrafa 600ml",
+      "priceCents": 999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=ba0c5ffb-15a0-450f-8233-2945d14d8e1e"
+    },
+    {
+      "id": "11f8ef56-b0c8-4b17-9c26-cb1c00378cf7",
+      "name": "Coca Cola Zero 600ml",
+      "description": "Unidade 1un",
+      "priceCents": 999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=11f8ef56-b0c8-4b17-9c26-cb1c00378cf7"
+    },
+    {
+      "id": "f31c9314-f293-45bb-88eb-a619d95c070b",
+      "name": "Coca-Cola Original 2l",
+      "description": "Garrafa 2l",
+      "priceCents": 1999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=f31c9314-f293-45bb-88eb-a619d95c070b"
+    },
+    {
+      "id": "c43ab601-ef69-44f8-a0d1-859ddb7fb9d8",
+      "name": "Refrigerante Guaraná Itubaina Retrô Garrafa 355ml",
+      "description": "Garrafa 355ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=c43ab601-ef69-44f8-a0d1-859ddb7fb9d8"
+    },
+    {
+      "id": "1f1f16eb-974f-4214-81bc-1b2c11c3e710",
+      "name": "Refrigerante Guaraná Antarctica Lata 350ml",
+      "description": "Lata 350ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=1f1f16eb-974f-4214-81bc-1b2c11c3e710"
+    },
+    {
+      "id": "e0a31512-41e0-4f0d-9413-5bc993d510b6",
+      "name": "Fanta Laranja 350ml",
+      "description": "",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=e0a31512-41e0-4f0d-9413-5bc993d510b6"
+    },
+    {
+      "id": "0f79772c-f310-4b18-81dd-b93b53210540",
+      "name": "Fanta Uva 350ml",
+      "description": "",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=0f79772c-f310-4b18-81dd-b93b53210540"
+    },
+    {
+      "id": "ca375677-208a-476a-a293-ee9b21655921",
+      "name": "Sprite 350ml",
+      "description": "",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=ca375677-208a-476a-a293-ee9b21655921"
+    },
+    {
+      "id": "f942e468-4322-4a43-be53-5715a05cb459",
+      "name": "Schweppes Citrus 350ml",
+      "description": "",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=f942e468-4322-4a43-be53-5715a05cb459"
+    },
+    {
+      "id": "fb771bea-aefa-401b-a500-d92e524d2dcf",
+      "name": "Coca cola Ks 250ml",
+      "description": "Garrafa de vidro Ks 250ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=fb771bea-aefa-401b-a500-d92e524d2dcf"
+    },
+    {
+      "id": "b83f2445-c558-4b03-852b-4ca5c6c60b68",
+      "name": "Coca Cola Zero 2 L Pet",
+      "description": "Zero Açúcar",
+      "priceCents": 1999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=b83f2445-c558-4b03-852b-4ca5c6c60b68"
+    },
+    {
+      "id": "d1f6aa05-b99a-453e-a2b3-988e5d8ec46f",
+      "name": "Coca Zero Ks 250ml",
+      "description": "Garrafa de vidro Ks 250ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=d1f6aa05-b99a-453e-a2b3-988e5d8ec46f"
+    },
+    {
+      "id": "acda6982-0f75-4bd8-88a5-d3e44832e506",
+      "name": "Suco de Laranja Natural 400ml",
+      "description": "A partir de R$ 20,00",
+      "priceCents": 2000,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=acda6982-0f75-4bd8-88a5-d3e44832e506"
+    },
+    {
+      "id": "b750724a-1a5a-443f-9536-1eee17173a5f",
+      "name": "Água",
+      "description": "",
+      "priceCents": 550,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=b750724a-1a5a-443f-9536-1eee17173a5f"
+    },
+    {
+      "id": "74f7ad4d-0aaa-46b1-87d1-ada048f015b3",
+      "name": "Cerveja Stannis Pilsner - 355 Ml",
+      "description": "",
+      "priceCents": 1399,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cervejas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=74f7ad4d-0aaa-46b1-87d1-ada048f015b3"
+    },
+    {
+      "id": "a52d6767-02c6-470a-9943-1cbec8ebfc57",
+      "name": "Chope em Growler - Pilsner - 1lt",
+      "description": "",
+      "priceCents": 2899,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cervejas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=a52d6767-02c6-470a-9943-1cbec8ebfc57"
+    },
+    {
+      "id": "66f46504-012a-41bf-8be0-1fcf4da2e4dd",
+      "name": "Cerveja Stannis Weiss 355ml",
+      "description": "Cerveja de trigo longneck",
+      "priceCents": 1899,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cervejas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=66f46504-012a-41bf-8be0-1fcf4da2e4dd"
+    },
+    {
+      "id": "59bcbedf-aefb-4ea3-8acd-cdaa29df86e7",
+      "name": "Cerveja Stannis Gold Amelia 355ml",
+      "description": "Uma Belgian Blonde Ale",
+      "priceCents": 1999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cervejas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=59bcbedf-aefb-4ea3-8acd-cdaa29df86e7"
+    },
+    {
+      "id": "351bdce0-52ab-4a9b-be5e-76bb9a3a2fba",
+      "name": "Cerveja Stannis Red Sonja 355ml",
+      "description": "",
+      "priceCents": 1899,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cervejas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=351bdce0-52ab-4a9b-be5e-76bb9a3a2fba"
+    },
+    {
+      "id": "a24246e9-19fb-4696-9cef-5ebf47345f58",
+      "name": "Cerveja Stannis Dear Paula 355ml",
+      "description": "",
+      "priceCents": 2099,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cervejas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=a24246e9-19fb-4696-9cef-5ebf47345f58"
+    },
+    {
+      "id": "eaa56b19-5c23-4e46-b36a-696c144b0892",
+      "name": "Cerveja Stannis Brigit Ale 355ml",
+      "description": "Cerveja American Pale Ale",
+      "priceCents": 2099,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cervejas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=eaa56b19-5c23-4e46-b36a-696c144b0892"
+    }
+  ]
+}

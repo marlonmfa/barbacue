@@ -26,6 +26,8 @@ class Product {
   final bool available;
   @JsonKey(name: 'sortOrder')
   final int sortOrder;
+  @JsonKey(name: 'ifoodUrl')
+  final String? ifoodUrl;
 
   const Product({
     required this.id,
@@ -40,6 +42,7 @@ class Product {
     this.imageUrl,
     required this.available,
     required this.sortOrder,
+    this.ifoodUrl,
   });
 
   /// True when a discount is active right now (within the optional window).
@@ -47,7 +50,9 @@ class Product {
     final promo = promoPriceCents;
     if (promo == null || promo >= priceCents) return false;
     final now = DateTime.now();
-    final start = promoStartsAt != null ? DateTime.tryParse(promoStartsAt!) : null;
+    final start = promoStartsAt != null
+        ? DateTime.tryParse(promoStartsAt!)
+        : null;
     final end = promoEndsAt != null ? DateTime.tryParse(promoEndsAt!) : null;
     if (start != null && now.isBefore(start)) return false;
     if (end != null && now.isAfter(end)) return false;

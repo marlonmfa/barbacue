@@ -42,6 +42,15 @@ Future<void> _loadFont(String family, List<String> files) async {
   await loader.load();
 }
 
+// Legacy screenshots exercise the explicitly disabled freight rollout.
+http.Client _paymentApi(Future<http.Response> Function(http.Request) handler) =>
+    MockClient((request) {
+      if (request.url.path == '/api/delivery/quote' && request.method == 'GET') {
+        return Future.value(http.Response('{"enabled":false}', 200));
+      }
+      return handler(request);
+    });
+
 void main() {
   setUpAll(() async {
     await _loadFont('Roboto', [
@@ -67,6 +76,11 @@ void main() {
   ThemeData capturableTheme() {
     final base = AppTheme.theme;
     return base.copyWith(
+      filledButtonTheme: FilledButtonThemeData(
+        style: base.filledButtonTheme.style?.copyWith(
+          textStyle: const WidgetStatePropertyAll(TextStyle(fontFamily: 'Roboto', fontSize: 14, fontWeight: FontWeight.w600)),
+        ),
+      ),
       appBarTheme: base.appBarTheme.copyWith(
         titleTextStyle:
             base.appBarTheme.titleTextStyle?.copyWith(fontFamily: 'Roboto'),
@@ -127,7 +141,7 @@ void main() {
   }
 
   testWidgets('screenshot: payment with a discount applied', (tester) async {
-    ApiService.client = MockClient((_) async => http.Response(
+    ApiService.client = _paymentApi((_) async => http.Response(
           '{"id":1,"code":"BARBA10","description":"10% de desconto",'
           '"discountType":"percentage","discountValue":10,"discountCents":500}',
           200,
@@ -141,12 +155,12 @@ void main() {
 
     await expectLater(
       find.byType(PaymentScreen),
-      matchesGoldenFile('../../../test-screenshots/payment-coupon-2026-07-17.png'),
+      matchesGoldenFile('../../../test-screenshots/payment-coupon-2026-09-08.png'),
     );
   });
 
   testWidgets('screenshot: pix success', (tester) async {
-    ApiService.client = MockClient((req) async => http.Response(
+    ApiService.client = _paymentApi((req) async => http.Response(
           orderBody(
             paymentMethod: 'pix',
             pix: {
@@ -169,7 +183,7 @@ void main() {
 
   testWidgets('screenshot: cash success', (tester) async {
     ApiService.client =
-        MockClient((_) async => http.Response(orderBody(paymentMethod: 'cash'), 201));
+        _paymentApi((_) async => http.Response(orderBody(paymentMethod: 'cash'), 201));
 
     await pump(tester, checkout: customer.copyWith(paymentMethod: 'cash'));
     await placeOrder(tester);

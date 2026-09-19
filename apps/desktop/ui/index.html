@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>Barbacue Pedidos</title><link rel="stylesheet" href="style.css"><script defer src="app.js"></script></head>
+<body>
+<header><div class="brand"><img src="../assets/icon.png" alt="" width="46" height="46"><div><strong>Barbacue</strong><span>Pedidos para Windows</span></div></div><button id="open" class="primary">Abrir pedidos</button></header>
+<main>
+<div class="intro"><h1>Pronto para o próximo pedido.</h1><p>Conecte este computador à loja e escolha onde imprimir as comandas.</p></div>
+<div class="workspace">
+<form id="settings">
+<section><h2>Conexão com a loja</h2><label for="serverUrl">Endereço do sistema</label><input id="serverUrl" type="url" placeholder="https://sua-loja.com.br" required autocomplete="url"><p class="help">Use o mesmo endereço que você abre no navegador. Entre no painel com seu acesso habitual.</p><label for="token">Chave de impressão</label><input id="token" type="password" autocomplete="new-password" placeholder="Chave configurada no servidor"><p id="token-help" class="help">Necessária somente para imprimir automaticamente. Solicite a chave ao responsável pelo sistema.</p></section>
+<section><div class="section-head"><h2>Impressora deste computador</h2><button type="button" id="refresh">Atualizar lista</button></div><label for="printer">Impressora instalada</label><select id="printer"><option value="">Selecione uma impressora</option></select><p class="help">USB, rede ou Wi-Fi: instale o driver no Windows para a impressora aparecer aqui.</p><label for="paper">Papel</label><select id="paper"><option value="80">Bobina de 80 mm</option><option value="58">Bobina de 58 mm</option><option value="210">Folha A4</option></select></section>
+<section class="options"><label class="check"><input id="autoPrint" type="checkbox"><span>Imprimir novos pedidos automaticamente<small>Pedidos enviados ao sistema entram na mesma fila, de qualquer origem integrada.</small></span></label><label class="check"><input id="startAtLogin" type="checkbox"><span>Iniciar ao entrar no Windows<small>O computador precisa estar ligado e conectado à internet.</small></span></label></section>
+<div class="actions"><button class="primary" type="submit">Salvar configuração</button><button type="button" id="test">Imprimir teste</button></div><p id="feedback" role="status" aria-live="polite"></p>
+</form>
+<aside><section class="status-panel"><h2>Impressão</h2><p id="status" role="status">Consultando configuração…</p><p id="last-seen" class="help"></p><button id="toggle">Ativar impressão automática</button></section><section class="paper-note"><h2>A operação continua.</h2><p>Ao fechar a janela de pedidos, o programa continua junto ao relógio do Windows.</p><p>Se a conexão cair, os pedidos recebidos pelo servidor ficam guardados. Confira envios incertos na fila da cozinha antes de reenviar.</p><p>O envio confirmado ao Windows não comprova a saída do papel.</p></section><details><summary>Atividade recente</summary><ol id="events"><li>Nenhuma impressão nesta sessão.</li></ol></details><p class="version" id="version"></p></aside>
+</div>
+</main>
+<footer>Barbacue · Barbadog · Chelas <span>O navegador e o programa compartilham os mesmos pedidos.</span></footer>
+</body></html>

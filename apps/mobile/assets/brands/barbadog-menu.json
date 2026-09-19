@@ -1,0 +1,718 @@
+{
+  "merchant": "Barbacue Hotdog & Sandwich",
+  "slug": "barbadog",
+  "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog--sandwich-centro",
+  "scrapedAt": "2026-08-13T20:11:54.517Z",
+  "items": [
+    {
+      "id": "dda4623f-ab5e-495c-aff8-f4103b57b847",
+      "name": "Doguinho",
+      "description": "Pão brioche 12 cm, 1 salsicha, molho de tomate da casa, ketchup e mostarda",
+      "priceCents": 2300,
+      "originalPriceCents": null,
+      "imageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/6cb73c63-55cd-459b-a02b-aa936967bf20/202601171837_061T_i.jpg",
+      "category": "Hotdog Tradicional",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=dda4623f-ab5e-495c-aff8-f4103b57b847"
+    },
+    {
+      "id": "0ec844a6-4e14-42a9-954f-9a92e4fd1836",
+      "name": "Barbadog Bacon",
+      "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, creme de queijo, molho de tomate da casa, farofa crocante com batata palha e bacon crocante.",
+      "priceCents": 4900,
+      "originalPriceCents": null,
+      "imageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/6cb73c63-55cd-459b-a02b-aa936967bf20/202601171838_V8XK_i.jpg",
+      "category": "Hotdog Tradicional",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=0ec844a6-4e14-42a9-954f-9a92e4fd1836"
+    },
+    {
+      "id": "b9361cd5-b766-4b6a-9687-daf93938bced",
+      "name": "Barbadog Clássico",
+      "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, creme de queijo, molho de tomate da casa, farofa crocante com batata palha e milho verde.",
+      "priceCents": 4200,
+      "originalPriceCents": null,
+      "imageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/6cb73c63-55cd-459b-a02b-aa936967bf20/202602052112_3M6F_i.jpg",
+      "category": "Hotdog Tradicional",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=b9361cd5-b766-4b6a-9687-daf93938bced"
+    },
+    {
+      "id": "c842766a-fae0-4656-bea6-69ae65a0827a",
+      "name": "Barbadog Crispy",
+      "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, creme de queijo, molho de tomate da casa e cebola crispy.",
+      "priceCents": 4500,
+      "originalPriceCents": null,
+      "imageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/6cb73c63-55cd-459b-a02b-aa936967bf20/202602052113_JVJ7_i.jpg",
+      "category": "Hotdog Tradicional",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=c842766a-fae0-4656-bea6-69ae65a0827a"
+    },
+    {
+      "id": "080472a5-06a3-4828-a244-eac9f8747eef",
+      "name": "Barbadog Chilli Nachos",
+      "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, creme de queijo, chilli artesanal e nachos crocantes.",
+      "priceCents": 5300,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Barbadog Especial",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=080472a5-06a3-4828-a244-eac9f8747eef"
+    },
+    {
+      "id": "7c17ef2a-9a42-4cbc-9e64-0040d7ffdd29",
+      "name": "Barbadog Corn Bacon Caramelizado",
+      "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, creme de queijo, molho de tomate da casa, milho verde e bacon caramelizado.",
+      "priceCents": 5300,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Barbadog Especial",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=7c17ef2a-9a42-4cbc-9e64-0040d7ffdd29"
+    },
+    {
+      "id": "ae29cb1f-3dbd-423d-8316-00c1ba48a71f",
+      "name": "Barbadog Coração Catupiry",
+      "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, molho de tomate da casa, coraçãozinho grelhado e Catupiry cremoso.",
+      "priceCents": 5900,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Barbadog Especial",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=ae29cb1f-3dbd-423d-8316-00c1ba48a71f"
+    },
+    {
+      "id": "83b9aacd-ae3b-4a78-a940-6ae0f38efd4e",
+      "name": "Barbadog Calabresa Biquinho",
+      "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, molho de tomate da casa, calabresa moida, pimenta biquinho e Catupiry cremoso.",
+      "priceCents": 5300,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Barbadog Especial",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=83b9aacd-ae3b-4a78-a940-6ae0f38efd4e"
+    },
+    {
+      "id": "72dc6721-ea91-4034-978a-b540ab37e967",
+      "name": "Barbadog Frango com Catupiry",
+      "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, molho de tomate da casa, creme de queijo frango desfiado com Catupiry cremoso.",
+      "priceCents": 5900,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Barbadog Especial",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=72dc6721-ea91-4034-978a-b540ab37e967"
+    },
+    {
+      "id": "523c8d15-81e0-4a9d-8af8-282c5cabe1c7",
+      "name": "Ciabatta Pulled Pork Chipotle",
+      "description": "Ciabatta, pulled pork com barbecue, molho chipotle e rúcula.",
+      "priceCents": 5600,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sandwich",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=523c8d15-81e0-4a9d-8af8-282c5cabe1c7"
+    },
+    {
+      "id": "decfabe1-e05a-4767-a264-9aa603d86d87",
+      "name": "Ciabatta Parmegiana",
+      "description": "Ciabatta, maionese verde, frango à parmegiana, muzzarela e molho de tomate da casa.",
+      "priceCents": 5600,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sandwich",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=decfabe1-e05a-4767-a264-9aa603d86d87"
+    },
+    {
+      "id": "b9860791-be36-41a4-aad1-f11c2e613465",
+      "name": "Ciabatta Veggie Brie E Geleia De Tomate",
+      "description": "Ciabatta, alface americana, rúcula, maionese verde, queijo brie e geleia de tomate.",
+      "priceCents": 5300,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sandwich",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=b9860791-be36-41a4-aad1-f11c2e613465"
+    },
+    {
+      "id": "8de7c6fb-07b6-4a17-a15a-059c27d4c808",
+      "name": "Croissant Double Smash",
+      "description": "Croissant folhado amanteigado com 2 smashes de 90g cada, queijo cheddar, bacon crocante e ketchup.",
+      "priceCents": 5200,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sandwich",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=8de7c6fb-07b6-4a17-a15a-059c27d4c808"
+    },
+    {
+      "id": "be0e3c82-c1a3-4fc4-b04d-b2caf71ea6f9",
+      "name": "Ciabatta Carne De Panela Catupiry",
+      "description": "Ciabatta, carne de panela desfiada, cebola roxa, Catupiry cremoso e rúcula fresca.",
+      "priceCents": 5900,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sandwich",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=be0e3c82-c1a3-4fc4-b04d-b2caf71ea6f9"
+    },
+    {
+      "id": "ff7cbdf6-3607-4547-b15e-153c1dfb3d29",
+      "name": "Brasinha Salada",
+      "description": "Pão, maionese verde, hambúrguer de 140g assadao na brasa, queijo prato, alface americana, tomate e picles.",
+      "priceCents": 4400,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Linha Brasinha",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=ff7cbdf6-3607-4547-b15e-153c1dfb3d29"
+    },
+    {
+      "id": "68f0a63a-8e5c-4653-b203-04496e45426b",
+      "name": "Brasinha Cheeseburguer",
+      "description": "Pão, maionese verde, hambúrguer de 140g assadao na brasa, queijo prato, picles e ketchup.",
+      "priceCents": 3300,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Linha Brasinha",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=68f0a63a-8e5c-4653-b203-04496e45426b"
+    },
+    {
+      "id": "9329bff0-40f0-4f57-9fe7-768dd73758d4",
+      "name": "Brasinha Bacon",
+      "description": "Pão, maionese verde, hambúrguer de 140g assadao na brasa, queijo prato, bacon em fatias e três aneis de cebola.",
+      "priceCents": 4400,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Linha Brasinha",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=9329bff0-40f0-4f57-9fe7-768dd73758d4"
+    },
+    {
+      "id": "b61ee41b-3fa4-467b-8c8b-7097c8c44935",
+      "name": "Brasinha Chicken Jr",
+      "description": "Pão, maionese verde, peito de frango empanado e frito, cheddar e cebola crispy.",
+      "priceCents": 3600,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Linha Brasinha",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=b61ee41b-3fa4-467b-8c8b-7097c8c44935"
+    },
+    {
+      "id": "8c5edb0c-546e-4b3f-88e4-6ac64b4d1256",
+      "name": "Chicken Popcorn",
+      "description": "Iscas de frango frito (350g). Acompanha molhos sweet chilli e barbecue.",
+      "priceCents": 4600,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=8c5edb0c-546e-4b3f-88e4-6ac64b4d1256"
+    },
+    {
+      "id": "744045f1-483a-4689-868c-f202ee6e0a1e",
+      "name": "Queijo Gouda Empanado",
+      "description": "Queijo gouda empanado (10 unidades). Acompanha molho sweet chilli.",
+      "priceCents": 3700,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=744045f1-483a-4689-868c-f202ee6e0a1e"
+    },
+    {
+      "id": "e1469f2c-c6aa-4fd9-984a-9a6eb4c10673",
+      "name": "Onion Rings",
+      "description": "Anéis de cebola (350g). Acompanha molho barbecue.",
+      "priceCents": 3700,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=e1469f2c-c6aa-4fd9-984a-9a6eb4c10673"
+    },
+    {
+      "id": "027e0ef2-9abc-4dca-97c7-22e4111efaa2",
+      "name": "Dadinho de Tapioca",
+      "description": "Dadinho de tapioca com queijos muçarela e coalho (8 un). Acompanha geleia de tomate.",
+      "priceCents": 4400,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=027e0ef2-9abc-4dca-97c7-22e4111efaa2"
+    },
+    {
+      "id": "08ad9591-1f4b-4335-b892-20d4046eaddc",
+      "name": "Tortilhas de Milho Crocante",
+      "description": "Tortilha de milho crocantes. Acompanha molhos: Guacamole, sour cream e Pico de Gallo.",
+      "priceCents": 3700,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=08ad9591-1f4b-4335-b892-20d4046eaddc"
+    },
+    {
+      "id": "31e159bf-cb0a-4a41-bb15-158e560a0402",
+      "name": "Salada do Barba",
+      "description": "Alface americana, rúcula, tomate cereja e crouton. Acompanha maionese temperada.",
+      "priceCents": 3700,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Porções",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=31e159bf-cb0a-4a41-bb15-158e560a0402"
+    },
+    {
+      "id": "39993ef6-0fc4-44fc-8281-5010754c5796",
+      "name": "Batata Waffles",
+      "description": "Batata waffles (350g). Acompanha maionese temperada.",
+      "priceCents": 3700,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Batatas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=39993ef6-0fc4-44fc-8281-5010754c5796"
+    },
+    {
+      "id": "4d62659d-aa92-43e3-8be0-c3c75549c696",
+      "name": "Beef Melt Fries",
+      "description": "Batata frita, carne de panela desfiada com barbecue, creme de queijos derretido. Acompanha sour cream.",
+      "priceCents": 6000,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Batatas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=4d62659d-aa92-43e3-8be0-c3c75549c696"
+    },
+    {
+      "id": "94d70b1d-33cf-45cc-b452-18758673a424",
+      "name": "Batata Frita",
+      "description": "Batata frita palito (350g). Acompanha maionese temperada.",
+      "priceCents": 3700,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Batatas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=94d70b1d-33cf-45cc-b452-18758673a424"
+    },
+    {
+      "id": "695cb12f-11eb-4633-93dd-a85b6b85d663",
+      "name": "Batata Crinkles",
+      "description": "Batata crinkles temperada (350g). Acompanha maionese temperada.",
+      "priceCents": 3700,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Batatas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=695cb12f-11eb-4633-93dd-a85b6b85d663"
+    },
+    {
+      "id": "7b06c0cc-b882-493b-811a-555a132da1b7",
+      "name": "Barba Dream",
+      "description": "Nosso clássico pão artesanal vira estrela em versão doce! Uma massa macia, frita na hora, envolta em açúcar e canela, recheada com uma generosa porção de creme (Nutella, doce de leite ou brigadeiro) e finalizada com pedaços crocantes de wafer. Uma sobremesa quente, cremosa e crocante na medida certa.",
+      "priceCents": 2700,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=7b06c0cc-b882-493b-811a-555a132da1b7"
+    },
+    {
+      "id": "bb0610f8-7350-48f5-b0fa-d9a2ac1fc56d",
+      "name": "Brigadeiro Com Ovomaltine",
+      "description": "Brigadeiro de colher com cobertura de Ovomaltine. Serve 1 pessoa.",
+      "priceCents": 1900,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=bb0610f8-7350-48f5-b0fa-d9a2ac1fc56d"
+    },
+    {
+      "id": "4c02871b-f781-46a1-b4d8-dcf10c07db3c",
+      "name": "Brigadeiro com Negresco",
+      "description": "Brigadeiro de colher com cobertura de Negresco. Serve 1 pessoa.",
+      "priceCents": 1900,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=4c02871b-f781-46a1-b4d8-dcf10c07db3c"
+    },
+    {
+      "id": "6321bff5-cb09-4e37-95f8-d4d19cefb4af",
+      "name": "Croissant Doce de Leite",
+      "description": "Croissant com doce de leite e bolacha waffle",
+      "priceCents": 2999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=6321bff5-cb09-4e37-95f8-d4d19cefb4af"
+    },
+    {
+      "id": "b7fc3df4-0fb3-4818-ae01-933306775a18",
+      "name": "Croissant Creme de Ovomaltine",
+      "description": "",
+      "priceCents": 3599,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=b7fc3df4-0fb3-4818-ae01-933306775a18"
+    },
+    {
+      "id": "4fb1f015-bd93-481e-9720-ce054c23fc9c",
+      "name": "Croissant Nutella",
+      "description": "Croissant com Nutella e farofa de Negresco",
+      "priceCents": 3599,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Sobremesas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=4fb1f015-bd93-481e-9720-ce054c23fc9c"
+    },
+    {
+      "id": "5fa9c785-5a6a-4db8-9094-07d1c5a0fd87",
+      "name": "Cerveja Stannis 355ml Pilsener",
+      "description": "",
+      "priceCents": 1399,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cerveja Stannis",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=5fa9c785-5a6a-4db8-9094-07d1c5a0fd87"
+    },
+    {
+      "id": "d2a6a494-eb6f-43d7-99db-17249316d678",
+      "name": "Cerveja Stannis 355ml Bright Ale",
+      "description": "",
+      "priceCents": 2099,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cerveja Stannis",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=d2a6a494-eb6f-43d7-99db-17249316d678"
+    },
+    {
+      "id": "52a0910f-bbb0-4eaa-929c-6a4596f02505",
+      "name": "Cerveja Stannis 355ml Dear Paula",
+      "description": "",
+      "priceCents": 2099,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cerveja Stannis",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=52a0910f-bbb0-4eaa-929c-6a4596f02505"
+    },
+    {
+      "id": "9ec11617-8a43-4246-ac47-760c941e2f9a",
+      "name": "Cerveja Stannis 355ml Red Sonja",
+      "description": "",
+      "priceCents": 1899,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cerveja Stannis",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=9ec11617-8a43-4246-ac47-760c941e2f9a"
+    },
+    {
+      "id": "d0c0bad1-ac37-4a90-8ac2-de74c698f28c",
+      "name": "Cerveja Stannis 355ml Gold Amélia",
+      "description": "",
+      "priceCents": 1999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cerveja Stannis",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=d0c0bad1-ac37-4a90-8ac2-de74c698f28c"
+    },
+    {
+      "id": "9c77bdab-4ff1-40d2-8c7c-9d03695daa2e",
+      "name": "Chope Em Growler Pilsener 1lt",
+      "description": "",
+      "priceCents": 2899,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Cerveja Stannis",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=9c77bdab-4ff1-40d2-8c7c-9d03695daa2e"
+    },
+    {
+      "id": "0775b917-d632-4ec5-90ab-3044ed4a5204",
+      "name": "Coca-Cola 600ml",
+      "description": "Garrafa 600ml",
+      "priceCents": 999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=0775b917-d632-4ec5-90ab-3044ed4a5204"
+    },
+    {
+      "id": "b38a0093-7232-455f-9119-f7a11a811d4a",
+      "name": "Coca Cola Zero 600ml",
+      "description": "Unidade 1un",
+      "priceCents": 999,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=b38a0093-7232-455f-9119-f7a11a811d4a"
+    },
+    {
+      "id": "afe1fd12-e905-4fcb-a862-b299c0c295e8",
+      "name": "Refrigerante Guarana Antartica Lata 350 Ml",
+      "description": "",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=afe1fd12-e905-4fcb-a862-b299c0c295e8"
+    },
+    {
+      "id": "e087a0ec-ecb9-4635-bcc8-e610d1ffcf54",
+      "name": "Coca Cola Zero 350 Ml",
+      "description": "",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=e087a0ec-ecb9-4635-bcc8-e610d1ffcf54"
+    },
+    {
+      "id": "83f616c1-e487-45dc-9382-12ea8a009545",
+      "name": "Coca Cola 350 Ml",
+      "description": "",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=83f616c1-e487-45dc-9382-12ea8a009545"
+    },
+    {
+      "id": "b64513f9-40df-4ce5-96d5-569d24481648",
+      "name": "Fanta Laranja 350 Ml",
+      "description": "",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=b64513f9-40df-4ce5-96d5-569d24481648"
+    },
+    {
+      "id": "6e043501-e63e-4fcd-a4f1-6bb8640b2a36",
+      "name": "Fanta Uva 350ml",
+      "description": "Lata 350ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=6e043501-e63e-4fcd-a4f1-6bb8640b2a36"
+    },
+    {
+      "id": "46d8b85d-3526-44e7-8f8a-732937b8aac3",
+      "name": "Refrigerante Original Sprite 350ml",
+      "description": "Refrig Sprite Lt 350ml S/Acucar",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=46d8b85d-3526-44e7-8f8a-732937b8aac3"
+    },
+    {
+      "id": "6a121a06-558b-4ee2-8a34-66e0529fd0d6",
+      "name": "Água Crystal com Gás 500ml",
+      "description": "Garrafa 500ml",
+      "priceCents": 550,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=6a121a06-558b-4ee2-8a34-66e0529fd0d6"
+    },
+    {
+      "id": "cc80eed4-8854-400e-9e36-fa86fd7e1f93",
+      "name": "Agua Mineral Sem Gas Crystal 500ml",
+      "description": "",
+      "priceCents": 550,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=cc80eed4-8854-400e-9e36-fa86fd7e1f93"
+    },
+    {
+      "id": "5dd8583e-0cde-4943-b6b8-4ce5fe135107",
+      "name": "Coca-Cola Zero Pet 200ml",
+      "description": "",
+      "priceCents": 499,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=5dd8583e-0cde-4943-b6b8-4ce5fe135107"
+    },
+    {
+      "id": "7d96bf2e-1ab0-4a36-bf06-b9d167a9a3f3",
+      "name": "Refrigerante Mini Coca Cola",
+      "description": "Frasco 30ml",
+      "priceCents": 499,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=7d96bf2e-1ab0-4a36-bf06-b9d167a9a3f3"
+    },
+    {
+      "id": "e788b317-1010-4560-8f81-4053b26d44eb",
+      "name": "Suco Del Valle Pêssego 290ml",
+      "description": "Lata 290ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=e788b317-1010-4560-8f81-4053b26d44eb"
+    },
+    {
+      "id": "16cec65d-40ed-4144-a194-5a17c01ed05c",
+      "name": "Suco Del Valle Maracujá 290ml",
+      "description": "Lata 290ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=16cec65d-40ed-4144-a194-5a17c01ed05c"
+    },
+    {
+      "id": "a2f69a8f-bf89-4217-9392-dcbad7bc0519",
+      "name": "Suco Del Valle Pêssego 200ml",
+      "description": "Embalagem 200ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=a2f69a8f-bf89-4217-9392-dcbad7bc0519"
+    },
+    {
+      "id": "034f76e4-3009-4a82-af30-6ad46258147e",
+      "name": "Suco Del Valle Manga 290ml",
+      "description": "Embalagem 290ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=034f76e4-3009-4a82-af30-6ad46258147e"
+    },
+    {
+      "id": "1da7713d-7317-4961-b8b5-87612d0f6243",
+      "name": "Schweppes Citrus 350ml",
+      "description": "Lata 350ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=1da7713d-7317-4961-b8b5-87612d0f6243"
+    },
+    {
+      "id": "3a61c14a-baa7-488d-b619-5f924700edc2",
+      "name": "Tônica Schweppes 350ml",
+      "description": "Lata 350ml",
+      "priceCents": 850,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Bebidas",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=3a61c14a-baa7-488d-b619-5f924700edc2"
+    },
+    {
+      "id": "73a8974b-c763-4ec8-9599-305542b50ef0",
+      "name": "Guacamole",
+      "description": "",
+      "priceCents": 800,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=73a8974b-c763-4ec8-9599-305542b50ef0"
+    },
+    {
+      "id": "475cd757-b7f5-49c9-9bf1-11c3aafec192",
+      "name": "Sour Cream",
+      "description": "",
+      "priceCents": 800,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=475cd757-b7f5-49c9-9bf1-11c3aafec192"
+    },
+    {
+      "id": "2fce8428-2f38-48a6-adfe-10ed60377631",
+      "name": "Pico De Galo",
+      "description": "",
+      "priceCents": 800,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=2fce8428-2f38-48a6-adfe-10ed60377631"
+    },
+    {
+      "id": "87387afe-4338-406d-95ec-09f093be4bd4",
+      "name": "Chipotle",
+      "description": "",
+      "priceCents": 800,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=87387afe-4338-406d-95ec-09f093be4bd4"
+    },
+    {
+      "id": "f42947f5-3e82-436b-b7c9-8d6be74b74bb",
+      "name": "Adicional De Batata Palito",
+      "description": "",
+      "priceCents": 1200,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=f42947f5-3e82-436b-b7c9-8d6be74b74bb"
+    },
+    {
+      "id": "0c5fc966-0b47-420a-80e1-ec876973bcff",
+      "name": "Adicional De Batata Waffle",
+      "description": "",
+      "priceCents": 1200,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=0c5fc966-0b47-420a-80e1-ec876973bcff"
+    },
+    {
+      "id": "537b57a0-aba3-49d4-9c64-c4c83360f5a4",
+      "name": "Adicional De Batata Crinkle",
+      "description": "",
+      "priceCents": 1200,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=537b57a0-aba3-49d4-9c64-c4c83360f5a4"
+    },
+    {
+      "id": "60c44a24-e1a3-4d5c-9bb6-874da008151b",
+      "name": "Bacon",
+      "description": "",
+      "priceCents": 1100,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=60c44a24-e1a3-4d5c-9bb6-874da008151b"
+    },
+    {
+      "id": "d90841d5-12dd-4e93-983e-ffee2d99866c",
+      "name": "Maionese Verde Temperada",
+      "description": "",
+      "priceCents": 700,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=d90841d5-12dd-4e93-983e-ffee2d99866c"
+    },
+    {
+      "id": "e3a80052-8255-455d-877f-cf7059bb641f",
+      "name": "Maionese Temperada",
+      "description": "",
+      "priceCents": 700,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=e3a80052-8255-455d-877f-cf7059bb641f"
+    },
+    {
+      "id": "297ab47b-197f-4cf4-a2ea-11b80a16df52",
+      "name": "Sweet Chili",
+      "description": "",
+      "priceCents": 800,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=297ab47b-197f-4cf4-a2ea-11b80a16df52"
+    },
+    {
+      "id": "5d04af98-840d-4deb-8010-3c6eb337b377",
+      "name": "Barbecue",
+      "description": "",
+      "priceCents": 800,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=5d04af98-840d-4deb-8010-3c6eb337b377"
+    },
+    {
+      "id": "a946bfce-dd1a-4697-8ff0-9a38e595d29a",
+      "name": "Geleia De Tomate",
+      "description": "",
+      "priceCents": 1200,
+      "originalPriceCents": null,
+      "imageUrl": null,
+      "category": "Acompanhamentos",
+      "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/barbacue-hotdog-%26-sandwich-centro/6cb73c63-55cd-459b-a02b-aa936967bf20?prato=a946bfce-dd1a-4697-8ff0-9a38e595d29a"
+    }
+  ]
+}

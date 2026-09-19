@@ -9,6 +9,8 @@ import '../providers/checkout_provider.dart';
 import '../providers/table_session_provider.dart';
 import '../services/api_service.dart';
 import '../theme/app_theme.dart';
+import '../services/privacy_consent.dart';
+import '../screens/privacy_screen.dart';
 
 const _suggestions = [
   'Quero um X-Burguer',
@@ -32,6 +34,65 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   final _controller = TextEditingController();
   final _scroll = ScrollController();
+  bool _checkingConsent = false;
+
+  Future<bool> _authorizeAi() async {
+    if (_checkingConsent) return false;
+    _checkingConsent = true;
+    try {
+      if (await PrivacyConsent.hasAiConsent()) return mounted;
+      if (!mounted) return false;
+      final accepted = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Atendimento com inteligência artificial'),
+          content: const SingleChildScrollView(
+            child: Text(
+              'Para responder e ajudar com seu pedido, o BARBACUE envia à OpenAI '
+              'suas mensagens, histórico desta conversa, carrinho e os dados do '
+              'pedido, incluindo nome, telefone, endereço e observações quando '
+              'preenchidos. O processamento pode ocorrer fora do Brasil. '
+              'Não envie senhas nem dados bancários.\n\n'
+              'O uso da IA é opcional. Você pode pedir pelo cardápio sem autorizar '
+              'e revogar depois em Privacidade e ajuda.',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).push(
+                MaterialPageRoute<void>(builder: (_) => const PrivacyScreen()),
+              ),
+              child: const Text('Ver política'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Agora não'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Autorizar IA'),
+            ),
+          ],
+        ),
+      );
+      if (accepted != true || !mounted) return false;
+      await PrivacyConsent.acceptAi();
+      return mounted;
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Não foi possível salvar sua escolha. Tente novamente.',
+            ),
+          ),
+        );
+      }
+      return false;
+    } finally {
+      _checkingConsent = false;
+    }
+  }
 
   @override
   void dispose() {
@@ -65,6 +126,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Future<void> _send(String text) async {
     final trimmed = text.trim();
     if (trimmed.isEmpty || ref.read(chatProvider).loading) return;
+    if (!await _authorizeAi() || !mounted) return;
+    if (ref.read(chatProvider).loading) return;
 
     // Everything `ref` is needed for is resolved up front: `ref` is illegal once
     // this State is disposed, but the notifiers it hands back belong to the

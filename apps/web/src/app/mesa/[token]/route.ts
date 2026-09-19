@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { restaurantTables } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { setTableSession } from "@/lib/table-session";
+import { clearTableSession, setTableSession } from "@/lib/table-session";
 
 export const dynamic = "force-dynamic";
 
@@ -15,13 +15,18 @@ export async function GET(
 ) {
   const { token } = await ctx.params;
 
-  const home = new URL("/", req.url);
+  const menu = new URL("/pedir", req.url);
+  const invalidTable = () => {
+    menu.searchParams.set("mesa", "notfound");
+    const res = NextResponse.redirect(menu);
+    clearTableSession(res);
+    return res;
+  };
 
   // Basic shape check before hitting the DB (tokens are UUIDs).
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token);
   if (!isUuid) {
-    home.searchParams.set("mesa", "notfound");
-    return NextResponse.redirect(home);
+    return invalidTable();
   }
 
   const [table] = await db
@@ -30,12 +35,11 @@ export async function GET(
     .where(eq(restaurantTables.token, token));
 
   if (!table || !table.active) {
-    home.searchParams.set("mesa", "notfound");
-    return NextResponse.redirect(home);
+    return invalidTable();
   }
 
-  home.searchParams.set("mesa", "ok");
-  const res = NextResponse.redirect(home);
+  menu.searchParams.set("mesa", table.token);
+  const res = NextResponse.redirect(menu);
   setTableSession(res, { number: table.number, token: table.token, label: table.label });
   return res;
 }

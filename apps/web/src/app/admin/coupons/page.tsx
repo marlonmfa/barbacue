@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 interface Coupon {
+  audience: "all" | "visitor" | "member";
   id: number; code: string; description: string | null;
   discountType: "flat" | "percentage"; discountValue: number;
   minOrderCents: number | null; maxUsages: number | null; usedCount: number | null;
@@ -10,6 +11,7 @@ interface Coupon {
 }
 
 const EMPTY_FORM = {
+  audience: "all" as "all" | "visitor" | "member",
   code: "", description: "", discountType: "flat" as "flat" | "percentage",
   discountValue: 0, minOrderCents: 0, maxUsages: "", active: true, expiresAt: "",
 };
@@ -43,10 +45,11 @@ export default function AdminCoupons() {
   function openEdit(c: Coupon) {
     setEditing(c.id);
     setForm({
+      audience: c.audience ?? "all",
       code: c.code,
       description: c.description ?? "",
       discountType: c.discountType,
-      discountValue: c.discountValue,
+      discountValue: c.discountType === "flat" ? c.discountValue / 100 : c.discountValue,
       minOrderCents: c.minOrderCents ?? 0,
       maxUsages: c.maxUsages !== null ? String(c.maxUsages) : "",
       active: c.active,
@@ -108,7 +111,7 @@ export default function AdminCoupons() {
             <thead className="bg-[#0e0b0a] text-[#a89a8c] text-left">
               <tr>
                 <th className="px-5 py-3">Código</th>
-                <th className="px-5 py-3">Desconto</th>
+                <th className="px-5 py-3">Público</th><th className="px-5 py-3">Desconto</th>
                 <th className="px-5 py-3">Pedido mín.</th>
                 <th className="px-5 py-3">Usos</th>
                 <th className="px-5 py-3">Status</th>
@@ -122,7 +125,7 @@ export default function AdminCoupons() {
                     <span className="font-mono font-bold text-[#c8b89a]">{c.code}</span>
                     {c.description && <p className="text-[#a89a8c] text-xs">{c.description}</p>}
                   </td>
-                  <td className="px-5 py-3 text-white">
+                  <td className="px-5 py-3">{{ all: "Todos", visitor: "Visitantes", member: "Clientes da casa" }[c.audience ?? "all"]}</td><td className="px-5 py-3 text-white">
                     {c.discountType === "flat"
                       ? fmtCents(c.discountValue)
                       : `${c.discountValue}%`}
@@ -168,7 +171,7 @@ export default function AdminCoupons() {
             <h2 className="text-lg font-bold text-white mb-5">
               {editing ? "Editar cupom" : "Novo cupom"}
             </h2>
-            <form onSubmit={handleSave} className="flex flex-col gap-4">
+            <form onSubmit={handleSave} className="flex flex-col gap-4"><label className="text-sm text-[#a89a8c]">Público da oferta<select className={ic} value={form.audience} onChange={e => setForm({ ...form, audience: e.target.value as Coupon["audience"] })}><option value="all">Todos os clientes</option><option value="visitor">Somente visitantes</option><option value="member">Somente clientes da casa</option></select></label>
               <F label="Código *">
                 <input required className={ic} value={form.code}
                   onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} />

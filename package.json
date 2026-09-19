@@ -8,7 +8,10 @@
   "scripts": {
     "dev": "npm run dev --workspace=apps/web",
     "scrape": "npm run scrape --workspace=packages/scraper",
-    "seed": "npm run seed --workspace=packages/scraper"
+    "seed": "npm run seed --workspace=packages/scraper",
+    "desktop": "npm start --workspace=@barbacue/desktop",
+    "desktop:windows": "npm run dist:win --workspace=@barbacue/desktop",
+    "test:desktop": "npm test --workspace=@barbacue/desktop && npm test --workspace=@barbacue/print-agent"
   },
   "devDependencies": {
     "playwright-extra": "^4.3.6",

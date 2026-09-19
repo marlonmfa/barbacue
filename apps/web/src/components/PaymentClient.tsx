@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import QRCode from "qrcode";
 import { useCart, formatPrice } from "@/lib/cart";
@@ -8,6 +8,11 @@ import { useCheckout, PAYMENT_LABELS } from "@/lib/checkout";
 import type { CustomerPrefill } from "@/lib/customer-session";
 import type { TableSession } from "@/lib/table-session-shared";
 import type { PaymentMethod } from "@/db/schema";
+import { DeliveryQuote } from "@/components/DeliveryQuote";
+import { checkoutAmounts, quoteMatchesAddress } from "@/lib/delivery-checkout";
+import type { CheckoutDeliveryQuote, DeliveryAvailability, DeliveryBrand } from "@/lib/delivery-checkout";
+
+const subscribeHydration = () => () => {};
 
 interface OrderResponse {
   orderId: string;
@@ -15,28 +20,39 @@ interface OrderResponse {
   orderType: "delivery" | "dine_in";
   tableNumber: number | null;
   totalCents: number;
+  deliveryFeeCents: number;
+  deliveryDistanceMeters: number | null;
+  deliveryDurationSeconds: number | null;
   pix: { payload: string } | null;
 }
 
 export function PaymentClient({
   prefill,
   table,
+  brand = "barbacue",
+  backHref = "/cart",
 }: {
   prefill?: CustomerPrefill | null;
   table?: TableSession | null;
+  brand?: DeliveryBrand;
+  backHref?: string;
 }) {
   const { items, totalCents, clear } = useCart();
   const checkout = useCheckout();
+  const setCheckout = checkout.set;
+  const placing = useRef(false);
 
-  const [hydrated, setHydrated] = useState(false);
+  const hydrated = useSyncExternalStore(subscribeHydration, () => true, () => false);
   const [coupon, setCoupon] = useState<{ code: string; discountCents: number } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [order, setOrder] = useState<OrderResponse | null>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => setHydrated(true), []);
+  const [deliveryAvailability, setDeliveryAvailability] = useState<DeliveryAvailability>("loading");
+  const updateQuote = useCallback((deliveryQuote: CheckoutDeliveryQuote | null) => {
+    setCheckout({ deliveryQuote });
+  }, [setCheckout]);
 
   // Dine-in is authoritative from the table cookie, falling back to the store
   // (e.g. when the AI agent navigated here directly).
@@ -56,10 +72,7 @@ export function PaymentClient({
 
   useEffect(() => {
     const subtotal = totalCents();
-    if (!checkout.couponCode || subtotal === 0) {
-      setCoupon(null);
-      return;
-    }
+    if (!checkout.couponCode || subtotal === 0) return;
     let cancelled = false;
     fetch("/api/coupons", {
       method: "POST",
@@ -84,8 +97,11 @@ export function PaymentClient({
   if (!hydrated) return null;
 
   const subtotal = totalCents();
-  const discount = coupon?.discountCents ?? 0;
-  const total = Math.max(0, subtotal - discount);
+  const appliedCoupon = coupon && checkout.couponCode?.trim().toUpperCase() === coupon.code.toUpperCase() ? coupon : null;
+  const deliveryQuote = !isDineIn && deliveryAvailability === "enabled" && quoteMatchesAddress(checkout.deliveryQuote, checkout.address, brand)
+    ? checkout.deliveryQuote : null;
+  const deliveryReady = isDineIn || deliveryAvailability === "disabled" || (deliveryAvailability === "enabled" && Boolean(deliveryQuote));
+  const { discount, total } = checkoutAmounts(subtotal, appliedCoupon?.discountCents ?? 0, deliveryQuote?.feeCents ?? 0);
 
   const METHODS: { value: PaymentMethod; icon: string; hint: string }[] = [
     { value: "pix", icon: "⚡", hint: "Pague na hora pelo QR Code ou copia e cola" },
@@ -180,8 +196,18 @@ export function PaymentClient({
   }
 
   async function placeOrder() {
+    if (placing.current || loading) return;
     if (!checkout.name.trim() || checkout.phone.trim().replace(/\D/g, "").length < 8) {
       setError("Preencha nome e telefone na etapa anterior.");
+      return;
+    }
+    if (!isDineIn && !checkout.address.trim()) {
+      setError("Informe o endereço de entrega.");
+      return;
+    }
+    if (!isDineIn && (!deliveryReady || (deliveryAvailability === "enabled" && !quoteMatchesAddress(checkout.deliveryQuote, checkout.address, brand)))) {
+      updateQuote(null);
+      setError("Calcule o frete para confirmar o total antes de enviar o pedido.");
       return;
     }
     if (
@@ -194,17 +220,20 @@ export function PaymentClient({
       return;
     }
     setError(null);
+    placing.current = true;
     setLoading(true);
     try {
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          brand,
           customerName: checkout.name,
           customerPhone: checkout.phone,
           deliveryAddress: isDineIn ? undefined : checkout.address || undefined,
+          deliveryQuoteId: deliveryQuote?.quoteId,
           notes: checkout.notes || undefined,
-          couponCode: coupon?.code,
+          couponCode: appliedCoupon?.code,
           paymentMethod: checkout.paymentMethod,
           changeForCents:
             checkout.paymentMethod === "cash" && checkout.changeForCents
@@ -224,6 +253,10 @@ export function PaymentClient({
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
+        if (["delivery_quote_required", "delivery_quote_invalid", "delivery_disabled"].includes(data.code)) {
+          updateQuote(null);
+          setDeliveryAvailability(data.code === "delivery_disabled" ? "disabled" : "enabled");
+        }
         // Always prefer the human pt-BR message the API now returns.
         setError(typeof data.message === "string" ? data.message : "Não foi possível enviar o pedido. Tente novamente.");
         setLoading(false);
@@ -232,11 +265,12 @@ export function PaymentClient({
 
       const data: OrderResponse = await res.json();
       clear();
-      checkout.set({ couponCode: null });
+      checkout.set({ couponCode: null, deliveryQuote: null });
       setOrder(data);
     } catch {
       setError("Sem conexão. Tente novamente.");
     } finally {
+      placing.current = false;
       setLoading(false);
     }
   }
@@ -244,7 +278,7 @@ export function PaymentClient({
   return (
     <div className="min-h-screen bg-[var(--bg)]">
       <header className="bg-[var(--brand-red)] text-white px-4 py-4 flex items-center gap-3">
-        <Link href="/cart" className="text-white/80 hover:text-white">← Voltar</Link>
+        <Link href={backHref} className="text-white/80 hover:text-white">← Voltar</Link>
         <h1 className="font-bold text-lg">Pagamento</h1>
         {isDineIn && tableNumber && (
           <span className="ml-auto text-xs bg-black/25 px-2.5 py-1 rounded-full font-semibold">🍽️ Mesa {tableNumber}</span>
@@ -252,6 +286,9 @@ export function PaymentClient({
       </header>
 
       <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col gap-6">
+        {!isDineIn && <DeliveryQuote address={checkout.address} brand={brand} quote={checkout.deliveryQuote} availability={deliveryAvailability}
+          disabled={loading} onAddressChange={address => { checkout.set({ address }); setError(null); }}
+          onQuoteChange={updateQuote} onAvailabilityChange={setDeliveryAvailability} />}
         {/* Recap */}
         <section className="bg-[var(--surface)] rounded-2xl shadow-sm border border-[var(--border)] p-5">
           <h2 className="font-bold text-[var(--text)] mb-3">Resumo</h2>
@@ -261,13 +298,19 @@ export function PaymentClient({
               <span>{formatPrice(i.priceCents * i.qty)}</span>
             </div>
           ))}
+          <div className="flex justify-between text-sm py-2 text-[var(--text-muted)] border-t border-[var(--border)] mt-3">
+            <span>Subtotal dos itens</span><span>{formatPrice(subtotal)}</span>
+          </div>
           {discount > 0 && (
-            <div className="flex justify-between text-sm py-1 text-green-400 font-medium">
-              <span>Desconto ({coupon?.code})</span><span>−{formatPrice(discount)}</span>
+            <div className="flex justify-between text-sm py-1 text-[#287241] font-medium">
+              <span>Desconto ({appliedCoupon?.code})</span><span>−{formatPrice(discount)}</span>
             </div>
           )}
+          <div className="flex justify-between gap-3 text-sm py-1 text-[var(--text-muted)]">
+            <span>Frete</span><span>{isDineIn ? "Não se aplica" : deliveryReady ? formatPrice(deliveryQuote?.feeCents ?? 0) : "A calcular"}</span>
+          </div>
           <div className="flex justify-between font-bold text-lg text-[var(--text)] pt-2 mt-2 border-t border-[var(--border)]">
-            <span>Total</span><span className="text-[var(--brand-tan)]">{formatPrice(total)}</span>
+            <span>{deliveryReady ? "Total" : "Total parcial"}</span><span className="text-[var(--brand-tan)]">{formatPrice(total)}</span>
           </div>
           <p className="text-xs text-[var(--text-muted)] mt-3">
             {isDineIn ? (
@@ -308,13 +351,17 @@ export function PaymentClient({
 
           {checkout.paymentMethod === "cash" && (
             <div className="mt-4 flex flex-col gap-1">
-              <label className="text-sm font-medium text-[var(--text-muted)]">Troco para quanto? (opcional)</label>
+              <label htmlFor="payment-change" className="text-sm font-medium text-[var(--text-muted)]">Troco para quanto? (opcional)</label>
               <input
+                id="payment-change"
                 type="number"
+                min="0"
+                step="0.01"
                 inputMode="decimal"
                 placeholder="Ex: 50"
                 defaultValue={checkout.changeForCents ? checkout.changeForCents / 100 : ""}
                 onChange={(e) => {
+                  setError(null);
                   const v = parseFloat(e.target.value);
                   checkout.set({ changeForCents: isNaN(v) ? null : Math.round(v * 100) });
                 }}
@@ -324,15 +371,17 @@ export function PaymentClient({
           )}
         </section>
 
-        {error && <p className="text-red-400 text-sm bg-red-950/40 rounded-xl px-4 py-2.5">{error}</p>}
+        {error && <p role="alert" className="text-[#941d24] text-sm bg-[#fff0ee] rounded-xl px-4 py-2.5">{error}</p>}
 
         <button
           onClick={placeOrder}
-          disabled={loading}
+          disabled={loading || !deliveryReady}
           className="bg-[var(--brand-red)] hover:bg-[var(--brand-red-hover)] disabled:opacity-50 text-white font-semibold py-3.5 rounded-2xl transition-colors text-sm active:scale-[0.98]"
         >
           {loading
             ? "Enviando..."
+            : !deliveryReady
+            ? "Calcule o frete para continuar"
             : checkout.paymentMethod === "pix"
             ? `Gerar Pix · ${formatPrice(total)}`
             : `Confirmar pedido · ${formatPrice(total)}`}

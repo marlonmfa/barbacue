@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "orderId": "00000000-0000-4000-8000-000000000001",
+  "orderNumber": "DEMO0001",
+  "brand": "barbacue",
+  "channel": "table_qr",
+  "orderType": "dine_in",
+  "tableNumber": 12,
+  "tableLabel": "Mesa 12",
+  "customerName": null,
+  "items": [
+    { "name": "Burger da casa", "qty": 2, "notes": "Um sem cebola. Molho à parte." },
+    { "name": "Porção de batata", "qty": 1, "notes": null }
+  ],
+  "notes": "Levar os itens juntos à mesa.",
+  "createdAt": "2026-09-07T18:30:00.000Z",
+  "payment": { "method": "cash", "status": "pending", "label": "Pagar no local" },
+  "reprint": false
+}

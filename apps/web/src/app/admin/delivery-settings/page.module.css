@@ -1,0 +1,42 @@
+.page { max-width: 1040px; color: var(--admin-copy, #f3f1eb); }
+.header { max-width: 680px; margin-bottom: 30px; }
+.back { display: inline-block; color: var(--admin-muted, #929b9d); font-size: 13px; margin-bottom: 14px; text-decoration: underline; text-underline-offset: 3px; }
+.header h1 { font-family: var(--font-anton), Impact, sans-serif; font-size: clamp(30px, 4vw, 40px); line-height: 1.2; margin: 0 0 12px; font-weight: 400; }
+.header p { color: #adb4b4; line-height: 1.6; font-size: 14px; }
+.form fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.activation { border: 1px solid var(--admin-line, #2b3234); border-radius: 12px; padding: 20px; background: var(--admin-panel, #171c1e); margin-bottom: 8px; }
+.check { display: flex; align-items: flex-start; gap: 13px; cursor: pointer; }
+.check input { margin-top: 4px; accent-color: var(--brand-red); width: 20px; height: 20px; flex-shrink: 0; }
+.check strong { display: block; font-size: 16px; line-height: 1.4; }
+.check small { display: block; color: #adb4b4; font-size: 13px; line-height: 1.6; margin-top: 5px; }
+.section { display: grid; grid-template-columns: minmax(180px, .7fr) minmax(0, 1.3fr); gap: 34px; padding: 30px 0; border-bottom: 1px solid var(--admin-line, #2b3234); }
+.sectionIntro h2 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.sectionIntro p, .help, .formula { color: #adb4b4; line-height: 1.6; font-size: 13px; }
+.fields { display: grid; gap: 14px; min-width: 0; }
+.field { display: grid; gap: 7px; font-size: 13px; font-weight: 600; min-width: 0; }
+.field input { min-width: 0; width: 100%; min-height: 46px; background: var(--admin-panel-raised, #1d2325); border: 1px solid #414a4d; border-radius: 8px; padding: 11px 12px; color: #f3f1eb; font: inherit; font-size: 15px; font-weight: 400; }
+.field input::placeholder { color: #899496; }
+.twoColumns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.inline { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.secondary { min-height: 44px; padding: 10px 14px; border: 1px solid #556165; border-radius: 8px; font-size: 13px; font-weight: 650; background: transparent; color: #f3f1eb; }
+.formula { padding-left: 14px; border-left: 2px solid #b59163; color: #d9ccb9; }
+.providers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.provider { display: flex; gap: 10px; align-items: flex-start; border: 1px solid #414a4d; border-radius: 9px; padding: 14px; cursor: pointer; }
+.provider input { margin-top: 4px; accent-color: var(--brand-red); }
+.provider strong { display: block; font-size: 14px; font-weight: 650; }
+.provider small { color: #adb4b4; display: block; font-size: 12px; margin-top: 5px; }
+.providerSelected { border-color: #d9a17d; background: #242320; }
+.warning { color: #ebc695; font-size: 13px; line-height: 1.6; }
+.error { color: #ffb7b7; background: #391f23; padding: 14px 16px; border-radius: 8px; margin-top: 16px; font-size: 14px; line-height: 1.6; }
+.error .secondary { margin-top: 12px; }
+.success { color: #a5d6b1; font-size: 13px; line-height: 1.5; }
+.form > .success { margin-top: 18px; }
+.actions { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-top: 24px; }
+.actions p { color: #adb4b4; max-width: 430px; font-size: 12px; line-height: 1.6; }
+.save { background: #d81a23; color: white; padding: 13px 20px; min-height: 48px; font-size: 14px; font-weight: 700; border-radius: 9px; white-space: nowrap; }
+.save:hover:not(:disabled) { background: #ba141c; }
+.page button:disabled { opacity: .5; cursor: default; }
+.page input:focus-visible, .page button:focus-visible, .page a:focus-visible { outline: 3px solid #ed6e70; outline-offset: 3px; }
+.feedback { color: #adb4b4; font-size: 14px; }
+@media (max-width: 800px) { .section { grid-template-columns: 1fr; gap: 18px; } .sectionIntro { max-width: 550px; } }
+@media (max-width: 540px) { .activation { padding: 16px; } .twoColumns, .providers { grid-template-columns: 1fr; } .actions { align-items: stretch; flex-direction: column-reverse; gap: 14px; } .save { white-space: normal; width: 100%; } .header { margin-bottom: 24px; } }

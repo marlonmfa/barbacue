@@ -1,0 +1,21 @@
+{
+  "orders": [
+    {
+      "source": "telefone",
+      "externalId": "EXEMPLO-TROQUE-O-ID",
+      "brand": "barbacue",
+      "customerName": "Cliente exemplo",
+      "orderType": "pickup",
+      "items": [
+        {
+          "name": "Produto exemplo",
+          "qty": 1,
+          "priceCents": 2500,
+          "notes": "Sem cebola"
+        }
+      ],
+      "paymentMethod": "cash",
+      "paymentStatus": "pending"
+    }
+  ]
+}

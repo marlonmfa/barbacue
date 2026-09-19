@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:barbacue/services/api_service.dart';
 
 void main() {
-  const base = 'https://barbacue.hirableaiagents.com';
+  const base = 'https://barbacue.cog.ia.br';
 
   test('rewrites root-relative product paths to absolute', () {
     final data = [
