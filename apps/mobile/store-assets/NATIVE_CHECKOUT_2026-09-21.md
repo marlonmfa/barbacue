@@ -20,7 +20,7 @@
 
 ## Situação na Apple
 
-Os builds 4 estão anexados e válidos; as versões permanecem REJECTED até nova submissão. Não houve resubmissão nesta tarefa. A aprovação da diretriz 4.2 depende da avaliação da Apple. As capturas automatizadas são evidência de teste, não screenshots de marketing enviadas à loja; as imagens existentes na App Store não foram alteradas.
+Os builds 4 estão anexados e válidos; a API confirmou que as versões passaram a PREPARE_FOR_SUBMISSION após a troca do build. Não houve resubmissão nesta tarefa. A aprovação da diretriz 4.2 depende da avaliação da Apple. As capturas automatizadas são evidência de teste, não screenshots de marketing enviadas à loja; as imagens existentes na App Store não foram alteradas.
 
 Evidência: `native-checkout-status-2026-09-21.json` e `native-checkout-metadata-2026-09-21.json`.
 
