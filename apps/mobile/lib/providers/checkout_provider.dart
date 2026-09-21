@@ -63,48 +63,49 @@ class CheckoutState {
     int? tableNumber,
     bool clearTable = false,
     bool? loaded,
-  }) =>
-      CheckoutState(
-        name: name ?? this.name,
-        phone: phone ?? this.phone,
-        address: address ?? this.address,
-        notes: notes ?? this.notes,
-        paymentMethod: paymentMethod ?? this.paymentMethod,
-        changeForCents: clearChange ? null : (changeForCents ?? this.changeForCents),
-        couponCode: clearCoupon ? null : (couponCode ?? this.couponCode),
-        orderType: orderType ?? this.orderType,
-        tableToken: clearTable ? null : (tableToken ?? this.tableToken),
-        tableNumber: clearTable ? null : (tableNumber ?? this.tableNumber),
-        loaded: loaded ?? this.loaded,
-      );
+  }) => CheckoutState(
+    name: name ?? this.name,
+    phone: phone ?? this.phone,
+    address: address ?? this.address,
+    notes: notes ?? this.notes,
+    paymentMethod: paymentMethod ?? this.paymentMethod,
+    changeForCents: clearChange
+        ? null
+        : (changeForCents ?? this.changeForCents),
+    couponCode: clearCoupon ? null : (couponCode ?? this.couponCode),
+    orderType: orderType ?? this.orderType,
+    tableToken: clearTable ? null : (tableToken ?? this.tableToken),
+    tableNumber: clearTable ? null : (tableNumber ?? this.tableNumber),
+    loaded: loaded ?? this.loaded,
+  );
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'phone': phone,
-        'address': address,
-        'notes': notes,
-        'paymentMethod': paymentMethod,
-        'changeForCents': changeForCents,
-        'couponCode': couponCode,
-        'orderType': orderType,
-        'tableToken': tableToken,
-        'tableNumber': tableNumber,
-      };
+    'name': name,
+    'phone': phone,
+    'address': address,
+    'notes': notes,
+    'paymentMethod': paymentMethod,
+    'changeForCents': changeForCents,
+    'couponCode': couponCode,
+    'orderType': orderType,
+    'tableToken': tableToken,
+    'tableNumber': tableNumber,
+  };
 
   // `loaded` is deliberately absent from the JSON — it describes this session's
   // hydration, not the customer.
   factory CheckoutState.fromJson(Map<String, dynamic> json) => CheckoutState(
-        name: json['name'] as String? ?? '',
-        phone: json['phone'] as String? ?? '',
-        address: json['address'] as String? ?? '',
-        notes: json['notes'] as String? ?? '',
-        paymentMethod: json['paymentMethod'] as String? ?? 'pix',
-        changeForCents: json['changeForCents'] as int?,
-        couponCode: json['couponCode'] as String?,
-        orderType: json['orderType'] as String? ?? 'delivery',
-        tableToken: json['tableToken'] as String?,
-        tableNumber: json['tableNumber'] as int?,
-      );
+    name: json['name'] as String? ?? '',
+    phone: json['phone'] as String? ?? '',
+    address: json['address'] as String? ?? '',
+    notes: json['notes'] as String? ?? '',
+    paymentMethod: json['paymentMethod'] as String? ?? 'pix',
+    changeForCents: json['changeForCents'] as int?,
+    couponCode: json['couponCode'] as String?,
+    orderType: json['orderType'] as String? ?? 'delivery',
+    tableToken: json['tableToken'] as String?,
+    tableNumber: json['tableNumber'] as int?,
+  );
 }
 
 class CheckoutNotifier extends Notifier<CheckoutState> {
@@ -124,12 +125,12 @@ class CheckoutNotifier extends Notifier<CheckoutState> {
   /// keeps a delivery order type, and leaving never keeps a token.
   static CheckoutState _withTable(CheckoutState s, TableSession? table) =>
       table == null
-          ? s.copyWith(orderType: 'delivery', clearTable: true)
-          : s.copyWith(
-              orderType: 'dine_in',
-              tableToken: table.token,
-              tableNumber: table.number,
-            );
+      ? s.copyWith(orderType: 'delivery', clearTable: true)
+      : s.copyWith(
+          orderType: 'dine_in',
+          tableToken: table.token,
+          tableNumber: table.number,
+        );
 
   void _syncTable(TableSession? table) {
     state = _withTable(state, table);
@@ -150,13 +151,24 @@ class CheckoutNotifier extends Notifier<CheckoutState> {
     }
     // Re-asserted after hydration: the persisted blob carries the *last*
     // session's table, which a lapsed or abandoned one would otherwise restore.
-    state = _withTable(state, ref.read(tableSessionProvider))
-        .copyWith(loaded: true);
+    state = _withTable(
+      state,
+      ref.read(tableSessionProvider),
+    ).copyWith(loaded: true);
   }
 
   Future<void> _persist() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_kCheckoutKey, jsonEncode(state.toJson()));
+  }
+
+  Future<void> eraseLocalData() async {
+    _touched = true;
+    state = const CheckoutState(loaded: true);
+    final prefs = await SharedPreferences.getInstance();
+    if (!await prefs.remove(_kCheckoutKey)) {
+      throw StateError('Falha ao apagar dados.');
+    }
   }
 
   void update({
@@ -190,8 +202,9 @@ class CheckoutNotifier extends Notifier<CheckoutState> {
   }
 }
 
-final checkoutProvider =
-    NotifierProvider<CheckoutNotifier, CheckoutState>(CheckoutNotifier.new);
+final checkoutProvider = NotifierProvider<CheckoutNotifier, CheckoutState>(
+  CheckoutNotifier.new,
+);
 
 const paymentLabels = <String, String>{
   'pix': 'Pix',

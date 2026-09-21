@@ -1,0 +1,22 @@
+{
+  "chelas": {
+    "appId": "6807118144",
+    "version": "1.0",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "build": "4",
+    "processingState": "VALID",
+    "descriptionVerified": true,
+    "reviewNotesVerified": true,
+    "submittedForReview": false
+  },
+  "barbadog": {
+    "appId": "6807118285",
+    "version": "1.0",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "build": "4",
+    "processingState": "VALID",
+    "descriptionVerified": true,
+    "reviewNotesVerified": true,
+    "submittedForReview": false
+  }
+}

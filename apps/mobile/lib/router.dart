@@ -13,7 +13,7 @@ GoRouter createRouter(BrandConfig brand) => GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => brand.hasNativeCheckout
+      builder: (context, state) => brand.brand == AppBrand.barbacue
           ? const MenuScreen()
           : const BrandMenuScreen(),
     ),
@@ -23,7 +23,8 @@ GoRouter createRouter(BrandConfig brand) => GoRouter(
         path: '/payment',
         builder: (context, state) => const PaymentScreen(),
       ),
-      GoRoute(path: '/chat', builder: (context, state) => const ChatScreen()),
+      if (brand.hasAiChat)
+        GoRoute(path: '/chat', builder: (context, state) => const ChatScreen()),
       // The target of every printed table QR. Reached from the phone's camera via
       // universal links / app links — never linked to from inside the app.
       GoRoute(

@@ -195,7 +195,10 @@ class AppTheme {
           backgroundColor: brandConfig.accent,
           foregroundColor: brandConfig.ink,
           minimumSize: const Size.fromHeight(54),
-          textStyle: const TextStyle(fontWeight: FontWeight.w900),
+          textStyle: const TextStyle(
+            fontFamily: 'Roboto',
+            fontWeight: FontWeight.w900,
+          ),
           shape: const StadiumBorder(),
         ),
       ),

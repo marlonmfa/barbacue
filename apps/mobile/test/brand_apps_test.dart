@@ -18,8 +18,8 @@ void main() {
     expect(apps.map((app) => app.domain).toSet(), hasLength(3));
     expect(apps.map((app) => app.name).toSet(), hasLength(3));
     expect(brandConfigs[AppBrand.barbacue]!.hasNativeCheckout, isTrue);
-    expect(brandConfigs[AppBrand.chelas]!.hasNativeCheckout, isFalse);
-    expect(brandConfigs[AppBrand.barbadog]!.hasNativeCheckout, isFalse);
+    expect(brandConfigs[AppBrand.chelas]!.hasNativeCheckout, isTrue);
+    expect(brandConfigs[AppBrand.barbadog]!.hasNativeCheckout, isTrue);
   });
 
   test(
@@ -30,6 +30,7 @@ void main() {
 
       final menu = await ApiService.fetchMenu();
       expect(menu, hasLength(9));
+      expect(menu.expand((c) => c.products).every((p) => !p.available), isTrue);
       expect(menu.expand((category) => category.products), hasLength(66));
       expect(
         menu
@@ -57,5 +58,4 @@ void main() {
       );
     },
   );
-
 }

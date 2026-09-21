@@ -1,3 +1,9 @@
+# Atualização de 21 de setembro de 2026
+
+Chelas e Barbadog: rejeição 4.2 tratada com checkout nativo. Build iOS 1.0.0 (4) enviado, VALID e anexado à versão 1.0. Descrições, notas, páginas públicas e declarações de privacidade atualizadas. Nova revisão ainda não submetida; aprovação pendente da Apple. [Entrega e validação](NATIVE_CHECKOUT_2026-09-21.md).
+
+---
+
 # Estado dos releases — atualização de 9 de setembro de 2026
 
 Estado observado nas lojas nesta data; a aprovação final depende de cada loja.

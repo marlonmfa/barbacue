@@ -2,7 +2,9 @@ import '../widgets/privacy_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../models/cart_item.dart';
+import '../providers/cart_provider.dart';
+import '../widgets/cart_bar.dart';
 
 import '../config/app_brand.dart';
 import '../models/product.dart';
@@ -27,6 +29,7 @@ class _BrandMenuScreenState extends ConsumerState<BrandMenuScreen> {
   }
 
   Future<void> _refresh() async {
+    ref.invalidate(storeStatusProvider);
     ref.invalidate(menuProvider);
     await ref.read(menuProvider.future);
   }
@@ -48,6 +51,7 @@ class _BrandMenuScreenState extends ConsumerState<BrandMenuScreen> {
     final menu = ref.watch(menuProvider);
 
     return Scaffold(
+      appBar: AppBar(title: Text(brand.shortName), actions: const [PrivacyButton()]),
       body: SafeArea(
         bottom: false,
         child: menu.when(
@@ -97,7 +101,7 @@ class _BrandMenuScreenState extends ConsumerState<BrandMenuScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'DO IFOOD PARA VOCÊ',
+                            'FEITO NA NOSSA COZINHA',
                             style: TextStyle(
                               color: brand.primary,
                               fontSize: 11,
@@ -114,7 +118,11 @@ class _BrandMenuScreenState extends ConsumerState<BrandMenuScreen> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Preços e disponibilidade são confirmados no iFood.',
+                            categories
+                                    .expand((c) => c.products)
+                                    .any((p) => p.available)
+                                ? 'Monte seu pedido e finalize aqui no aplicativo.'
+                                : 'Sem conexão com o cardápio atualizado. Consulta disponível; puxe para atualizar antes de pedir.',
                             style: TextStyle(
                               color: brand.ink.withValues(alpha: .62),
                               fontSize: 13,
@@ -137,7 +145,7 @@ class _BrandMenuScreenState extends ConsumerState<BrandMenuScreen> {
                       sliver: SliverList.separated(
                         itemCount: categories[i].products.length,
                         separatorBuilder: (_, _) => const SizedBox(height: 12),
-                        itemBuilder: (_, index) => _IfoodProductCard(
+                        itemBuilder: (_, index) => _NativeProductCard(
                           brand: brand,
                           product: categories[i].products[index],
                           category: categories[i].name,
@@ -156,21 +164,18 @@ class _BrandMenuScreenState extends ConsumerState<BrandMenuScreen> {
           },
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        minimum: const EdgeInsets.fromLTRB(14, 7, 14, 10),
-        child: FilledButton.icon(
-          onPressed: () => _open(currentBrand.ifoodUri),
-          icon: const Icon(Icons.delivery_dining),
-          label: const Text('PEDIR NO IFOOD'),
-        ),
-      ),
+      bottomNavigationBar: ref.watch(cartTotalItemsProvider) > 0
+          ? const CartBar()
+          : SafeArea(
+              minimum: const EdgeInsets.all(14),
+              child: Text(
+                'Escolha um prato para começar seu pedido',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: brand.ink),
+              ),
+            ),
     );
   }
-}
-
-Future<void> _open(Uri? uri) async {
-  if (uri == null) return;
-  await launchUrl(uri, mode: LaunchMode.externalApplication);
 }
 
 class _MobileHero extends StatelessWidget {
@@ -287,7 +292,7 @@ class _MobileHero extends StatelessWidget {
                     label: brand.minimumOrder ?? 'CARDÁPIO COMPLETO',
                     brand: brand,
                   ),
-                  _FactChip(label: 'ENTREGA IFOOD', brand: brand),
+                  _FactChip(label: 'PEDIDO NO APP', brand: brand),
                 ],
               ),
             ],
@@ -439,8 +444,8 @@ class _CategoryHeading extends StatelessWidget {
   );
 }
 
-class _IfoodProductCard extends StatelessWidget {
-  const _IfoodProductCard({
+class _NativeProductCard extends ConsumerWidget {
+  const _NativeProductCard({
     required this.brand,
     required this.product,
     required this.category,
@@ -450,19 +455,70 @@ class _IfoodProductCard extends StatelessWidget {
   final String category;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final closed = ref
+        .watch(storeStatusProvider)
+        .maybeWhen(data: (status) => !status.open, orElse: () => false);
+    final canAdd = product.available && !closed;
+    final qty = ref.watch(itemQtyProvider(product.id));
     return Semantics(
       button: true,
-      label: 'Ver ${product.name} no iFood',
+      label: 'Detalhes de ${product.name}',
       child: InkWell(
-        onTap: () => _open(
-          product.ifoodUrl == null
-              ? brand.ifoodUri
-              : Uri.parse(product.ifoodUrl!),
+        onTap: () => showModalBottomSheet<void>(
+          context: context,
+          isScrollControlled: true,
+          builder: (sheetContext) => SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.name,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    product.description ??
+                        'Consulte o estabelecimento sobre ingredientes e alergênicos.',
+                  ),
+                  const SizedBox(height: 16),
+                  Text(formatPrice(product.effectivePriceCents)),
+                  const SizedBox(height: 16),
+                  FilledButton.icon(
+                    onPressed: !canAdd
+                        ? null
+                        : () {
+                            ref
+                                .read(cartProvider.notifier)
+                                .add(
+                                  CartItem(
+                                    productId: product.id,
+                                    name: product.name,
+                                    priceCents: product.effectivePriceCents,
+                                    qty: 1,
+                                    imageUrl: product.imageUrl,
+                                  ),
+                                );
+                            Navigator.pop(sheetContext);
+                          },
+                    icon: const Icon(Icons.add_shopping_cart),
+                    label: Text(
+                      product.available
+                          ? (closed ? 'Loja fechada' : 'Adicionar ao pedido')
+                          : 'Sem conexão: atualize para pedir',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         borderRadius: BorderRadius.circular(20),
         child: Ink(
-          height: 172,
+          height: 188,
           decoration: BoxDecoration(
             color: brand.surface,
             borderRadius: BorderRadius.circular(20),
@@ -539,7 +595,9 @@ class _IfoodProductCard extends StatelessWidget {
                             ),
                           ),
                           Icon(
-                            Icons.north_east_rounded,
+                            qty > 0
+                                ? Icons.check_circle
+                                : Icons.add_circle_outline,
                             color: brand.ink,
                             size: 18,
                           ),

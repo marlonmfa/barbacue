@@ -22,7 +22,10 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(tester.getTopLeft(find.byType(CustomScrollView)).dy, 32);
-    expect(find.text('PEDIR NO IFOOD'), findsOneWidget);
+    expect(tester.getTopLeft(find.byType(CustomScrollView)).dy, greaterThanOrEqualTo(32));
+    expect(
+      find.text('Escolha um prato para começar seu pedido'),
+      findsOneWidget,
+    );
   });
 }
