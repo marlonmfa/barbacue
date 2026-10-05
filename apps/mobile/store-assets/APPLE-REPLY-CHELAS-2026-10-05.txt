@@ -1,0 +1,7 @@
+Draft reply — Chelas Cocina Mexicana, guideline 4.2
+
+The reviewed build 3 provided limited ordering functionality. The replacement build 1.0.0 (4), already selected for the version, adds a complete native ordering flow: live restaurant catalog, product details, cart quantities, delivery details and order summary, payment selection (Pix, cash or card on delivery), submission to the restaurant and order confirmation. It does not redirect to iFood to place the order.
+
+The offline catalog is read-only and cannot submit synthetic product IDs. Privacy/help and local-data erasure with confirmation are accessible in the app. No customer account creation is required.
+
+We re-ran the automated menu-to-order-confirmation flow on phone and tablet layouts for both restaurant brands on October 5, 2026, with test transport instead of creating real orders. All seven focused checkout/data-erasure tests passed. Build 4 is ready for your renewed evaluation; this response does not claim Apple approval.
