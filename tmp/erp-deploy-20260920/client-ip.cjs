@@ -1,0 +1,1 @@
+const original=global.fetch;global.fetch=(input,options={})=>{if(String(input).endsWith('/api/admin/auth')){const headers=new Headers(options.headers);if(!headers.has('x-forwarded-for'))headers.set('x-forwarded-for',process.env.TEST_LOGIN_IP);return original(input,{...options,headers});}return original(input,options)};

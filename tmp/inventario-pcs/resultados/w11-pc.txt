@@ -1,0 +1,328 @@
+Hostname: W11-PC   Usuario SSH: usuario   Logado no console: W11-PC\Usuario
+SO: Microsoft Windows 11 Pro 10.0.26200   Fabricante/Modelo: To Be Filled By O.E.M. A320M-HDV R4.0
+Ligado desde: 10/09/2026 16:18:20   RAM: 15.9 GB
+Descricao do PC: 
+Perfis em C:\Users: Public, TEMP, TEMP.Font Driver Host, TEMP.Font Driver Host.000, TEMP.Font Driver Host.001, TEMP.Font Driver Host.002, TEMP.Font Driver Host.003, UMFD-0, UMFD-0.Font Driver Host, UMFD-0.Font Driver Host.000, UMFD-0.Font Driver Host.001, UMFD-0.Font Driver Host.002, UMFD-0.Font Driver Host.003, Usuario
+Disco C: livre 142.7 / 222.6 GB
+Disco D: livre 312.6 / 931.4 GB
+IP 192.168.1.14/24  (Wi-Fi 2)
+IP 10.66.0.30/24  (vpncog-mesh)
+Gateway 192.168.1.1 via Wi-Fi 2
+Estado                  : Conectado
+SSID                   : BARBACUE_5G
+Sinal                 : 100%
+Perfis Wi-Fi salvos: BARBACUE_5G | BARBACUE
+Adobe Acrobat (64-bit) | 26.001.21346 | Adobe | 20260329
+aic8800d80 windows wifi driver install | 1.2.8 | AIC | 20260521
+AnotaAIResponde 3.0.7 | 3.0.7 | Anota AI | 
+Brave | 147.1.89.132 | Autores do Brave | 20260412
+CPUID CPU-Z 2.19 | 2.19 | CPUID, Inc. | 20260412
+ELGIN Printer Driver v1.8.0 | 1.8.0 |  | 20260507
+ELGINUtilitySetup V1.2.2.41 | V1.2.2.41 | ELGIN | 20260507
+Gestor de Pedidos 8.10.4 | 8.10.4 | iFood | 
+Google Chrome | 154.0.8037.99 | Google LLC | 20261008
+HWiNFO® 64 | 8.44 | Martin Malik, REALiX s.r.o. | 20260412
+Intelbras SIM Next 1.25.4 | 1.25.4 | Intelbras | 20260416
+K-Lite Codec Pack 19.6.6 Full | 19.6.6 | KLCP | 20260407
+Microsoft Edge | 147.0.3912.60 | Microsoft Corporation | 20260412
+Microsoft Office LTSC Professional Plus 2024 - pt-br | 16.0.17932.20700 | Microsoft Corporation | 
+Microsoft OneDrive | 26.173.0906.0008 | Microsoft Corporation | 
+Microsoft Visual C++ 2005 Redistributable | 8.0.61001 | Microsoft Corporation | 20251202
+Microsoft Visual C++ 2005 Redistributable (x64) | 8.0.61000 | Microsoft Corporation | 20251202
+Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.6161 | 9.0.30729.6161 | Microsoft Corporation | 20251202
+Microsoft Visual C++ 2008 Redistributable - x86 9.0.30729.6161 | 9.0.30729.6161 | Microsoft Corporation | 20251202
+Microsoft Visual C++ 2010  x64 Redistributable - 10.0.40219 | 10.0.40219 | Microsoft Corporation | 20251202
+Microsoft Visual C++ 2010  x86 Redistributable - 10.0.40219 | 10.0.40219 | Microsoft Corporation | 20251202
+Microsoft Visual C++ 2012 Redistributable (x64) - 11.0.61030 | 11.0.61030.0 | Microsoft Corporation | 
+Microsoft Visual C++ 2012 Redistributable (x86) - 11.0.61030 | 11.0.61030.0 | Microsoft Corporation | 
+Microsoft Visual C++ 2013 Redistributable (x64) - 12.0.40664 | 12.0.40664.0 | Microsoft Corporation | 
+Microsoft Visual C++ 2013 Redistributable (x86) - 12.0.40664 | 12.0.40664.0 | Microsoft Corporation | 
+Microsoft Visual C++ 2015-2022 Redistributable (x64) - 14.44.35208 | 14.44.35208.0 | Microsoft Corporation | 
+Microsoft Visual C++ 2015-2022 Redistributable (x86) - 14.44.35208 | 14.44.35208.0 | Microsoft Corporation | 
+Mozilla Firefox (x64 pt-BR) | 149.0.2 | Mozilla | 
+NetTime |  | Mark Griffiths | 20251202
+NVIDIA Driver de áudio HD 1.3.36.6 | 1.3.36.6 | NVIDIA Corporation | 20260414
+NVIDIA Driver de gráficos 391.35 | 391.35 | NVIDIA Corporation | 20260414
+NVIDIA Driver do 3D Vision 391.35 | 391.35 | NVIDIA Corporation | 20260414
+OpenSSH | 10.0.0.0 | Microsoft Corporation | 20261008
+POS Printer Driver V7.17 7.17 | 7.17 | Lee 2021 (C) Copyright | 20260507
+qBittorrent | 5.1.4 | The qBittorrent project | 
+Realtek Audio Driver | 6.0.9239.1 | Realtek Semiconductor Corp. | 20260414
+TeamViewer | 15.82.6 | TeamViewer | 
+TechPowerUp GPU-Z | 2.69.0 | TechPowerUp | 20260412
+Uniplus 6.12.6 | 6.12.6 | Intelidata | 
+USBPcap 1.5.4.0 | 1.5.4.0 | Tomasz Mon | 
+VLC media player | 3.0.23 | VideoLAN | 
+WinRAR 7.20 (64-bit) | 7.20.0 | win.rar GmbH | 
+WireGuard | 1.1.1 | WireGuard LLC | 20261008
+Zoom Workplace (64-bit) | 7.0.34412 | Zoom | 20260407
+--- Apps da Microsoft Store (nao-Microsoft):
+WinRAR.ShellExtension 1.0.0.2
+AdobeAcrobatReaderCoreApp 26.0.0.1
+Clipchamp.Clipchamp 4.5.10420.0
+SpotifyAB.SpotifyMusic 1.287.414.0
+AD2F1837.HPPrinterDriver 2604.1.4520.0
+AD2F1837.HPPrinterControl 165.4.1108.0
+--- Relevantes para restaurante/PDV:
+  * AnotaAIResponde 3.0.7 3.0.7  []
+  * ELGIN Printer Driver v1.8.0 1.8.0  [C:\ELGIN\]
+  * ELGINUtilitySetup V1.2.2.41 V1.2.2.41  [C:\Program Files (x86)\ELGINUtilitySetup\]
+  * Gestor de Pedidos 8.10.4 8.10.4  []
+  * TeamViewer 15.82.6  [C:\Program Files\TeamViewer]
+  * WireGuard 1.1.1  []
+NVDisplay.Container.exe      x2  sessao 0  C:\Program Files\NVIDIA Corporation\Display.NvContainer\NVDisplay.Container.exe
+AicWifiService.exe           x1  sessao 0  C:\Program Files\aic8800d80 windows wifi driver install\AicWifiService.exe
+NetTimeService.exe           x1  sessao 0  C:\Program Files (x86)\NetTime\NetTimeService.exe
+pg_ctl.exe                   x1  sessao 0  C:\UNIPLUS\pg\bin\pg_ctl.exe
+ssh-agent.exe                x1  sessao 0  C:\Program Files\OpenSSH\ssh-agent.exe
+sshd.exe                     x1  sessao 0  C:\Program Files\OpenSSH\sshd.exe
+wireguard.exe                x1  sessao 0  C:\Program Files\WireGuard\wireguard.exe
+OfficeClickToRun.exe         x1  sessao 0  C:\Program Files\Common Files\Microsoft Shared\ClickToRun\OfficeClickToRun.exe
+TeamViewer_Service.exe       x1  sessao 0  C:\Program Files\TeamViewer\TeamViewer_Service.exe
+postgres.exe                 x7  sessao 0  C:\UNIPLUS\pg\bin\postgres.exe
+crashpad_handler.exe         x1  sessao 0  C:\Program Files\TeamViewer\crashpad_handler.exe
+DefenderSessionHelper.exe    x1  sessao 1  C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.26080.4-0\DefenderSessionHelper.exe
+Widgets.exe                  x1  sessao 1  C:\Program Files\WindowsApps\MicrosoftWindows.Client.WebExperience_526.7600.30.0_x64__cw5n1h2txyewy\Dashboard\Widgets.exe
+WidgetService.exe            x1  sessao 1  C:\Program Files\WindowsApps\Microsoft.WidgetsPlatformRuntime_1.6.14.0_x64__8wekyb3d8bbwe\WidgetService\WidgetService.exe
+msedgewebview2.exe           x12  sessao 1  C:\Program Files (x86)\Microsoft\EdgeWebView\Application\146.0.3856.109\msedgewebview2.exe
+RAVCpl64.exe                 x1  sessao 1  C:\Program Files\Realtek\Audio\HDA\RAVCpl64.exe
+AnotaAIResponde.exe          x11  sessao 1  C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe
+Impressora_Anota_AI.exe      x2  sessao 1  C:\Program Files (x86)\AnotaAIResponde\resources\extraResources\Impressora_Anota_AI.exe
+OneDrive.exe                 x1  sessao 1  C:\Program Files\Microsoft OneDrive\OneDrive.exe
+Gestor de Pedidos.exe        x5  sessao 1  C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe
+Spotify.exe                  x7  sessao 1  C:\Program Files\WindowsApps\SpotifyAB.SpotifyMusic_1.287.414.0_x64__zpdnekdrzrea0\Spotify.exe
+NetTime.exe                  x1  sessao 1  C:\Program Files (x86)\NetTime\NetTime.exe
+OneDrive.Sync.Service.exe    x1  sessao 1  C:\Program Files\Microsoft OneDrive\26.173.0906.0008\OneDrive.Sync.Service.exe
+chrome.exe                   x14  sessao 1  C:\Program Files\Google\Chrome\Application\chrome.exe
+msedge.exe                   x12  sessao 1  C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+SIMNext.exe                  x1  sessao 1  C:\Program Files\Intelbras\SIMNext\SIM Next\SIMNext.exe
+sshd-session.exe             x2  sessao 0  c:\program files\openssh\sshd-session.exe
+--- Janelas abertas:
+OneDriveSetup | C:\Windows\System32\OneDriveSetup.exe /thfirstsetup | AUTORIDADE NT\SERVIÇO LOCAL
+OneDriveSetup | C:\Windows\System32\OneDriveSetup.exe /thfirstsetup | AUTORIDADE NT\SERVIÇO DE REDE
+electron.app.AnotaAIResponde | C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe | W11-PC\Usuario
+OneDrive | "C:\Program Files\Microsoft OneDrive\OneDrive.exe" /background | W11-PC\Usuario
+ifood.order.manager | C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe | W11-PC\Usuario
+SecurityHealth | %windir%\system32\SecurityHealthSystray.exe | Public
+RTHDVCPL | "C:\Program Files\Realtek\Audio\HDA\RAVCpl64.exe" -s | Public
+--- Servicos de terceiros em execucao:
+AicWifiService | AicWifiService | Auto
+ClickToRunSvc | Microsoft Office Click-to-Run Service | Auto
+MDCoreSvc | Serviço Microsoft Defender Core | Auto
+NetTimeSvc | NetTime | Auto
+NVDisplay.ContainerLocalSystem | NVIDIA Display Container LS | Auto
+postgresql-13.4-Intelidata | postgresql-13.4-Intelidata | Auto
+ssh-agent | OpenSSH Authentication Agent | Auto
+sshd | OpenSSH SSH Server | Auto
+TeamViewer | TeamViewer | Auto
+WdNisSvc | Serviço de Inspeção de Rede do Microsoft Defender Antivírus | Manual
+WinDefend | Serviço Microsoft Defender Antivírus | Auto
+WireGuardTunnel$vpncog-mesh | WireGuard Tunnel: vpncog-mesh | Auto
+--- C:\Users\Public\Desktop (11 itens; 40 mais recentes)
+  2026-05-07  POS Printer Driver V7.17.lnk
+  2026-05-07  ELGINUtility.lnk
+  2026-05-07  TeamViewer.lnk
+  2026-05-07  Uniplus.lnk
+  2026-05-07  Uninfce.lnk
+  2026-05-07  Pdv Gourmet.lnk
+  2026-04-16  Intelbras Media Player.lnk
+  2026-04-16  Intelbras SIM Next.lnk
+  2026-04-15  Gestor de Pedidos.lnk
+  2026-04-15  AnotaAIResponde.lnk
+--- C:\Users\Public\Documents (4 itens; 40 mais recentes)
+  2025-12-01  Minhas Músicas\
+  2025-12-01  Minhas Imagens\
+  2025-12-01  Meus Vídeos\
+--- C:\Users\Usuario\Desktop (10 itens; 40 mais recentes)
+  2026-10-03  BEBIDAS SALÃO.xlsx
+  2026-09-15  exportacao1789505365645.pdf
+  2026-09-15  xmls-56307927000123.zip
+  2026-08-14  exportacao1786735185587.pdf
+  2026-07-31  Programas\
+  2026-07-15  exportacao1784133059317.pdf
+  2026-07-15  exportacao1784132973771.pdf
+  2026-06-18  exportacao1781805486824.pdf
+  2026-06-17  exportacao1781720061339.pdf
+--- C:\Users\Usuario\Documents (15 itens; 40 mais recentes)
+  2026-10-03  Modelos Personalizados do Office\
+  2026-07-27  WindowsPowerShell\
+  2026-07-23  ROTAPRO_FILE
+  2026-07-23  FeedbackHub\
+  2026-05-07  driver_setup.log
+  2026-05-07  Java Printing (5).pdf
+  2026-05-07  Java Printing (4).pdf
+  2026-05-07  Java Printing (3).pdf
+  2026-05-07  Java Printing (2).pdf
+  2026-05-07  Java Printing.pdf
+  2026-05-07  Java Printing (1).pdf
+  2025-12-01  Minhas Músicas\
+  2025-12-01  Meus Vídeos\
+  2025-12-01  Minhas Imagens\
+--- C:\Users\Usuario\Downloads (100 itens; 40 mais recentes)
+  2026-09-24  Contrato prestação de serviços - BARBACUE x LUCAS.docx
+  2026-09-22  Contrato prestação de serviços - BARBACUE x LUCAS.pdf
+  2026-09-10  kapo del valle.jpg
+  2026-09-10  kapo.webp
+  2026-09-10  stannis zero alcool.jpg
+  2026-09-10  sem gluten.webp
+  2026-09-04  invoice_1788568091315.pdf
+  2026-08-10  WhatsApp Image 2026-08-10 at 18.32.53.jpeg
+  2026-07-31  nf copag.pdf
+  2026-07-24  nota fiscal multiplier 24 07.pdf
+  2026-07-23  pedido de pães.pdf
+  2026-07-23  RotaPro_Setup.exe
+  2026-07-10  WhatsApp Image 2026-07-10 at 18.00.33.jpeg
+  2026-07-10  WhatsApp Image 2026-07-10 at 17.59.44.jpeg
+  2026-07-10  WhatsApp Image 2026-07-10 at 17.59.07.jpeg
+  2026-07-10  CONTRATO LOCAÇÃO.pdf
+  2026-07-10  nota ficas multipier 10 do 07.pdf
+  2026-07-08  nota fiscal larissa.pdf
+  2026-07-01  WhatsApp Image 2026-07-01 at 16.42.46.jpeg
+  2026-06-28  WhatsApp Installer.exe
+  2026-06-26  DANFE-42260656307927000123550010000000011480573744.pdf
+  2026-06-26  morango.avif
+  2026-06-23  1030h ás 1500 1700 ás 2300.pdf
+  2026-06-11  WhatsApp Image 2026-06-11 at 19.32.33.jpeg
+  2026-06-11  WhatsApp Image 2026-06-11 at 19.09.22.jpeg
+  2026-06-11  WhatsApp Image 2026-06-11 at 17.56.10 (1).jpeg
+  2026-06-11  WhatsApp Image 2026-06-11 at 17.56.10.jpeg
+  2026-06-11  WhatsApp Image 2026-06-11 at 17.56.11.jpeg
+  2026-06-11  WhatsApp Image 2026-06-10 at 11.37.35 (1).jpeg
+  2026-06-11  WhatsApp Image 2026-06-10 at 11.37.35.jpeg
+  2026-06-11  BEEF MELT.jpg
+  2026-06-09  onion.webp
+  2026-06-09  dadinho de tapioca.webp
+  2026-06-09  queijo gouda.jpg
+  2026-06-09  popcorn.jpg
+  2026-06-09  WhatsApp Image 2026-06-09 at 12.59.42 (1).jpeg
+  2026-06-09  WhatsApp Image 2026-06-09 at 12.59.43 (1).jpeg
+  2026-06-09  WhatsApp Image 2026-06-09 at 12.59.43.jpeg
+  2026-06-09  WhatsApp Image 2026-06-09 at 12.59.42.jpeg
+  2026-06-09  WhatsApp Image 2026-06-09 at 12.34.17.jpeg
+--- Area de Trabalho publica:
+  AnotaAIResponde.lnk
+  desktop.ini
+  ELGINUtility.lnk
+  Gestor de Pedidos.lnk
+  Intelbras Media Player.lnk
+  Intelbras SIM Next.lnk
+  Pdv Gourmet.lnk
+  POS Printer Driver V7.17.lnk
+  TeamViewer.lnk
+  Uninfce.lnk
+  Uniplus.lnk
+--- Atalhos (.lnk) e destinos:
+  AnotaAIResponde.lnk -> C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe 
+  ELGINUtility.lnk -> C:\Program Files (x86)\ELGINUtilitySetup\ELGIN.Utility.exe 
+  Gestor de Pedidos.lnk -> C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe 
+  Intelbras Media Player.lnk -> C:\Program Files\Intelbras\SIMNext\Media Player\Intelbras Media Player.exe 
+  Intelbras SIM Next.lnk -> C:\Program Files\Intelbras\SIMNext\SIM Next\SIMNext.exe 
+  Pdv Gourmet.lnk -> C:\UNIPLUS\Pdv Gourmet.exe 
+  POS Printer Driver V7.17.lnk -> C:\POS Printer Driver V7.17\POS Printer Driver V7.17.exe 
+  TeamViewer.lnk -> C:\Program Files\TeamViewer\TeamViewer.exe 
+  Uninfce.lnk -> C:\UNIPLUS\UniNfce.exe 
+  Uniplus.lnk -> C:\UNIPLUS\Uniplus.exe 
+  AnotaAIResponde.lnk -> C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe 
+  ELGINUtility.lnk -> C:\Program Files (x86)\ELGINUtilitySetup\ELGIN.Utility.exe 
+  Gestor de Pedidos.lnk -> C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe 
+  Intelbras Media Player.lnk -> C:\Program Files\Intelbras\SIMNext\Media Player\Intelbras Media Player.exe 
+  Intelbras SIM Next.lnk -> C:\Program Files\Intelbras\SIMNext\SIM Next\SIMNext.exe 
+  Pdv Gourmet.lnk -> C:\UNIPLUS\Pdv Gourmet.exe 
+  POS Printer Driver V7.17.lnk -> C:\POS Printer Driver V7.17\POS Printer Driver V7.17.exe 
+  TeamViewer.lnk -> C:\Program Files\TeamViewer\TeamViewer.exe 
+  Uninfce.lnk -> C:\UNIPLUS\UniNfce.exe 
+  Uniplus.lnk -> C:\UNIPLUS\Uniplus.exe 
+  AnotaAIResponde.lnk -> C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe 
+  ELGINUtility.lnk -> C:\Program Files (x86)\ELGINUtilitySetup\ELGIN.Utility.exe 
+  Gestor de Pedidos.lnk -> C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe 
+  Intelbras Media Player.lnk -> C:\Program Files\Intelbras\SIMNext\Media Player\Intelbras Media Player.exe 
+  Intelbras SIM Next.lnk -> C:\Program Files\Intelbras\SIMNext\SIM Next\SIMNext.exe 
+  Pdv Gourmet.lnk -> C:\UNIPLUS\Pdv Gourmet.exe 
+  POS Printer Driver V7.17.lnk -> C:\POS Printer Driver V7.17\POS Printer Driver V7.17.exe 
+  TeamViewer.lnk -> C:\Program Files\TeamViewer\TeamViewer.exe 
+  Uninfce.lnk -> C:\UNIPLUS\UniNfce.exe 
+  Uniplus.lnk -> C:\UNIPLUS\Uniplus.exe 
+  AnotaAIResponde.lnk -> C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe 
+  ELGINUtility.lnk -> C:\Program Files (x86)\ELGINUtilitySetup\ELGIN.Utility.exe 
+  Gestor de Pedidos.lnk -> C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe 
+  Intelbras Media Player.lnk -> C:\Program Files\Intelbras\SIMNext\Media Player\Intelbras Media Player.exe 
+  Intelbras SIM Next.lnk -> C:\Program Files\Intelbras\SIMNext\SIM Next\SIMNext.exe 
+  Pdv Gourmet.lnk -> C:\UNIPLUS\Pdv Gourmet.exe 
+  POS Printer Driver V7.17.lnk -> C:\POS Printer Driver V7.17\POS Printer Driver V7.17.exe 
+  TeamViewer.lnk -> C:\Program Files\TeamViewer\TeamViewer.exe 
+  Uninfce.lnk -> C:\UNIPLUS\UniNfce.exe 
+  Uniplus.lnk -> C:\UNIPLUS\Uniplus.exe 
+--- Pastas na raiz de C:
+  Arquivos de Programas
+  ELGIN
+  POS Printer Driver V7.17
+  Program Files
+  Program Files (x86)
+  UNIPLUS
+  Users
+--- Programas:
+  Gestor de Pedidos 8.10.4 8.10.4 []
+--- Apps Store:
+--- Processos:
+  RODANDO: Gestor de Pedidos.exe [C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe] sessao 1
+--- Pastas:
+  C:\Program Files (x86)\Gestor de Pedidos  (modif. 10/08/2026 17:23:17)
+--- Atalhos/abas do navegador apontando para iFood:
+  [perfis Wi-Fi]
+     Nenhum> Perfis do usuário ------------- Todos os Perfis de Usuários: BARBACUE_5G Todos os Perfis de Usuários: BARBACUE
+  [nomes de arquivos]
+     16 - Simples.pdf QRCode Mesa 17 - Simples.pdf QRCode Mesa 2 - Simples chelas.pdf QRCode Mesa 2 - Simples.pdf QRCode Mesa 3 - Simples chelas.pdf QR
+     7 - Simples.pdf QRCode Mesa 8 - Simples.pdf QRCode Mesa 8 e - Simples chelas.pdf QRCode Mesa 9 - Simples chelas.pdf QRCode Mesa 9 - Simples.pdf qu
+     EEF MELT.jpg CONTRATO LOCAÇÃO.pdf Contrato prestac a o de servic os - BARBACUE x LUCAS.pdf Contrato prestação de serviços - BARBACUE x LUCAS.docx da
+     pedido de pães.pdf popcorn.jpg protocolo.pdf QRCode Mesa 1 - Simples chelas.pdf QRCode Mesa 1 - Simples.pdf QRCode Mesa 10 - Simples.pdf QRCode M
+     Code Mesa 5 - Simples.pdf QRCode Mesa 6 - Simples chelas.pdf QRCode Mesa 6 - Simples.pdf QRCode Mesa 7 - Simples chelas.pdf QR
+     Code Mesa 3 - Simples.pdf QRCode Mesa 4 - Simples chelas.pdf QRCode Mesa 4 - Simples.pdf QRCode mesa 5 - Simples chelas.pdf QR
+--- Navegadores (historico/favoritos):
+  [History C:\Users\Usuario\AppData\Local\Google\Chrome\User Data\Default]
+     kwMS4wIKXMDSoASAFQAw%3D%3D/\ Y t i https://www.google.com/maps/dir/Barbacue+-+Burguers+na+Brasa,+R.+Expedicion%C3%A1rio+Cabo+Harry+Hadlich,+865+-
+     4W_K7NfC0j6F_w_aem_a3sAnDPSlXtETC9ZoHc8-A3 & M http://app.anota.ai/p/barbacue-hotdog-sandwich?utm_source=ig&utm_medium=social&utm_content=link_in_b
+     I2MDkyMy4wIKXMDSoASAFQAw%3D%3D5K https://www.google.com/maps/dir/Barbacue+-+Burguers+na+Brasa,+R.+Expedicion%C3%A1rio+Cabo+Harry+Hadlich,+865+-
+     ntry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3Dgoogle.com/maps/dir/Barbacue+-+Burguers+na+Brasa,+R.+Expedicionário+Cabo+Harry+Hadlich,+865+-+Cent
+     https://www.google.com/maps/dir/Barbacue+-+Burguers+na+Brasa,+R.+Expedicion%C3%A1rio+Cabo+Harry+Hadlich,+865+-
+     g - [i https://mail.google.com/mail/u/0/#inboxInbox (15,831) - thebarbacue@gmail.com - Gmail / bj ! ]? https://admin.anota.ai/main/lo
+     & M http://app.anota.ai/p/barbacue-hotdog-sandwich?utm_source=ig&utm_medium=social&utm_content=link_in_b
+     I2MDkxNi4wIKXMDSoASAFQAw%3D%3D4G b E https://www.google.com/maps/dir/Barbacue+-+Burguers+na+Brasa,+R.+Expedicion%C3%A1rio+Cabo+Harry+Hadlich,+865+-
+  URLs iFood em C:\Users\Usuario\AppData\Local\Google\Chrome\User Data\Default:
+     http://portal.ifood.com.br/
+     http://portal.ifood.com.br/menu/list
+     https://download-gestordepedidos.ifood.com.br/Gestor%20de%20Pedidos-x64.exehttps://gestordepedidos.ifood.com.br/
+     https://download-gestordepedidos.ifood.com.br/Gestor%20de%20Pedidos-x64.exeM
+     https://gestordepedidos.ifood.com.br/
+     https://gestordepedidos.ifood.com.br/#/'*
+     https://gestordepedidos.ifood.com.br/#/download
+     https://gestordepedidos.ifood.com.br/#/downloadhttps://gestordepedidos.ifood.com.br//X�
+     https://gestordepedidos.ifood.com.br/#/downloadhttps://gestordepedidos.ifood.com.br/]�W
+     https://gestordepedidos.ifood.com.br/#/downloadhttps://www.google.com/-�;
+     https://gestordepedidos.ifood.com.br/#/downloadhttps://www.google.com/T�H
+     https://gestordepedidos.ifood.com.br/#/downloadiFood
+     https://gestordepedidos.ifood.com.br/#/https://gestordepedidos.ifood.com.br/-�O
+     https://gestordepedidos.ifood.com.br/#/https://gestordepedidos.ifood.com.br/R�G
+     https://gestordepedidos.ifood.com.br/#/iFood
+  [Preferences C:\Users\Usuario\AppData\Local\Google\Chrome\User Data\Default]
+     tom_links":{"initialized":true,"list":[{"isMostVisited":true,"title":"Barbacue Planilhas","url":"https://docs.google.com/spreadsheets/d/1qj4pnEGIQ95
+     6047479332","given_name":"Barbacue","hd":"NO_HOSTED_DOMAIN","is_supervised_child":0,"is_under_advanced_p
+     ilities/he4tolldmfya":0},"accountcapability_overrides":{},"email":"thebarbacue@gmail.com","full_name":"Barbacue Carnes na Brasa","gaia":"11366571562
+  URLs iFood em C:\Users\Usuario\AppData\Local\Microsoft\Edge\User Data\Default:
+     https://gestordepedidos.ifood.com.br/
+     https://gestordepedidos.ifood.com.br/#/download
+     https://gestordepedidos.ifood.com.br/#/downloadhttps://gestordepedidos.ifood.com.br/
+     https://gestordepedidos.ifood.com.br/#/downloadhttps://gestordepedidos.ifood.com.br/W�
+     https://gestordepedidos.ifood.com.br/#/downloadiFood
+     https://gestordepedidos.ifood.com.br/#/home/catalog
+     https://gestordepedidos.ifood.com.br/#/home/cataloghttps://gestordepedidos.ifood.com.br/
+     https://gestordepedidos.ifood.com.br/#/home/cataloghttps://gestordepedidos.ifood.com.br/m�
+     https://gestordepedidos.ifood.com.br/#/home/catalogiFood
+     https://gestordepedidos.ifood.com.br/#/home/configuration
+     https://gestordepedidos.ifood.com.br/#/home/configurationhttps://gestordepedidos.ifood.com.br/
+     https://gestordepedidos.ifood.com.br/#/home/configurationiFood
+     https://gestordepedidos.ifood.com.br/#/home/deliveries/arriving
+     https://gestordepedidos.ifood.com.br/#/home/deliveries/arrivinghttps://gestordepedidos.ifood.com.br/
+     https://gestordepedidos.ifood.com.br/#/home/deliveries/arrivinghttps://gestordepedidos.ifood.com.br/n�
+--- PONTUACAO: barbacue=16654  barbadog=50  chelas=9
+Spooler: Running
+Padrao: 

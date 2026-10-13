@@ -1,0 +1,7 @@
+##### W11-PC
+=== IMPRESSORAS (Win32_Printer)
+  (TEMPO ESGOTADO apos 25s)
+=== PORTAS TCP/IP
+Cloud TCP/IP Port -> api-sh33-1.hprtcloud.com:9100
+  reg: Cloud TCP/IP Port -> api-sh33-1.hprtcloud.com:9100
+=== TESTE DE CONEXAO (impressoras de rede)

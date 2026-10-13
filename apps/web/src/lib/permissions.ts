@@ -22,7 +22,7 @@ export const PERMISSIONS = [
   { id: "tables", label: "Mesas", description: "Administrar mesas e seus códigos de acesso", href: "/admin/tables" },
   { id: "customers", label: "Clientes", description: "Consultar o cadastro de clientes", href: "/admin/customers" },
   { id: "settings", label: "Loja e horários", description: "Editar dados públicos e funcionamento da loja", href: "/admin/settings" },
-  { id: "service", label: "Atendimento", description: "Atender pelo WhatsApp e testar pedidos", href: "/whatsapp" },
+  { id: "service", label: "Testar pedidos", description: "Simular pedidos pelo canal de atendimento", href: "/teste_pedido" },
   { id: "beta", label: "Beta do aplicativo", description: "Consultar inscritos no programa de testes", href: "/admin/beta" },
 ] as const;
 export type Permission = typeof PERMISSIONS[number]["id"];
@@ -39,11 +39,14 @@ export function permissionForPath(path: string): Permission | "admin" | null {
   const normalized = path.replace(/^\/api\/admin(?=\/|$)/, "/admin");
   const section = normalized.split("/")[2];
   if (normalized === "/admin" || normalized === "/admin/") return "dashboard";
-  if (path === "/whatsapp" || path.startsWith("/whatsapp/") || path === "/teste_pedido") return "service";
+  // The WhatsApp console pairs the business number and reads every customer
+  // conversation, so it is administrator-only regardless of custom permissions.
+  if (path === "/whatsapp" || path.startsWith("/whatsapp/")) return "admin";
+  if (path === "/teste_pedido") return "service";
   const map: Record<string, Permission | "admin"> = {
     orders: "orders", kitchen: "kitchen", waiter: "floor", delivery: "deliveries", catalogs: "catalog", products: "catalog", categories: "catalog", upload: "catalog",
     coupons: "offers", tables: "tables", customers: "customers", settings: "settings", "delivery-settings": "settings", "closed-days": "settings",
-    whatsapp: "service", beta: "beta", team: "admin", employees: "admin", staff: "admin", system: "admin", downloads: "admin", impersonate: "admin",
+    whatsapp: "admin", beta: "beta", erp: "admin", team: "admin", employees: "admin", staff: "admin", system: "admin", downloads: "admin", impersonate: "admin",
   };
   return map[section] ?? null;
 }

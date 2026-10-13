@@ -26,7 +26,7 @@ const groups: { label: string; items: NavItem[] }[] = [
       { href: "/admin/orders", label: "Caixa e pedidos", icon: "orders" },
       { href: "/admin/waiter", label: "Salão", icon: "tables" },
       { href: "/admin/delivery", label: "Minhas entregas", icon: "delivery" },
-      { href: "/whatsapp", label: "Atendimento", icon: "whatsapp" },
+      { href: "/whatsapp", label: "WhatsApp", icon: "whatsapp", adminOnly: true },
       { href: "/teste_pedido", label: "Testar pedido", icon: "beaker" },
     ],
   },
@@ -41,6 +41,7 @@ const groups: { label: string; items: NavItem[] }[] = [
   {
     label: "Gestão",
     items: [
+      { href: "/admin/erp", label: "ERP e financeiro", icon: "orders", adminOnly: true },
       { href: "/admin/tables", label: "Mesas", icon: "tables" },
       { href: "/admin/customers", label: "Clientes", icon: "customers" },
       { href: "/admin/team", label: "Funcionários", icon: "team", adminOnly: true },

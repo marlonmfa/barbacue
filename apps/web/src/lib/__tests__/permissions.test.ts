@@ -60,3 +60,13 @@ test("Windows installer page and direct download are administrator-only", () => 
     }
   }
 });
+
+test("WhatsApp console and its API are administrator-only", () => {
+  for (const path of ["/whatsapp", "/whatsapp/", "/api/admin/whatsapp/pair", "/api/admin/whatsapp/messages", "/admin/whatsapp"]) {
+    assert.equal(canAccessPath({ role: "admin", permissions: [] }, path), true, `admin: ${path}`);
+    for (const role of ["manager", "cashier", "kitchen", "waiter", "driver", "employee"] as const) {
+      assert.equal(canAccessPath({ role, permissions: PERMISSIONS.map(p => p.id) }, path), false, `${role}: ${path}`);
+    }
+  }
+  assert.equal(canAccessPath({ role: "manager" }, "/teste_pedido"), true);
+});

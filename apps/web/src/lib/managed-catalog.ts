@@ -1,3 +1,4 @@
+import { generatedBrandImage } from "@/lib/generated-brand-images";
 import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { brandCatalogProducts } from "@/db/schema";
@@ -60,7 +61,7 @@ export async function getManagedBrandStorefront(slug: BrandSlug): Promise<BrandS
         description: row.description ?? "",
         priceCents: row.priceCents,
         originalPriceCents: row.originalPriceCents,
-        imageUrl: row.imageUrl,
+        imageUrl: row.imageUrl || generatedBrandImage(slug, row.externalId, row.name),
         category: row.category,
         ifoodUrl: row.ifoodUrl || fallback.ifoodUrl,
       })),

@@ -1,0 +1,751 @@
+Hostname: MARLONDELL   Usuario SSH: barbacue   Logado no console: MARLONDELL\Barbacue
+SO: Microsoft Windows 11 Home 10.0.26200   Fabricante/Modelo: Dell Inc. XPS 15 7590
+Ligado desde: 10/07/2026 10:35:35   RAM: 15.7 GB
+Descricao do PC: 
+Perfis em C:\Users: Barbacue, defaultuser100000, Public, TEMP, TEMP.Font Driver Host, TEMP.Font Driver Host.000, TEMP.Font Driver Host.001, TEMP.Font Driver Host.002, TEMP.Font Driver Host.003, TEMP.Font Driver Host.004, TEMP.Font Driver Host.005, TEMP.Font Driver Host.006, UMFD-0, UMFD-0.Font Driver Host, UMFD-0.Font Driver Host.000, UMFD-0.Font Driver Host.001, UMFD-0.Font Driver Host.002, UMFD-0.Font Driver Host.003, UMFD-0.Font Driver Host.004, UMFD-0.Font Driver Host.005, UMFD-0.Font Driver Host.006
+Disco C: livre 152.6 / 459.8 GB
+IP 54.232.189.113/32  (Topaz Loopback)
+IP 10.66.0.28/24  (vpncog-mesh)
+IP 192.168.1.8/24  (Wi-Fi)
+Gateway 192.168.1.1 via Wi-Fi
+Estado                  : Conectado
+SSID                   : BARBACUE_5G
+Sinal                 : 99%
+Perfis Wi-Fi salvos: BARBACUE | BARBACUE_5G | Barbacue | Barbacue 5G | OnePlus 6 | DM Reconstrucao Financeira | AP_103_5G | AP_103_2.4G | SAM_5G | iPhone de Carol | iPhone de Claudio | Barbacue 2.4G | HUAWEI-2.4G-8CEa | Mi Phone | GNET_BARBACUE | FAMILIA-2.4G | Galaxy J5706C | FAMILIA-5G | ESPAÇO-HANGAR33 | NAXI_DAVI_2G | VIVOFIBRA-79B1 | MarlonS22 | Pixel_1218 | Alcantara_Quartos5G | Alcantara_Quartos | Pixel | Zeli_PalmasNet | Alcantara5G | Alcantara | Ademir_Quartos_5G | Ademir_Quartos | Multilaser_6D6BC5_5G | Ademir | dormitorios | Unifique Paulo 2.4 | casa 2g | Ademir5G | OEM-PC_Network | homewifi_494 | DLINK | hhonors | Brasil | INVITADOS HFR | MarciaWifi5 | MarciaWifi | 8C79C4-TS3100series
+7-Zip 19.00 (x64) | 19.00 | Igor Pavlov | 
+Adobe Acrobat (64-bit) | 26.002.21931 | Adobe | 20260918
+Among Us |  | Innersloth | 
+AnotaAIResponde 3.0.3 | 3.0.3 | Anota AI | 
+AnotaAIResponde 3.0.7 | 3.0.7 | Anota AI | 
+AnyDesk | ad 7.0.16 | AnyDesk Software GmbH | 
+Aplicativo Itaú | 1.0.202 | Banco Itaú | 20260707
+Área de trabalho remota do Google Chrome | 1.0 | Google\Chrome | 20221203
+Audacity 3.1.2 | 3.1.2 | Audacity Team | 20211204
+AutoScreenRecorder 3.2 Pro | 3.2.383 | Wisdom Software Inc. | 20200722
+Avast Free Antivirus | 26.9.11171.3829 | Gen Digital Inc. | 
+BS.Player FREE | 2.75.1089 | AB Team, d.o.o. | 
+Catan Universe |  | Exozet | 
+Chrome Remote Desktop Host | 154.0.8037.40 | Google LLC | 20260921
+Copilot | 154.0.4258.62 | Microsoft Corporation | 20261008
+Counter-Strike: Global Offensive |  | Valve | 
+Dell Digital Delivery Services | 5.6.3.0 | Dell Inc. | 20250912
+Dell Mobile Connect Drivers | 2.0.8401 | Screenovate Technologies Ltd. | 20200317
+Dell Power Manager Service | 3.8.0 | Dell Inc. | 20210518
+Dell SupportAssist | 5.2.1.2141 | Dell Inc. | 20260904
+Dell SupportAssist OS Recovery Plugin for Dell Update | 5.5.16.2 | Dell Inc. | 
+Dell SupportAssist Remediation | 5.5.15.2 | Dell Inc. | 
+Dell Update for Windows Universal | 5.3.0 | Dell Inc. | 20240506
+Dominion |  | Temple Gates Games | 
+DWAgent |  |  | 
+ELGIN Printer Driver v-1.6.3 versão v-1.6.3 | v-1.6.3 | ELGIN | 20230407
+ELGIN Printer Driver v1.8.2 | 1.8.2 |  | 20260723
+ExpressVPN | 9.2.0.58 | ExpressVPN | 
+Ferramentas de Build do Visual Studio 2022 | 17.14.37 | Microsoft Corporation | 20260725
+FiveM |  | Cfx.re | 
+Gestor de Pedidos 8.10.4 | 8.10.4 | iFood | 
+GIMP 2.10.18 | 2.10.18 | The GIMP Team | 20200525
+Git | 2.55.0.3 | The Git Development Community | 20260725
+Goodix Fingerprint Driver | 2.1.32.800 | Goodix, Inc. | 20210101
+Google Chrome | 154.0.8037.98 | Google LLC | 20261005
+Google Drive | 132.0.0.0 | Google LLC | 
+HP Enabling Services | 0.2.10 | HP Inc. | 20260717
+HP PSDr NTService Component | 11.8.0.0 | HP Inc. | 20260717
+Impressora GP iFood 0.1.0 | 0.1.0 | iFood | 
+Intel(R) Chipset Device Software | 10.1.17903.8106 | Intel(R) Corporation | 
+Intel(R) Dynamic Platform and Thermal Framework | 8.5.10103.7263 | Intel Corporation | 
+Intel(R) Management Engine Components | 2036.15.0.1835 | Intel Corporation | 
+Intel(R) Wireless Bluetooth(R) | 23.160.0.9 | Intel Corporation | 20250926
+Intelbras SIM Next 1.25.2 | 1.25.2 | Intelbras | 20250519
+Intelbras SIM Play 1.3.2 | 1.3.2 | Intelbras | 20241102
+IRPF2019 | 1.7 | Receita Federal do Brasil | 20211216
+IRPF2021 | 1.4 | Receita Federal do Brasil | 20210515
+Killer Drivers | 2.2.1460 | Rivet Networks | 20210101
+Killer Performance Driver Suite UWD | 2.3.1513 | Rivet Networks | 20210119
+Killer Wireless Driver UWD | 2.2.1454 | Rivet Networks | 20210101
+Mbox to Outlook Transfer | 5.5.0.0 | GlexSoft LLC | 
+Microsoft .NET Runtime - 5.0.17 (x64) | 5.0.17.31213 | Microsoft Corporation | 
+Microsoft .NET Runtime - 6.0.36 (x64) | 6.0.36.34214 | Microsoft Corporation | 
+Microsoft Edge | 154.0.4258.62 | Microsoft Corporation | 20261007
+Microsoft Office Professional Plus 2016 - en-us | 16.0.19127.20800 | Microsoft Corporation | 
+Microsoft OneDrive | 26.178.0913.0006 | Microsoft Corporation | 
+Microsoft Teams Meeting Add-in for Microsoft Office | 1.25.14205 | Microsoft | 20250617
+Microsoft Update Health Tools | 5.72.0.0 | Microsoft Corporation | 20231102
+Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.4148 | 9.0.30729.4148 | Microsoft Corporation | 20210309
+Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.6161 | 9.0.30729.6161 | Microsoft Corporation | 20200322
+Microsoft Visual C++ 2008 Redistributable - x86 9.0.30729.6161 | 9.0.30729.6161 | Microsoft Corporation | 20200322
+Microsoft Visual C++ 2010  x64 Redistributable - 10.0.40219 | 10.0.40219 | Microsoft Corporation | 20201115
+Microsoft Visual C++ 2010  x86 Redistributable - 10.0.40219 | 10.0.40219 | Microsoft Corporation | 20201115
+Microsoft Visual C++ 2012 Redistributable (x64) - 11.0.61030 | 11.0.61030.0 | Microsoft Corporation | 
+Microsoft Visual C++ 2012 Redistributable (x86) - 11.0.61030 | 11.0.61030.0 | Microsoft Corporation | 
+Microsoft Visual C++ 2013 Redistributable (x64) - 12.0.30501 | 12.0.30501.0 | Microsoft Corporation | 
+Microsoft Visual C++ 2013 Redistributable (x86) - 12.0.30501 | 12.0.30501.0 | Microsoft Corporation | 
+Microsoft Visual C++ 2015-2022 Redistributable (x64) - 14.44.35211 | 14.44.35211.0 | Microsoft Corporation | 
+Microsoft Visual C++ 2015-2022 Redistributable (x86) - 14.44.35211 | 14.44.35211.0 | Microsoft Corporation | 
+Microsoft Visual Studio Code (User) | 1.130.0 | Microsoft Corporation | 20260725
+Microsoft Visual Studio Installer | 4.8.60.55523 | Microsoft Corporation | 20210712
+Microsoft Windows Application Compatibility Fix Database |  |  | 
+Microsoft Windows Desktop Runtime - 6.0.36 (x64) | 6.0.36.34217 | Microsoft Corporation | 
+Microsoft Windows Desktop Runtime - 8.0.31 (x64) | 8.0.31.36421 | Microsoft Corporation | 
+Microsoft Windows Desktop Runtime 10.0.12 (x64) | 10.0.12.50000 | Microsoft Corporation | 20260909
+Mozilla Firefox (x64 en-US) | 112.0.2 | Mozilla | 
+Mozilla Maintenance Service | 91.4.0 | Mozilla | 
+Mozilla Thunderbird (x64 pt-BR) | 91.4.0 | Mozilla | 
+Nelogica ProfitPro | 5.0.1.48 | Nelogica | 
+Nelogica ProfitStarter | 5.0.1.87 | Nelogica | 
+Node.js | 24.18.0 | Node.js Foundation | 20260725
+Notepad++ (32-bit x86) | 7.8.5 | Notepad++ Team | 
+NVIDIA FrameView SDK 1.1.4923.29968894 | 1.1.4923.29968894 | NVIDIA Corporation | 20221201
+NVIDIA GeForce Experience 3.23.0.74 | 3.23.0.74 | NVIDIA Corporation | 20221201
+NVIDIA Graphics Driver 555.99 | 555.99 | NVIDIA Corporation | 20250130
+NVIDIA PhysX System Software 9.19.0218 | 9.19.0218 | NVIDIA Corporation | 20200317
+OBS Studio | 27.0.1 | OBS Project | 
+OpenOffice 4.1.7 | 4.17.9800 | Apache Software Foundation | 20200322
+Opera Stable 136.0.6008.80 | 136.0.6008.80 | Opera Software | 
+Perto Printer TEC 2.5 | 2.5 | Perto S/A | 20221203
+pgAdmin 4 version 8.11 | 8.11 | The pgAdmin Development Team | 20240904
+pgAdmin III 1.28 | 1.28 | The pgAdmin Development Team | 20240904
+POS Series Printer Driver version 11.3.0.1 | 11.3.0.1 |  | 20221130
+PostgreSQL 17  | 17.10-2 | PostgreSQL Global Development Group | 20260725
+POS-X Thermal Printer Uninstallation | 4.57 |  | 
+Python Launcher | 3.9.7483.0 | Python Software Foundation | 20210712
+RAV Endpoint Protection | 7.7.12 | Reason Cybersecurity Inc. | 
+Ravendawn versão 1.0.0 | 1.0.0 | Tavernlight Games | 20240121
+Realtek Audio Driver | 6.0.8940.1 | Realtek Semiconductor Corp. | 20210101
+Realtek USB Audio | 6.3.9600.2277 | Realtek Semiconductor Corp. | 20210518
+Ripple Desktop Wallet | 1.4.1 | Rippex | 20210712
+Skype version 8.72 | 8.72 | Skype Technologies S.A. | 20210607
+SmartFTP Client | 9.0.2759.0 | SmartSoft Ltd. | 20200523
+ST Microelectronics 3 Axis Digital Accelerometer Solution | 4.10.0093 | ST Microelectronics | 20200317
+SteamVR |  | Valve | 
+Tailscale | 1.102.2 | Tailscale Inc. | 20260812
+TeamViewer | 15.82.6 | TeamViewer | 
+Uniplus 6.9.81 | 6.9.81 | Intelidata | 
+USBPcap 1.5.4.0 | 1.5.4.0 | Tomasz Mon | 
+VLC media player | 3.0.10 | VideoLAN | 
+vs_CoreEditorFonts | 17.7.40001 | Microsoft Corporation | 20260725
+Wampserver64 3.2.0 | 3.2.0 | Dominique Ottello aka Otomatic | 20200518
+Warsaw 2.52.1.3 64 bits | 2.52.1.3 | Topaz | 20260707
+Web Companion | 7.0.2417.4248 | Lavasoft | 20200409
+WebAdvisor by McAfee | 4.1.2.126 | McAfee, LLC | 
+WebcamMax | 7.7.2.6.MultiLanguage |  | 
+Windows Live Upload Tool | 14.0.8014.1029 | Microsoft Corporation | 20200415
+Windows PC Health Check | 3.2.2110.14001 | Microsoft Corporation | 20211024
+Windows SDK AddOn | 10.1.0.0 | Microsoft Corporation | 20210712
+Windows Software Development Kit - Windows 10.0.26100.7705 | 10.1.26100.7705 | Microsoft Corporation | 
+WinRAR 6.11 (64-bit) | 6.11.0 | win.rar GmbH | 
+WireGuard | 1.1.1 | WireGuard LLC | 20261008
+WM-02 Wireless Gaming Mouse AP version 1.0.0.6 |  |  | 20210518
+Wondershare Helper Compact 2.6.0 | 2.6.0 | Wondershare | 20210309
+--- Apps da Microsoft Store (nao-Microsoft):
+WavesAudio.MaxxAudioProforDell2019 2.0.54.0
+DellInc.DellCinemaGuide 1.0.49.0
+ScreenovateTechnologies.DellMobileConnect 3.3.9809.0
+STMicroelectronicsMEMS.DellFreeFallDataProtection 1.0.27.0
+5A894077.McAfeeSecurity 2.1.68.0
+PortraitDisplays.DellCinemaColor 2.4.78.0
+WinRAR.ShellExtension 1.0.0.1
+DellInc.DellPowerManager 3.14.40.0
+DellInc.MyDell 2.2.6.0
+AppUp.ThunderboltControlCenter 1.0.37.0
+DellInc.DellUpdate 5.3.44.0
+DellInc.DellCustomerConnect 5.5.5.0
+E046963F.LenovoDisplayControlCenter 3.0.32161.0
+AppUp.IntelGraphicsExperience 1.100.5688.0
+RivetNetworks.KillerControlCenter 3.1624.1026.0
+AppUp.IntelOptaneMemoryandStorageManagement 18.1.1042.0
+Disney.37853FC22B2CE 2024.3.211.0
+PortraitDisplays.DellPremierColor 6.3.41.0
+DellInc.DellDigitalDelivery 5.6.3.0
+NVIDIACorp.NVIDIAControlPanel 8.1.969.0
+AdobeAcrobatReaderCoreApp 26.0.0.1
+DolbyLaboratories.DolbyVisionAccess 2.20503.802.0
+DellInc.DellSupportAssistforPCs 5.2.1.0
+AdobeAcrobatReaderCoreApp 26.0.0.1
+ChatDog.ChatRobot5.5-PoweredbyAIAgent 1.0.98.0
+AD2F1837.HPPrinterDriver 2605.1.4767.0
+AD2F1837.HPPrinterControl 166.2.1118.0
+DolbyLaboratories.DolbyAccess 3.27.12250.0
+Clipchamp.Clipchamp 4.6.10420.0
+SpotifyAB.SpotifyMusic 1.303.264.0
+OpenAI.Codex 26.928.4866.0
+AD2F1837.myHP 61.52637.14262.0
+--- Relevantes para restaurante/PDV:
+  * AnotaAIResponde 3.0.3 3.0.3  []
+  * AnotaAIResponde 3.0.7 3.0.7  []
+  * AnyDesk ad 7.0.16  ["C:\Program Files (x86)\AnyDesk"]
+  * ELGIN Printer Driver v-1.6.3 versão v-1.6.3 v-1.6.3  [C:\ELGIN\]
+  * ELGIN Printer Driver v1.8.2 1.8.2  [C:\ELGIN\]
+  * Gestor de Pedidos 8.10.4 8.10.4  []
+  * Impressora GP iFood 0.1.0 0.1.0  []
+  * Tailscale 1.102.2  []
+  * TeamViewer 15.82.6  [C:\Program Files\TeamViewer]
+  * WireGuard 1.1.1  []
+aswToolsSvc.exe              x1  sessao 0  C:\Program Files\Avast Software\Avast\aswToolsSvc.exe
+dwagsvc.exe                  x1  sessao 0  C:\Program Files\DWAgent\native\dwagsvc.exe
+Dell.TechHub.exe             x1  sessao 0  C:\Program Files\Dell\TechHub\Dell.TechHub.exe
+AnyDesk.exe                  x1  sessao 0  C:\Program Files (x86)\AnyDesk\AnyDesk.exe
+armsvc.exe                   x1  sessao 0  C:\Program Files (x86)\Common Files\Adobe\ARM\1.0\armsvc.exe
+OfficeClickToRun.exe         x1  sessao 0  C:\Program Files\Common Files\Microsoft Shared\ClickToRun\OfficeClickToRun.exe
+nssm.exe                     x1  sessao 0  C:\Program Files (x86)\ExpressVPN\bootstrap\amd64\nssm.exe
+HPAppPrintScanDoctorService.exe x1  sessao 0  C:\Program Files\HPAppPrintScanDoctor\HPAppPrintScanDoctorService.exe
+dwagent.exe                  x1  sessao 0  C:\Program Files\DWAgent\runtime\dwagent.exe
+HPPrintScanDoctorService.exe x1  sessao 0  C:\Program Files\HPPrintScanDoctor\HPPrintScanDoctorService.exe
+nvcontainer.exe              x2  sessao 0  C:\Program Files\NVIDIA Corporation\NvContainer\nvcontainer.exe
+expressvpnd.exe              x1  sessao 0  C:\Program Files (x86)\ExpressVPN\expressvpnd\expressvpnd.exe
+rsClientSvc.exe              x1  sessao 0  C:\Program Files\ReasonLabs\EPP\rsClientSvc.exe
+pg_ctl.exe                   x1  sessao 0  C:\UNIPLUS\pg\bin\pg_ctl.exe
+rsDNSResolver.exe            x1  sessao 0  C:\Program Files\ReasonLabs\DNS\rsDNSResolver.exe
+rsDNSSvc.exe                 x1  sessao 0  C:\Program Files\ReasonLabs\DNS\rsDNSSvc.exe
+rsEDRSvc.exe                 x1  sessao 0  C:\Program Files\ReasonLabs\EDR\rsEDRSvc.exe
+pg_ctl.exe                   x1  sessao 0  C:\Program Files\PostgreSQL\17\bin\pg_ctl.exe
+rsSyncSvc.exe                x1  sessao 0  C:\Program Files\ReasonLabs\Common\rsSyncSvc.exe
+rsVPNSvc.exe                 x1  sessao 0  C:\Program Files\ReasonLabs\VPN\rsVPNSvc.exe
+SIMNext.LocalRecording.exe   x1  sessao 0  C:\Program Files\Intelbras\SIMNext\Local Recording Service\SIMNext.LocalRecording.exe
+tailscaled.exe               x2  sessao 0  C:\Program Files\Tailscale\tailscaled.exe
+TeamViewer_Service.exe       x1  sessao 0  C:\Program Files\TeamViewer\TeamViewer_Service.exe
+Lavasoft.WCAssistant.WinService.exe x1  sessao 0  C:\Program Files (x86)\Lavasoft\Web Companion\Application\Lavasoft.WCAssistant.WinService.exe
+postgres.exe                 x6  sessao 0  C:\UNIPLUS\pg\bin\postgres.exe
+aswEngSrv.exe                x1  sessao 0  C:\Program Files\Avast Software\Avast\aswEngSrv.exe
+postgres.exe                 x7  sessao 0  C:\Program Files\PostgreSQL\17\bin\postgres.exe
+crashpad_handler.exe         x1  sessao 0  C:\Program Files\TeamViewer\crashpad_handler.exe
+codex-windows-sandbox-service.exe x1  sessao 0  C:\Program Files\WindowsApps\OpenAI.Codex_26.928.4866.0_x64__2p2nqsd0c76g0\app\resources\codex-windows-sandbox-service.exe
+Dell.TechHub.Instrumentation.SubAgent.exe x1  sessao 0  C:\Program Files\Dell\DTP\InstrumentationSubAgent\Dell.TechHub.Instrumentation.SubAgent.exe
+Dell.Update.SubAgent.exe     x1  sessao 0  C:\Program Files (x86)\Dell\UpdateService\DCF\Dell.Update.SubAgent.exe
+Dell.TechHub.DataManager.SubAgent.exe x1  sessao 0  C:\Program Files\Dell\DTP\DataManagerSubAgent\Dell.TechHub.DataManager.SubAgent.exe
+Dell.TechHub.Diagnostics.SubAgent.exe x1  sessao 0  C:\Program Files\Dell\DTP\DiagnosticsSubAgent\Dell.TechHub.Diagnostics.SubAgent.exe
+Dell.CoreServices.Client.exe x1  sessao 0  C:\Program Files\Dell\TechHub\Dell.CoreServices.Client.exe
+Dell.TechHub.Analytics.SubAgent.exe x1  sessao 0  C:\Program Files\Dell\DTP\AnalyticsSubAgent\Dell.TechHub.Analytics.SubAgent.exe
+Dell.D3.WinSvc.exe           x1  sessao 0  C:\Program Files (x86)\Dell Digital Delivery Services\Dell.D3.WinSvc.exe
+DellSupportAssistRemedationService.exe x1  sessao 0  C:\Program Files\Dell\SARemediation\agent\DellSupportAssistRemedationService.exe
+ServiceShell.exe             x1  sessao 0  C:\Program Files (x86)\Dell\UpdateService\ServiceShell.exe
+SupportAssistAgent.exe       x1  sessao 0  C:\Program Files\Dell\SupportAssistAgent\bin\SupportAssistAgent.exe
+servicehost.exe              x1  sessao 0  C:\Program Files\McAfee\WebAdvisor\ServiceHost.exe
+wireguard.exe                x1  sessao 0  C:\Program Files\WireGuard\wireguard.exe
+MicrosoftEdgeUpdate.exe      x2  sessao 0  C:\Program Files (x86)\Microsoft\EdgeUpdate\MicrosoftEdgeUpdate.exe
+DefenderSessionHelper.exe    x1  sessao 2  C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.26080.4-0\DefenderSessionHelper.exe
+HPPrinterHealthMonitor.exe   x1  sessao 2  C:\Program Files\HPAppPrintScanDoctor\HPPrinterHealthMonitor.exe
+uihost.exe                   x1  sessao 2  C:\Program Files\McAfee\WebAdvisor\UIHost.exe
+rsAppUI.exe                  x4  sessao 2  C:\Program Files\ReasonLabs\Common\Client\v1.6.0\rsAppUI.exe
+nvnodejslauncher.exe         x1  sessao 2  C:\Program Files (x86)\NVIDIA Corporation\NvNode\nvnodejslauncher.exe
+CrossDeviceService.exe       x1  sessao 2  C:\Program Files\WindowsApps\MicrosoftWindows.CrossDevice_1.26072.116.0_x64__cw5n1h2txyewy\CrossDeviceService.exe
+WidgetBoard.exe              x1  sessao 2  C:\Program Files\WindowsApps\MicrosoftWindows.Client.WebExperience_526.21100.40.0_x64__cw5n1h2txyewy\WidgetBoard.exe
+msedgewebview2.exe           x6  sessao 2  C:\Program Files (x86)\Microsoft\EdgeWebView\Application\154.0.4258.62\msedgewebview2.exe
+TabTip.exe                   x1  sessao 2  C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe
+WidgetService.exe            x1  sessao 2  C:\Program Files\WindowsApps\Microsoft.WidgetsPlatformRuntime_1.6.19.0_x64__8wekyb3d8bbwe\WidgetService\WidgetService.exe
+MicrosoftStartFeedProvider.exe x1  sessao 2  C:\Program Files\WindowsApps\Microsoft.StartExperiencesApp_1.380.2.0_x64__8wekyb3d8bbwe\MicrosoftStartFeedProvider\MicrosoftStartFeedProvider.exe
+SpotifyLauncher.exe          x1  sessao 2  C:\Program Files\WindowsApps\SpotifyAB.SpotifyMusic_1.303.264.0_x64__zpdnekdrzrea0\SpotifyLauncher.exe
+crashpad_handler.exe         x1  sessao 2  C:\Program Files\WindowsApps\SpotifyAB.SpotifyMusic_1.303.264.0_x64__zpdnekdrzrea0\crashpad_handler.exe
+NVIDIA Web Helper.exe        x1  sessao 2  C:\Program Files (x86)\NVIDIA Corporation\NvNode\NVIDIA Web Helper.exe
+rsHelper.exe                 x1  sessao 2  C:\Program Files\ReasonLabs\EPP\rsHelper.exe
+SupportAssistOsRecovery.exe  x1  sessao 0  C:\Program Files\Dell\SupportAssistAgent\bin\FrameworkAgents\SupportAssistOsRecovery.exe
+Dell.TechHub.Instrumentation.UserProcess.exe x1  sessao 2  C:\Program Files\Dell\DTP\InstrumentationSubAgent\Dell.TechHub.Instrumentation.UserProcess.exe
+PhoneExperienceHost.exe      x1  sessao 2  C:\Program Files\WindowsApps\Microsoft.YourPhone_1.26072.257.0_x64__8wekyb3d8bbwe\PhoneExperienceHost.exe
+core.exe                     x1  sessao 2  C:\Program Files\Topaz OFD\Warsaw\core.exe
+--- Janelas abertas:
+GoogleDriveFS | "C:\Program Files\Google\Drive File Stream\132.0.0.0\GoogleDriveFS.exe" --startup_mode | NT AUTHORITY\SYSTEM
+OneDriveSetup | C:\Windows\System32\OneDriveSetup.exe /thfirstsetup | NT AUTHORITY\LOCAL SERVICE
+GoogleDriveFS | "C:\Program Files\Google\Drive File Stream\132.0.0.0\GoogleDriveFS.exe" --startup_mode | NT AUTHORITY\LOCAL SERVICE
+OneDriveSetup | C:\Windows\System32\OneDriveSetup.exe /thfirstsetup | NT AUTHORITY\NETWORK SERVICE
+GoogleDriveFS | "C:\Program Files\Google\Drive File Stream\132.0.0.0\GoogleDriveFS.exe" --startup_mode | NT AUTHORITY\NETWORK SERVICE
+BACKUP | BACKUP.lnk | MARLONDELL\Barbacue
+OneDrive | "C:\Program Files\Microsoft OneDrive\OneDrive.exe" /background | MARLONDELL\Barbacue
+GoogleDriveFS | "C:\Program Files\Google\Drive File Stream\132.0.0.0\GoogleDriveFS.exe" --startup_mode | MARLONDELL\Barbacue
+electron.app.AnotaAIResponde | C:\Users\Barbacue\AppData\Local\Programs\AnotaAIResponde\AnotaAIResponde.exe | MARLONDELL\Barbacue
+Adobe Acrobat Synchronizer | "C:\Program Files\Adobe\Acrobat DC\Acrobat\AdobeCollabSync.exe" | MARLONDELL\Barbacue
+Opera Stable | "C:\Users\Barbacue\AppData\Local\Programs\Opera\opera.exe" --autostart | MARLONDELL\Barbacue
+Teams | "C:\Users\Barbacue\AppData\Local\Microsoft\WindowsApps\MSTeams_8wekyb3d8bbwe\ms-teams.exe" msteams:system-initiated | MARLONDELL\Barbacue
+MicrosoftEdgeAutoLaunch_0BC89D2E3CC8A8D7B4B419182B4D0A24 | "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --win-session-start | MARLONDELL\Barbacue
+MicrosoftEdgeAutoLaunch_763945D53103020F9A20CE9295CC0668 | "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --win-session-start | MARLONDELL\Barbacue
+MicrosoftEdgeAutoLaunch_620E13099C368FB91FD284B4D0FE06C0 | "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --win-session-start | MARLONDELL\Barbacue
+MicrosoftEdgeAutoLaunch_166E22DFC48B9BF1B52731EEB19C3A76 | "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --win-session-start | MARLONDELL\Barbacue
+MicrosoftEdgeAutoLaunch_462F4C65163CFC47527CCE93C0535685 | "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --win-session-start | MARLONDELL\Barbacue
+MicrosoftEdgeAutoLaunch_305A321EEE199D0B568D5658C6B7C53C | "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --win-session-start | MARLONDELL\Barbacue
+MicrosoftEdgeAutoLaunch_1071B6A94E4E188A6056BDB065346E22 | "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --win-session-start | MARLONDELL\Barbacue
+MicrosoftEdgeAutoLaunch_36271C42DE03E7292B9FE0F63CD15945 | "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --win-session-start | MARLONDELL\Barbacue
+MicrosoftEdgeAutoLaunch_AE080E2B5F3880638683774D4B0B2B52 | "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --win-session-start | MARLONDELL\Barbacue
+ifood.order.manager | C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe | MARLONDELL\Barbacue
+GoogleDriveFS | "C:\Program Files\Google\Drive File Stream\132.0.0.0\GoogleDriveFS.exe" --startup_mode | .DEFAULT
+AnyDesk | C:\PROGRA~2\AnyDesk\AnyDesk.exe  --control | Public
+Tailscale | C:\PROGRA~1\Tailscale\tailscale-ipn.exe  | Public
+SecurityHealth | %windir%\system32\SecurityHealthSystray.exe | Public
+RtkAudUService | "C:\WINDOWS\System32\DriverStore\FileRepository\realtekservice.inf_amd64_c607c18cb15933d8\RtkAudUService64.exe" -background | Public
+WavesSvc | "C:\WINDOWS\System32\DriverStore\FileRepository\wavesapo8de.inf_amd64_9384fc4d30af89c3\WavesSvc64.exe" -Jack | Public
+DellMobileConnectWelcome | "C:\Program Files\Dell\DellMobileConnectDrivers\DellMobileConnectWelcome.exe" | Public
+WM-02 Wireless Gaming Mouse AP | "C:\Program Files\WM-02 Wireless Gaming Mouse AP\WM-02 Wireless Gaming Mouse.exe" "Hide" | Public
+AvastUI.exe | "C:\Program Files\Avast Software\Avast\AvLaunch.exe" /gui | Public
+DWAgentMon | "C:\Program Files\DWAgent\native\dwaglnc.exe" systray | Public
+--- Servicos de terceiros em execucao:
+AdobeARMservice | Adobe Acrobat Update Service | Auto
+AnyDesk | AnyDesk Service | Auto
+aswbIDSAgent | aswbIDSAgent | Manual
+avast! Antivirus | Avast Antivirus | Auto
+avast! Tools | Avast Tools | Auto
+AvastWscReporter | AvastWscReporter | Auto
+ClickToRunSvc | Microsoft Office Click-to-Run Service | Auto
+CodexSandboxService.OpenAI.Codex | ChatGPT | Auto
+Dell Digital Delivery Services | Dell Digital Delivery Services | Auto
+Dell SupportAssist Remediation | Dell SupportAssist Remediation | Auto
+DellClientManagementService | Dell Client Management Service | Auto
+DellTechHub | Dell TechHub | Auto
+DWAgent | DWAgent | Auto
+edgeupdate | Microsoft Edge Update Service (edgeupdate) | Auto
+ExpressVPNService | ExpressVPN Service | Auto
+HPAppPrintScanDoctorService | HP App Print Scan Doctor Service | Auto
+HPPrintScanDoctorService | HP Print Scan Doctor Service | Auto
+McAfee WebAdvisor | McAfee WebAdvisor | Auto
+MDCoreSvc | Serviço Microsoft Defender Core | Auto
+NvContainerLocalSystem | NVIDIA LocalSystem Container | Auto
+postgresql-9.4-Intelidata | postgresql-9.4-Intelidata | Auto
+postgresql-x64-17 | postgresql-x64-17 - PostgreSQL Server 17 | Auto
+rsClientSvc | Reason Security EPP Client Service | Auto
+rsDNSResolver | Safer Web DNS Resolver | Auto
+rsDNSSvc | Safer Web Service | Auto
+rsEDRSvc | Reason Cybersecurity EDR Service | Auto
+rsEngineSvc | Reason Security Engine Service | Auto
+rsSyncSvc | Reason Security Sync Service | Auto
+rsVPNSvc | RAV VPN Service | Auto
+rsWSC | Reason WSC Service | Auto
+SIMNextLocalRecording | SIM Next Local Recording Service | Auto
+SupportAssistAgent | Dell SupportAssist | Auto
+Tailscale | Tailscale | Auto
+TeamViewer | TeamViewer | Auto
+WaaSMedicSvc | WaaSMedicSvc | Unknown
+WCAssistantService | WC Assistant | Auto
+WinDefend | Serviço Microsoft Defender Antivírus | Auto
+WireGuardTunnel$vpncog-mesh | WireGuard Tunnel: vpncog-mesh | Auto
+--- C:\Users\Barbacue\Desktop (38 itens; 40 mais recentes)
+  2026-10-07  Google Slides.lnk
+  2026-10-07  Google Sheets.lnk
+  2026-10-07  Google Docs.lnk
+  2026-07-25  Codex.lnk
+  2026-07-25  BarbaTudo\
+  2026-05-15  Uniplus.lnk
+  2025-11-04  IMG_0965.JPG
+  2025-09-26  6.png
+  2025-09-26  5.png
+  2025-09-26  7.png
+  2025-09-26  9.png
+  2025-09-26  8.png
+  2025-09-26  4.png
+  2025-09-26  12.png
+  2025-09-26  11.png
+  2025-09-26  10.png
+  2025-09-26  13.png
+  2025-09-26  3.png
+  2025-09-26  1.png
+  2025-09-26  2.png
+  2025-04-30  Arquivo Contabil\
+  2025-04-28  Barba\
+  2024-09-16  SendScriptWhatsApp-main\
+  2024-02-27  Microsoft Edge.lnk
+  2023-10-12  gta\
+  2023-04-12  Curri Giannn  Jaragua.pdf
+  2023-03-22  lista_de_cupons_23_03_2023-22_05_2023.pdf
+  2023-01-18  coxinha.jfif
+  2022-11-30  POS-80.lnk
+  2022-09-17  MATERIAIS PARA O BARBA - Copia.docx
+  2022-09-17  MATERIAIS PARA O BARBA.docx
+  2022-07-10  c9079d25d2278acd93cf9f7d53d38294.jpg
+  2022-06-27  Barbacue - Chrome.lnk
+  2022-05-28  Sweet Barba.jpg
+  2022-05-09  556943a4-19b2-4bdd-98b9-4944011fe095.jpg
+  2022-03-28  BACKUP.lnk
+  2020-06-16  ELGIN_i9_i7_Driver_v-1.6.3.exe
+--- C:\Users\Barbacue\Documents (24 itens; 40 mais recentes)
+  2026-09-05  Fax\
+  2026-09-05  Scanned Documents\
+  2026-08-18  WORD.docx
+  2026-07-25  chaton\
+  2026-07-25  Codex\
+  2026-07-23  driver_setup.log
+  2026-07-23  WindowsPowerShell\
+  2026-07-23  ROTAPRO_FILE
+  2025-07-25  pgadmin.log
+  2025-07-14  Cardápio chelas\
+  2025-03-06  BARBACUE_BURGUERIA_CNPJ_A1_2025_SENHA_1234_06032025152431388.pfx
+  2025-01-29  My Videos\
+  2025-01-29  My Music\
+  2025-01-29  My Pictures\
+  2024-08-05  nota raumak.pdf
+  2023-12-11  exportacao1702000681051.pdf
+  2023-10-12  Rockstar Games\
+  2023-05-24  Junior.xlsx
+  2022-12-05  teste.pdf
+  2022-10-02  steamvr\
+  2022-09-21  Dell\
+  2022-09-05  League of Legends\
+  2022-08-19  AD_Port
+--- C:\Users\Barbacue\Downloads (854 itens; 40 mais recentes)
+  2026-09-15  exportacao1789504498914.pdf
+  2026-09-05  CERTIFICADO_INTERNACIONAL_DE_VACINACAO_E_PROFILAXIA_-_FEBRE_AMARELA.pdf
+  2026-08-18  tangerina soda.jpg
+  2026-08-14  WhatsApp Image 2026-08-14 at 16.36.05.jpeg
+  2026-08-13  exportação 07.pdf
+  2026-08-13  exportacao1786654139159.pdf
+  2026-08-13  exportacao1786653856179 mes 07.pdf
+  2026-08-11  stories (2).jpg
+  2026-08-11  stories (1).jpg
+  2026-08-11  feed (2).jpg
+  2026-08-11  feed (1).jpg
+  2026-08-11  stories.jpg
+  2026-08-11  feed.jpg
+  2026-08-03  coca original ks.jpg
+  2026-08-03  coca zero ks.jpg
+  2026-08-03  coca ks.webp
+  2026-07-25  rustdesk-1.4.9-x86_64 (1).exe
+  2026-07-25  rustdesk-1.4.9-x86_64.exe
+  2026-07-25  ChatGPT Installer (1).exe
+  2026-07-25  VSCodeUserSetup-x64-1.130.0.exe
+  2026-07-25  VisualStudioSetup.exe
+  2026-07-25  Microsoft.Services.Store.winmd
+  2026-07-25  ChatGPT Installer.exe
+  2026-07-23  1784843052994.pdf
+  2026-07-23  WhatsApp Image 2026-07-23 at 18.22.04.jpeg
+  2026-07-23  driver-elgin-i7-i8-e-i9-windows-e-linux (1).zip
+  2026-07-23  RotaPro_Setup.exe
+  2026-07-17  Calcular frete com desconto para lojas virtuais  Melhor Envio.pdf
+  2026-07-17  Brooklyn-Bridge-NY-2-1024x640.jpg
+  2026-07-07  aplicativoitau (3).msi
+  2026-07-07  Instalação do Guardião Itaú 30 horas.log
+  2026-07-07  DiagnosticoItau.exe
+  2026-07-07  aplicativoitau (2).msi
+  2026-07-07  WhatsApp Image 2026-07-07 at 21.06.32.jpeg
+  2026-07-07  WhatsApp Image 2026-07-07 at 21.05.18.jpeg
+  2026-06-10  cuba libre.jpg
+  2026-06-10  57431f46ccf8073cfdd5ad6b1edf1e78.jpg
+  2026-06-10  vicente.txt
+  2026-05-20  SIMNext-1-25-4.zip
+  2026-05-15  dwagent.exe
+--- C:\Users\defaultuser100000\Documents (3 itens; 40 mais recentes)
+  2025-01-29  My Videos\
+  2025-01-29  My Pictures\
+  2025-01-29  My Music\
+--- C:\Users\Public\Desktop (12 itens; 40 mais recentes)
+  2026-10-07  Microsoft Edge.lnk
+  2026-09-18  Adobe Acrobat.lnk
+  2026-03-17  TeamViewer.lnk
+  2025-10-16  Avast Free Antivirus.lnk
+  2025-09-15  Gestor de Pedidos.lnk
+  2025-05-19  Intelbras Media Player.lnk
+  2025-05-19  Intelbras SIM Next.lnk
+  2024-11-02  Intelbras SIM Play.lnk
+  2024-07-10  CAIXA.lnk
+  2024-03-03  AnotaAIResponde.lnk
+  2022-03-28  AnyDesk.lnk
+--- C:\Users\Public\Documents (6 itens; 40 mais recentes)
+  2021-03-09  Wondershare\
+  2020-04-15  microsoft\
+  2020-03-23  My Pictures\
+  2020-03-23  My Videos\
+  2020-03-23  My Music\
+--- Area de Trabalho publica:
+  Adobe Acrobat.lnk
+  AnotaAIResponde.lnk
+  AnyDesk.lnk
+  Avast Free Antivirus.lnk
+  CAIXA.lnk
+  desktop.ini
+  Gestor de Pedidos.lnk
+  Intelbras Media Player.lnk
+  Intelbras SIM Next.lnk
+  Intelbras SIM Play.lnk
+  Microsoft Edge.lnk
+  TeamViewer.lnk
+--- Atalhos (.lnk) e destinos:
+  Adobe Acrobat.lnk -> C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe 
+  AnotaAIResponde.lnk -> C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe 
+  AnyDesk.lnk -> C:\Program Files (x86)\AnyDesk\AnyDesk.exe 
+  Avast Free Antivirus.lnk -> C:\Program Files\Avast Software\Avast\AvastUI.exe 
+  CAIXA.lnk -> C:\UNIPLUS\Pdv Gourmet Starter.exe 
+  Gestor de Pedidos.lnk -> C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe 
+  Intelbras Media Player.lnk -> C:\Program Files\Intelbras\SIMNext\Media Player\Intelbras Media Player.exe 
+  Intelbras SIM Next.lnk -> C:\Program Files\Intelbras\SIMNext\SIM Next\SIMNext.exe 
+  Intelbras SIM Play.lnk -> C:\Program Files\Intelbras\SIMPlay\SimPlay.exe 
+  Microsoft Edge.lnk -> C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe 
+  TeamViewer.lnk -> C:\Program Files\TeamViewer\TeamViewer.exe 
+  BACKUP.lnk -> C:\UNIPLUS\Yoda.exe 
+  Barbacue - Chrome.lnk -> C:\Program Files (x86)\Google\Chrome\Application\chrome.exe --profile-directory="Default"
+  Codex.lnk -> C:\Users\Barbacue\AppData\Local\OpenAI\Codex\bin\69066b736e1e17a4\codex.exe 
+  Google Docs.lnk -> C:\Program Files\Google\Drive File Stream\launch.bat -open_gdocs_root
+  Google Sheets.lnk -> C:\Program Files\Google\Drive File Stream\launch.bat -open_gsheets_root
+  Google Slides.lnk -> C:\Program Files\Google\Drive File Stream\launch.bat -open_gslides_root
+  Microsoft Edge.lnk -> C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe 
+  POS-80.lnk -> C:\POS Printer Driver V11.3.0.1\PrinterTestDemo.exe 
+  Uniplus.lnk -> C:\UNIPLUS\Uniplus.exe 
+  Google Docs.lnk -> C:\Program Files\Google\Drive File Stream\launch.bat -open_gdocs_root
+  Google Sheets.lnk -> C:\Program Files\Google\Drive File Stream\launch.bat -open_gsheets_root
+  Google Slides.lnk -> C:\Program Files\Google\Drive File Stream\launch.bat -open_gslides_root
+  Google Docs.lnk -> C:\Program Files\Google\Drive File Stream\launch.bat -open_gdocs_root
+  Google Sheets.lnk -> C:\Program Files\Google\Drive File Stream\launch.bat -open_gsheets_root
+  Google Slides.lnk -> C:\Program Files\Google\Drive File Stream\launch.bat -open_gslides_root
+  Google Docs.lnk -> C:\Program Files\Google\Drive File Stream\launch.bat -open_gdocs_root
+  Google Sheets.lnk -> C:\Program Files\Google\Drive File Stream\launch.bat -open_gsheets_root
+  Google Slides.lnk -> C:\Program Files\Google\Drive File Stream\launch.bat -open_gslides_root
+  Adobe Acrobat.lnk -> C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe 
+  AnotaAIResponde.lnk -> C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe 
+  AnyDesk.lnk -> C:\Program Files (x86)\AnyDesk\AnyDesk.exe 
+  Avast Free Antivirus.lnk -> C:\Program Files\Avast Software\Avast\AvastUI.exe 
+  CAIXA.lnk -> C:\UNIPLUS\Pdv Gourmet Starter.exe 
+  Gestor de Pedidos.lnk -> C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe 
+  Intelbras Media Player.lnk -> C:\Program Files\Intelbras\SIMNext\Media Player\Intelbras Media Player.exe 
+  Intelbras SIM Next.lnk -> C:\Program Files\Intelbras\SIMNext\SIM Next\SIMNext.exe 
+  Intelbras SIM Play.lnk -> C:\Program Files\Intelbras\SIMPlay\SimPlay.exe 
+  Microsoft Edge.lnk -> C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe 
+  TeamViewer.lnk -> C:\Program Files\TeamViewer\TeamViewer.exe 
+  Adobe Acrobat.lnk -> C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe 
+  AnotaAIResponde.lnk -> C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe 
+  AnyDesk.lnk -> C:\Program Files (x86)\AnyDesk\AnyDesk.exe 
+  Avast Free Antivirus.lnk -> C:\Program Files\Avast Software\Avast\AvastUI.exe 
+  CAIXA.lnk -> C:\UNIPLUS\Pdv Gourmet Starter.exe 
+  Gestor de Pedidos.lnk -> C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe 
+  Intelbras Media Player.lnk -> C:\Program Files\Intelbras\SIMNext\Media Player\Intelbras Media Player.exe 
+  Intelbras SIM Next.lnk -> C:\Program Files\Intelbras\SIMNext\SIM Next\SIMNext.exe 
+  Intelbras SIM Play.lnk -> C:\Program Files\Intelbras\SIMPlay\SimPlay.exe 
+  Microsoft Edge.lnk -> C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe 
+  TeamViewer.lnk -> C:\Program Files\TeamViewer\TeamViewer.exe 
+  AnyDesk.lnk -> C:\Program Files (x86)\AnyDesk\AnyDesk.exe  --control
+  Tailscale.lnk -> C:\Program Files\Tailscale\tailscale-ipn.exe 
+  BACKUP.lnk -> C:\UNIPLUS\Yoda.exe 
+--- Pastas na raiz de C:
+  00 - BKP GOURMET SE
+  00 - BRVATECH
+  00-XML
+  admin
+  Apps
+  Arquivos de Programas RFB
+  Brasfoot22-23
+  catalog
+  Dell
+  Drivers
+  ELGIN
+  export
+  image
+  inetpub
+  install
+  Intel
+  MinGW
+  PertoPrinterTEC
+  POS Printer Driver V11.3.0.1
+  Program Files
+  Program Files (x86)
+  Python39
+  system
+  System Repair
+  Temp
+  THERMAL Receipt Printer 4.X
+  UNIPLUS
+  UNIPLUS-new
+  Users
+  wamp64
+--- Programas:
+  Gestor de Pedidos 8.10.4 8.10.4 []
+  Impressora GP iFood 0.1.0 0.1.0 []
+--- Apps Store:
+--- Processos:
+--- Pastas:
+  C:\Program Files (x86)\Gestor de Pedidos  (modif. 10/08/2026 16:59:55)
+--- Atalhos/abas do navegador apontando para iFood:
+  [nome do PC / usuarios]
+     MARLONDELL barbacue MARLONDELL\Barbacue Barbacue defaultuser100000 Public TEMP TEMP.Font Driver Host TEMP.Font Driver
+  [perfis Wi-Fi]
+     Nenhum> Perfis do usuário ------------- Todos os Perfis de Usuários: BARBACUE Todos os Perfis de Usuários: BARBACUE_5G Todos os Perfis de Usuários:
+     Usuários: Mi Phone Todos os Perfis de Usuários: GNET_BARBACUE Todos os Perfis de Usuários: FAMILIA-2.4G Todos os Perfis de Usuários
+     Barbacue Todos os Perfis de Usuários: Barbacue 5G Todos os Perfis de Usuários: OnePlus 6 Todos os Perfis de Usuários
+     os Perfis de Usuários: iPhone de Claudio Todos os Perfis de Usuários: Barbacue 2.4G Todos os Perfis de Usuários: HUAWEI-2.4G-8CEa Todos os Perfis de
+  [nomes de arquivos]
+     steamvr input WindowsPowerShell Scripts InstalledScriptInfos AD_Port BARBACUE_BURGUERIA_CNPJ_A1_2025_SENHA_1234_06032025152431388.pfx desktop.ini d
+     7.png 5a0684334b0666910f0fd493fd4df568.avif CARTÃO CNPJ - VICENTE.pdf Chelas Cocina Mexicana - Anota AI.pdf Comp Pamela.jpeg Comprovante.pdf DALL
+     nionoo.jpg Planilha Gabi.txt Reuniao-Lula-e-sindicatos-3.webp STORIES CHELAS.jpg WhatsApp Image 2023-02-16 at 18.13.02 (1).jpeg WhatsApp Image 202
+     n pulled salada sweet barba tex mex veg waffles _MG_0316.jpg Cardápio chelas burrigo veggie.jpeg burrito burguer.jpeg burrito carne panela.jpeg bu
+     c5254ece804a59ec16775959356005-1024-1024.jpeg 002_Ito_Studio_Proposta_Barbacue.pdf 00_Barbacue_Embalagem_Papel_Kraft_Mockup_Lacre.png 00_Barbacue_Lo
+     eos desktop.ini Wondershare filmora_64bit_full846.exe desktop.ini 17. Barbacue IMG_9606.jpg IMG_9609.jpg IMG_9611.jpg IMG_9613.jpg IMG_9616.jpg IMG_
+     a4-19b2-4bdd-98b9-4944011fe095.jpg 6.png 7.png 8.png 9.png BACKUP.lnk Barbacue - Chrome.lnk c9079d25d2278acd93cf9f7d53d38294.jpg Codex.lnk coxinha.j
+     esktop.ini Wondershare filmora_64bit_full846.exe desktop.ini Cardápio chelas burrigo veggie.jpeg burrito burguer.jpeg burrito carne panela.jpeg bu
+--- Navegadores (historico/favoritos):
+  [History C:\Users\Barbacue\AppData\Local\Google\Chrome\User Data\Default]
+     4 # g http://accounts.google.com/signin/chrome/sync a + " U http://barbacue.hirableaiagents.com/ a % ! I http://developer.ifood.com.br/ a ! > C
+     e.com/ %2 g http://accounts.google.com/signin/chrome/sync #) U http://barbacue.hirableaiagents.com/ "# I http://developer.ifood.com.br/ ! = http://
+     a Oi https://mail.google.com/mail/u/0/Inbox (16,021) - thebarbacue@gmail.com - GmailP / U aA https://portal.ifood.com.br/rev
+     sers/Barbacue/Downloads/CERTIFICADO_INTERNACIONAL_DE_VACINACAO_E_PROFILAXIA_-_FEBRE
+     https://www.google.com/maps/dir/Barbacue+-+Burguers+na+Brasa,+R.+Expedicion%C3%A1rio+Cabo+Harry+Hadlich,+865+-
+     Xf [i https://mail.google.com/mail/u/0/#inboxInbox (16,021) - thebarbacue@gmail.com - GmailM / ^ U/ OS https://portal.ifood.com.br/login
+     =0&classe=3&is_loyalty=0&search_id=2300059692 e R # file:///C:/Users/Barbacue/AppData/Local/Temp/uviewer6434837221510813264.pdf g6 4 i file:///C:/
+     UNIPLUS/exportacao1789504498914.pdf g5R # file:///C:/Users/Barbacue/AppData/Local/Temp/uviewer7330791387910702002.pdf g4r c file:///C:/U
+  URLs iFood em C:\Users\Barbacue\AppData\Local\Google\Chrome\User Data\Default:
+     http://developer.ifood.com.br/
+     http://developer.ifood.com.br/iFood
+     http://partners-auth.ifood.com.br/realms/partners/protocol/openid-connect/auth
+     http://portal.ifood.com.br/login/
+     http://portal.ifood.com.br/login0
+     http://portal.ifood.com.br/logout.%0
+     http://portal.ifood.com.br/logout6$
+     http://portal.ifood.com.br/menu
+     http://portal.ifood.com.br/menu/list
+     http://portal.ifood.com.br/menu/list=
+     http://portal.ifood.com.br/merchant-delivery-core-portal-experience
+     http://portal.ifood.com.br/partners/sso/callback
+     http://portal.ifood.com.br/reputation
+     http://portal.ifood.com.br/revenue
+     http://portal.ifood.com.br/revenueW
+  [Preferences C:\Users\Barbacue\AppData\Local\Google\Chrome\User Data\Default]
+     tom_links":{"initialized":true,"list":[{"isMostVisited":true,"title":"Barbacue Planilhas","url":"https://docs.google.com/spreadsheets/d/1qj4pnEGIQ95
+     br,*":{"last_modified":"13405391543361109","setting":{}},"https://[*.]barbacue.com.br,*":{"last_modified":"13362535815293994","setting":{}},"https:/
+     ilities/he4tolldmfya":0},"accountcapability_overrides":{},"email":"thebarbacue@gmail.com","full_name":"Barbacue Carnes na Brasa","gaia":"11366571562
+     6047479332","given_name":"Barbacue","hd":"NO_HOSTED_DOMAIN","is_supervised_child":0,"is_under_advanced_p
+     ]chelas.com.br,*":{"last_modified":"13342581725502420","setting":{}},"http://
+     //*,*":{"last_modified":"13431127739480416","setting":{}},"http://[*.]barbacue.com.br,*":{"last_modified":"13362877457339896","setting":{}},"http://
+     [*.]chelas.com,*":{"last_modified":"13342581729036371","setting":{}},"http://[*.
+     setting":{"default-id":{"display-name":"Downloads","path":"C:\\Users\\Barbacue\\Downloads","path-type":0,"timestamp":"13391574866028952"}}},"https:/
+  [History C:\Users\Barbacue\AppData\Local\Google\Chrome\User Data\Profile 1]
+     e&ie=UTF-8canva - Pesquisa Google / O Jz Q file:///C:/Users/Barbacue/Downloads/LOGO%20BARBACUE%20-%20HOT%20DOG.pdfLogo BARBACUE Hot Dog &
+     .pngC:\Users\Barbacue\Downloads\Green Playful Illustrative Food Burritos Instagram Post (2)
+     9 ! [ QG 6ebc3faa-c7b9-4096-9b08-ae389a771f88C:\Users\Barbacue\Downloads\Green Playful Illustrative Food Burritos Instagram Post (2)
+     9 ! [ QG 1b6a8f6b-8a06-4548-be8e-f83358fb7f9aC:\Users\Barbacue\Downloads\Green Playful Illustrative Food Burritos Instagram Post.png
+     C:\Users\Barbacue\Downloads\Green Playful Illustrative Food Burritos Instagram Post.png
+     edium%3Dam_ep%26utm_campaign%3Dbento_mvp&hl=en M file:///C:/Users/Barbacue/Downloads/LOGO%20BARBACUE%20-%20HOT%20DOG.pdf
+     .pngC:\Users\Barbacue\Downloads\Green Playful Illustrative Food Burritos Instagram Post (1)
+     9 ! [ QG 520a5c7c-693f-4f46-883f-7202c8d0228dC:\Users\Barbacue\Downloads\Green Playful Illustrative Food Burritos Instagram Post (1)
+  [Preferences C:\Users\Barbacue\AppData\Local\Google\Chrome\User Data\Profile 1]
+     _type\":\"application/pdf\"}]},\"version\":\"1.0\"},\"displayName\":\"Barbacue\",\"extensionId\":\"\",\"extensionName\":\"\",\"icon\":\"print-previe
+     time":"13358892734939092"},"selectfile":{"last_directory":"C:\\Users\\Barbacue\\Pictures"},"sessions":{"event_log":[{"did_schedule_command":true,"fi
+     setting":{"default-id":{"display-name":"Downloads","path":"C:\\Users\\Barbacue\\Downloads","path-type":0,"timestamp":"13391560471903784"}}}},"file_s
+     ",\"extensionName\":\"\",\"icon\":\"cr:insert-drive-file\"},{\"id\":\"Barbacue\",\"origin\":\"local\",\"capabilities\":{\"printer\":{\"collate\":{},
+     _to_data_migration":true},"savefile":{"default_directory":"C:\\Users\\Barbacue\\Pictures"},"segmentation_platform":{"client_result_prefs":"CmAKEXJlc
+  [Preferences C:\Users\Barbacue\AppData\Local\Google\Chrome\User Data\Profile 4]
+     time":"13361142119367118"},"selectfile":{"last_directory":"C:\\Users\\Barbacue\\OneDrive"},"sessions":{"event_log":[{"did_schedule_command":true,"fi
+  [History C:\Users\Barbacue\AppData\Local\Google\Chrome\User Data\Profile 7]
+     bd9982e6aeff&authuser=2&rlz=1C1CHBF_enBR998BR998&cs=0&output=search&q=Chelas&ludocid=1451512443256459115&lsig=AB86z5WRvOVlgtXDBUWx3x2BxxLd&sa=X&ve
+     ; ! ; 0ae2e8d1-69b0-47c1-bbe7-3129c1acec7aC:\Users\Barbacue\Downloads\GOOGLE AVALIAÇÂO CHELAS.pngC:\Users\Barbacue\Downloads\GOOG
+     LE AVALIAÇÂO CHELAS.png / VElr " " / V https://www.google.com/
+  [Preferences C:\Users\Barbacue\AppData\Local\Google\Chrome\User Data\Profile 7]
+     _to_data_migration":true},"savefile":{"default_directory":"C:\\Users\\Barbacue\\Downloads"},"segmentation_platform":{"client_result_prefs":"CmQKC3Nl
+     haytqlldmfya":1,"accountcapabilities/he4tolldmfya":0},"email":"contatochelas@gmail.com","full_name":"Cláudio Kusz Júnior","gaia":"1034631140587060
+  [History C:\Users\Barbacue\AppData\Local\Google\Chrome\User Data\Profile 9]
+     G ! GS ==5e6fd7fd-39d9-4ac3-864b-ad6d6796a0f6C:\Users\Barbacue\Downloads\VisualStudioSetup.exeC:\Users\Barbacue\Downloads\VisualStud
+     I !uI G==5b3fbb13-3ebf-40e5-95e8-0bb67d1d7009C:\Users\Barbacue\Downloads\VSCodeUserSetup-x64-1.130.0.exeC:\Users\Barbacue\Downloads\
+     { !{ 3G==76fa1890-1dff-49a6-b1a0-470127ab0fd3C:\Users\Barbacue\Downloads\rustdesk-1.4.9-x86_64 (1).exeC:\Users\Barbacue\Downloads\ru
+     5 http://rustdesk.com/ J: s http://pedido.anota.ai/loja/chelas-cozinha-mexicana 3 e http://pedido.anota.ai/loja/lanches-do-barba
+     ! ' ==ad863dd0-0ee5-449f-b2dd-0c439b3282b7C:\Users\Barbacue\Downloads\ChatGPT Installer (1).exeC:\Users\Barbacue\Downloads\ChatGP
+     w { !{ 3G==ec89a1f2-1b45-4c8d-a2e0-92caf0b5315aC:\Users\Barbacue\Downloads\rustdesk-1.4.9-x86_64.exeC:\Users\Barbacue\Downloads\rustde
+     5 http://rustdesk.com/ 7 s http://pedido.anota.ai/loja/chelas-cozinha-mexicana 0 e http://pedido.anota.ai/loja/lanches-do-barba =
+     ets/d/12yyKLB5aaEkWpykEYUjBURKTw_UsNVdnYFTFRkEQ0qE/edit#gid=1910621145Barbacue Planilhas - Inicio Novembro 2023 - Google Sheets / CHn L 6 ]5 ht
+  URLs iFood em C:\Users\Barbacue\AppData\Local\Google\Chrome\User Data\Profile 9:
+     http://developer.ifood.com.br/
+     http://developer.ifood.com.br/en-US/docs/guides/modules/authentication/intro
+     http://developer.ifood.com.br/iFood
+     https://developer.ifood.com.br/
+     https://developer.ifood.com.br/)
+     https://developer.ifood.com.br/)`
+     https://developer.ifood.com.br/)https://developer.ifood.com.br/_8
+     https://developer.ifood.com.br/)https://developer.ifood.com.br/9_
+     https://developer.ifood.com.br/)iFood
+     https://developer.ifood.com.br/*�B
+     https://developer.ifood.com.br/1m
+     https://developer.ifood.com.br/3
+     https://developer.ifood.com.br/d0
+     https://developer.ifood.com.br/developer
+     https://developer.ifood.com.br/developerhttps://developer.ifood.com.br/,j
+  [Preferences C:\Users\Barbacue\AppData\Local\Google\Chrome\User Data\Profile 9]
+     _to_data_migration":true},"savefile":{"default_directory":"C:\\Users\\Barbacue\\Downloads"},"segmentation_platform":{"client_result_prefs":"ClIKDXNo
+  [History C:\Users\Barbacue\AppData\Local\Microsoft\Edge\User Data\Default]
+     ile:///C:/UNIPLUS/exportacao1789504990980.pdf JvR # file:///C:/Users/Barbacue/AppData/Local/Temp/uviewer6434837221510813264.pdf Ju https://123
+     4 ^ g http://accounts.google.com/signin/chrome/sync E/+ ] U http://barbacue.hirableaiagents.com/ E % \ I http://developer.ifood.com.br/ E [ ;
+     f-31tqyeKtQHiV9u3OE D $ I http://developer.ifood.com.br/ E * U http://barbacue.hirableaiagents.com/ D 4 i file:///C:/UNIPLUS/exportacao1789504498914
+     s / : `\ Ei https://mail.google.com/mailInbox (14,373) - thebarbacue@gmail.com - Gmail / q u A https://admin.anota.ai/main/g
+     gmail/ 2 g http://accounts.google.com/signin/chrome/sync ) U http://barbacue.hirableaiagents.com/ # I http://developer.ifood.com.br/ T ) http:/
+     G M V $ R # file:///C:/Users/Barbacue/AppData/Local/Temp/uviewer7330791387910702002.pdf Jsr c file:///C:/U
+     sers/Barbacue/Downloads/CERTIFICADO_INTERNACIONAL_DE_VACINACAO_E_PROFILAXIA_-_FEBRE
+     ^ I Oc https://mail.google.com/mail/u/0/Inbox (1) - contatochelas@gmail.com - GmailK; / q 2
+  URLs iFood em C:\Users\Barbacue\AppData\Local\Microsoft\Edge\User Data\Default:
+     http://developer.ifood.com.br/
+     http://developer.ifood.com.br/iFood
+     http://partners-auth.ifood.com.br/realms/partners/protocol/openid-connect/auth
+     http://portal.ifood.com.br/home
+     http://portal.ifood.com.br/login
+     http://portal.ifood.com.br/logout
+     http://portal.ifood.com.br/logout&
+     http://portal.ifood.com.br/menu
+     http://portal.ifood.com.br/menu/list
+     http://portal.ifood.com.br/menu/list)
+     http://portal.ifood.com.br/menuz
+     http://portal.ifood.com.br/merchant-delivery-core-portal-experience
+     http://portal.ifood.com.br/partners/sso/callback
+     http://portal.ifood.com.br/reputation
+     http://portal.ifood.com.br/revenue
+  [Preferences C:\Users\Barbacue\AppData\Local\Microsoft\Edge\User Data\Default]
+     ,-1.0],"segment_id":513}}},"selectfile":{"last_directory":"C:\\Users\\Barbacue\\Downloads"},"session_restore_prompt":{"ignored":false},"sessions":{"
+     d":0,"has_advance_consent":false},"chosen_chrome_profile":"C:\\Users\\Barbacue\\AppData\\Local\\Google\\Chrome\\User Data\\Default","chrome_uninstal
+     _to_data_migration":true},"savefile":{"default_directory":"C:\\Users\\Barbacue\\Downloads"},"secure_ip_bandwidth_last_visit":"2026-10-08 20:07:25.91
+     trigger":false,"import_extension_source_path_from_chrome":"C:\\Users\\Barbacue\\AppData\\Local\\Google\\Chrome\\User Data\\Default","import_extensio
+--- PONTUACAO: barbacue=5753  barbadog=0  chelas=51
+Spooler: Running
+Padrao: 
+--- OneNote for Windows 10
+    Driver: Microsoft Software Printer Driver | Porta: Microsoft.Office.OneNote_16001.14326.22594.0_x64__8wekyb3d8bbwe_microsoft.onenoteim_S-1-5-21-2662222737-3942706024-599724008-1006 | Status: Normal | Offline: False | Erro detectado: 0 | Compartilhada: False 
+    Fila: vazia
+--- OneNote (Desktop)
+    Driver: Send to Microsoft OneNote 16 Driver | Porta: nul: | Status: Normal | Offline: False | Erro detectado: 0 | Compartilhada: False 
+    Fila: vazia
+--- Microsoft XPS Document Writer
+    Driver: Microsoft XPS Document Writer v4 | Porta: PORTPROMPT: | Status: Normal | Offline: False | Erro detectado: 0 | Compartilhada: False 
+    Fila: vazia
+--- Microsoft Print to PDF
+    Driver: Microsoft Print To PDF | Porta: PORTPROMPT: | Status: Normal | Offline: False | Erro detectado: 0 | Compartilhada: False 
+    Fila: vazia
+--- HPE80E20 (HP Smart Tank 580-590 series)
+    Driver: Microsoft PWG Raster Class Driver | Porta: WSD-3ae7fcfc-f8ee-47ac-8639-f195547eb3c6 | Status: Offline | Offline: False | Erro detectado: 9 | Compartilhada: False 
+    Fila: vazia
+--- Fax
+    Driver: Microsoft Shared Fax Driver | Porta: SHRFAX: | Status: Normal | Offline: False | Erro detectado: 0 | Compartilhada: False 
+    Fila: vazia
+--- ELGIN i9(USB)
+    Driver: ELGIN i9(USB) | Porta: USB003 | Status: Normal | Offline: False | Erro detectado: 0 | Compartilhada: True ELGIN i9(USB) comandas
+    Fila: vazia
+    LOCAL (USB003) - ver dispositivos USB abaixo
+--- ELGIN i9 COMANDAS
+    Driver: ELGIN i9 FULL 2(USB) | Porta: USB003 | Status: Normal | Offline: False | Erro detectado: 0 | Compartilhada: True ELGIN i9 COMANDAS
+    Fila: vazia
+    LOCAL (USB003) - ver dispositivos USB abaixo
+--- Dispositivos de impressao detectados (PnP):
+  [OK] PrintQueue | Root Print Queue | SWD\PRINTENUM\PRINTQUEUES
+  [OK] System | Intel(R) Thermal Subsystem - A379 | PCI\VEN_8086&DEV_A379&SUBSYS_09051028&REV_10\3&11583659&0&90
+  [OK] System | ACPI Thermal Zone | ACPI\THERMALZONE\THM_
+  [OK] Printer | Microsoft PWG Raster Class Driver | SWD\PRINTENUM\WSD-3AE7FCFC-F8EE-47AC-8639-F195547EB3C6
+  [OK] Processor | Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz | ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_158_-_INTEL(R)_CORE(TM)_I7-9750H_CPU_@_2.60GHZ\_1
+  [OK] Processor | Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz | ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_158_-_INTEL(R)_CORE(TM)_I7-9750H_CPU_@_2.60GHZ\_2
+  [OK] Processor | Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz | ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_158_-_INTEL(R)_CORE(TM)_I7-9750H_CPU_@_2.60GHZ\_3
+  [OK] Processor | Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz | ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_158_-_INTEL(R)_CORE(TM)_I7-9750H_CPU_@_2.60GHZ\_4
+  [OK] Processor | Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz | ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_158_-_INTEL(R)_CORE(TM)_I7-9750H_CPU_@_2.60GHZ\_5
+  [OK] Processor | Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz | ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_158_-_INTEL(R)_CORE(TM)_I7-9750H_CPU_@_2.60GHZ\_6
+  [OK] Processor | Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz | ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_158_-_INTEL(R)_CORE(TM)_I7-9750H_CPU_@_2.60GHZ\_7
+  [OK] Processor | Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz | ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_158_-_INTEL(R)_CORE(TM)_I7-9750H_CPU_@_2.60GHZ\_8
+  [OK] Processor | Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz | ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_158_-_INTEL(R)_CORE(TM)_I7-9750H_CPU_@_2.60GHZ\_9
+  [OK] Processor | Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz | ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_158_-_INTEL(R)_CORE(TM)_I7-9750H_CPU_@_2.60GHZ\_A
+  [OK] Processor | Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz | ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_158_-_INTEL(R)_CORE(TM)_I7-9750H_CPU_@_2.60GHZ\_B
+  [OK] Processor | Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz | ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_158_-_INTEL(R)_CORE(TM)_I7-9750H_CPU_@_2.60GHZ\_C
+  [OK] Printer | ELGIN i9(USB) | USBPRINT\ELGINI9\6&25C6D831&1&USB003
+  [OK] USB | ELGIN i9 | USB\VID_20D1&PID_7008\88888888888888888888888888888888
+  [OK] PrintQueue | ELGIN i9(USB) | SWD\PRINTENUM\{C23B4720-C85F-4FA9-A159-26DBEEA2F9B0}
+  [OK] Biometric | Goodix fingerprint | USB\VID_27C6&PID_5395&MI_00\6&25DE4786&0&0000
+  [OK] PrintQueue | ELGIN i9 COMANDAS | SWD\PRINTENUM\{B2645B15-54DB-4512-8744-F2DB32E21859}
+  [OK] PrintQueue | HPE80E20 (HP Smart Tank 580-590 series) | SWD\PRINTENUM\{80C35007-9269-4AC1-9985-524131F266A4}
+--- Portas seriais:
+  COM13 Standard Serial over Bluetooth link OK
+--- Erros recentes do servico de impressao:
+  07/24/2026 14:17:10 [350] O documento  não pôde ser impresso e foi excluído porque o arquivo no spool está corrompido. O driver associado é: . Tente imprimir o documento novamente.
+  07/24/2026 14:14:26 [823] A impressora padrão foi alterada para ELGIN i9 COMANDAS. Consulte os dados do usuário do evento para obter informações de contexto.
+  07/24/2026 14:05:26 [823] A impressora padrão foi alterada para POS-80. Consulte os dados do usuário do evento para obter informações de contexto.
+  07/23/2026 15:10:24 [823] A impressora padrão foi alterada para ELGIN i9(USB). Consulte os dados do usuário do evento para obter informações de contexto.
+  07/23/2026 15:01:41 [823] A impressora padrão foi alterada para POS-80. Consulte os dados do usuário do evento para obter informações de contexto.
+  07/23/2026 15:01:41 [823] A impressora padrão foi alterada para POS-80. Consulte os dados do usuário do evento para obter informações de contexto.
+  07/17/2026 12:34:41 [823] A impressora padrão foi alterada para HP Smart Tank 580-590 series [unknown]. Consulte os dados do usuário do evento para obter informações de contexto.
+  06/26/2026 15:07:59 [823] A impressora padrão foi alterada para POS-80. Consulte os dados do usuário do evento para obter informações de contexto.
+  04/02/2026 17:21:23 [823] A impressora padrão foi alterada para ELGIN i9(USB). Consulte os dados do usuário do evento para obter informações de contexto.
+  07/12/2025 22:10:58 [372] O documento Print Document, pertencente a Barbacue, não pôde ser impresso na impressora IMPRESSORA. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+  07/12/2025 22:10:58 [372] O documento Print Document, pertencente a Barbacue, não pôde ser impresso na impressora IMPRESSORA. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+  07/12/2025 22:10:58 [372] O documento Print Document, pertencente a Barbacue, não pôde ser impresso na impressora IMPRESSORA. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+  07/12/2025 22:10:58 [372] O documento Print Document, pertencente a Barbacue, não pôde ser impresso na impressora IMPRESSORA. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+  01/30/2025 16:14:48 [215] Falha ao instalar driver de impressora Microsoft Print To PDF, código de erro 0x3, HRESULT 0x80070057. Consulte os dados do usuário para o evento para obter informações de contexto.
+  01/30/2025 16:14:48 [215] Falha ao instalar driver de impressora Microsoft XPS Document Writer v4, código de erro 0x3, HRESULT 0x80070057. Consulte os dados do usuário para o evento para obter informações de contexto.
+
+==================== FIM ====================

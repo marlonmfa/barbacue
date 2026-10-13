@@ -36,6 +36,7 @@ function MenuCard({ item }: { item: ScrapedMenuItem }) {
             <span>{item.category.slice(0, 2).toUpperCase()}</span>
           </div>
         )}
+        {item.imageUrl?.startsWith("/menu/brands-2026-09/") && <span className="brand-image-caption">Imagem ilustrativa</span>}
         {onSale && <span className="brand-promo">Oferta</span>}
       </div>
 

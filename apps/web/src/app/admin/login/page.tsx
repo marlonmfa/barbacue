@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 export default function AdminLoginPage() {
   const [username, setUsername] = useState("");
@@ -33,7 +34,14 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-[#0e0b0a] flex items-center justify-center px-4">
       <div className="w-full max-w-sm bg-[#1a1512] rounded-2xl shadow-xl p-8">
         <div className="text-center mb-8">
-          <span className="text-4xl">🔥</span>
+          <Image
+            src="/brand/barbacue-logo.png"
+            alt="Barbacue & Co"
+            width={160}
+            height={160}
+            preload
+            className="mx-auto h-40 w-40 rounded-xl object-contain"
+          />
           <h1 className="text-xl font-bold text-white mt-3">Acesso da equipe</h1>
           <p className="text-[#a89a8c] text-sm mt-1">Barbacue</p>
         </div>

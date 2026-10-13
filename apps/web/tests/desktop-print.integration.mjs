@@ -13,7 +13,10 @@ assert.match(new URL(database).pathname, /desktop_test/);
 const pool = new pg.Pool({ connectionString: database });
 const dir = await mkdtemp(join(tmpdir(), 'desktop-integration-'));
 const ids = [];
+let existingJobs = [];
 try {
+  existingJobs = (await pool.query("SELECT id,next_attempt_at FROM kitchen_print_jobs WHERE status='queued'")).rows;
+  if (existingJobs.length) await pool.query("UPDATE kitchen_print_jobs SET next_attempt_at=now()+interval '1 day' WHERE id=ANY($1::uuid[])", [existingJobs.map(job => job.id)]);
   const readiness = await fetch(`${base}/api/print-agent/status`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
   assert.equal(readiness.status, 200);
   assert.equal((await readiness.json()).allChannels, true);
@@ -52,5 +55,6 @@ try {
   console.log('PASS: authenticated import, five sources, concurrent deduplication, atomic tickets, cancellation, agent delivery, no duplicate after status change.');
 } finally {
   if (ids.length) { await pool.query('DELETE FROM kitchen_print_jobs WHERE order_id=ANY($1::uuid[])', [ids]); await pool.query('DELETE FROM orders WHERE id=ANY($1::uuid[])', [ids]); }
+  for (const job of existingJobs) await pool.query("UPDATE kitchen_print_jobs SET next_attempt_at=$1 WHERE id=$2 AND status='queued'", [job.next_attempt_at, job.id]);
   await pool.end(); await rm(dir, { recursive: true, force: true });
 }

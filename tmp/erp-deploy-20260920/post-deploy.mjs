@@ -1,0 +1,6 @@
+import {execFileSync} from 'node:child_process';import {createHmac} from 'node:crypto';import {writeFileSync,readFileSync} from 'node:fs';import assert from 'node:assert/strict';
+const p=JSON.parse(execFileSync('pm2',['jlist'],{encoding:'utf8'})).find(p=>p.name==='barbacue');assert.equal(p.pm2_env.status,'online');
+const env={...p.pm2_env.env,...p.pm2_env};const value=`0|admin|${Date.now()+600000}`;const token=value+'.'+createHmac('sha256',env.ADMIN_COOKIE_SECRET).update(value).digest('base64url');
+const res=await fetch('http://127.0.0.1:3007/api/admin/erp',{headers:{Cookie:'barbacue_admin='+token}});assert.equal(res.status,200);const erp=await res.json();assert.equal(erp.recipes.length,334);assert.equal(erp.finance.length,0);assert.equal(erp.purchases.length,0);assert.equal(erp.payroll.length,0);
+writeFileSync('/tmp/barbacue-erp-verify.cookie',token,{mode:0o600});
+const report={online:true,buildId:readFileSync('/root/barbacue/apps/web/.next-erp-release-20260920/BUILD_ID','utf8').trim(),recipes:erp.recipes.length,financialTestDataAbsent:true};writeFileSync('/root/deploy-backups/barbacue-erp-20260920/activated.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));

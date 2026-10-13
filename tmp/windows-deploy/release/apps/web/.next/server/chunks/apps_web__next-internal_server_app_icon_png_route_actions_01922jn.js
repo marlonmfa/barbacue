@@ -1,3 +1,0 @@
-module.exports=[76384,(e,o,d)=>{}];
-
-//# sourceMappingURL=apps_web__next-internal_server_app_icon_png_route_actions_01922jn.js.map

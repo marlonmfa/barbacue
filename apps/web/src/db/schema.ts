@@ -205,8 +205,13 @@ export const betaSignups = pgTable("beta_signups", {
 export const customerAccounts = pgTable("customer_accounts", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
+  // Nullable: contas criadas pelo login do Instagram não recebem e-mail da Meta.
+  email: text("email").unique(),
+  // Nullable: contas criadas por login social não têm senha local.
+  passwordHash: text("password_hash"),
+  instagramId: text("instagram_id").unique(),
+  instagramUsername: text("instagram_username"),
+  facebookId: text("facebook_id").unique(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
@@ -393,3 +398,66 @@ export type OrderType = (typeof orderTypeEnum.enumValues)[number];
 export type RestaurantTable = typeof restaurantTables.$inferSelect;
 export type BetaSignup = typeof betaSignups.$inferSelect;
 export type BetaPlatform = (typeof betaPlatformEnum.enumValues)[number];
+
+// ERP quantities use thousandths of the ingredient's unit; money uses cents.
+export interface ErpLine { ingredientId: number; quantityMilli: number; unitCostCents: number }
+export interface RecipePart { ingredientId: number; quantityMilli: number }
+export const erpSuppliers = pgTable("erp_suppliers", {
+  id: serial("id").primaryKey(), name: text("name").notNull(), document: text("document"),
+  contact: text("contact"), notes: text("notes"), active: boolean("active").notNull().default(true),
+});
+export const erpIngredients = pgTable("erp_ingredients", {
+  id: serial("id").primaryKey(), name: text("name").notNull(), unit: text("unit").notNull(),
+  stockMilli: integer("stock_milli").notNull().default(0), minimumMilli: integer("minimum_milli").notNull().default(0),
+  unitCostCents: integer("unit_cost_cents").notNull().default(0), active: boolean("active").notNull().default(true),
+});
+export const erpPurchases = pgTable("erp_purchases", {
+  id: serial("id").primaryKey(), supplierId: integer("supplier_id").notNull().references(() => erpSuppliers.id),
+  brand: text("brand").notNull(), lines: jsonb("lines").$type<ErpLine[]>().notNull(),
+  totalCents: integer("total_cents").notNull(), dueDate: date("due_date").notNull(), invoice: text("invoice"),
+  status: text("status").notNull().default("draft"), receivedAt: timestamp("received_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+export const erpRecipes = pgTable("erp_recipes", {
+  id: serial("id").primaryKey(), catalogKey: text("catalog_key").unique(), brand: text("brand").notNull(),
+  name: text("name").notNull(), description: text("description").notNull().default(""),
+  category: text("category").notNull().default(""), salePriceCents: integer("sale_price_cents").notNull().default(0),
+  yieldPortions: integer("yield_portions").notNull().default(1), instructions: text("instructions").notNull().default(""),
+  parts: jsonb("parts").$type<RecipePart[]>().notNull().default([]), status: text("status").notNull().default("review"),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+export const erpMovements = pgTable("erp_movements", {
+  id: serial("id").primaryKey(), ingredientId: integer("ingredient_id").notNull().references(() => erpIngredients.id),
+  quantityMilli: integer("quantity_milli").notNull(), reason: text("reason").notNull(), reference: text("reference"),
+  actorId: integer("actor_id").notNull(), createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+export const erpFinance = pgTable("erp_finance", {
+  id: serial("id").primaryKey(), brand: text("brand").notNull(), kind: text("kind").notNull(),
+  category: text("category").notNull(), description: text("description").notNull(), amountCents: integer("amount_cents").notNull(),
+  dueDate: date("due_date").notNull(), competence: text("competence"), document: text("document"),
+  sourceKey: text("source_key").unique(), status: text("status").notNull().default("open"),
+  settledDate: date("settled_date"), paymentMethod: text("payment_method"), receipt: text("receipt"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+export const erpPayroll = pgTable("erp_payroll", {
+  id: serial("id").primaryKey(), employeeId: integer("employee_id").notNull().references(() => employees.id),
+  competence: text("competence").notNull(), baseCents: integer("base_cents").notNull(),
+  additionsCents: integer("additions_cents").notNull(), deductionsCents: integer("deductions_cents").notNull(),
+  netCents: integer("net_cents").notNull(), notes: text("notes"), financeId: integer("finance_id").notNull().references(() => erpFinance.id),
+}, t => [unique("erp_payroll_employee_month").on(t.employeeId, t.competence)]);
+export const erpAttendance = pgTable("erp_attendance", {
+  id: serial("id").primaryKey(), employeeId: integer("employee_id").notNull().references(() => employees.id),
+  startAt: timestamp("start_at", { withTimezone: true }).notNull(), endAt: timestamp("end_at", { withTimezone: true }).notNull(),
+  breakMinutes: integer("break_minutes").notNull().default(0), notes: text("notes"),
+});
+export const erpLeaves = pgTable("erp_leaves", {
+  id: serial("id").primaryKey(), employeeId: integer("employee_id").notNull().references(() => employees.id),
+  kind: text("kind").notNull(), startDate: date("start_date").notNull(), endDate: date("end_date").notNull(),
+  notes: text("notes"), status: text("status").notNull().default("planned"),
+});
+export const erpAudit = pgTable("erp_audit", {
+  id: serial("id").primaryKey(), requestId: uuid("request_id").notNull().unique(),
+  actorId: integer("actor_id").notNull(), action: text("action").notNull(),
+  result: jsonb("result").$type<Record<string, unknown>>().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});

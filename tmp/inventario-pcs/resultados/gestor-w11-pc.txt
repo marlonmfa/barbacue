@@ -1,0 +1,16 @@
+##### W11-PC
+=== local-storage.json (chaves; tokens ocultos)
+  fstr = <oculto, 10143 chars>
+=== nomes de loja / merchant
+  "merchant_id":"991532f5-0400-4efe-b38a-b2b37f8bd9b0   [005991.log]
+  /!ÃP01171838_V8XK_i.jpg",1( DEFAULT"uÅTBarbadog Bacon","quante# 1,"% Pric! 9,"p unit observ%ë   [000005.ldb]
+  /!ãP01171838_V8XK_i.jpg",1> DEFAUL!~- TBarbadog Bacon","quante8 1,"%Ó Pri K 49,"p unit observE   [000005.ldb]
+  :"2525743","id":"991532f5-jHð>","name":"Chelas Cocina Mexicana","companyGroup":"IFO","logo":" Ü,stat   [005990.ldb]
+  :"3538495","id":"6cb73c63-jHðC","name":"Barbacue Hotdog & Sandwich","companyGroup":"IFD","logo":"h à   [005990.ldb]
+  1704c530-18b r Da-8885-9bc49e90e1f W Ó CHELASþZ 6Z > ZI Å $077628429,þ J $-946590901þ þ þ   [001193.ldb]
+  c6-176b-4021-a6cd-3e09dca09cbf","name":"Barbacue","companyGroup":"IFO","logo":"https://static-images   [000005.ldb]
+  d{"shortId":"576303","id":" GÀ","name":"Barbacue","companyGroup":"IFO","logo":" ,static-image6 /   [005990.ldb]
+  mer":{"merchantShor ðC2525743","name":"Chelas Cocina Mexicana","country":"BR","tourPath":" Ú /#","   [000005.ldb]
+  omer":{"merchantShor ÞØ2525743","name":"Chelas Cocina Mexicana","country":"BR"! urPath":" " /#","w   [005990.ldb]
+  ß /! P01171838_V8XK_i.jpg",1% DEFAULTyÀTBarbadog Bacon","quante+ 1,"% ,Price":49,"p unit observ%   [000005.ldb]
+=== log.log: impressao (ultimas 15 linhas)

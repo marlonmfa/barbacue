@@ -60,7 +60,7 @@
       "description": "Monte seus próprios tacos em casa com o kit completo do Chelas! Tudo fresquinho e pronto pra você criar o seu taco perfeito Escolha uma proteína: • Pulled Pork desfiado • Carne de Panela suculenta • Chilli da casa ️ Acompanha: • Cheddar cremoso • Pico de Gallo fresco • Sour Cream da casa • Guacamole • Alface crocante • 4 tacos crocantes • 1 pacote de Doritos Original Tudo vem na caixinha pra montar em casa e viver o crunch mais crocante do Chelas!",
       "priceCents": 12999,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/tacos-do-chelas.webp",
       "category": "Combos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=96e34f21-8fb4-46a4-8c26-641175f6a431"
     },
@@ -70,7 +70,7 @@
       "description": "Quesadilla de queijo mussarela. 4 fatias",
       "priceCents": 3400,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/quesadilla-de-mussarela.webp",
       "category": "Quesadillas",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=5488dc1c-26b3-458f-b8bc-de227010fb2f"
     },
@@ -80,7 +80,7 @@
       "description": "Tortilla de trigo, 180g de carne suína desfiada, creme de queijo, molho chipotle, creme de queijos e molho barbecue.",
       "priceCents": 5690,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/quesadilla-de-pulled-pork.webp",
       "category": "Quesadillas",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=b5a0f4ba-18cf-49ce-98ba-a3fd4ba2c3ec"
     },
@@ -90,7 +90,7 @@
       "description": "Tortilla de trigo, 200g de carne de panela desfiada, creme de queijo, pico de galo.",
       "priceCents": 5899,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/quesadilla-carne-de-panela.webp",
       "category": "Quesadillas",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=288e74de-e70e-40aa-83ce-607d916ac263"
     },
@@ -100,7 +100,7 @@
       "description": "Tortilla de trigo, frango, Catupiry cremoso e orégano.",
       "priceCents": 5300,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/quesadilla-de-frango-com-catupiry.webp",
       "category": "Quesadillas",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=d45ee388-8732-4111-8714-d07266257f5f"
     },
@@ -110,7 +110,7 @@
       "description": "Tortilla de trigo, alface americana, aproximadamente 200g de chilli beans cozido lentamente, creme de queijos, arroz mexicano, guacamole.",
       "priceCents": 5799,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/burrito-chillicious.webp",
       "category": "Burritos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=f1f3fd37-6801-4223-afe6-a3efb67f9c80"
     },
@@ -120,7 +120,7 @@
       "description": "Tortilla de trigo, 200g de frango com pimentões, alface, arroz mexicano, creme de queijos e sour cream.",
       "priceCents": 5600,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/burrito-de-frango.webp",
       "category": "Burritos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=6f3cd5d1-7501-4c3c-8326-19da8d749ec1"
     },
@@ -130,7 +130,7 @@
       "description": "Tortilla de trigo, hamburguer de 185g assado na brasa, arroz mexicano, alface, creme de queijos, molho chipottle e cebola roxa.",
       "priceCents": 5899,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/burrito-burguer.webp",
       "category": "Burritos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=44272453-d415-4c15-9c6d-5a9882350c1b"
     },
@@ -140,7 +140,7 @@
       "description": "Tortilla de trigo, 200g chilli de proteína de soja, alface, arroz mexicano, creme de queijo e guacamole.",
       "priceCents": 4999,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/burrito-chilli-veggie.webp",
       "category": "Burritos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=fe1d13dc-1354-426e-80fe-ff3635119845"
     },
@@ -150,7 +150,7 @@
       "description": "Tortilla de trigo, 200g de carne de panela desfiada, alface, arroz mexicano, creme de queijos, guacamole, pico de galo.",
       "priceCents": 5999,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/burrito-carne-de-panela.webp",
       "category": "Burritos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=df1fdf20-3d0a-42de-97d7-67bef381ce23"
     },
@@ -160,7 +160,7 @@
       "description": "Tortilla de trigo, 180g pulled pork, alface, arroz mexicano, creme de queijos, sour cream e molho barbecue.",
       "priceCents": 5899,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/burrito-pulled-pork.webp",
       "category": "Burritos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=5d0f578f-a181-484e-a62e-963814792d33"
     },
@@ -170,7 +170,7 @@
       "description": "Tortilla de trigo, creme de queijos, arroz, alface americana, filé de sassami marinado e frito, barbecue e sweet chilli.",
       "priceCents": 5500,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/chicken-sweet-crispy.webp",
       "category": "Burritos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=a0673099-cf87-452a-89d6-28cb7c81d2bd"
     },
@@ -180,7 +180,7 @@
       "description": "Tortilla de trigo, creme de queijos, alface americana, arroz, camarão empanado com chipotle e sour cream.",
       "priceCents": 6900,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/burrito-de-camarao.webp",
       "category": "Burritos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=d166f89f-70e9-46cb-9b7a-b796b9312fec"
     },
@@ -190,7 +190,7 @@
       "description": "Nachos crocante (140g), creme de queijo, chillicious (420g de chilli cozido lentamente). Acompanha molhos, pico de galo, guacamole e sour cream.",
       "priceCents": 9599,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/chilli-nachos.webp",
       "category": "Nachos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=7704e335-8566-48f5-9668-b22eb6ebdbb1"
     },
@@ -200,7 +200,7 @@
       "description": "Nachos crocante (140g), 400g de pulled pork, creme de queijos. Acompanha molhos, guacamole, sour cream e pico de galo.",
       "priceCents": 9599,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/nacho-pulled-pork.webp",
       "category": "Nachos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=d1d4d536-d0d6-483a-947a-97db53efeb07"
     },
@@ -210,7 +210,7 @@
       "description": "Bowl com 420 g de chilli cozido lentamente + creme de queijo. *Acompanha nachos crocante (140g)",
       "priceCents": 7999,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/chilli-bowl.webp",
       "category": "Nachos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=d18fe304-028f-4344-bba1-23135771555e"
     },
@@ -220,7 +220,7 @@
       "description": "Nachos crocante (140g), 420g de chillicious vegetariano (proteina de soja) e creme de queijos. Acompanha molhos pico de galo, guacamole e sour cream.",
       "priceCents": 7799,
       "originalPriceCents": 7890,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/nachos-chilli-vegetariano.webp",
       "category": "Nachos",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=41586c5f-78d3-4465-9ff2-7001e0cb473c"
     },
@@ -230,7 +230,7 @@
       "description": "Croissant folhado amanteigado, com 2 smashes de 90g cada, queijo cheddar, bacon crocante e ketchup",
       "priceCents": 5200,
       "originalPriceCents": null,
-      "imageUrl": null,
+      "imageUrl": "/menu/brands-2026-09/croissant-double-smash.webp",
       "category": "Croissant",
       "ifoodUrl": "https://www.ifood.com.br/delivery/jaragua-do-sul-sc/chelas-cocina-mexicana-centro/991532f5-0400-4efe-b38a-b2b37f8bd9b0?prato=22733db3-0412-4a77-b171-caa1d363779c"
     },
