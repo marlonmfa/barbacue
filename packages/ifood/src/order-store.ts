@@ -1,8 +1,10 @@
 import { createHash } from 'node:crypto';
 import { Pool } from 'pg';
+import { loadMerchants, resolveMerchant } from './merchants';
+import './config';
 import type { IfoodEvent, IfoodOrder } from './types';
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new Pool({ connectionString: process.env.DATABASE_URL, connectionTimeoutMillis: 10_000, query_timeout: 15_000, application_name: 'barbacue-ifood-monitor' });
 const states: Record<string, string> = { PLC: 'pending', CFM: 'confirmed', PRS: 'preparing', RTP: 'ready', DSP: 'ready', CON: 'delivered', CAN: 'cancelled' };
 export function ifoodLocalId(id: string) {
   const hex = createHash('sha256').update(`ifood:${id}`).digest('hex');
@@ -31,7 +33,7 @@ export function mapIfoodOrder(order: IfoodOrder, brand = 'barbacue') {
   const discount = cents(order.total?.benefits);
   const total = cents(order.total?.orderAmount, Math.max(0, subtotal + fee + cents(order.total?.additionalFees) - discount));
   const scheduled = order.orderTiming === 'SCHEDULED' ? `AGENDADO: conferir preparo em ${order.preparationStartDateTime ?? order.delivery?.deliveryDateTime ?? 'horário do iFood'}` : '';
-  const notes = [`iFood #${order.displayId ?? order.id}`, scheduled, `Pago online: R$ ${(cents(order.payments?.prepaid) / 100).toFixed(2)}; cobrar: R$ ${(cents(order.payments?.pending) / 100).toFixed(2)}`, `Formas no iFood: ${(order.payments?.methods ?? []).map(m => `${m.method} ${m.type}`).join(', ')}`, order.extraInfo, 'Status externo: acompanhe e altere no gestor iFood.'].filter(Boolean).join('\n');
+  const notes = [`iFood #${order.displayId ?? order.id}`, `Pedido externo: ${order.id}`, order.merchant?.id ? `Loja iFood: ${order.merchant.id}` : '', scheduled, `Pago online: R$ ${(cents(order.payments?.prepaid) / 100).toFixed(2)}; cobrar: R$ ${(cents(order.payments?.pending) / 100).toFixed(2)}`, `Formas no iFood: ${(order.payments?.methods ?? []).map(m => `${m.method} ${m.type}`).join(', ')}`, order.extraInfo, 'Status externo: acompanhe e altere no gestor iFood.'].filter(Boolean).join('\n');
   if (notes.length > 2000 || (deliveryAddress?.length ?? 0) > 2000) throw new Error('Dados iFood excedem o limite de impressão');
   return { id: ifoodLocalId(order.id), brand, items, deliveryAddress, subtotal, fee, discount, total, notes,
     orderType: order.orderType === 'DELIVERY' ? 'delivery' : ['INDOOR', 'DINE_IN'].includes(order.orderType ?? '') ? 'dine_in' : 'pickup',
@@ -40,16 +42,16 @@ export function mapIfoodOrder(order: IfoodOrder, brand = 'barbacue') {
     changeForCents: cents(order.payments?.methods?.find(m => m.cash?.changeFor)?.cash?.changeFor),
   };
 }
-export async function storeIfoodEvent(event: IfoodEvent, order: IfoodOrder | null) {
+export async function storeIfoodEvent(event: IfoodEvent, order: IfoodOrder | null, brand?: string, dryRun = process.env.IFOOD_DRY_RUN !== 'false') {
+  if (dryRun) return;
   if (!process.env.DATABASE_URL) throw new Error('Configure DATABASE_URL para registrar pedidos iFood no painel');
-  if (process.env.IFOOD_DRY_RUN === 'true') return;
   const state = states[event.code];
   if (!state) return;
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
     if (order) {
-      const x = mapIfoodOrder(order, process.env.IFOOD_BRAND || 'barbacue');
+      const x = mapIfoodOrder(order, brand ?? resolveMerchant(loadMerchants(), event.merchantId, order.merchant?.id).brand);
       await client.query(`INSERT INTO orders (id,brand,customer_name,customer_phone,order_type,delivery_address,items,subtotal_cents,discount_cents,delivery_fee_cents,total_cents,channel,status,payment_method,payment_status,change_for_cents,notes)
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,'ifood',$12,$13,$14,$15,$16) ON CONFLICT (id) DO NOTHING`,
         [x.id,x.brand,order.customer?.name || 'Cliente iFood',order.customer?.phone?.number || '',x.orderType,x.deliveryAddress || null,JSON.stringify(x.items),x.subtotal,x.discount,x.fee,x.total,state,x.paymentMethod,x.paid ? 'paid' : 'pending',x.changeForCents,x.notes]);
@@ -70,4 +72,19 @@ export async function storeIfoodEvent(event: IfoodEvent, order: IfoodOrder | nul
     await client.query('COMMIT');
   } catch (error) { await client.query('ROLLBACK'); throw error; }
   finally { client.release(); }
+}
+
+/** Detalhes do pedido são imutáveis; consultar o iFood só antes da primeira importação. */
+export async function hasStoredIfoodOrder(orderId: string, brand?: string): Promise<boolean> {
+  if (!process.env.DATABASE_URL) throw new Error('Configure DATABASE_URL para monitorar pedidos iFood');
+  const result = await pool.query("SELECT brand FROM orders WHERE id=$1 AND channel='ifood'", [ifoodLocalId(orderId)]);
+  if (result.rowCount && brand && result.rows[0].brand !== brand) throw new Error('Marca do pedido persistido diverge da loja do evento');
+  return Boolean(result.rowCount);
+}
+
+export async function checkIfoodStore(): Promise<void> {
+  if (!process.env.DATABASE_URL) throw new Error('Configure DATABASE_URL para monitorar pedidos iFood');
+  // Verificação somente de leitura; nunca aplica migrações no banco ativo.
+  await pool.query('SELECT id, brand, channel, status, items, notes FROM orders LIMIT 0');
+  await pool.query('SELECT order_id, status, next_attempt_at, attempts FROM kitchen_print_jobs LIMIT 0');
 }

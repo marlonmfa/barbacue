@@ -119,3 +119,13 @@ ssh root@72.60.31.220 'pm2 status'                     # status
 - `/admin/login` usa a logo oficial `/brand/barbacue-logo.png`, com texto alternativo e dimensões reservadas, substituindo o emoji do cabeçalho.
 - Build, ESLint e conferência de desktop/celular aprovados; imagem e formulário também verificados pelo HTTPS público após a publicação.
 - Nenhuma migração de banco. Versão ERP anterior preservada em `/root/barbacue-before-login-logo-20260920`; configuração privada PM2 e relatório em `/root/deploy-backups/barbacue-login-logo-20260920/` dentro do container `otherpagesandig`.
+
+## Monitor iFood — 18/10/2026
+
+Adicionado serviço Docker independente em `/root/barbacue-ifood`, no host atual
+`otherpagesandig` (SSH 2212). Não substitui o web/PM2 e usa a conexão do Postgres
+nativo existente, com credenciais da aplicação Food COG. Leia
+[`packages/ifood/README.md`](../../../packages/ifood/README.md) e
+[`GUIA-IFOOD.md`](../../../GUIA-IFOOD.md). Estado verificado: `healthy`,
+`waiting_authorization` das três lojas; a importação começa quando todas concederem
+ORDER/EVENTS. Nenhuma migração ou alteração em contas/volumes foi necessária.

@@ -49,11 +49,11 @@ export class TokenProvider {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body,
+      signal: AbortSignal.timeout(15_000),
     });
 
     if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      throw new Error(`Falha ao obter token iFood (${res.status}): ${text}`);
+      throw new Error(`Falha ao obter token iFood (${res.status}); verifique credenciais e autorização no portal`);
     }
 
     const data = (await res.json()) as TokenResponse;
@@ -66,4 +66,20 @@ export class TokenProvider {
     this.expiresAt = Date.now() + Math.max(60, data.expiresIn - 300) * 1000;
     return this.token;
   }
+}
+
+export interface MerchantAccess { id: string; modules: string[]; authorized: boolean }
+
+/** Diagnóstico das permissões do token obtido via HTTPS; não valida tokens externos. */
+export function merchantAccessFromToken(token: string, merchantIds: string[]): MerchantAccess[] {
+  let claims: { merchant_scoped?: boolean; merchant_scope?: string[]; scope?: string[] };
+  try { claims = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString('utf8')); }
+  catch { throw new Error('Não foi possível verificar as permissões do token iFood'); }
+  if (typeof claims.merchant_scoped !== 'boolean') throw new Error('Token iFood sem informação de escopo por loja');
+  return merchantIds.map(id => {
+    const modules = claims.merchant_scoped
+      ? (claims.merchant_scope ?? []).filter(s => s.startsWith(`${id}:`)).map(s => s.slice(id.length + 1))
+      : (claims.scope ?? []);
+    return { id, modules, authorized: modules.includes('order') && modules.includes('events') };
+  });
 }

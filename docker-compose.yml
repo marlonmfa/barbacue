@@ -72,6 +72,36 @@ services:
       migrate:
         condition: service_completed_successfully
 
+  # Ativar explicitamente após autorizar as três lojas no iFood Developer.
+  ifood-monitor:
+    profiles: [ifood]
+    build:
+      context: .
+      dockerfile: packages/ifood/Dockerfile
+    restart: unless-stopped
+    init: true
+    environment:
+      DATABASE_URL: postgresql://barbacue:barbacue@postgres:5432/barbacue
+      IFOOD_CLIENT_ID: ${IFOOD_CLIENT_ID:-}
+      IFOOD_CLIENT_SECRET: ${IFOOD_CLIENT_SECRET:-}
+      IFOOD_MERCHANTS_JSON: ${IFOOD_MERCHANTS_JSON:-}
+      IFOOD_MERCHANT_ID: ${IFOOD_MERCHANT_ID:-}
+      IFOOD_BRAND: ${IFOOD_BRAND:-barbacue}
+      IFOOD_POLL_INTERVAL_MS: ${IFOOD_POLL_INTERVAL_MS:-30000}
+      IFOOD_DRY_RUN: ${IFOOD_DRY_RUN:-true}
+      IFOOD_AUTO_CONFIRM: ${IFOOD_AUTO_CONFIRM:-false}
+    healthcheck:
+      test: ["CMD", "node", "-e", "const fs=require('fs');const h=JSON.parse(fs.readFileSync('/tmp/ifood-health.json','utf8'));process.exit(Date.now()-(h.state==='waiting_authorization'?h.lastCheck:h.lastSuccess)<300000?0:1)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
   # Long-running WhatsApp ordering bot (Baileys). Bridges WhatsApp ↔ web API.
   whatsapp-bot:
     build:
