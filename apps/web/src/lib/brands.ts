@@ -11,7 +11,9 @@ export const BRAND_THEME: Record<Brand, { logo: string; icon: string; tagline: s
   barbadog: { logo: "/brand/icons/barbadog-apple.png", icon: "/brand/icons/barbadog-icon.png", tagline: "Hot dogs", background: "#182448", accent: "#ffd34e" },
 };
 
-/** Marca atual primeiro; as demais na ordem de cadastro. */
-export function brandSwitcherOrder(active: Brand): { current: Brand; others: Brand[] } {
-  return { current: active, others: (Object.keys(BRANDS) as Brand[]).filter((slug) => slug !== active) };
+/** Ordem fixa do topo (Chelas, Barbacue, Barbadog); só o tamanho muda conforme o domínio. */
+export const SWITCHER_ORDER: Brand[] = ["chelas", "barbacue", "barbadog"];
+
+export function brandSwitcherOrder(active: Brand): { slug: Brand; featured: boolean }[] {
+  return SWITCHER_ORDER.map((slug) => ({ slug, featured: slug === active }));
 }

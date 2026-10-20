@@ -33,6 +33,9 @@ for (const viewport of [{ width: 1280, height: 800, tag: "desktop" }, { width: 3
     const current = await nav.locator('[aria-current="page"]').innerText();
     if (!current.includes(c.brand)) failures.push(`${c.host}: featured "${current}"`);
     for (const o of c.others) if ((await nav.getByLabel(o).count()) !== 1) failures.push(`${c.host}: missing ${o}`);
+    const order = await nav.locator("a[aria-current], a[aria-label]").evaluateAll((els) => els.map((e) => e.getAttribute("aria-label") || e.textContent));
+    const names = order.map((t) => ["Chelas", "Barbacue", "Barbadog"].find((n) => t.includes(n)));
+    if (names.join() !== "Chelas,Barbacue,Barbadog") failures.push(`${c.host}: order ${names.join()}`);
     const big = await nav.locator('[aria-current="page"] img').boundingBox();
     const small = await nav.getByLabel(c.others[0]).locator("img").boundingBox();
     if (!(big && small && big.width > small.width * 1.6)) failures.push(`${c.host}: current logo not larger`);

@@ -6,10 +6,11 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { BRANDS, BRAND_THEME, brandSwitcherOrder } from "../src/lib/brands";
 
-test("current brand is featured and the other two follow", () => {
-  assert.deepEqual(brandSwitcherOrder("chelas"), { current: "chelas", others: ["barbacue", "barbadog"] });
-  assert.deepEqual(brandSwitcherOrder("barbadog"), { current: "barbadog", others: ["barbacue", "chelas"] });
-  assert.deepEqual(brandSwitcherOrder("barbacue").others, ["chelas", "barbadog"]);
+test("order is always Chelas, Barbacue, Barbadog; only the domain brand is featured", () => {
+  const view = (b: "barbacue" | "chelas" | "barbadog") => brandSwitcherOrder(b).map((x) => `${x.slug}:${x.featured ? "G" : "p"}`).join(" ");
+  assert.equal(view("barbacue"), "chelas:p barbacue:G barbadog:p");
+  assert.equal(view("chelas"), "chelas:G barbacue:p barbadog:p");
+  assert.equal(view("barbadog"), "chelas:p barbacue:p barbadog:G");
 });
 
 test("every brand has its own logo, icon and colors", () => {
