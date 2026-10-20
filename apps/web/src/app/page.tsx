@@ -1,4 +1,5 @@
 import { BrandNavigation } from "@/components/BrandNavigation";
+import { BRANDS } from "@/lib/brands";
 import { redirect } from "next/navigation";
 import { requireStaff } from "@/lib/admin-auth";
 import { landingPath } from "@/lib/permissions";
@@ -55,7 +56,7 @@ export default async function HomePage({
   );
 
   if (brandSlug) {
-    return <><BrandNavigation active={brandSlug} /><CustomerEntry /><BrandStorefront brand={await getManagedBrandStorefront(brandSlug)} /></>;
+    return <><BrandNavigation active={brandSlug} /><CustomerEntry brandName={BRANDS[brandSlug]} /><BrandStorefront brand={await getManagedBrandStorefront(brandSlug)} /></>;
   }
 
   const [{ menu, settings }, table, { mesa }] = await Promise.all([

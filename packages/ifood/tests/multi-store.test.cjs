@@ -165,3 +165,19 @@ test('live worker waits for grants without consuming events or writing orders', 
     await fs.rm(dir, { recursive: true, force: true });
   }
 });
+test('authorized stores are monitored while others are still pending', async () => {
+  const { splitByAccess } = require('../src/poller.ts');
+  const access = [
+    { id: DEFAULT_MERCHANTS[0].id, authorized: false },
+    { id: DEFAULT_MERCHANTS[1].id, authorized: true },
+    { id: DEFAULT_MERCHANTS[2].id, authorized: true },
+  ];
+  const split = splitByAccess(DEFAULT_MERCHANTS, access);
+  assert.deepEqual(split.active.map(m => m.brand), ['barbacue', 'barbadog']);
+  assert.deepEqual(split.pending.map(m => m.brand), ['chelas']);
+  const client = mock([event(1)]);
+  let polledWith;
+  client.pollEvents = async opts => { polledWith = opts; return [event(1)]; };
+  await pollCycle(client, async () => {}, async () => false, split.active.map(m => m.id));
+  assert.deepEqual(polledWith.merchantIds, [DEFAULT_MERCHANTS[1].id, DEFAULT_MERCHANTS[2].id]);
+});

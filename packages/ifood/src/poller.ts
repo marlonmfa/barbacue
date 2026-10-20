@@ -6,6 +6,14 @@ import { loadConfig } from './config';
 import { checkIfoodStore, hasStoredIfoodOrder, storeIfoodEvent } from './order-store';
 import { resolveMerchant } from './merchants';
 
+const ACCESS_RECHECK_MS = 5 * 60_000;
+
+/** Separa as lojas configuradas entre liberadas (ORDER+EVENTS) e pendentes. */
+export function splitByAccess<T extends { id: string }>(merchants: T[], access: { id: string; authorized: boolean }[]) {
+  const ok = (m: T) => access.some(a => a.id === m.id && a.authorized);
+  return { active: merchants.filter(ok), pending: merchants.filter(m => !ok(m)) };
+}
+
 export type OrderHandler = (event: IfoodEvent, order: IfoodOrder | null, client: IfoodClient) => Promise<void>;
 
 // Monitorar não confirma o pedido comercialmente. A confirmação automática é opt-in.
@@ -21,8 +29,8 @@ export const defaultHandler: OrderHandler = async (event, order, client) => {
 };
 
 /** Um evento com erro não impede as demais lojas; ACK só após persistir. */
-export async function pollCycle(client: IfoodClient, handler: OrderHandler = defaultHandler, hasOrder = hasStoredIfoodOrder) {
-  const events = await client.pollEvents();
+export async function pollCycle(client: IfoodClient, handler: OrderHandler = defaultHandler, hasOrder = hasStoredIfoodOrder, merchantIds?: string[]) {
+  const events = await client.pollEvents(merchantIds ? { merchantIds } : {});
   const processed: string[] = [];
   let failed = 0;
   for (const event of events) {
@@ -58,7 +66,11 @@ export async function runPoller(handler: OrderHandler = defaultHandler) {
   process.on('SIGINT', stop);
   process.on('SIGTERM', stop);
   const healthPath = process.env.IFOOD_HEALTH_FILE || '/tmp/ifood-health.json';
-  let authorized = false;
+  // Cada loja é liberada de forma independente no iFood: lojas já autorizadas
+  // são monitoradas enquanto as pendentes são reverificadas periodicamente.
+  let active: string[] = [];
+  let pending: typeof config.merchants = config.merchants;
+  let lastAccessCheck = 0;
   const writeHealth = async (state: Record<string, unknown>) => {
     await writeFile(`${healthPath}.tmp`, JSON.stringify({ dryRun: config.dryRun, merchants: config.merchants, ...state }));
     await rename(`${healthPath}.tmp`, healthPath);
@@ -69,25 +81,30 @@ export async function runPoller(handler: OrderHandler = defaultHandler) {
       let waiting = false;
       try {
         if (!config.dryRun) await checkIfoodStore();
-        if (!authorized) {
+        if (pending.length && Date.now() - lastAccessCheck >= ACCESS_RECHECK_MS) {
           const access = await client.getMerchantAccess(true);
-          const pending = config.merchants.filter(m => !access.find(a => a.id === m.id)?.authorized);
-          if (pending.length) {
-            waiting = true;
-            console.log(`Aguardando ativação ORDER/EVENTS no iFood: ${pending.map(m => m.name).join(', ')}`);
-            await writeHealth({ state: 'waiting_authorization', lastCheck: Date.now(), pending });
-          } else {
-            authorized = true;
-            console.log(`Monitoramento iniciado: ${config.merchants.map(m => m.name).join(', ')}; simulação: ${config.dryRun}; confirmação automática: ${config.autoConfirm}`);
+          lastAccessCheck = Date.now();
+          const split = splitByAccess(config.merchants, access);
+          if (split.active.length !== active.length) {
+            console.log(`Monitoramento iFood: ${split.active.map(m => m.name).join(', ') || 'nenhuma loja'}; simulação: ${config.dryRun}; confirmação automática: ${config.autoConfirm}`);
           }
+          active = split.active.map(m => m.id);
+          pending = split.pending;
+          if (pending.length) console.log(`Aguardando ativação ORDER/EVENTS no iFood: ${pending.map(m => m.name).join(', ')}`);
         }
-        if (authorized) {
-        const result = await pollCycle(client, handler);
-        if (result.failed) throw new Error(`${result.failed} evento(s) pendente(s) de nova tentativa`);
-        await writeHealth({ state: 'monitoring', lastSuccess: Date.now(), ...result });
+        if (!active.length) {
+          waiting = true;
+          await writeHealth({ state: 'waiting_authorization', lastCheck: Date.now(), pending });
+        } else {
+          const result = await pollCycle(client, handler, hasStoredIfoodOrder, active);
+          if (result.failed) throw new Error(`${result.failed} evento(s) pendente(s) de nova tentativa`);
+          await writeHealth({ state: 'monitoring', lastSuccess: Date.now(), active, pending, ...result });
         }
       } catch (err) {
-        authorized = false;
+        // Força nova leitura das permissões: uma revogação também é detectada.
+        lastAccessCheck = 0;
+        pending = config.merchants;
+        active = [];
         console.error('Falha no monitoramento iFood:', err instanceof Error ? err.message : 'erro desconhecido');
       }
       await delay(Math.max(30_000, (waiting ? 60_000 : config.pollIntervalMs) - (Date.now() - startedAt)), undefined, { signal: controller.signal }).catch(err => {
