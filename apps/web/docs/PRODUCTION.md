@@ -129,3 +129,25 @@ nativo existente, com credenciais da aplicação Food COG. Leia
 [`GUIA-IFOOD.md`](../../../GUIA-IFOOD.md). Estado verificado: `healthy`,
 `waiting_authorization` das três lojas; a importação começa quando todas concederem
 ORDER/EVENTS. Nenhuma migração ou alteração em contas/volumes foi necessária.
+
+## Gestor iFood publicado — 22/10/2026
+
+- Build ativo: `hXBFWAPcgt6P_MZp1_KNB` (main `e500019`, PRs #3 e #4), `distDir` padrão `.next`.
+  Enviado com `rsync` **sem** `--delete` para `/root/barbacue/` no container `otherpagesandig`
+  (`ssh vps-otherpagesandig`, 91.108.125.60:2212). O alias `otherpagesandig` do `~/.ssh/config`
+  ainda aponta para o host antigo 72.60.31.220 — não use.
+- Migração `0015_social_login` aplicada em transação, com registro em `drizzle.__drizzle_migrations`
+  (hash SHA-256 do arquivo, `created_at` 1790989371202). A `0014` já estava aplicada.
+- PM2 `barbacue`: `IFOOD_CLIENT_ID`, `IFOOD_CLIENT_SECRET` e `IFOOD_DRY_RUN=false` copiados do
+  `.env` do monitor (`/root/barbacue-ifood/.env`), `pm2 restart --update-env` e `pm2 save`.
+- Monitor: `healthy`, `state=monitoring`, `dryRun=false`, três lojas.
+- Verificado pelo HTTPS público: `/`, `/admin/login`, login admin, `/admin/ifood` (200) e
+  `GET /api/admin/ifood` com `configured=true`, `dryRun=false`, 3 lojas e 34 pedidos.
+- **Pendente (iFood, não código):** status/pausa das lojas responde
+  `User is forbidden to access this resource` — o app Food COG não tem o módulo Merchant
+  autorizado. Habilitar o escopo MERCHANT no Portal do Desenvolvedor e pedir que as três lojas
+  reautorizem. Pedidos (ORDER/EVENTS) não são afetados.
+- Backup: `/root/deploy-backups/barbacue-ifood-gestor-20261022/` (dump do banco, ambiente PM2,
+  SQL aplicado). App anterior: `/root/barbacue-before-ifood-gestor-20261022/`.
+- Rollback: restaurar esse diretório para `/root/barbacue` e `pm2 restart barbacue`; a 0015 é
+  aditiva e pode permanecer.
