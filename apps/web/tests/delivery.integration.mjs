@@ -104,6 +104,7 @@ try {
   console.log(`Passed ${assertions} delivery API assertions: config/auth, immutable road quote, expiry, range, provider failures, order binding, coupons, cash change and legacy/dine-in compatibility.`);
 } finally {
   await configureFake({ reset: true });
+  await pool.query('DELETE FROM kitchen_print_jobs WHERE order_id IN (SELECT id FROM orders WHERE customer_phone=$1)', [customerPhone]);
   await pool.query('DELETE FROM orders WHERE customer_phone=$1', [customerPhone]);
   await pool.query('DELETE FROM customers WHERE phone=$1', [customerPhone]);
   if (quotes.length) await pool.query('DELETE FROM delivery_quotes WHERE id=ANY($1::uuid[])', [quotes]);

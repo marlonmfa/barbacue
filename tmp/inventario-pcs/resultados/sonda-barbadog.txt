@@ -1,0 +1,22 @@
+##### BARBADOG
+=== IMPRESSORAS (Win32_Printer)
+  (TEMPO ESGOTADO apos 25s)
+=== PORTAS TCP/IP
+Cloud TCP/IP Port -> api-sh33-1.hprtcloud.com:9100
+  reg: Cloud TCP/IP Port -> api-sh33-1.hprtcloud.com:9100
+=== TESTE DE CONEXAO (impressoras de rede)
+  api-sh33-1.hprtcloud.com:9100 -> TCP OK | ping TimedOut
+=== USB / PnP de impressao
+  [Unknown] Printer | ELGIN i9(USB) | USBPRINT\ELGINI9\6&25C6D831&1&USB001
+  [Unknown] USB | ELGIN i9 | USB\VID_20D1&PID_7008\88888888888888888888888888888888
+  [Unknown] PrintQueue | ELGIN i9(USB) | SWD\PRINTENUM\{939E3AFF-764F-4CD0-AE99-ADBEF0CD8297}
+=== FILA
+  ELGIN i9(USB), 134 | printStream |  | 10/09/2026 18:37:05
+  ELGIN i9(USB), 135 | printStream |  | 10/09/2026 18:37:06
+=== ERROS PrintService (ultimos 10)
+  07/24/2026 15:21:00 [369] Falha do spooler de impressão ao verificar o ambiente Windows x64 no pacote de driver de impressão. Código de erro de sistema Win32 122 (0x7a). Isto pode ocorrer devido a memória insuficiente ou a outra falha do sistema. Não é necessária uma ação do usuário.
+  07/24/2026 14:38:50 [350] O documento  não pôde ser impresso e foi excluído porque o arquivo no spool está corrompido. O driver associado é: . Tente imprimir o documento novamente.
+=== GESTOR DE PEDIDOS: pastas de dados
+  C:\Users\barba\AppData\Roaming\Gestor de Pedidos (modif. 10/09/2026 18:34:12)
+  C:\Users\barba\AppData\Local\ifood-order-manager-updater (modif. 10/08/2026 17:29:09)
+=== GESTOR DE PEDIDOS: lojas/contas encontradas

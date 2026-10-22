@@ -83,5 +83,5 @@ export default async function AdminDashboard() {
   const session = await requireStaff();
   if (!can(session, "dashboard")) redirect(landingPath(session));
   const data = await getDashboardData();
-  return <OperationsDashboard {...data} />;
+  return <OperationsDashboard {...data} canUseWhatsApp={session.role === "admin"} />;
 }

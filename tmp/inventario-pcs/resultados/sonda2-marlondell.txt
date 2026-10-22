@@ -1,0 +1,54 @@
+##### MARLONDELL
+=== SPOOLER
+  estado Running | PID 4724
+  spoolsv iniciado 10/09/2026 17:00:54 | CPU 3s | memoria 33 MB | threads 12
+  arquivos na pasta de spool: 0
+=== IMPRESSORAS (registro)
+  ELGIN i9 COMANDAS | porta USB003 | driver ELGIN i9 FULL 2(USB) | compart. ELGIN i9 COMANDAS
+  ELGIN i9(USB) | porta USB003 | driver ELGIN i9(USB) | compart. ELGIN i9(USB) comandas
+  Fax | porta SHRFAX: | driver Microsoft Shared Fax Driver | compart. 
+  HPE80E20 (HP Smart Tank 580-590 series) | porta WSD-3ae7fcfc-f8ee-47ac-8639-f195547eb3c6 | driver Microsoft PWG Raster Class Driver | compart. 
+  Microsoft Print to PDF | porta PORTPROMPT: | driver Microsoft Print To PDF | compart. 
+  Microsoft XPS Document Writer | porta PORTPROMPT: | driver Microsoft XPS Document Writer v4 | compart. 
+  OneNote (Desktop) | porta nul: | driver Send to Microsoft OneNote 16 Driver | compart. 
+  S-1-5-21-2662222737-3942706024-599724008-1006:OneNote for Windows 10 | porta Microsoft.Office.OneNote_16001.14326.22594.0_x64__8wekyb3d8bbwe_microsoft.onenoteim_S-1-5-21-2662222737-3942706024-599724008-1006 | driver Microsoft Software Printer Driver | compart. 
+  padrao do usuario: ELGIN i9 COMANDAS,winspool,Ne07:
+=== PORTAS
+  monitor: Appmon
+  monitor: Canon BJ Language Monitor TS3100 series
+  monitor: ELGIN POS Language Monitor
+  monitor: HPRT POS Language Monitor
+  monitor: Local Port
+  monitor: Microsoft Shared Fax Monitor
+  monitor: Standard TCP/IP Port
+  monitor: USB Monitor
+  monitor: Virtual Port Monitor
+  monitor: WSD Port
+  tcp: Cloud TCP/IP Port -> api-sh33-1.hprtcloud.com:9100
+=== DISPOSITIVOS USB DE IMPRESSAO (PnP)
+  [OK] System | Intel(R) Thermal Subsystem - A379 | PCI\VEN_8086&DEV_A379&SUBSYS_09051028&REV_10\3&11583659&0&90
+  [OK] System | ACPI Thermal Zone | ACPI\THERMALZONE\THM_
+  [OK] Printer | Microsoft PWG Raster Class Driver | SWD\PRINTENUM\WSD-3AE7FCFC-F8EE-47AC-8639-F195547EB3C6
+  [OK] Printer | ELGIN i9(USB) | USBPRINT\ELGINI9\6&25C6D831&1&USB003
+  [OK] USB | ELGIN i9 | USB\VID_20D1&PID_7008\88888888888888888888888888888888
+  [OK] PrintQueue | ELGIN i9(USB) | SWD\PRINTENUM\{C23B4720-C85F-4FA9-A159-26DBEEA2F9B0}
+  [OK] PrintQueue | ELGIN i9 COMANDAS | SWD\PRINTENUM\{B2645B15-54DB-4512-8744-F2DB32E21859}
+=== ERROS PrintService (ultimos 12)
+  07/24/2026 14:17:10 [350] O documento  não pôde ser impresso e foi excluído porque o arquivo no spool está corrompido. O driver associado é: . Tente imprimir o documento novamente.
+  07/24/2026 14:14:26 [823] A impressora padrão foi alterada para ELGIN i9 COMANDAS. Consulte os dados do usuário do evento para obter informações de contexto.
+  07/24/2026 14:05:26 [823] A impressora padrão foi alterada para POS-80. Consulte os dados do usuário do evento para obter informações de contexto.
+  07/23/2026 15:10:24 [823] A impressora padrão foi alterada para ELGIN i9(USB). Consulte os dados do usuário do evento para obter informações de contexto.
+  07/23/2026 15:01:41 [823] A impressora padrão foi alterada para POS-80. Consulte os dados do usuário do evento para obter informações de contexto.
+  07/23/2026 15:01:41 [823] A impressora padrão foi alterada para POS-80. Consulte os dados do usuário do evento para obter informações de contexto.
+  07/17/2026 12:34:41 [823] A impressora padrão foi alterada para HP Smart Tank 580-590 series [unknown]. Consulte os dados do usuário do evento para obter informações de contexto.
+  06/26/2026 15:07:59 [823] A impressora padrão foi alterada para POS-80. Consulte os dados do usuário do evento para obter informações de contexto.
+  04/02/2026 17:21:23 [823] A impressora padrão foi alterada para ELGIN i9(USB). Consulte os dados do usuário do evento para obter informações de contexto.
+  07/12/2025 22:10:58 [372] O documento Print Document, pertencente a Barbacue, não pôde ser impresso na impressora IMPRESSORA. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+  07/12/2025 22:10:58 [372] O documento Print Document, pertencente a Barbacue, não pôde ser impresso na impressora IMPRESSORA. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+  07/12/2025 22:10:58 [372] O documento Print Document, pertencente a Barbacue, não pôde ser impresso na impressora IMPRESSORA. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+=== GESTOR DE PEDIDOS: pastas de dados
+  C:\Users\Barbacue\AppData\Roaming\Gestor de Pedidos (modif. 10/09/2026 18:33:30)
+  C:\Users\Barbacue\AppData\Roaming\order-manager-printer (modif. 04/17/2024 19:01:56)
+  C:\Users\Barbacue\AppData\Local\ifood-order-manager-updater (modif. 03/25/2022 22:03:27)
+  C:\Users\Barbacue\AppData\Local\order-manager-printer-updater (modif. 04/17/2024 19:01:30)
+=== GESTOR DE PEDIDOS: lojas/contas encontradas

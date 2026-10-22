@@ -1,0 +1,43 @@
+##### W11-PC
+=== SPOOLER
+  estado Running | PID 3548
+  spoolsv iniciado 10/09/2026 16:18:34 | CPU 1s | memoria 37 MB | threads 15
+  arquivos na pasta de spool: 8
+    00024.SHD 5480 bytes 10/09/2026 18:37:09
+    00024.SPL 1256 bytes 10/09/2026 18:37:09
+    00025.SHD 5480 bytes 10/09/2026 18:37:09
+    00025.SPL 1256 bytes 10/09/2026 18:37:09
+    00026.SHD 5480 bytes 10/09/2026 18:39:35
+    00026.SPL 1200 bytes 10/09/2026 18:39:35
+    00027.SHD 5480 bytes 10/09/2026 18:39:35
+    00027.SPL 1200 bytes 10/09/2026 18:39:35
+=== IMPRESSORAS (registro)
+  ELGIN i9(USB) | porta USB001 | driver ELGIN i9(USB) | compart. 
+  HPE80E20 (HP Smart Tank 580-590 series) | porta WSD-dc3f65e6-169c-4687-b683-08c3b4555b58 | driver Microsoft IPP Class Driver | compart. 
+  Microsoft Print to PDF | porta PORTPROMPT: | driver Microsoft Print To PDF | compart. 
+  padrao do usuario: ELGIN i9(USB),winspool,Ne01:
+=== PORTAS
+  monitor: Appmon
+  monitor: ELGIN POS Language Monitor
+  monitor: Local Port
+  monitor: Standard TCP/IP Port
+  monitor: USB Monitor
+  monitor: Virtual Port Monitor
+  monitor: WSD Port
+  tcp: Cloud TCP/IP Port -> api-sh33-1.hprtcloud.com:9100
+=== DISPOSITIVOS USB DE IMPRESSAO (PnP)
+  [Unknown] USB | ELGIN i9 | USB\VID_20D1&PID_7008\88888888888888888888888888888888
+  [OK] PrintQueue | ELGIN i9(USB) | SWD\PRINTENUM\{B5CA9064-EB69-447A-8209-0988B504E90C}
+  [OK] Printer | Microsoft IPP Class Driver | SWD\PRINTENUM\WSD-DC3F65E6-169C-4687-B683-08C3B4555B58
+  [Unknown] SoftwareDevice | ELGIN i9 | USBPRINT\ELGINI9\7&25C6D831&0&USB001
+=== ERROS PrintService (ultimos 12)
+  05/07/2026 16:55:51 [372] O documento Documento de Impressão, pertencente a Usuario, não pôde ser impresso na impressora Microsoft Print to PDF. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+  05/07/2026 16:55:51 [372] O documento Documento de Impressão, pertencente a Usuario, não pôde ser impresso na impressora Microsoft Print to PDF. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+  05/07/2026 16:55:51 [372] O documento Documento de Impressão, pertencente a Usuario, não pôde ser impresso na impressora Microsoft Print to PDF. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+  05/07/2026 16:55:51 [372] O documento Documento de Impressão, pertencente a Usuario, não pôde ser impresso na impressora Microsoft Print to PDF. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+  05/07/2026 16:55:51 [372] O documento Documento de Impressão, pertencente a Usuario, não pôde ser impresso na impressora Microsoft Print to PDF. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+  05/07/2026 16:55:51 [372] O documento Documento de Impressão, pertencente a Usuario, não pôde ser impresso na impressora Microsoft Print to PDF. Tente imprimir o documento novamente ou reinicie o spooler de impressão. 
+=== GESTOR DE PEDIDOS: pastas de dados
+  C:\Users\Usuario\AppData\Roaming\Gestor de Pedidos (modif. 10/09/2026 18:34:57)
+  C:\Users\Usuario\AppData\Local\ifood-order-manager-updater (modif. 10/08/2026 17:21:10)
+=== GESTOR DE PEDIDOS: lojas/contas encontradas

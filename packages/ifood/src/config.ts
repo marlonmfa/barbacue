@@ -1,5 +1,6 @@
 import * as path from "path";
 import * as dotenv from "dotenv";
+import { loadMerchants, MerchantConnection } from "./merchants";
 
 dotenv.config({ path: path.join(__dirname, "../../../.env") });
 
@@ -31,6 +32,8 @@ function required(name: string): string {
 }
 
 export interface IfoodConfig {
+  merchants: MerchantConnection[];
+  autoConfirm: boolean;
   clientId: string;
   clientSecret: string;
   /** merchantId (UUID) da loja no iFood. Obtenha via GET /merchants. */
@@ -42,11 +45,16 @@ export interface IfoodConfig {
 }
 
 export function loadConfig(): IfoodConfig {
+  const merchants = loadMerchants();
+  const pollIntervalMs = Number(process.env.IFOOD_POLL_INTERVAL_MS?.trim() || 30_000);
+  if (!Number.isFinite(pollIntervalMs) || pollIntervalMs < 30_000 || pollIntervalMs > 300_000) throw new Error('IFOOD_POLL_INTERVAL_MS deve estar entre 30000 e 300000');
   return {
+    merchants,
+    autoConfirm: process.env.IFOOD_AUTO_CONFIRM === 'true',
     clientId: required("IFOOD_CLIENT_ID"),
     clientSecret: required("IFOOD_CLIENT_SECRET"),
-    merchantId: required("IFOOD_MERCHANT_ID"),
-    pollIntervalMs: Number(process.env.IFOOD_POLL_INTERVAL_MS ?? 30_000),
-    dryRun: process.env.IFOOD_DRY_RUN === "true",
+    merchantId: merchants.find(m => m.brand === "barbacue")?.id ?? merchants[0].id,
+    pollIntervalMs,
+    dryRun: process.env.IFOOD_DRY_RUN !== "false",
   };
 }

@@ -1,0 +1,441 @@
+[
+  {
+    "key": "quesadilla-de-mussarela",
+    "name": "Quesadilla de Mussarela",
+    "description": "Quesadilla de queijo mussarela. 4 fatias",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "5488dc1c-26b3-458f-b8bc-de227010fb2f",
+        "name": "Quesadilla de Mussarela"
+      }
+    ],
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-df4ce5e9-dc5d-40b3-95ad-e8c9a8141e08.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "prompt": "Use case: product-mockup. Photorealistic Quesadilla de Mussarela: exactly four grilled wheat tortilla wedges filled only with mozzarella, on warm off-white plate and cream backdrop, three-quarter view, soft natural lighting, no extra ingredients, text, logos or watermark."
+  },
+  {
+    "key": "tacos-do-chelas",
+    "name": "Tacos Do Chelas",
+    "description": "Monte seus próprios tacos em casa com o kit completo do Chelas! Tudo fresquinho e pronto pra você criar o seu taco perfeito Escolha uma proteína: • Pulled Pork desfiado • Carne de Panela suculenta • Chilli da casa ️ Acompanha: • Cheddar cremoso • Pico de Gallo fresco • Sour Cream da casa • Guacamole • Alface crocante • 4 tacos crocantes • 1 pacote de Doritos Original Tudo vem na caixinha pra montar em casa e viver o crunch mais crocante do Chelas!",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "96e34f21-8fb4-46a4-8c26-641175f6a431",
+        "name": "Tacos Do Chelas"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Tacos Do Chelas. Exact menu description in Portuguese: Monte seus próprios tacos em casa com o kit completo do Chelas! Tudo fresquinho e pronto pra você criar o seu taco perfeito Escolha uma proteína: • Pulled Pork desfiado • Carne de Panela suculenta • Chilli da casa ️ Acompanha: • Cheddar cremoso • Pico de Gallo fresco • Sour Cream da casa • Guacamole • Alface crocante • 4 tacos crocantes • 1 pacote de Doritos Original Tudo vem na caixinha pra montar em casa e viver o crunch mais crocante do Chelas!. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-c57ec1f4-2fd4-4634-8229-9ce1011089ee.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "quesadilla-de-frango-com-catupiry",
+    "name": "Quesadilla de Frango com Catupiry",
+    "description": "Tortilla de trigo, frango, Catupiry cremoso e orégano.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "d45ee388-8732-4111-8714-d07266257f5f",
+        "name": "Quesadilla de Frango com Catupiry"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Quesadilla de Frango com Catupiry. Exact menu description in Portuguese: Tortilla de trigo, frango, Catupiry cremoso e orégano.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-435ebd96-1564-4264-9388-4badedf44ae9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "quesadilla-carne-de-panela",
+    "name": "Quesadilla Carne de Panela",
+    "description": "Tortilla de trigo, 200g de carne de panela desfiada, creme de queijo, pico de galo.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "288e74de-e70e-40aa-83ce-607d916ac263",
+        "name": "Quesadilla Carne de Panela"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Quesadilla Carne de Panela. Exact menu description in Portuguese: Tortilla de trigo, 200g de carne de panela desfiada, creme de queijo, pico de galo.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-68736a89-e021-4683-b75e-d0ec915bc397.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "burrito-chillicious",
+    "name": "Burrito Chillicious",
+    "description": "Tortilla de trigo, alface americana, aproximadamente 200g de chilli beans cozido lentamente, creme de queijos, arroz mexicano, guacamole.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "f1f3fd37-6801-4223-afe6-a3efb67f9c80",
+        "name": "Burrito Chillicious"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Burrito Chillicious. Exact menu description in Portuguese: Tortilla de trigo, alface americana, aproximadamente 200g de chilli beans cozido lentamente, creme de queijos, arroz mexicano, guacamole.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-56bed8f5-a672-4881-96fb-fed162b4e37a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "quesadilla-de-pulled-pork",
+    "name": "Quesadilla de Pulled Pork",
+    "description": "Tortilla de trigo, 180g de carne suína desfiada, creme de queijo, molho chipotle, creme de queijos e molho barbecue.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "b5a0f4ba-18cf-49ce-98ba-a3fd4ba2c3ec",
+        "name": "Quesadilla de Pulled Pork"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Quesadilla de Pulled Pork. Exact menu description in Portuguese: Tortilla de trigo, 180g de carne suína desfiada, creme de queijo, molho chipotle, creme de queijos e molho barbecue.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-8e30ff31-fbe2-4b7d-8c22-ffc634279ad1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "burrito-de-frango",
+    "name": "Burrito de Frango",
+    "description": "Tortilla de trigo, 200g de frango com pimentões, alface, arroz mexicano, creme de queijos e sour cream.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "6f3cd5d1-7501-4c3c-8326-19da8d749ec1",
+        "name": "Burrito de Frango"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Burrito de Frango. Exact menu description in Portuguese: Tortilla de trigo, 200g de frango com pimentões, alface, arroz mexicano, creme de queijos e sour cream.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-677e69fc-f616-4c09-b229-e4f7635c7013.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "burrito-burguer",
+    "name": "Burrito Burguer",
+    "description": "Tortilla de trigo, hamburguer de 185g assado na brasa, arroz mexicano, alface, creme de queijos, molho chipottle e cebola roxa.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "44272453-d415-4c15-9c6d-5a9882350c1b",
+        "name": "Burrito Burguer"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Burrito Burguer. Exact menu description in Portuguese: Tortilla de trigo, hamburguer de 185g assado na brasa, arroz mexicano, alface, creme de queijos, molho chipottle e cebola roxa.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-9a8662f1-0420-4238-8893-bceefac57c01.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "burrito-chilli-veggie",
+    "name": "Burrito Chilli Veggie",
+    "description": "Tortilla de trigo, 200g chilli de proteína de soja, alface, arroz mexicano, creme de queijo e guacamole.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "fe1d13dc-1354-426e-80fe-ff3635119845",
+        "name": "Burrito Chilli Veggie"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Burrito Chilli Veggie. Exact menu description in Portuguese: Tortilla de trigo, 200g chilli de proteína de soja, alface, arroz mexicano, creme de queijo e guacamole.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-b412380e-f51a-496e-9e2e-566ad950ba2e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "chicken-sweet-crispy",
+    "name": "Chicken Sweet Crispy",
+    "description": "Tortilla de trigo, creme de queijos, arroz, alface americana, filé de sassami marinado e frito, barbecue e sweet chilli.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "a0673099-cf87-452a-89d6-28cb7c81d2bd",
+        "name": "Chicken Sweet Crispy"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Chicken Sweet Crispy. Exact menu description in Portuguese: Tortilla de trigo, creme de queijos, arroz, alface americana, filé de sassami marinado e frito, barbecue e sweet chilli.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-af407a7d-99de-4c00-8fb9-e0ecc156facc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "burrito-carne-de-panela",
+    "name": "Burrito Carne de Panela",
+    "description": "Tortilla de trigo, 200g de carne de panela desfiada, alface, arroz mexicano, creme de queijos, guacamole, pico de galo.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "df1fdf20-3d0a-42de-97d7-67bef381ce23",
+        "name": "Burrito Carne de Panela"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Burrito Carne de Panela. Exact menu description in Portuguese: Tortilla de trigo, 200g de carne de panela desfiada, alface, arroz mexicano, creme de queijos, guacamole, pico de galo.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-347a257f-f517-4f79-8bd8-8b6d36b951d9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "burrito-de-camarao",
+    "name": "Burrito de Camarão",
+    "description": "Tortilla de trigo, creme de queijos, alface americana, arroz, camarão empanado com chipotle e sour cream.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "d166f89f-70e9-46cb-9b7a-b796b9312fec",
+        "name": "Burrito de Camarão"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Burrito de Camarão. Exact menu description in Portuguese: Tortilla de trigo, creme de queijos, alface americana, arroz, camarão empanado com chipotle e sour cream.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-0f2da6dd-ed82-4b5a-9d15-5031d7d607c2.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "burrito-pulled-pork",
+    "name": "Burrito Pulled Pork",
+    "description": "Tortilla de trigo, 180g pulled pork, alface, arroz mexicano, creme de queijos, sour cream e molho barbecue.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "5d0f578f-a181-484e-a62e-963814792d33",
+        "name": "Burrito Pulled Pork"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Burrito Pulled Pork. Exact menu description in Portuguese: Tortilla de trigo, 180g pulled pork, alface, arroz mexicano, creme de queijos, sour cream e molho barbecue.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-58075eed-079f-4fb8-bf52-dad0f15e4dcd.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "chilli-nachos",
+    "name": "Chilli Nachos",
+    "description": "Nachos crocante (140g), creme de queijo, chillicious (420g de chilli cozido lentamente). Acompanha molhos, pico de galo, guacamole e sour cream.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "7704e335-8566-48f5-9668-b22eb6ebdbb1",
+        "name": "Chilli Nachos"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Chilli Nachos. Exact menu description in Portuguese: Nachos crocante (140g), creme de queijo, chillicious (420g de chilli cozido lentamente). Acompanha molhos, pico de galo, guacamole e sour cream.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-c7fb4dd4-1bfb-4499-b752-1d4a36564354.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "nachos-chilli-vegetariano",
+    "name": "Nachos Chilli Vegetariano",
+    "description": "Nachos crocante (140g), 420g de chillicious vegetariano (proteina de soja) e creme de queijos. Acompanha molhos pico de galo, guacamole e sour cream.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "41586c5f-78d3-4465-9ff2-7001e0cb473c",
+        "name": "Nachos Chilli Vegetariano"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Nachos Chilli Vegetariano. Exact menu description in Portuguese: Nachos crocante (140g), 420g de chillicious vegetariano (proteina de soja) e creme de queijos. Acompanha molhos pico de galo, guacamole e sour cream.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-170dbbb9-c116-4721-8c96-50e4d72e795b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "nacho-pulled-pork",
+    "name": "Nacho Pulled Pork",
+    "description": "Nachos crocante (140g), 400g de pulled pork, creme de queijos. Acompanha molhos, guacamole, sour cream e pico de galo.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "d1d4d536-d0d6-483a-947a-97db53efeb07",
+        "name": "Nacho Pulled Pork"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Nacho Pulled Pork. Exact menu description in Portuguese: Nachos crocante (140g), 400g de pulled pork, creme de queijos. Acompanha molhos, guacamole, sour cream e pico de galo.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-28e89b3c-5ce3-487c-b7ef-2d1c3fe15f26.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "croissant-double-smash",
+    "name": "Croissant Double Smash",
+    "description": "Croissant folhado amanteigado, com 2 smashes de 90g cada, queijo cheddar, bacon crocante e ketchup",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "22733db3-0412-4a77-b171-caa1d363779c",
+        "name": "Croissant Double Smash"
+      },
+      {
+        "brand": "barbadog",
+        "id": "8de7c6fb-07b6-4a17-a15a-059c27d4c808",
+        "name": "Croissant Double Smash"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Croissant Double Smash. Exact menu description in Portuguese: Croissant folhado amanteigado, com 2 smashes de 90g cada, queijo cheddar, bacon crocante e ketchup. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-65dc4113-4e6c-4f13-b688-d009482b3931.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "barbadog-chilli-nachos",
+    "name": "Barbadog Chilli Nachos",
+    "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, creme de queijo, chilli artesanal e nachos crocantes.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "080472a5-06a3-4828-a244-eac9f8747eef",
+        "name": "Barbadog Chilli Nachos"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Barbadog Chilli Nachos. Exact menu description in Portuguese: Pão Hot Dog 25cm, 2 salsichas, maionese verde, creme de queijo, chilli artesanal e nachos crocantes.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-798366f5-7157-4c59-ad63-616b8fcf108b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "chilli-bowl",
+    "name": "Chilli Bowl",
+    "description": "Bowl com 420 g de chilli cozido lentamente + creme de queijo. *Acompanha nachos crocante (140g)",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "d18fe304-028f-4344-bba1-23135771555e",
+        "name": "Chilli Bowl"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Chilli Bowl. Exact menu description in Portuguese: Bowl com 420 g de chilli cozido lentamente + creme de queijo. *Acompanha nachos crocante (140g). Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-f12d2197-763d-4bca-b5a1-21a64c9cb2d7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "barbadog-corn-bacon-caramelizado",
+    "name": "Barbadog Corn Bacon Caramelizado",
+    "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, creme de queijo, molho de tomate da casa, milho verde e bacon caramelizado.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "7c17ef2a-9a42-4cbc-9e64-0040d7ffdd29",
+        "name": "Barbadog Corn Bacon Caramelizado"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Barbadog Corn Bacon Caramelizado. Exact menu description in Portuguese: Pão Hot Dog 25cm, 2 salsichas, maionese verde, creme de queijo, molho de tomate da casa, milho verde e bacon caramelizado.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-274fe96f-01bf-46a3-9b95-6a84fb5b8e3c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "barbadog-coracao-catupiry",
+    "name": "Barbadog Coração Catupiry",
+    "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, molho de tomate da casa, coraçãozinho grelhado e Catupiry cremoso.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "ae29cb1f-3dbd-423d-8316-00c1ba48a71f",
+        "name": "Barbadog Coração Catupiry"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Barbadog Coração Catupiry. Exact menu description in Portuguese: Pão Hot Dog 25cm, 2 salsichas, maionese verde, molho de tomate da casa, coraçãozinho grelhado e Catupiry cremoso.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-97ff8f17-3c0d-4688-adb5-ce3818b3e5ee.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "barbadog-calabresa-biquinho",
+    "name": "Barbadog Calabresa Biquinho",
+    "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, molho de tomate da casa, calabresa moida, pimenta biquinho e Catupiry cremoso.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "83b9aacd-ae3b-4a78-a940-6ae0f38efd4e",
+        "name": "Barbadog Calabresa Biquinho"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Barbadog Calabresa Biquinho. Exact menu description in Portuguese: Pão Hot Dog 25cm, 2 salsichas, maionese verde, molho de tomate da casa, calabresa moida, pimenta biquinho e Catupiry cremoso.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-e637194d-d84a-49d8-859b-78fcd8d40d97.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "ciabatta-pulled-pork-chipotle",
+    "name": "Ciabatta Pulled Pork Chipotle",
+    "description": "Ciabatta, pulled pork com barbecue, molho chipotle e rúcula.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "523c8d15-81e0-4a9d-8af8-282c5cabe1c7",
+        "name": "Ciabatta Pulled Pork Chipotle"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Ciabatta Pulled Pork Chipotle. Exact menu description in Portuguese: Ciabatta, pulled pork com barbecue, molho chipotle e rúcula.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-c036833d-b59d-471e-ba18-d16eeba588ac.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "ciabatta-parmegiana",
+    "name": "Ciabatta Parmegiana",
+    "description": "Ciabatta, maionese verde, frango à parmegiana, muzzarela e molho de tomate da casa.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "decfabe1-e05a-4767-a264-9aa603d86d87",
+        "name": "Ciabatta Parmegiana"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Ciabatta Parmegiana. Exact menu description in Portuguese: Ciabatta, maionese verde, frango à parmegiana, muzzarela e molho de tomate da casa.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-6075561f-0fef-40df-b05c-4aefc2a079e5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "barbadog-frango-com-catupiry",
+    "name": "Barbadog Frango com Catupiry",
+    "description": "Pão Hot Dog 25cm, 2 salsichas, maionese verde, molho de tomate da casa, creme de queijo frango desfiado com Catupiry cremoso.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "72dc6721-ea91-4034-978a-b540ab37e967",
+        "name": "Barbadog Frango com Catupiry"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Barbadog Frango com Catupiry. Exact menu description in Portuguese: Pão Hot Dog 25cm, 2 salsichas, maionese verde, molho de tomate da casa, creme de queijo frango desfiado com Catupiry cremoso.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-1fe7fc17-e62d-484a-baad-639cd71eff90.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "ciabatta-veggie-brie-e-geleia-de-tomate",
+    "name": "Ciabatta Veggie Brie E Geleia De Tomate",
+    "description": "Ciabatta, alface americana, rúcula, maionese verde, queijo brie e geleia de tomate.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "b9860791-be36-41a4-aad1-f11c2e613465",
+        "name": "Ciabatta Veggie Brie E Geleia De Tomate"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Ciabatta Veggie Brie E Geleia De Tomate. Exact menu description in Portuguese: Ciabatta, alface americana, rúcula, maionese verde, queijo brie e geleia de tomate.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-73e7f4d2-dafd-44a7-918f-7ec3d489960e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "ciabatta-carne-de-panela-catupiry",
+    "name": "Ciabatta Carne De Panela Catupiry",
+    "description": "Ciabatta, carne de panela desfiada, cebola roxa, Catupiry cremoso e rúcula fresca.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "be0e3c82-c1a3-4fc4-b04d-b2caf71ea6f9",
+        "name": "Ciabatta Carne De Panela Catupiry"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Ciabatta Carne De Panela Catupiry. Exact menu description in Portuguese: Ciabatta, carne de panela desfiada, cebola roxa, Catupiry cremoso e rúcula fresca.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-fb8cf193-438b-4f97-8d6f-0afded7a8864.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "brasinha-bacon",
+    "name": "Brasinha Bacon",
+    "description": "Pão, maionese verde, hambúrguer de 140g assadao na brasa, queijo prato, bacon em fatias e três aneis de cebola.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "9329bff0-40f0-4f57-9fe7-768dd73758d4",
+        "name": "Brasinha Bacon"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Brasinha Bacon. Exact menu description in Portuguese: Pão, maionese verde, hambúrguer de 140g assadao na brasa, queijo prato, bacon em fatias e três aneis de cebola.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-1b88659b-d141-48bd-a4ca-ba9b91ff7ac9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "brasinha-salada",
+    "name": "Brasinha Salada",
+    "description": "Pão, maionese verde, hambúrguer de 140g assadao na brasa, queijo prato, alface americana, tomate e picles.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "ff7cbdf6-3607-4547-b15e-153c1dfb3d29",
+        "name": "Brasinha Salada"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Brasinha Salada. Exact menu description in Portuguese: Pão, maionese verde, hambúrguer de 140g assadao na brasa, queijo prato, alface americana, tomate e picles.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-d41a3350-be80-419e-8599-752e8aec9357.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "brasinha-cheeseburguer",
+    "name": "Brasinha Cheeseburguer",
+    "description": "Pão, maionese verde, hambúrguer de 140g assadao na brasa, queijo prato, picles e ketchup.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "68f0a63a-8e5c-4653-b203-04496e45426b",
+        "name": "Brasinha Cheeseburguer"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Brasinha Cheeseburguer. Exact menu description in Portuguese: Pão, maionese verde, hambúrguer de 140g assadao na brasa, queijo prato, picles e ketchup.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-8488ba63-01a2-4985-ada7-115edc0703e4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "brasinha-chicken-jr",
+    "name": "Brasinha Chicken Jr",
+    "description": "Pão, maionese verde, peito de frango empanado e frito, cheddar e cebola crispy.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "b61ee41b-3fa4-467b-8c8b-7097c8c44935",
+        "name": "Brasinha Chicken Jr"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Brasinha Chicken Jr. Exact menu description in Portuguese: Pão, maionese verde, peito de frango empanado e frito, cheddar e cebola crispy.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-4d3ecd67-a059-465d-94a6-03e13eef080f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  }
+]

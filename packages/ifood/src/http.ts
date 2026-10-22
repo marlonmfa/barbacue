@@ -59,6 +59,7 @@ export class IfoodHttp {
         const token = await this.tokens.getToken();
         const res = await fetch(target.toString(), {
           method,
+          signal: AbortSignal.timeout(15_000),
           headers: {
             Authorization: `Bearer ${token}`,
             ...(body !== undefined ? { "Content-Type": contentType } : {}),

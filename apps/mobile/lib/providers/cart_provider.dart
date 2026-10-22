@@ -6,6 +6,8 @@ import '../models/cart_item.dart';
 const _kCartKey = 'barbacue-cart';
 
 class CartNotifier extends Notifier<List<CartItem>> {
+  bool _touched = false;
+
   @override
   List<CartItem> build() {
     _loadFromStorage();
@@ -15,7 +17,7 @@ class CartNotifier extends Notifier<List<CartItem>> {
   Future<void> _loadFromStorage() async {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_kCartKey);
-    if (raw == null) return;
+    if (raw == null || _touched) return;
     try {
       final List<dynamic> data = jsonDecode(raw);
       state = data.map((e) => CartItem.fromJson(e)).toList();
@@ -25,6 +27,7 @@ class CartNotifier extends Notifier<List<CartItem>> {
   }
 
   Future<void> _persist() async {
+    _touched = true;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
       _kCartKey,
@@ -70,6 +73,15 @@ class CartNotifier extends Notifier<List<CartItem>> {
   void clear() {
     state = [];
     _persist();
+  }
+
+  Future<void> eraseLocalData() async {
+    _touched = true;
+    state = [];
+    final prefs = await SharedPreferences.getInstance();
+    if (!await prefs.remove(_kCartKey)) {
+      throw StateError('Falha ao apagar carrinho.');
+    }
   }
 
   int get totalCents => state.fold(0, (sum, e) => sum + e.priceCents * e.qty);

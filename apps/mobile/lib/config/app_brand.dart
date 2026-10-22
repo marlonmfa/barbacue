@@ -39,7 +39,8 @@ class BrandConfig {
   final String? ifoodUrl;
   final String? minimumOrder;
 
-  bool get hasNativeCheckout => brand == AppBrand.barbacue;
+  bool get hasNativeCheckout => true;
+  bool get hasAiChat => brand == AppBrand.barbacue;
   Uri get siteUri => Uri.https(domain);
   Uri legalUri(String page) => Uri.https(domain, '/legal/$slug/$page.html');
   Uri? get ifoodUri => ifoodUrl == null ? null : Uri.parse(ifoodUrl!);

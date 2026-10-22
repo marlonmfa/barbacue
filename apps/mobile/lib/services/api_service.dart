@@ -140,17 +140,15 @@ class ApiService {
   }
 
   static Future<List<Category>> fetchMenu() async {
-    // Chelas and Barbadog are iFood-powered storefronts. Their bundled,
-    // versioned snapshots make the first screen instant and keep the menu
-    // usable on weak mobile connections; each product still opens its live
-    // iFood URL for availability and checkout.
-    if (!currentBrand.hasNativeCheckout) return _bundledBrandMenu();
-
     try {
-      final response = await _client.get(
-        Uri.parse('$baseUrl/api/products'),
-        headers: {'Accept': 'application/json'},
-      );
+      final response = await _client
+          .get(
+            Uri.parse(
+              '$baseUrl/api/products',
+            ).replace(queryParameters: {'brand': currentBrand.slug}),
+            headers: {'Accept': 'application/json'},
+          )
+          .timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
@@ -159,9 +157,11 @@ class ApiService {
         return parsed;
       }
     } catch (_) {
-      rethrow;
+      if (currentBrand.brand == AppBrand.barbacue) rethrow;
     }
-
+    // Offline snapshots are browsing-only: their synthetic IDs must never
+    // reach checkout, which requires the live managed catalog IDs.
+    if (currentBrand.brand != AppBrand.barbacue) return _bundledBrandMenu();
     throw Exception('Falha ao carregar o cardápio.');
   }
 
@@ -217,7 +217,7 @@ class ApiService {
       priceCents: original ?? salePrice,
       promoPriceCents: original == null ? null : salePrice,
       imageUrl: json['imageUrl']?.toString(),
-      available: true,
+      available: false,
       sortOrder: productIndex,
       ifoodUrl: json['ifoodUrl']?.toString(),
     );
@@ -293,45 +293,75 @@ class ApiService {
   /// An unavailable configuration is not permission to deliver without a fee.
   static Future<bool> fetchDeliveryEnabled() async {
     try {
-      final response = await _client.get(
-        Uri.parse('$baseUrl/api/delivery/quote'),
-        headers: {'Accept': 'application/json'},
-      ).timeout(const Duration(seconds: 15));
+      final response = await _client
+          .get(
+            Uri.parse('$baseUrl/api/delivery/quote'),
+            headers: {'Accept': 'application/json'},
+          )
+          .timeout(const Duration(seconds: 15));
       if (response.statusCode != 200) {
-        throw DeliveryApiException(_apiMessage(response.body) ?? 'Não foi possível verificar a entrega.');
+        throw DeliveryApiException(
+          _apiMessage(response.body) ?? 'Não foi possível verificar a entrega.',
+        );
       }
       final data = jsonDecode(response.body);
       if (data is! Map<String, dynamic> || data['enabled'] is! bool) {
-        throw const DeliveryApiException('Não foi possível verificar a entrega.');
+        throw const DeliveryApiException(
+          'Não foi possível verificar a entrega.',
+        );
       }
       return data['enabled'] as bool;
     } on DeliveryApiException {
       rethrow;
     } catch (_) {
-      throw const DeliveryApiException('Não foi possível verificar a entrega. Confira sua conexão e tente novamente.');
+      throw const DeliveryApiException(
+        'Não foi possível verificar a entrega. Confira sua conexão e tente novamente.',
+      );
     }
   }
 
   static Future<DeliveryQuote> quoteDelivery({required String address}) async {
     try {
-      final response = await _client.post(
-        Uri.parse('$baseUrl/api/delivery/quote'),
-        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
-        body: jsonEncode({'address': address.trim(), 'brand': currentBrand.slug}),
-      ).timeout(const Duration(seconds: 30));
+      final response = await _client
+          .post(
+            Uri.parse('$baseUrl/api/delivery/quote'),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              'address': address.trim(),
+              'brand': currentBrand.slug,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
       if (response.statusCode != 200 && response.statusCode != 201) {
         String? code;
         try {
           final data = jsonDecode(response.body);
-          if (data is Map<String, dynamic>) code = (data['code'] ?? data['error']) is String ? (data['code'] ?? data['error']) as String : null;
+          if (data is Map<String, dynamic>) {
+            code = (data['code'] ?? data['error']) is String
+                ? (data['code'] ?? data['error']) as String
+                : null;
+          }
         } catch (_) {}
-        throw DeliveryApiException(_apiMessage(response.body) ?? 'Não foi possível calcular o frete. Confira o endereço e tente novamente.', code: code);
+        throw DeliveryApiException(
+          _apiMessage(response.body) ??
+              'Não foi possível calcular o frete. Confira o endereço e tente novamente.',
+          code: code,
+        );
       }
-      return DeliveryQuote.fromJson(jsonDecode(response.body) as Map<String, dynamic>, requestedAddress: address, brand: currentBrand.slug);
+      return DeliveryQuote.fromJson(
+        jsonDecode(response.body) as Map<String, dynamic>,
+        requestedAddress: address,
+        brand: currentBrand.slug,
+      );
     } on DeliveryApiException {
       rethrow;
     } catch (_) {
-      throw const DeliveryApiException('Não foi possível confirmar o valor do frete. Calcule novamente.');
+      throw const DeliveryApiException(
+        'Não foi possível confirmar o valor do frete. Calcule novamente.',
+      );
     }
   }
 
@@ -362,9 +392,14 @@ class ApiService {
 
     try {
       final data = jsonDecode(response.body);
-      if (data is Map<String, dynamic> && data['code'] is String &&
+      if (data is Map<String, dynamic> &&
+          data['code'] is String &&
           (data['code'] as String).startsWith('delivery_')) {
-        throw DeliveryApiException(_apiMessage(response.body) ?? 'Confira o frete antes de enviar o pedido.', code: data['code'] as String);
+        throw DeliveryApiException(
+          _apiMessage(response.body) ??
+              'Confira o frete antes de enviar o pedido.',
+          code: data['code'] as String,
+        );
       }
     } on DeliveryApiException {
       rethrow;

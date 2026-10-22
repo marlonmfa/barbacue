@@ -1,0 +1,186 @@
+{
+  "icons": [
+    {
+      "brand": "barbacue",
+      "kind": "icon",
+      "hash": "193a4261780852b2ed98d217f555cfe7165e86cd431648308785821e02e84656"
+    },
+    {
+      "brand": "barbacue",
+      "kind": "apple",
+      "hash": "e9961cde8ef9db107768df18317c8c09875c6ab349277e3f797bcb007d9cfb50"
+    },
+    {
+      "brand": "chelas",
+      "kind": "icon",
+      "hash": "8c02209dd53e5ef60d321071b5ac4913d1d7b35e7525e79486298b329329f2ce"
+    },
+    {
+      "brand": "chelas",
+      "kind": "apple",
+      "hash": "3113d398009915b12b8301440a7c0b7d3913024bffe4c1b12563e56dac9376e0"
+    },
+    {
+      "brand": "barbadog",
+      "kind": "icon",
+      "hash": "1fd6c1d8058f674bbd28db8b34bf7eb70c4468c9953d5b1c808d53ae76a76fdd"
+    },
+    {
+      "brand": "barbadog",
+      "kind": "apple",
+      "hash": "a14916da94487be128d4f2bac6751dfe03dbf3aa1de8d515c4778511c1f085e1"
+    }
+  ],
+  "images": [
+    {
+      "path": "/menu/brands-2026-09/quesadilla-de-mussarela.webp",
+      "hash": "2efa8237b1fe5146954851d48705dc8f08008b8509653009eb58a6266221af88"
+    },
+    {
+      "path": "/menu/brands-2026-09/tacos-do-chelas.webp",
+      "hash": "9b4910228f0837dc3a6a3d4be7dff382a2ddc2bbb91f90a10f023d0954c53543"
+    },
+    {
+      "path": "/menu/brands-2026-09/quesadilla-de-frango-com-catupiry.webp",
+      "hash": "1d241d9c6990a4a7fc55341bee2f94dea7121345a5ec0db7341eaa1d5aa8cdf7"
+    },
+    {
+      "path": "/menu/brands-2026-09/quesadilla-carne-de-panela.webp",
+      "hash": "4143e0265a9ff190ca0761c910dc4362cc7be539678de435abe65ed6b1e35357"
+    },
+    {
+      "path": "/menu/brands-2026-09/burrito-chillicious.webp",
+      "hash": "c43ed66c664da6bbbe7829b461adac77b25634e51334eb21928588f01e4c1089"
+    },
+    {
+      "path": "/menu/brands-2026-09/quesadilla-de-pulled-pork.webp",
+      "hash": "ced78756619c2ee4d36fd14b2b362bae54c61c7d5d9e9fa8fdef68104e3b2f28"
+    },
+    {
+      "path": "/menu/brands-2026-09/burrito-de-frango.webp",
+      "hash": "a204c6ecea03e46ff7f90c1dc40ff587f66e2865711b9ae1f5e10f23bc95a54a"
+    },
+    {
+      "path": "/menu/brands-2026-09/burrito-burguer.webp",
+      "hash": "d06fbec04719e0ee9f5b83672f9055d83b1ce456a3e76201bb3b32c1ccba253b"
+    },
+    {
+      "path": "/menu/brands-2026-09/burrito-chilli-veggie.webp",
+      "hash": "38c57e392175a44de2792566c78dc835875e829ba525ff333ad79eaae804f8b6"
+    },
+    {
+      "path": "/menu/brands-2026-09/chicken-sweet-crispy.webp",
+      "hash": "cd10ce9846ebcadce3f7667b3bf21157ca56abc3f33ee2ec02de6e74266c5e3f"
+    },
+    {
+      "path": "/menu/brands-2026-09/burrito-carne-de-panela.webp",
+      "hash": "cbb6b08a7ea398a98f8ca86bcaf41dc5daa09acec58ea4bbf82ea24976e53d57"
+    },
+    {
+      "path": "/menu/brands-2026-09/burrito-de-camarao.webp",
+      "hash": "f4709d4c0a11d4196e6794a4d3444b47245dc656daae4a3a1742ea1f8d6ca142"
+    },
+    {
+      "path": "/menu/brands-2026-09/burrito-pulled-pork.webp",
+      "hash": "138226bc0105a8e7a992aefe0ea2e14ecd2c88d142b91684884647379ebbdfea"
+    },
+    {
+      "path": "/menu/brands-2026-09/chilli-nachos.webp",
+      "hash": "97ccbe88711e689941ecea943a5e57f19b3330a38a75b4d03479f23f1086cdb3"
+    },
+    {
+      "path": "/menu/brands-2026-09/nachos-chilli-vegetariano.webp",
+      "hash": "39ef62172fbb2d8ce92f1ee4230b4cbcd3ae491f7f6b201a3024e7bd48601ef3"
+    },
+    {
+      "path": "/menu/brands-2026-09/nacho-pulled-pork.webp",
+      "hash": "d063d04d78e0f508a4771c6d802c71694837ac3c3d1d4fc93957125d4c32dd1b"
+    },
+    {
+      "path": "/menu/brands-2026-09/croissant-double-smash.webp",
+      "hash": "c52ef7f5e2cf2779ee53619c6ebe193bc73c0da50ecbdfa2127a31a9e5160047"
+    },
+    {
+      "path": "/menu/brands-2026-09/barbadog-chilli-nachos.webp",
+      "hash": "d91e263f88b4f533c6956717b9c1b65f3faf02dba7e3168fe23b5aea91b0e003"
+    },
+    {
+      "path": "/menu/brands-2026-09/chilli-bowl.webp",
+      "hash": "4a79052ec3e4427430b0836dbad769e8ad5b2fb214fa87eb3d3d13f62d55b857"
+    },
+    {
+      "path": "/menu/brands-2026-09/barbadog-corn-bacon-caramelizado.webp",
+      "hash": "3c4972a2418b0d7338d4a8a8ee26b2fdc61e2db76f129e11b0c67304e0fcf08f"
+    },
+    {
+      "path": "/menu/brands-2026-09/barbadog-coracao-catupiry.webp",
+      "hash": "05ef2d2ecbbf670258b39ed160fee4f35927711fee957d4c3845b7fe0af858de"
+    },
+    {
+      "path": "/menu/brands-2026-09/barbadog-calabresa-biquinho.webp",
+      "hash": "ce67e49d744f0931e5d62de471de913f0d38c1a6dafd2d599c9f9462d5c8f9b7"
+    },
+    {
+      "path": "/menu/brands-2026-09/ciabatta-pulled-pork-chipotle.webp",
+      "hash": "ef99c426f315e9a5737b194a80cc10cd6a7a3466709cdfa75d37f04730a73b8d"
+    },
+    {
+      "path": "/menu/brands-2026-09/ciabatta-parmegiana.webp",
+      "hash": "fdf8e080067d2e81787185238616c97c3e2a1cbca974cd63d05591cbab00e673"
+    },
+    {
+      "path": "/menu/brands-2026-09/barbadog-frango-com-catupiry.webp",
+      "hash": "ebb30bfcf24a924240d21b568eb0365066b511584d7193078778d7e26541f7b1"
+    },
+    {
+      "path": "/menu/brands-2026-09/ciabatta-veggie-brie-e-geleia-de-tomate.webp",
+      "hash": "abf5def80b00b49b7ff4aea15249bb36a4345bfec967a5e4653adb4717eadde2"
+    },
+    {
+      "path": "/menu/brands-2026-09/ciabatta-carne-de-panela-catupiry.webp",
+      "hash": "80e4072c3860ce21230a6af078d6f7b00bc95b87c689ef3aa953f711735f2abc"
+    },
+    {
+      "path": "/menu/brands-2026-09/brasinha-bacon.webp",
+      "hash": "2f51f6d4d39a985ceb36d9564fa205af3648ff66980340075e5fc50ba9c09c94"
+    },
+    {
+      "path": "/menu/brands-2026-09/brasinha-salada.webp",
+      "hash": "c7063a5e8fd34bb592b31ebe1acaf4859e492b96eed01b36b35eae3d30051a96"
+    },
+    {
+      "path": "/menu/brands-2026-09/brasinha-cheeseburguer.webp",
+      "hash": "44142ff9d03a6cf59a51dcc4f72bfeb318633ac7ebc61e5f3ee92a87d7fa6596"
+    },
+    {
+      "path": "/menu/brands-2026-09/brasinha-chicken-jr.webp",
+      "hash": "34c1e27b09b9ad585ea6005d4c4e659b1872adc18d063ab62630d0c4de681dda"
+    }
+  ],
+  "catalogs": [
+    {
+      "brand": "chelas",
+      "updated": 18,
+      "total": 66
+    },
+    {
+      "brand": "barbadog",
+      "updated": 14,
+      "total": 71
+    }
+  ],
+  "browser": [
+    {
+      "brand": "chelas",
+      "loaded": 18,
+      "overflow": false,
+      "illustrationLabel": true
+    },
+    {
+      "brand": "barbadog",
+      "loaded": 14,
+      "overflow": false,
+      "illustrationLabel": true
+    }
+  ]
+}

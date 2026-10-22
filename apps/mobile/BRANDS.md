@@ -6,12 +6,14 @@ Eles podem coexistir no mesmo aparelho e são publicados separadamente.
 | App | Android/iOS bundle ID | Backend | Fluxo de pedido |
 | --- | --- | --- | --- |
 | Barbacue | `com.lanchesdobarba.barbacue` | `barbacue.cog.ia.br` | Carrinho, cupom, checkout, Pix, mesa e chat nativos |
-| Chelas | `com.lanchesdobarba.chelas` | `chelas.hirableaiagents.com` | Cardápio nativo e abertura do prato/restaurante no iFood |
-| Barbadog | `com.lanchesdobarba.barbadog` | `barbadog.hirableaiagents.com` | Cardápio nativo e abertura do prato/restaurante no iFood |
+| Chelas | `com.lanchesdobarba.chelas` | `chelas.hirableaiagents.com` | Cardápio atualizado, detalhes, carrinho, entrega e pagamento nativos |
+| Barbadog | `com.lanchesdobarba.barbadog` | `barbadog.hirableaiagents.com` | Cardápio atualizado, detalhes, carrinho, entrega e pagamento nativos |
 
-Chelas e Barbadog levam um snapshot versionado do scraping dentro do app. Assim,
-o cardápio aparece instantaneamente mesmo com conexão fraca; preço,
-disponibilidade e checkout são confirmados no iFood ao abrir o item.
+Chelas e Barbadog consultam o catálogo gerenciado para usar os IDs reais do
+checkout. Sem conexão, exibem o snapshot embarcado apenas para consulta: é
+necessário atualizar antes de adicionar itens. Não há criação de conta nem chat
+com IA nestas duas marcas. A central Privacidade e ajuda permite apagar os dados
+locais e acessar as páginas públicas de privacidade, termos e consentimento.
 
 ## Executar
 

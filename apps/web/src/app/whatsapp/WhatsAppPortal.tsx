@@ -25,7 +25,9 @@ function Icon({ name, size = 20 }: { name: string; size?: number }) {
     smile: <><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></>,
     phone: <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.8 2.1Z"/>,
     video: <><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/></>,
-    close: <path d="m18 6-12 12M6 6l12 12"/>, refresh: <><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></>,
+    close: <path d="m18 6-12 12M6 6l12 12"/>,
+    qr: <><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h3M21 18v3h-3"/></>,
+    unlink: <><path d="M9 17H7A5 5 0 0 1 7 7h2M15 7h2a5 5 0 0 1 4 8"/><path d="M8 12h4M3 3l18 18"/></>, refresh: <><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></>,
   };
   return <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>;
 }
@@ -49,6 +51,7 @@ export function WhatsAppPortal() {
   // its own inline slot — otherwise a failed pair looks like nothing happened.
   const [pairError, setPairError] = useState("");
   const [pairBusy, setPairBusy] = useState(false);
+  const [confirmUnpair, setConfirmUnpair] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -80,7 +83,17 @@ export function WhatsAppPortal() {
   const visible = useMemo(() => chats.filter((chat) => `${chat.name} ${chat.lastMessage}`.toLowerCase().includes(search.toLowerCase())), [chats, search]);
   const currentAccount = accounts[0] ?? null;
 
-  function openPairModal() { setPairError(""); setPairing("central"); }
+  // Pairing finished on the phone: close the modal and land in the inbox.
+  useEffect(() => {
+    if (pairing && currentAccount?.status === "connected") { const done = setTimeout(() => setPairing(null), 0); return () => clearTimeout(done); }
+  }, [pairing, currentAccount?.status]);
+
+  // Two explicit entry points: QR starts generating right away; the phone
+  // flow first asks for the number, then shows the code WhatsApp expects.
+  function openPairModal(next: "qr" | "phone" = "qr") {
+    setPairError(""); setMethod(next); setPairing("central");
+    if (next === "qr") void startPairing("qr");
+  }
   function switchMethod(next: "qr" | "phone") { setPairError(""); setMethod(next); }
 
   // Leaving the modal tells the bot to stop refreshing the QR. Without it the
@@ -92,14 +105,21 @@ export function WhatsAppPortal() {
     if (id) api("pair-cancel", { method: "POST", body: JSON.stringify({ account: id }) }).catch(() => undefined);
   }
 
-  async function startPairing() {
-    if (!pairing || pairBusy) return;
+  async function startPairing(how: "qr" | "phone" = method) {
+    if (pairBusy) return;
     setPairBusy(true); setPairError("");
     try {
-      await api("pair", { method: "POST", body: JSON.stringify({ account: pairing, method, phone }) });
+      await api("pair", { method: "POST", body: JSON.stringify({ account: "central", method: how, phone: how === "phone" ? phone.replace(/\D/g, "") : undefined }) });
       await refresh();
     } catch (e) { setPairError(e instanceof Error ? e.message : "Falha ao parear"); }
     finally { setPairBusy(false); }
+  }
+
+  async function unpair() {
+    if (!confirmUnpair) { setConfirmUnpair(true); setTimeout(() => setConfirmUnpair(false), 4000); return; }
+    setConfirmUnpair(false);
+    try { await api("disconnect", { method: "POST", body: JSON.stringify({ account: "central" }) }); setActive(null); await refresh(); }
+    catch (e) { setError(e instanceof Error ? e.message : "Não foi possível desconectar"); }
   }
 
   async function send(event: FormEvent) {
@@ -130,7 +150,12 @@ export function WhatsAppPortal() {
         </nav>
         <div className={styles.accountActions}>
           <div className={styles.connectionSummary}>{accounts.filter((a) => a.status === "connected").length}<span>/ 1 número online</span></div>
-          <button className={styles.pairButton} onClick={openPairModal}><Icon name="plus" size={17}/> Parear número</button>
+          {currentAccount?.status === "connected"
+            ? <button className={`${styles.pairButton} ${styles.unpairButton}`} onClick={unpair} title="Desconectar o número"><Icon name="unlink" size={17}/> {confirmUnpair ? "Confirmar desconexão" : "Desconectar"}</button>
+            : <>
+              <button className={styles.pairButton} onClick={() => openPairModal("qr")} title="Parear lendo um QR code no celular"><Icon name="qr" size={17}/> Parear por QR code</button>
+              <button className={`${styles.pairButton} ${styles.pairButtonAlt}`} onClick={() => openPairModal("phone")} title="Receber um código no celular"><Icon name="phone" size={16}/> Enviar código ao celular</button>
+            </>}
           <Link href="/admin" className={styles.adminLink} aria-label="Voltar ao painel"><Icon name="dots"/></Link>
         </div>
       </header>
@@ -166,12 +191,12 @@ export function WhatsAppPortal() {
               <div ref={endRef}/>
             </div>
             <form className={styles.composer} onSubmit={send}><button type="button" aria-label="Emoji" onClick={() => setDraft((value) => `${value} 🙂`)}><Icon name="smile"/></button><button type="button" aria-label="Anexar foto, vídeo, áudio ou documento" onClick={() => fileRef.current?.click()}><Icon name="clip"/></button><input ref={fileRef} className={styles.fileInput} type="file" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt" onChange={(event) => sendFile(event.target.files?.[0])}/><input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Digite uma mensagem"/><button className={styles.send} disabled={!draft.trim()} aria-label="Enviar"><Icon name="send" size={19}/></button></form>
-          </> : <div className={styles.welcome}><div className={styles.rings}><span>B</span></div><h2>Um número, três agentes.</h2><p>O cliente escolhe Barbacue, Barbadog ou Chelas. A conversa é entregue ao agente certo e continua nesta mesma caixa de entrada.</p><div>{accounts.map((account) => <button key={account.id} onClick={() => account.status === "connected" ? setFilter("all") : openPairModal()}><i className={styles.allDot}/><span><b>Número central</b><small>{account.status === "connected" ? `+${account.phoneNumber}` : "Parear número"}</small></span><em className={account.status === "connected" ? styles.online : ""}>{account.status === "connected" ? "Online" : "Offline"}</em></button>)}</div></div>}
+          </> : <div className={styles.welcome}><div className={styles.rings}><span>B</span></div><h2>Um número, três agentes.</h2><p>O cliente escolhe Barbacue, Barbadog ou Chelas. A conversa é entregue ao agente certo e continua nesta mesma caixa de entrada.</p><div>{accounts.map((account) => <button key={account.id} onClick={() => account.status === "connected" ? setFilter("all") : openPairModal("qr")}><i className={styles.allDot}/><span><b>Número central</b><small>{account.status === "connected" ? `+${account.phoneNumber}` : "Parear número"}</small></span><em className={account.status === "connected" ? styles.online : ""}>{account.status === "connected" ? "Online" : "Offline"}</em></button>)}</div>{currentAccount?.status !== "connected" && <div className={styles.welcomeActions}><button onClick={() => openPairModal("qr")}><Icon name="qr" size={18}/> Parear por QR code</button><button onClick={() => openPairModal("phone")}><Icon name="phone" size={17}/> Enviar código ao celular</button></div>}</div>}
         </article>
       </section>
 
-      {pairing && <div className={styles.modalBackdrop} onMouseDown={(e) => e.target === e.currentTarget && closePairModal()}><section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="pair-title"><button className={styles.modalClose} onClick={closePairModal}><Icon name="close"/></button><span className={`${styles.modalBrand} ${styles.allDot}`}>3</span><h2 id="pair-title">Conectar número central</h2><p>Este único número atende clientes das três marcas e encaminha cada conversa ao agente especializado.</p><div className={styles.methodTabs}><button className={method === "qr" ? styles.methodActive : ""} onClick={() => switchMethod("qr")}>Escanear QR code</button><button className={method === "phone" ? styles.methodActive : ""} onClick={() => switchMethod("phone")}>Usar número</button></div>
-        {method === "qr" ? <div className={styles.qrArea}>{currentAccount?.qrDataUrl ? <><div className={styles.qr}><Image src={currentAccount.qrDataUrl} alt="QR code de pareamento" width={230} height={230} unoptimized/></div><ol><li>Abra o WhatsApp no celular</li><li>Toque em <b>Aparelhos conectados</b></li><li>Escaneie este código</li></ol></> : <><div className={styles.qrPlaceholder}><span>▦</span></div><button className={styles.modalAction} disabled={pairBusy} onClick={startPairing}>{pairBusy ? "Gerando QR code…" : "Gerar QR code"}</button></>}</div> : <div className={styles.phoneArea}><label>Número com DDD<input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="55 11 99999 9999" inputMode="tel"/></label>{currentAccount?.pairingCode ? <div className={styles.code}><span>Código de pareamento</span><b>{currentAccount.pairingCode}</b><small>No celular, escolha “Conectar com número de telefone”.</small></div> : <button className={styles.modalAction} disabled={pairBusy || phone.replace(/\D/g, "").length < 10} onClick={startPairing}>{pairBusy ? "Enviando código…" : "Enviar código"}</button>}</div>}
+      {pairing && <div className={styles.modalBackdrop} onMouseDown={(e) => e.target === e.currentTarget && closePairModal()}><section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="pair-title"><button className={styles.modalClose} onClick={closePairModal}><Icon name="close"/></button><span className={`${styles.modalBrand} ${styles.allDot}`}>3</span><h2 id="pair-title">{method === "qr" ? "Parear por QR code" : "Parear com código no celular"}</h2><p>Este único número atende clientes das três marcas e encaminha cada conversa ao agente especializado.</p><div className={styles.methodTabs}><button className={method === "qr" ? styles.methodActive : ""} onClick={() => { switchMethod("qr"); if (!currentAccount?.qrDataUrl) void startPairing("qr"); }}>QR code</button><button className={method === "phone" ? styles.methodActive : ""} onClick={() => switchMethod("phone")}>Código no celular</button></div>
+        {method === "qr" ? <div className={styles.qrArea}>{currentAccount?.qrDataUrl ? <><div className={styles.qr}><Image src={currentAccount.qrDataUrl} alt="QR code de pareamento" width={230} height={230} unoptimized/></div><ol><li>Abra o WhatsApp no celular</li><li>Toque em <b>Aparelhos conectados › Conectar aparelho</b></li><li>Aponte a câmera para este código</li></ol><button className={styles.linkButton} disabled={pairBusy} onClick={() => startPairing("qr")}>Gerar novo QR code</button></> : <><div className={styles.qrPlaceholder}><span>▦</span></div><button className={styles.modalAction} disabled={pairBusy} onClick={() => startPairing("qr")}>{pairBusy ? "Gerando QR code…" : "Gerar QR code"}</button></>}</div> : <div className={styles.phoneArea}><label>Número do WhatsApp (DDI + DDD)<input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="55 47 99999 9999" inputMode="tel" autoComplete="tel"/></label>{currentAccount?.pairingCode ? <div className={styles.code}><span>Código de pareamento</span><b>{currentAccount.pairingCode}</b><small>O WhatsApp desse número mostrará uma notificação. Toque nela (ou em <b>Aparelhos conectados › Conectar aparelho › Conectar com número de telefone</b>) e digite este código.</small><button className={styles.linkButton} disabled={pairBusy} onClick={() => startPairing("phone")}>Enviar novo código</button></div> : <button className={styles.modalAction} disabled={pairBusy || phone.replace(/\D/g, "").length < 10} onClick={() => startPairing("phone")}>{pairBusy ? "Enviando código…" : "Enviar código ao celular"}</button>}</div>}
         {(pairError || currentAccount?.lastError) && <p className={styles.modalError} role="alert">{pairError || currentAccount?.lastError}</p>}
         <div className={styles.modalFoot}><span>As credenciais ficam salvas no servidor.</span><button onClick={() => { setPairing((current) => current); refresh(); }}><Icon name="refresh" size={15}/> Atualizar</button></div>
       </section></div>}

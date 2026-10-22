@@ -97,7 +97,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Revogar consentimento de IA'));
+      await tester.scrollUntilVisible(find.text('Revogar consentimento de IA'), 250);
       await tester.tap(find.text('Revogar consentimento de IA'));
       await tester.pumpAndSettle();
       expect(await PrivacyConsent.hasAiConsent(), isFalse);

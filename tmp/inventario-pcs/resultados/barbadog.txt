@@ -1,0 +1,155 @@
+Hostname: BARBADOG   Usuario SSH: barba   Logado no console: BARBADOG\barba
+SO: Microsoft Windows 11 Home Single Language 10.0.26200   Fabricante/Modelo: LENOVO 82BU
+Ligado desde: 09/15/2026 10:23:35   RAM: 3.7 GB
+Descricao do PC: 
+Perfis em C:\Users: barba, Public, TEMP, TEMP.Font Driver Host, TEMP.Font Driver Host.000, TEMP.Font Driver Host.001, TEMP.Font Driver Host.002, TEMP.Font Driver Host.003, UMFD-0, UMFD-0.Font Driver Host, UMFD-0.Font Driver Host.000, UMFD-0.Font Driver Host.001, UMFD-0.Font Driver Host.002, UMFD-0.Font Driver Host.003
+Disco C: livre 67 / 118.3 GB
+IP 192.168.1.9/24  (Wi-Fi)
+IP 10.66.0.29/24  (vpncog-mesh)
+Gateway 192.168.1.1 via Wi-Fi
+Estado                  : Conectado
+SSID                   : BARBACUE
+Sinal                 : 96%
+Perfis Wi-Fi salvos: BARBACUE
+AnotaAIResponde 3.0.8 | 3.0.8 | Anota AI | 
+Copilot | 154.0.4258.62 | Microsoft Corporation | 20261007
+ELGIN Printer Driver v1.8.0 | 1.8.0 |  | 20260724
+Gestor de Pedidos 8.10.4 | 8.10.4 | iFood | 
+Google Chrome | 155.0.8059.39 | Google LLC | 20261008
+Microsoft Edge | 154.0.4258.62 | Microsoft Corporation | 20261006
+Microsoft OneDrive | 26.173.0906.0008 | Microsoft Corporation | 
+Microsoft Windows Application Compatibility Fix Database |  |  | 
+OpenSSH | 10.0.0.0 | Microsoft Corporation | 20261008
+TeamViewer | 15.82.6 | TeamViewer | 
+WireGuard | 1.1.1 | WireGuard LLC | 20261008
+--- Apps da Microsoft Store (nao-Microsoft):
+4505Fortemedia.FMAPOControl 1.0.38.0
+AppUp.IntelGraphicsExperience 1.100.5688.0
+DolbyLaboratories.DolbyAudio 3.30100.101.0
+RealtekSemiconductorCorp.RealtekAudioControl 1.37.275.0
+AD2F1837.HPPrinterDriver 2605.1.4767.0
+AD2F1837.HPPrinterControl 166.2.1118.0
+--- Relevantes para restaurante/PDV:
+  * AnotaAIResponde 3.0.8 3.0.8  []
+  * ELGIN Printer Driver v1.8.0 1.8.0  [C:\ELGIN\]
+  * Gestor de Pedidos 8.10.4 8.10.4  []
+  * TeamViewer 15.82.6  [C:\Program Files\TeamViewer]
+  * WireGuard 1.1.1  []
+HPPrintScanDoctorService.exe x1  sessao 0  C:\Program Files\HPPrintScanDoctor\HPPrintScanDoctorService.exe
+TeamViewer_Service.exe       x1  sessao 0  C:\Program Files\TeamViewer\TeamViewer_Service.exe
+crashpad_handler.exe         x2  sessao 0  C:\Program Files\TeamViewer\crashpad_handler.exe
+wireguard.exe                x1  sessao 0  C:\Program Files\WireGuard\wireguard.exe
+ssh-agent.exe                x1  sessao 0  C:\Program Files\OpenSSH\ssh-agent.exe
+sshd.exe                     x1  sessao 0  C:\Program Files\OpenSSH\sshd.exe
+DefenderSessionHelper.exe    x1  sessao 24  C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.26080.4-0\DefenderSessionHelper.exe
+WidgetBoard.exe              x1  sessao 24  C:\Program Files\WindowsApps\MicrosoftWindows.Client.WebExperience_526.21100.40.0_x64__cw5n1h2txyewy\WidgetBoard.exe
+CrossDeviceService.exe       x1  sessao 24  C:\Program Files\WindowsApps\MicrosoftWindows.CrossDevice_1.26072.116.0_x64__cw5n1h2txyewy\CrossDeviceService.exe
+WidgetService.exe            x1  sessao 24  C:\Program Files\WindowsApps\Microsoft.WidgetsPlatformRuntime_1.6.19.0_x64__8wekyb3d8bbwe\WidgetService\WidgetService.exe
+msedgewebview2.exe           x12  sessao 24  C:\Program Files (x86)\Microsoft\EdgeWebView\Application\154.0.4258.62\msedgewebview2.exe
+MicrosoftStartFeedProvider.exe x1  sessao 24  C:\Program Files\WindowsApps\Microsoft.StartExperiencesApp_1.398.2.0_x64__8wekyb3d8bbwe\MicrosoftStartFeedProvider\MicrosoftStartFeedProvider.exe
+TeamViewer.exe               x1  sessao 24  C:\Program Files\TeamViewer\TeamViewer.exe
+tv_w32.exe                   x1  sessao 24  C:\Program Files\TeamViewer\tv_w32.exe
+tv_x64.exe                   x1  sessao 24  C:\Program Files\TeamViewer\tv_x64.exe
+AnotaAIResponde.exe          x11  sessao 24  C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe
+Gestor de Pedidos.exe        x5  sessao 24  C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe
+Impressora_Anota_AI.exe      x2  sessao 24  C:\Program Files (x86)\AnotaAIResponde\resources\extraResources\Impressora_Anota_AI.exe
+msedge.exe                   x8  sessao 24  C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+chrome.exe                   x10  sessao 24  C:\Program Files\Google\Chrome\Application\chrome.exe
+sshd-session.exe             x2  sessao 0  c:\program files\openssh\sshd-session.exe
+--- Janelas abertas:
+OneDriveSetup | C:\Windows\System32\OneDriveSetup.exe /thfirstsetup | AUTORIDADE NT\SERVIÇO LOCAL
+OneDriveSetup | C:\Windows\System32\OneDriveSetup.exe /thfirstsetup | AUTORIDADE NT\SERVIÇO DE REDE
+OneDrive | "C:\Users\barba\AppData\Local\Microsoft\OneDrive\OneDrive.exe" /background | BARBADOG\barba
+electron.app.AnotaAIResponde | C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe | BARBADOG\barba
+ifood.order.manager | C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe | BARBADOG\barba
+MicrosoftEdgeAutoLaunch_C3D823CB52CEA10955D5208F9F1054D1 | "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --no-startup-window --win-session-start | BARBADOG\barba
+SecurityHealth | %windir%\system32\SecurityHealthSystray.exe | Public
+RtkAudUService | "C:\WINDOWS\System32\DriverStore\FileRepository\realtekservice.inf_amd64_719a4f3eb3c3c65a\RtkAudUService64.exe" -background | Public
+--- Servicos de terceiros em execucao:
+HPPrintScanDoctorService | HP Print Scan Doctor Service | Auto
+MDCoreSvc | Serviço Microsoft Defender Core | Auto
+ssh-agent | OpenSSH Authentication Agent | Auto
+TeamViewer | TeamViewer | Auto
+WdNisSvc | Serviço de Inspeção de Rede do Microsoft Defender Antivírus | Manual
+WinDefend | Serviço Microsoft Defender Antivírus | Auto
+WireGuardTunnel$vpncog-mesh | WireGuard Tunnel: vpncog-mesh | Auto
+sshd | OpenSSH SSH Server | Auto
+--- C:\Users\barba\Documents (3 itens; 40 mais recentes)
+  2026-04-14  Meus Vídeos\
+  2026-04-14  Minhas Imagens\
+  2026-04-14  Minhas Músicas\
+--- C:\Users\barba\Downloads (20 itens; 40 mais recentes)
+  2026-08-10  WhatsApp Image 2026-08-10 at 20.12.20.jpeg
+  2026-08-10  WhatsApp Image 2026-08-10 at 20.03.23.jpeg
+  2026-08-10  2026 Contrato com inquilino - BEATRIZ GASCHO.pdf
+  2026-07-27  AnyDesk.exe
+  2026-07-24  Setup (1).exe
+  2026-07-24  Setup.exe
+  2026-07-24  driver-elgin-i7-i8-e-i9-windows-e-linux\
+  2026-07-24  driver-elgin-i7-i8-e-i9-windows-e-linux.zip
+  2026-04-14  AnotaAIResponde-Setup-2.0.35 (2).exe
+  2026-04-14  TeamViewer_Setup_x64 (1).exe
+  2026-04-14  TeamViewer_Setup_x64.exe
+  2026-04-14  manual_4ce638a5-22e5-4a0d-a820-0108152ced91_ELGIN Printer Driver_v-1.7.6.rar
+  2026-04-14  AnotaAIResponde-Setup-2.0.35 (1).exe
+  2026-04-14  AnotaAIResponde-Setup-2.0.35.exe
+  2026-04-14  Gestor de Pedidos-x64.exe
+  2026-04-14  anota-ai-gestor-de-pedidos-36-0.apk
+  2026-04-14  ChromeSetup.exe
+  2026-04-14  avast_secure_browser_setup.exe
+  2026-03-19  Elgin_i7_i9_v1.7.3.exe
+--- C:\Users\Public\Desktop (6 itens; 40 mais recentes)
+  2026-10-08  Google Chrome.lnk
+  2026-10-06  Microsoft Edge.lnk
+  2026-04-14  TeamViewer.lnk
+  2026-04-14  AnotaAIResponde.lnk
+  2026-04-14  Gestor de Pedidos.lnk
+--- C:\Users\Public\Documents (4 itens; 40 mais recentes)
+  2026-04-14  Meus Vídeos\
+  2026-04-14  Minhas Imagens\
+  2026-04-14  Minhas Músicas\
+--- Area de Trabalho publica:
+  AnotaAIResponde.lnk
+  desktop.ini
+  Gestor de Pedidos.lnk
+  Google Chrome.lnk
+  Microsoft Edge.lnk
+  TeamViewer.lnk
+--- Atalhos (.lnk) e destinos:
+  AnotaAIResponde.lnk -> C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe 
+  Gestor de Pedidos.lnk -> C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe 
+  Google Chrome.lnk -> C:\Program Files\Google\Chrome\Application\chrome.exe 
+  Microsoft Edge.lnk -> C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe 
+  TeamViewer.lnk -> C:\Program Files\TeamViewer\TeamViewer.exe 
+  AnotaAIResponde.lnk -> C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe 
+  Gestor de Pedidos.lnk -> C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe 
+  Google Chrome.lnk -> C:\Program Files\Google\Chrome\Application\chrome.exe 
+  Microsoft Edge.lnk -> C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe 
+  TeamViewer.lnk -> C:\Program Files\TeamViewer\TeamViewer.exe 
+  AnotaAIResponde.lnk -> C:\Program Files (x86)\AnotaAIResponde\AnotaAIResponde.exe 
+  Gestor de Pedidos.lnk -> C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe 
+  Google Chrome.lnk -> C:\Program Files\Google\Chrome\Application\chrome.exe 
+  Microsoft Edge.lnk -> C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe 
+  TeamViewer.lnk -> C:\Program Files\TeamViewer\TeamViewer.exe 
+--- Pastas na raiz de C:
+  Arquivos de Programas
+  ELGIN
+  inetpub
+  Intel
+  MSOCache
+  OneDriveTemp
+  Program Files
+  Program Files (x86)
+  Users
+--- Programas:
+  Gestor de Pedidos 8.10.4 8.10.4 []
+--- Apps Store:
+--- Processos:
+  RODANDO: Gestor de Pedidos.exe [C:\Program Files (x86)\Gestor de Pedidos\Gestor de Pedidos.exe] sessao 24
+--- Pastas:
+  C:\Program Files (x86)\Gestor de Pedidos  (modif. 10/08/2026 17:31:26)
+--- Atalhos/abas do navegador apontando para iFood:
+  [nome do PC / usuarios]
+     BARBADOG barba BARBADOG\barba barba Public TEMP TEMP.Font Driver Host TEMP.Font Driver Host.
+  [perfis Wi-Fi]
+     Nenhum> Perfis do usuário ------------- Todos os Perfis de Usuários: BARBACUE

@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../config/app_brand.dart';
 import '../providers/chat_provider.dart';
+import '../providers/cart_provider.dart';
+import '../providers/checkout_provider.dart';
+import '../providers/table_session_provider.dart';
 import '../services/privacy_consent.dart';
 
 class PrivacyScreen extends ConsumerWidget {
@@ -22,6 +25,53 @@ class PrivacyScreen extends ConsumerWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Acesse ${currentBrand.legalUri(page)}')),
       );
+    }
+  }
+
+  Future<void> _eraseLocalData(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Apagar dados deste aparelho?'),
+        content: const Text(
+          'Remove carrinho, nome, telefone, endereço e preferências salvos neste app. '
+          'Pedidos já enviados ao restaurante não são cancelados nem excluídos. '
+          'Use Solicitar exclusão de dados para informações mantidas pelo estabelecimento.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Apagar dados'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+    try {
+      await ref.read(tableSessionProvider.notifier).leave();
+      await ref.read(cartProvider.notifier).eraseLocalData();
+      await ref.read(checkoutProvider.notifier).eraseLocalData();
+      await PrivacyConsent.revokeAi();
+      ref.read(chatProvider.notifier).reset();
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Dados deste aparelho apagados.')),
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Não foi possível apagar todos os dados. Tente novamente.',
+            ),
+          ),
+        );
+      }
     }
   }
 
@@ -53,7 +103,16 @@ class PrivacyScreen extends ConsumerWidget {
             trailing: const Icon(Icons.open_in_new),
             onTap: () => _open(context, entry.key),
           ),
-        if (currentBrand.hasNativeCheckout) ...[
+        const Divider(),
+        const Text(
+          'Não há conta de usuário neste app. Você pode apagar os dados salvos neste aparelho a qualquer momento.',
+        ),
+        TextButton.icon(
+          onPressed: () => _eraseLocalData(context, ref),
+          icon: const Icon(Icons.delete_outline),
+          label: const Text('Apagar dados deste aparelho'),
+        ),
+        if (currentBrand.hasAiChat) ...[
           const Divider(),
           const Text(
             'O atendimento com IA é opcional. Ao revogar, novas mensagens '

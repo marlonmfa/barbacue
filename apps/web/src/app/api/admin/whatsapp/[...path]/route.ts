@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { withStaff } from "@/lib/admin-auth";
+import { withRole } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 
 type Context = { params: Promise<{ path: string[] }> };
 
-const proxy = withStaff<Context>(async (request, context) => {
+// Administrator-only: pairing, reading and sending on the business number.
+const proxy = withRole<Context>("admin", async (request, context) => {
   const base = process.env.BOT_STATUS_URL;
   const token = process.env.BOT_API_TOKEN;
   if (!base || !token) return NextResponse.json({ error: "Serviço WhatsApp não configurado." }, { status: 503 });

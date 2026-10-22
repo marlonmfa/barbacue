@@ -1,0 +1,3 @@
+.brand-menu-photo:has(img[src^="/menu/brands-2026-09/"]) { background: #f7f3ec; }
+.brand-menu-photo img[src^="/menu/brands-2026-09/"] { object-fit: contain !important; transform: none !important; }
+.brand-menu-photo:has(img[src^="/menu/brands-2026-09/"])::after { content: "Imagem ilustrativa"; position: absolute; bottom: 8px; left: 8px; padding: 3px 7px; border-radius: 5px; background: rgba(255,255,255,.92); color: #62584e; font: 10px/1.4 sans-serif; }

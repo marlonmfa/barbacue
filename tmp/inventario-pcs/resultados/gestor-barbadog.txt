@@ -1,0 +1,14 @@
+##### BARBADOG
+=== local-storage.json (chaves; tokens ocultos)
+  fstr = <oculto, 10143 chars>
+=== nomes de loja / merchant
+  :"2525743","id":"991532f5-jHð>","name":"Chelas Cocina Mexicana","companyGroup":"IFO","logo":" Ü,stat   [007310.ldb]
+  :"3538495","id":"6cb73c63-jHðC","name":"Barbacue Hotdog & Sandwich","companyGroup":"IFD","logo":"h à   [007310.ldb]
+  1704c530-18b Da-8885-9bc49e90e1f w Þ CHELASþI ÊI þX 85764893þX VX 946590901þÇ þÇ þÇ þÇ Ç0dfeaf   [001245.ldb]
+  1704c530-18bå Pa-8885-9bc49e90e1f1",.^ CHELASþT þT þT þT 2T 946590901þS þS þS þS ES4 nic Barb   [001245.ldb]
+  704c530-18b Æ Pa-8885-9bc49e90e1f1",. CHELASAOþ þ þ þ 94659090þS þS þS þS IS 3d :S Dláudi   [001245.ldb]
+  c6-176b-4021-a6cd-3e09dca09cbf","name":"Barbacue","companyGroup":"IFO","logo":"https://static-images   [005868.ldb]
+  D {"shortId":"57630! i 40 GÀ","name":"Barbacue","companyGroup":"IFO","logo":" Û ,static-image6Ù /   [007310.ldb]
+  mer":{"merchantShor ÞðC2525743","name":"Chelas Cocina Mexicana","country":"BR","tourPath":" " /#","   [007310.ldb]
+  omer":{"merchantShor Ø2525743","name":"Chelas Cocina Mexicana","country":"BR"!i urPath":" õ /#","w   [005868.ldb]
+=== log.log: impressao (ultimas 15 linhas)

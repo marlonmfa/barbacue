@@ -1,3 +1,4 @@
+import { brandIcons } from "@/lib/brand-icons";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { Geist, Anton } from "next/font/google";
@@ -20,6 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? (process.env.DOMAIN_CHELAS ?? "chelas.hirableaiagents.com")
       : (process.env.DOMAIN_HOTDOG ?? "barbadog.hirableaiagents.com");
     return {
+      icons: brandIcons(slug),
       metadataBase: new URL(`https://${domain}`),
       title: `${brand.name} — Cardápio`,
       description: brand.description,
@@ -28,6 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   return {
+    icons: brandIcons("barbacue"),
     metadataBase: new URL(`https://${process.env.DOMAIN_BARBA ?? process.env.DOMAIN ?? "barbacue.cog.ia.br"}`),
     title: "BARBACUE — Burguers na Brasa",
     description: "Burguers na brasa 🍔🔥 Jaraguá do Sul-SC. Faça seu pedido agora!",

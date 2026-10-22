@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     user = created;
   } else {
     const [existing] = await db.select().from(customerAccounts).where(eq(customerAccounts.email, email));
-    if (!existing || !(await verifyPassword(password, existing.passwordHash))) return NextResponse.json({ error: "E-mail ou senha inválidos." }, { status: 401 });
+    if (!existing?.passwordHash || !(await verifyPassword(password, existing.passwordHash))) return NextResponse.json({ error: "E-mail ou senha inválidos." }, { status: 401 });
     user = existing;
   }
   const response = NextResponse.json({ ok: true }); setMemberCookie(response, user.id); return response;

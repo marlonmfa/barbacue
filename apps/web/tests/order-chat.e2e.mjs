@@ -3,6 +3,7 @@ import { chromium } from 'playwright';
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 const requests = [];
+const base = process.env.BASE_URL || 'http://localhost:3018';
 await page.route('**/api/chat', async route => {
   const body = route.request().postDataJSON(); requests.push(body);
   await route.fulfill({ json: { reply: `Anotado ${body.brand}`, cart: [{ productId: 1, name: `Produto ${body.brand}`, priceCents: 2500, qty: 1 }], customer: { name: 'Cliente', phone: '47999999999', address: 'Rua Um, 10' }, paymentMethod: 'pix', couponCode: null } });
@@ -10,7 +11,7 @@ await page.route('**/api/chat', async route => {
 await page.route('**/api/transcribe', route => route.fulfill({ json: { text: 'Quero dois burritos' } }));
 try {
   for (const brand of ['chelas', 'barbacue', 'barbadog']) {
-    await page.goto(`http://localhost:3018/atendimento/${brand}`);
+    await page.goto(`${base}/atendimento/${brand}`);
     await page.getByRole('textbox', { name: 'Seu pedido' }).fill(`Pedido ${brand}`);
     await page.getByRole('button', { name: 'Enviar', exact: true }).click();
     await page.getByText(`Anotado ${brand}`, { exact: true }).waitFor();
@@ -29,9 +30,9 @@ try {
   await page.route('**/api/chat', route => route.fulfill({ status: 502, json: { error: 'Falha temporária' } }));
   await page.getByRole('textbox', { name: 'Seu pedido' }).fill('texto preservado');
   await page.getByRole('button', { name: 'Enviar', exact: true }).click();
-  await page.getByRole('alert').waitFor();
+  await page.getByRole('alert').filter({ hasText: 'Falha temporária' }).waitFor();
   assert.equal(await page.getByRole('textbox', { name: 'Seu pedido' }).inputValue(), 'texto preservado');
-  await page.goto('http://localhost:3018/atendimento/invalida');
+  await page.goto(`${base}/atendimento/invalida`);
   await page.getByRole('heading', { name: '404', exact: true }).waitFor();
   console.log('PASS: brand isolation, draft restoration, editable audio, retry, mobile layout, invalid brand 404');
 } finally { await browser.close(); }

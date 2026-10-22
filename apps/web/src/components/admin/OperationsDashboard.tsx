@@ -26,6 +26,7 @@ type OrderSummary = {
 };
 
 type Props = {
+  canUseWhatsApp?: boolean;
   metrics: {
     orders: number;
     products: number;
@@ -84,7 +85,7 @@ function PanelTitle({ icon, title, description }: { icon: AdminIconName; title: 
   );
 }
 
-export function OperationsDashboard({ metrics, brands, recentOrders, pixConfigured, gmailConfigured }: Props) {
+export function OperationsDashboard({ metrics, brands, recentOrders, pixConfigured, gmailConfigured, canUseWhatsApp = false }: Props) {
   const [activeBrand, setActiveBrand] = useState<BrandId>("all");
   const visibleOrders = useMemo(
     () => activeBrand === "all" ? recentOrders : recentOrders.filter((order) => order.brand === activeBrand),
@@ -104,7 +105,7 @@ export function OperationsDashboard({ metrics, brands, recentOrders, pixConfigur
           <p>Três restaurantes, um só lugar para acompanhar pedidos, cardápios, atendimento e equipe.</p>
         </div>
         <div className={styles.headActions}>
-          <Link href="/whatsapp" className={styles.secondaryAction}><AdminIcon name="whatsapp" size={17} />Abrir atendimento</Link>
+          {canUseWhatsApp && <Link href="/whatsapp" className={styles.secondaryAction}><AdminIcon name="whatsapp" size={17} />Abrir atendimento</Link>}
           <Link href="/admin/catalogs" className={styles.primaryAction}><AdminIcon name="plus" size={17} />Gerenciar produtos</Link>
         </div>
       </header>
@@ -175,7 +176,7 @@ export function OperationsDashboard({ metrics, brands, recentOrders, pixConfigur
             <h2>Atendimento unificado</h2>
             <p>As conversas ficam na mesma caixa de entrada e são identificadas pela marca atendida.</p>
             <div className={styles.agentRoute}><span>Barbacue</span><span>Barbadog</span><span>Chelas</span></div>
-            <Link href="/whatsapp" className={styles.channelAction}>Ir para as conversas <AdminIcon name="arrow" size={14} /></Link>
+            {canUseWhatsApp && <Link href="/whatsapp" className={styles.channelAction}>Ir para as conversas <AdminIcon name="arrow" size={14} /></Link>}
           </section>
 
           <section className={styles.panel}>

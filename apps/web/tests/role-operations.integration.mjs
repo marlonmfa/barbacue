@@ -196,7 +196,10 @@ try {
   console.log(`PASS ${checks} role operations checks; five screenshots saved in ${screenshots}.`);
 } finally {
   if (browser) await browser.close();
-  if (orderIds.length) await pool.query("DELETE FROM orders WHERE id=ANY($1::uuid[])", [orderIds]);
+  if (orderIds.length) {
+    await pool.query("DELETE FROM kitchen_print_jobs WHERE order_id=ANY($1::uuid[])", [orderIds]);
+    await pool.query("DELETE FROM orders WHERE id=ANY($1::uuid[])", [orderIds]);
+  }
   if (tableIds.length) await pool.query("DELETE FROM restaurant_tables WHERE id=ANY($1::int[])", [tableIds]);
   if (users.length) await pool.query("DELETE FROM staff_users WHERE id=ANY($1::int[])", [users]);
   await pool.end();

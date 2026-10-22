@@ -26,7 +26,7 @@ case "$brand" in
     app_icon="AppIcon-chelas"
     launch_storyboard="LaunchScreenChelas"
     build_name="1.0.0"
-    build_number="3"
+    build_number="4"
     signing_args=(
       CODE_SIGN_STYLE=Manual
       "CODE_SIGN_IDENTITY=Apple Distribution"
@@ -40,7 +40,7 @@ case "$brand" in
     app_icon="AppIcon-barbadog"
     launch_storyboard="LaunchScreenBarbadog"
     build_name="1.0.0"
-    build_number="3"
+    build_number="4"
     signing_args=(
       CODE_SIGN_STYLE=Manual
       "CODE_SIGN_IDENTITY=Apple Distribution"

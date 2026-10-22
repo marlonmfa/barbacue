@@ -1,0 +1,50 @@
+[
+  {
+    "key": "chilli-nachos",
+    "name": "Chilli Nachos",
+    "description": "Nachos crocante (140g), creme de queijo, chillicious (420g de chilli cozido lentamente). Acompanha molhos, pico de galo, guacamole e sour cream.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "7704e335-8566-48f5-9668-b22eb6ebdbb1",
+        "name": "Chilli Nachos"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Chilli Nachos. Exact menu description in Portuguese: Nachos crocante (140g), creme de queijo, chillicious (420g de chilli cozido lentamente). Acompanha molhos, pico de galo, guacamole e sour cream.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-4a4a9a22-0e00-40fd-ba6b-c9cd5277080b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "editPrompt": "Remove ONLY the ramekin containing smooth red sauce at the right rear of the plate. There must be exactly three sauce ramekins remaining: guacamole, pico de gallo, and sour cream. Preserve all nachos and their toppings, lighting, background and composition. Do not add any new food.",
+    "originalHint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-c7fb4dd4-1bfb-4499-b752-1d4a36564354.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "nacho-pulled-pork",
+    "name": "Nacho Pulled Pork",
+    "description": "Nachos crocante (140g), 400g de pulled pork, creme de queijos. Acompanha molhos, guacamole, sour cream e pico de galo.",
+    "refs": [
+      {
+        "brand": "chelas",
+        "id": "d1d4d536-d0d6-483a-947a-97db53efeb07",
+        "name": "Nacho Pulled Pork"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Nacho Pulled Pork. Exact menu description in Portuguese: Nachos crocante (140g), 400g de pulled pork, creme de queijos. Acompanha molhos, guacamole, sour cream e pico de galo.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-6029e4a7-26f6-4540-b196-266b8fc0117c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "editPrompt": "Remove ONLY the ramekin containing smooth red sauce at the right rear of the plate. There must be exactly three sauce ramekins remaining: guacamole, pico de gallo, and sour cream. Preserve all nachos and their toppings, lighting, background and composition. Do not add any new food.",
+    "originalHint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-28e89b3c-5ce3-487c-b7ef-2d1c3fe15f26.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "key": "brasinha-chicken-jr",
+    "name": "Brasinha Chicken Jr",
+    "description": "Pão, maionese verde, peito de frango empanado e frito, cheddar e cebola crispy.",
+    "refs": [
+      {
+        "brand": "barbadog",
+        "id": "b61ee41b-3fa4-467b-8c8b-7097c8c44935",
+        "name": "Brasinha Chicken Jr"
+      }
+    ],
+    "prompt": "Use case: product-mockup. Create ONE photorealistic food illustration for a Brazilian restaurant online menu. Product: Brasinha Chicken Jr. Exact menu description in Portuguese: Pão, maionese verde, peito de frango empanado e frito, cheddar e cebola crispy.. Follow the listed ingredients, quantities and bread type faithfully. Square image; full food visible with generous margins on a plain warm off-white ceramic plate or bowl on a warm cream background. Three-quarter slightly overhead camera angle, soft natural studio lighting, appetizing realistic textures. For burritos show a single burrito cut into two halves so its filling is visible. For quesadillas use four triangular wedges. For hot dogs show ONE long bun containing exactly two sausages side by side. No extra toppings, no garnish, no unlisted sides, no text, no logo or watermark. For a build-at-home taco kit, show exactly four empty crunchy shells, one small packet of plain tortilla chips, and the listed toppings separately, with ONLY pulled pork as the chosen protein. This is illustrative product imagery, not an actual restaurant photograph.",
+    "hint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-75a418f9-0ac2-4fb1-8a73-bad9c6b38fec.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "editPrompt": "Remove ONLY the green mayonnaise layer under the chicken. The sandwich must contain only bread, breaded fried chicken breast, cheddar and crispy onion. Preserve all other food, plate, composition, light and textures.",
+    "originalHint": "Generated images are saved to /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435 as /Users/marlonalcantara/.codex/generated_images/01a091cc-694f-7470-8f76-60cdeeb1f435/exec-4d3ecd67-a059-465d-94a6-03e13eef080f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  }
+]

@@ -1,5 +1,5 @@
 import { IFOOD_BASE, IfoodConfig, loadConfig } from "./config";
-import { TokenProvider } from "./auth";
+import { TokenProvider, merchantAccessFromToken } from "./auth";
 import { IfoodHttp } from "./http";
 import {
   CancellationReason,
@@ -15,12 +15,17 @@ import {
 export class IfoodClient {
   readonly config: IfoodConfig;
   private readonly http: IfoodHttp;
+  private readonly tokens: TokenProvider;
 
   constructor(config: IfoodConfig = loadConfig()) {
     this.config = config;
-    this.http = new IfoodHttp(
-      new TokenProvider(config.clientId, config.clientSecret)
-    );
+    this.tokens = new TokenProvider(config.clientId, config.clientSecret);
+    this.http = new IfoodHttp(this.tokens);
+  }
+
+  async getMerchantAccess(refresh = false) {
+    if (refresh) this.tokens.invalidate();
+    return merchantAccessFromToken(await this.tokens.getToken(), this.config.merchants.map(m => m.id));
   }
 
   // ─────────────── Merchant ───────────────
@@ -58,7 +63,7 @@ export class IfoodClient {
     groups?: string[];
     merchantIds?: string[];
   } = {}): Promise<IfoodEvent[]> {
-    const merchants = opts.merchantIds ?? [this.config.merchantId];
+    const merchants = opts.merchantIds ?? this.config.merchants.map(m => m.id);
     const events = await this.http.request<IfoodEvent[]>(
       `${IFOOD_BASE.events}/events:polling`,
       {
@@ -78,7 +83,7 @@ export class IfoodClient {
    * Envie em lotes de no máximo 2000 ids.
    */
   async acknowledgeEvents(eventIds: string[]): Promise<void> {
-    if (eventIds.length === 0) return;
+    if (eventIds.length === 0 || this.config.dryRun) return;
     for (let i = 0; i < eventIds.length; i += 2000) {
       const chunk = eventIds.slice(i, i + 2000).map((id) => ({ id }));
       await this.http.request(`${IFOOD_BASE.events}/events/acknowledgment`, {

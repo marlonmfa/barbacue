@@ -1,0 +1,39 @@
+##### BARBADOG
+=== SPOOLER
+  estado Running | PID 3716
+  spoolsv iniciado 09/15/2026 10:23:46 | CPU 120.6s | memoria 23 MB | threads 12
+  arquivos na pasta de spool: 4
+    00134.SHD 5520 bytes 10/09/2026 18:37:06
+    00134.SPL 3017 bytes 10/09/2026 18:37:06
+    00135.SHD 5520 bytes 10/09/2026 18:37:06
+    00135.SPL 3017 bytes 10/09/2026 18:37:06
+=== IMPRESSORAS (registro)
+  ELGIN i9(USB) | porta USB001 | driver ELGIN i9(USB) | compart. 
+  Fax | porta SHRFAX: | driver Microsoft Shared Fax Driver | compart. 
+  HPE80E20 (HP Smart Tank 580-590 series) | porta WSD-f792d16b-e63d-4d78-942c-c1cc68292a1e | driver Microsoft IPP Class Driver | compart. 
+  Microsoft Print to PDF | porta PORTPROMPT: | driver Microsoft Print To PDF | compart. 
+  padrao do usuario: ELGIN i9(USB),winspool,Ne03:
+=== PORTAS
+  monitor: Appmon
+  monitor: ELGIN POS Language Monitor
+  monitor: HPRT POS Language Monitor
+  monitor: Local Port
+  monitor: Microsoft Shared Fax Monitor
+  monitor: Standard TCP/IP Port
+  monitor: USB Monitor
+  monitor: Virtual Port Monitor
+  monitor: WSD Port
+  tcp: Cloud TCP/IP Port -> api-sh33-1.hprtcloud.com:9100
+=== DISPOSITIVOS USB DE IMPRESSAO (PnP)
+  [OK] System | ACPI Thermal Zone | ACPI\THERMALZONE\TZ01
+  [Unknown] Printer | ELGIN i9(USB) | USBPRINT\ELGINI9\6&25C6D831&1&USB001
+  [OK] Printer | Microsoft IPP Class Driver | SWD\PRINTENUM\WSD-F792D16B-E63D-4D78-942C-C1CC68292A1E
+  [Unknown] USB | ELGIN i9 | USB\VID_20D1&PID_7008\88888888888888888888888888888888
+  [Unknown] PrintQueue | ELGIN i9(USB) | SWD\PRINTENUM\{939E3AFF-764F-4CD0-AE99-ADBEF0CD8297}
+=== ERROS PrintService (ultimos 12)
+  07/24/2026 15:21:00 [369] Falha do spooler de impressão ao verificar o ambiente Windows x64 no pacote de driver de impressão. Código de erro de sistema Win32 122 (0x7a). Isto pode ocorrer devido a memória insuficiente ou a outra falha do sistema. Não é necessária uma ação do usuário.
+  07/24/2026 14:38:50 [350] O documento  não pôde ser impresso e foi excluído porque o arquivo no spool está corrompido. O driver associado é: . Tente imprimir o documento novamente.
+=== GESTOR DE PEDIDOS: pastas de dados
+  C:\Users\barba\AppData\Roaming\Gestor de Pedidos (modif. 10/09/2026 18:44:12)
+  C:\Users\barba\AppData\Local\ifood-order-manager-updater (modif. 10/08/2026 17:29:09)
+=== GESTOR DE PEDIDOS: lojas/contas encontradas
