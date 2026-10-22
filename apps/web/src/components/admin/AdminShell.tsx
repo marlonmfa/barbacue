@@ -24,6 +24,7 @@ const groups: { label: string; items: NavItem[] }[] = [
       { href: "/admin/workspace", label: "Meu trabalho", icon: "user" },
       { href: "/admin/kitchen", label: "Cozinha", icon: "kitchen" },
       { href: "/admin/orders", label: "Caixa e pedidos", icon: "orders" },
+      { href: "/admin/ifood", label: "Gestor iFood", icon: "orders" },
       { href: "/admin/waiter", label: "Salão", icon: "tables" },
       { href: "/admin/delivery", label: "Minhas entregas", icon: "delivery" },
       { href: "/whatsapp", label: "WhatsApp", icon: "whatsapp", adminOnly: true },

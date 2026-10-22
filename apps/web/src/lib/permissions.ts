@@ -14,6 +14,7 @@ export const ROLE_DESCRIPTIONS: Record<AccessRole, string> = {
 export const PERMISSIONS = [
   { id: "dashboard", label: "Visão geral", description: "Consultar indicadores e resumo da operação", href: "/admin" },
   { id: "orders", label: "Caixa e pedidos", description: "Consultar pedidos e gerenciar atendimento e entrega", href: "/admin/orders" },
+  { id: "ifood", label: "Gestor iFood", description: "Confirmar, preparar, despachar e cancelar pedidos do iFood e pausar as lojas", href: "/admin/ifood" },
   { id: "kitchen", label: "Preparo na cozinha", description: "Ver itens e observações; iniciar e concluir o preparo", href: "/admin/kitchen" },
   { id: "floor", label: "Salão", description: "Acompanhar mesas, lançar pedidos e registrar quando foram servidos", href: "/admin/waiter" },
   { id: "deliveries", label: "Minhas entregas", description: "Consultar somente as entregas atribuídas à sua conta e registrar a saída e conclusão", href: "/admin/delivery" },
@@ -28,7 +29,7 @@ export const PERMISSIONS = [
 export type Permission = typeof PERMISSIONS[number]["id"];
 export const PERMISSION_IDS = PERMISSIONS.map(p => p.id);
 export const DEFAULT_PERMISSIONS: Record<AccessRole, Permission[]> = {
-  admin: [...PERMISSION_IDS], manager: [...PERMISSION_IDS], cashier: ["orders", "tables"], kitchen: ["kitchen"], waiter: ["floor"], driver: ["deliveries"], employee: [],
+  admin: [...PERMISSION_IDS], manager: [...PERMISSION_IDS], cashier: ["orders", "ifood", "tables"], kitchen: ["kitchen"], waiter: ["floor"], driver: ["deliveries"], employee: [],
 };
 export interface Access { role: AccessRole; permissions?: Permission[] | null }
 export function effectivePermissions(access: Access): Permission[] {
@@ -44,7 +45,7 @@ export function permissionForPath(path: string): Permission | "admin" | null {
   if (path === "/whatsapp" || path.startsWith("/whatsapp/")) return "admin";
   if (path === "/teste_pedido") return "service";
   const map: Record<string, Permission | "admin"> = {
-    orders: "orders", kitchen: "kitchen", waiter: "floor", delivery: "deliveries", catalogs: "catalog", products: "catalog", categories: "catalog", upload: "catalog",
+    orders: "orders", ifood: "ifood", kitchen: "kitchen", waiter: "floor", delivery: "deliveries", catalogs: "catalog", products: "catalog", categories: "catalog", upload: "catalog",
     coupons: "offers", tables: "tables", customers: "customers", settings: "settings", "delivery-settings": "settings", "closed-days": "settings",
     whatsapp: "admin", beta: "beta", erp: "admin", team: "admin", employees: "admin", staff: "admin", system: "admin", downloads: "admin", impersonate: "admin",
   };
