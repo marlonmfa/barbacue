@@ -89,6 +89,12 @@ ativo antes de iniciar. Não substitua web, Postgres ou volumes para ativar o mo
 Antes de atualizar uma imagem existente, preserve diferenças do serviço ativo,
 teste a candidata e registre a revisão Git e o ID/digest da imagem publicada.
 
+## Gestor no painel
+
+A tela `/admin/ifood` (e o app Windows) opera as três lojas usando estes pedidos
+importados e envia as ações pela Order API do servidor. Veja
+`apps/web/docs/IFOOD-GESTOR.md`.
+
 ## Garantias e limites
 
 - Polling com `x-polling-merchants` para as três lojas, intervalo mínimo de 30s.

@@ -41,16 +41,21 @@ function showSetup() {
   restrict(setupWindow.webContents, url => url === setupUrl);
   void setupWindow.loadURL(setupUrl);
 }
-async function openDashboard() {
+async function openDashboard(path = '/admin/orders') {
   if (!settings.serverUrl) return showSetup();
-  if (dashboard && !dashboard.isDestroyed()) { dashboard.show(); dashboard.focus(); return; }
-  dashboard = new BrowserWindow({ width: 1440, height: 950, minWidth: 900, minHeight: 650, title: 'Barbacue Pedidos', icon: join(root, 'assets/icon.png'), backgroundColor: '#17120f', webPreferences: { ...prefs, partition: 'persist:barbacue-store' } });
+  if (dashboard && !dashboard.isDestroyed()) {
+    dashboard.show(); dashboard.focus();
+    if (new URL(dashboard.webContents.getURL() || settings.serverUrl).pathname !== path) await dashboard.loadURL(`${settings.serverUrl}${path}`).catch(() => {});
+    return;
+  }
+  // Autoplay sem gesto: o gestor iFood toca o alerta de pedido novo com a janela em segundo plano.
+  dashboard = new BrowserWindow({ width: 1440, height: 950, minWidth: 900, minHeight: 650, title: 'Barbacue Pedidos', icon: join(root, 'assets/icon.png'), backgroundColor: '#17120f', webPreferences: { ...prefs, partition: 'persist:barbacue-store', autoplayPolicy: 'no-user-gesture-required', backgroundThrottling: false } });
   restrict(dashboard.webContents, url => allowedNavigation(url, settings.serverUrl));
   dashboard.on('close', event => { if (!quitting) { event.preventDefault(); dashboard.hide(); } });
   dashboard.webContents.on('did-fail-load', (_event, code, _description, _url, main) => {
     if (main && code !== -3) { status = 'Painel sem conexão. Confira a internet e use Reabrir pedidos.'; showSetup(); }
   });
-  await dashboard.loadURL(`${settings.serverUrl}/admin/orders`).catch(() => {});
+  await dashboard.loadURL(`${settings.serverUrl}${path}`).catch(() => {});
 }
 async function persist(next) {
   if (next.token && !safeStorage.isEncryptionAvailable()) throw new Error('A proteção de credenciais do sistema está indisponível. Entre novamente no Windows.');
@@ -163,6 +168,7 @@ else {
   }
   const menu = [
     { label: 'Pedidos', click: () => void openDashboard() },
+    { label: 'Gestor iFood (3 lojas)', click: () => void openDashboard('/admin/ifood') },
     { label: 'Reabrir pedidos', click: () => { if (dashboard && !dashboard.isDestroyed()) dashboard.destroy(); dashboard = null; void openDashboard(); } },
     { label: 'Configurações e impressão', click: showSetup },
     { type: 'separator' },
@@ -179,7 +185,7 @@ else {
   registerIPC('state', state);
   registerIPC('printers', async () => (await setupWindow.webContents.getPrintersAsync()).map(p => ({ name: p.name, displayName: p.displayName, isDefault: p.isDefault })));
   registerIPC('save', changeSettings);
-  registerIPC('open', openDashboard);
+  registerIPC('open', () => openDashboard());
   registerIPC('toggle', () => changeSettings({ ...settings, autoPrint: !settings.autoPrint }));
   registerIPC('test', async () => {
     if (changing) throw new Error('Aguarde a operação atual terminar.');
