@@ -14,7 +14,7 @@ interface IfoodOrder {
 interface StoreStatus { operation?: string; available?: boolean; state?: string; message?: { title?: string; subtitle?: string; description?: string } | null }
 interface Store {
   id: string; name: string; brand: string;
-  status: StoreStatus[] | null; interruptions: { id: string; description?: string; start?: string; end?: string }[] | null; error: string | null;
+  status: StoreStatus[] | null; interruptions: { id: string; description?: string; start?: string; end?: string }[] | null; error: string | null; forbidden?: boolean;
 }
 interface Data { configured: boolean; dryRun: boolean; stores: Store[]; orders: IfoodOrder[] }
 
@@ -27,7 +27,7 @@ const COLUMNS = [
 ];
 const STATUS_LABEL: Record<string, string> = { pending: "Aguardando confirmação", confirmed: "Confirmado", preparing: "Preparando", ready: "Pronto / despachado", delivered: "Concluído", cancelled: "Cancelado" };
 const STATE_STYLE: Record<string, string> = { OK: "bg-green-500/20 text-green-300", WARNING: "bg-yellow-500/20 text-yellow-300", CLOSED: "bg-[#352b24] text-[#c8b89a]", ERROR: "bg-red-500/20 text-red-300" };
-const STATE_LABEL: Record<string, string> = { OK: "Aberta", WARNING: "Aberta com alerta", CLOSED: "Fechada", ERROR: "Com problema" };
+const STATE_LABEL: Record<string, string> = { OK: "Aberta", WARNING: "Aberta com alerta", CLOSED: "Fechada", ERROR: "Com problema", UNAVAILABLE: "Status indisponível" };
 const TYPE_LABEL = { delivery: "Entrega", pickup: "Retirada", dine_in: "No local" } as const;
 
 const fmtR = (cents: number) => `R$ ${(cents / 100).toFixed(2).replace(".", ",")}`;
@@ -155,7 +155,7 @@ export default function IfoodManager() {
       <div className="grid gap-3 md:grid-cols-3 mb-6">
         {(data?.stores ?? []).map(store => {
           const main = store.status?.find(s => s.operation === "DELIVERY") ?? store.status?.[0];
-          const state = main?.state ?? (store.error ? "ERROR" : "");
+          const state = main?.state ?? (store.forbidden ? "UNAVAILABLE" : store.error ? "ERROR" : "");
           const pausedBy = store.interruptions?.find(i => (!i.start || Date.parse(i.start) <= now) && (!i.end || Date.parse(i.end) > now));
           const count = data?.orders.filter(o => o.storeId === store.id && ["pending", "confirmed", "preparing", "ready"].includes(o.status)).length ?? 0;
           return (
@@ -176,7 +176,7 @@ export default function IfoodManager() {
                         className="min-h-10 rounded-lg bg-[#241d18] px-2 text-xs text-white">
                         {[15, 30, 60, 120, 240].map(m => <option key={m} value={m}>{m < 60 ? `${m} min` : `${m / 60} h`}</option>)}
                       </select>
-                      <button disabled={busy !== null || !data?.configured} onClick={() => void pause(store)} className="min-h-10 text-xs px-3 rounded-lg bg-[#241d18] hover:bg-[#352b24] text-[#c8b89a] disabled:opacity-50">Pausar loja</button>
+                      <button disabled={busy !== null || !data?.configured || store.forbidden} onClick={() => void pause(store)} className="min-h-10 text-xs px-3 rounded-lg bg-[#241d18] hover:bg-[#352b24] text-[#c8b89a] disabled:opacity-50">Pausar loja</button>
                     </>}
               </div>
             </section>
