@@ -46,9 +46,32 @@ O conector do servidor agora registra os pedidos e as transições recebidas em 
 
 As ações locais do painel não enviam alterações de status ao iFood. Faça os comandos comerciais, cancelamentos e despacho externos pelo gestor iFood; o conector sincroniza as transições recebidas. A integração exige credenciais/homologação válidas; não foi conectada a uma conta real nesta entrega.
 
+## CLI do Gestor iFood (`ifood`)
+
+O instalador também instala o comando `ifood`, que faz pelo Prompt de Comando ou PowerShell tudo o que o **Gestor iFood** do painel faz, nas três lojas (Barbacue, Hotdog e Chelas). Ele usa o próprio programa como motor (não precisa de Node.js) e fala com o servidor pelas mesmas rotas do painel: o segredo do iFood continua só no servidor e valem as permissões do usuário (acesso **Gestor iFood**). Abra um terminal novo depois de instalar para o Windows reconhecer o comando.
+
+- `ifood login --usuario caixa`: pede a senha; a sessão vale 8 horas
+- `ifood login --usuario caixa --lembrar`: guarda a senha protegida pelo Windows e renova sozinho
+- `ifood status`: servidor, usuário, credenciais iFood e modo simulação
+- `ifood lojas`: situação das lojas, pausas e pedidos ativos
+- `ifood pedidos --loja chelas --status novos`
+- `ifood pedido #1234 --ifood`: detalhes, com os dados atuais no iFood
+- `ifood confirmar #1234`
+- `ifood preparar #1234`
+- `ifood pronto #1234`: pedidos de retirada
+- `ifood despachar #1234`: pedidos de entrega
+- `ifood motivos #1234`
+- `ifood cancelar #1234 --motivo 501 --texto "Item indisponível"`
+- `ifood pausar hotdog --minutos 30 --motivo "Sem entregador"`
+- `ifood reabrir hotdog`
+- `ifood monitorar`: acompanha ao vivo e bipa a cada pedido novo
+- `ifood ajuda`
+
+O pedido pode ser indicado pelo código do iFood (`#1234`), pelo id do iFood ou pelo id local. Uma ação só é enviada quando vale para a etapa atual, e a etapa muda quando o iFood confirmar o evento ao monitor do servidor, como no painel. O cancelamento só aceita motivos informados pelo iFood e pede que se digite SIM (ou `--sim`). `--json` produz saída para scripts. Para rodar sem interação (agendador, SSH), use `--senha-stdin` ou as variáveis `BARBACUE_USER` e `BARBACUE_PASSWORD`. A sessão fica em `%APPDATA%\Barbacue Pedidos\ifood-cli.json`; `ifood logout` apaga a sessão e a senha guardada. Status e pausa das lojas dependem do módulo Merchant estar autorizado no app do iFood; sem ele o CLI mostra "Status indisponível" e o iFood recusa pausar/reabrir.
+
 ## Atualização e desinstalação
 
-Para atualizar, encerre pelo menu **Sair e parar impressão** e execute o novo instalador. A configuração e o registro de impressão permanecem no perfil do usuário do Windows, em `%APPDATA%\Barbacue Pedidos`. A chave é protegida pelo armazenamento seguro do sistema e vinculada ao usuário; não copie a configuração para outro computador. O servidor, os pedidos e a versão web não são removidos ao desinstalar. O instalador preserva os dados locais para permitir uma reinstalação sem perder o registro de envios.
+Para atualizar, encerre pelo menu **Sair e parar impressão** e execute o novo instalador. A configuração e o registro de impressão permanecem no perfil do usuário do Windows, em `%APPDATA%\Barbacue Pedidos`. A chave é protegida pelo armazenamento seguro do sistema e vinculada ao usuário; não copie a configuração para outro computador. A desinstalação também remove o comando `ifood` do PATH. O servidor, os pedidos e a versão web não são removidos ao desinstalar. O instalador preserva os dados locais para permitir uma reinstalação sem perder o registro de envios.
 
 ## Validação desta entrega
 
