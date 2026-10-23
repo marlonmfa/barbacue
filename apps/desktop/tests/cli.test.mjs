@@ -207,3 +207,13 @@ test('Windows wrapper runs the CLI through Electron as Node', async () => {
   const { stdout } = await promisify(execFile)(process.execPath, [fileURLToPath(new URL('../cli/ifood.mjs', import.meta.url)), '--versao']);
   assert.match(stdout, /^\d+\.\d+\.\d+/);
 });
+
+test('CLI runs when started through a symlinked path', async t => {
+  const { symlink } = await import('node:fs/promises');
+  const dir = await mkdtemp(join(tmpdir(), 'ifood-link-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const link = join(dir, 'cli');
+  await symlink(fileURLToPath(new URL('../cli', import.meta.url)), link, 'junction');
+  const { stdout } = await promisify(execFile)(process.execPath, [join(link, 'ifood.mjs'), 'versao']);
+  assert.match(stdout, /^\d+\.\d+\.\d+/);
+});

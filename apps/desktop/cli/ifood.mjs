@@ -5,6 +5,7 @@
 // (ELECTRON_RUN_AS_NODE=1), que é como o instalador Windows o executa.
 
 import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
+import { realpathSync } from 'node:fs';
 import { homedir, platform } from 'node:os';
 import { join, dirname } from 'node:path';
 import { execFile } from 'node:child_process';
@@ -547,6 +548,14 @@ export async function main(argv = process.argv.slice(2), ctx = createContext()) 
   }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+// Compara pelo caminho real: symlinks (/tmp no macOS), junctions e nomes 8.3
+// do Windows fariam o CLI sair calado sem rodar.
+function isEntryPoint() {
+  if (!process.argv[1]) return false;
+  try { return import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href; }
+  catch { return import.meta.url === pathToFileURL(process.argv[1]).href; }
+}
+
+if (isEntryPoint()) {
   main().then(code => { process.exitCode = code; });
 }
