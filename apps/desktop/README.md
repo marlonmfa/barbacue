@@ -22,6 +22,7 @@ A compilação copia o agente compartilhado para `vendor/print-agent` (não vers
 - `src/main.mjs`: processo principal; janela de configuração local, painel remoto isolado, bandeja, armazenamento protegido, coordenação serial da impressão e reinício.
 - `src/settings.mjs`: validação de configuração e navegação. A chave não é retornada ao renderer. Trocar o servidor exige informar uma nova chave.
 - `src/preload.cjs`: ponte restrita somente para a janela local; o painel remoto não recebe preload nem acesso ao sistema.
+- `cli/ifood.mjs`: CLI do Gestor iFood (sem dependências). No Windows, `ifood.cmd` executa com o Electron do programa (`ELECTRON_RUN_AS_NODE`), vai em `resources/cli` (extraResources) e `build/installer.nsh` copia o atalho para a pasta do programa e ajusta o PATH do usuário. Em desenvolvimento: `npm run ifood --workspace=@barbacue/desktop -- ajuda`.
 - `src/printing.mjs`: spool via driver instalado (`getPrintersAsync` / `webContents.print`); HTML escapado, timeout e tratamento conservador de falhas incertas.
 - `apps/print-agent`: journal durável, leases, prevenção de duplicação e confirmação ao servidor; compartilhado com os transportes CUPS/TCP existentes.
 - `0013_all_channel_printing.sql`: trigger transacional para novas origens. Totem/QR continuam criando a tarefa pela transação existente. A identidade única por pedido impede duplicação.
