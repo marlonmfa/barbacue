@@ -21,7 +21,7 @@ export const GET = withStaff(async () => {
 
   const stores = settings.configured
     ? await Promise.all(settings.stores.map(storeOverview))
-    : settings.stores.map(store => ({ ...store, status: null, interruptions: null, error: "Credenciais do iFood não configuradas no servidor." }));
+    : settings.stores.map(store => ({ ...store, status: null, interruptions: null, forbidden: false, error: "Credenciais do iFood não configuradas no servidor." }));
 
   return NextResponse.json({
     configured: settings.configured,

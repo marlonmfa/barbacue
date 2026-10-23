@@ -58,7 +58,7 @@ async function call<T>(path: string, init: { method?: string; body?: unknown } =
   if (res.status === 404) return null;
   if (!res.ok) {
     const detail = await res.json().then((d: { message?: string; error?: { message?: string } }) => d?.error?.message ?? d?.message).catch(() => null);
-    throw new IfoodApiError(detail ? `iFood: ${detail}` : `O iFood respondeu ${res.status}.`, res.status >= 500 ? 502 : res.status === 429 ? 429 : 409);
+    throw new IfoodApiError(detail ? `iFood: ${detail}` : `O iFood respondeu ${res.status}.`, res.status >= 500 ? 502 : res.status === 429 ? 429 : res.status === 403 ? 403 : 409);
   }
   const text = await res.text();
   return text ? JSON.parse(text) as T : null;
@@ -72,11 +72,16 @@ export async function storeOverview(store: IfoodStore) {
     call<StoreStatus[]>(`/merchant/v1.0/merchants/${store.id}/status`),
     call<Interruption[]>(`/merchant/v1.0/merchants/${store.id}/interruptions`),
   ]);
+  // 403 = o app não tem o módulo Merchant autorizado nesta loja; não é falha da loja.
+  const forbidden = status.status === "rejected" && status.reason instanceof IfoodApiError && status.reason.status === 403;
   return {
     ...store,
     status: status.status === "fulfilled" ? status.value ?? [] : null,
     interruptions: interruptions.status === "fulfilled" ? interruptions.value ?? [] : null,
-    error: status.status === "rejected" ? (status.reason instanceof Error ? status.reason.message : "Falha ao consultar a loja.") : null,
+    forbidden,
+    error: forbidden
+      ? "Status indisponível: o app do iFood não tem o módulo Merchant autorizado nesta loja. Os pedidos funcionam normalmente."
+      : status.status === "rejected" ? (status.reason instanceof Error ? status.reason.message : "Falha ao consultar a loja.") : null,
   };
 }
 
