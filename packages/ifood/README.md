@@ -135,3 +135,13 @@ Estado verificado em 18/10/2026: `healthy`, aguardando autorização das três l
 O estado `healthy` durante a espera confirma o worker e a checagem de acesso;
 ainda não significa recebimento de pedidos. Após a ativação, validar pedidos reais
 por marca no painel e na impressão.
+
+## Validação operacional — 22/10/2026
+
+As três lojas estão autorizadas em ORDER/EVENTS e o serviço está `healthy`, com
+`state=monitoring`. Foram encontrados 69 pedidos reais importados: Barbacue 53,
+Chelas 12 e Barbadog 4. Um pedido recente de cada loja teve merchant, total e itens
+comparados à API, todos consistentes. Os 69 jobs de impressão estavam em fila,
+sem tentativa; impressão física continua pendente. Escopo Merchant não autorizado
+para as três lojas; necessário somente para status/pausa no Gestor iFood.
+Nenhuma nova imagem ou configuração foi alterada nesta verificação.

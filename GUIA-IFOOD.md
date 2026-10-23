@@ -1,5 +1,32 @@
 # Conectar Chelas, Barbacue e Hotdog ao iFood
 
+## Estado confirmado em 22/10/2026 (America/Sao_Paulo)
+
+As três lojas já concederam **ORDER e EVENTS** ao Food COG. O monitor está
+`running`, `healthy`, `state=monitoring` e importando pedidos reais.
+
+| Marca | Pedidos importados na verificação |
+|---|---:|
+| Barbacue | 53 |
+| Chelas | 12 |
+| Hotdog / Barbadog | 4 |
+
+Total: 69 pedidos. Um pedido recente de cada marca foi comparado à Order API:
+merchant, valor total, nomes dos itens e quantidades conferiram nas três lojas.
+Consultas somente de leitura; nenhum pedido foi criado, confirmado ou cancelado.
+
+Pendências distintas do recebimento:
+
+- **Impressão:** 69 jobs em `queued`, nenhum com tentativa; não houve confirmação
+  de impressão física nesta verificação. Conectar/validar o agente de impressão.
+- **Status e pausa das lojas:** falta autorização do módulo Merchant. ORDER/EVENTS
+  já funcionam; o Gestor iFood está publicado em `/admin/ifood` conforme
+  [documentação](apps/web/docs/IFOOD-GESTOR.md).
+
+O Portal do Parceiro foi reaberto no Chrome na tela de login para o responsável.
+As autorizações de ORDER/EVENTS não precisam ser reenviadas.
+
+
 A integração existente em `packages/ifood` foi adaptada para monitorar as três
 lojas e importar pedidos para `/admin/orders`, com o canal **iFood** e a marca correta.
 
