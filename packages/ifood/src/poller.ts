@@ -28,6 +28,22 @@ export const defaultHandler: OrderHandler = async (event, order, client) => {
   }
 };
 
+/** Reutilizado pelo polling e pelo worker da fila de webhook. Não envia ACK. */
+export async function processEvent(client: IfoodClient, event: IfoodEvent, handler: OrderHandler = defaultHandler, hasOrder = hasStoredIfoodOrder) {
+  if (!event.id || !event.orderId || !event.code) throw new Error('Evento iFood incompleto');
+  // Não buscar nem consumir pedidos de outras lojas em caso de filtro ignorado.
+  if (event.merchantId) resolveMerchant(client.config.merchants, event.merchantId);
+  const needsOrder = ['PLC', 'CFM', 'PRS', 'RTP', 'DSP', 'CON', 'CAN'].includes(event.code);
+  const knownMerchant = event.merchantId ? resolveMerchant(client.config.merchants, event.merchantId) : undefined;
+  const stored = needsOrder && !client.config.dryRun && knownMerchant ? await hasOrder(event.orderId, knownMerchant.brand) : false;
+  const fetchOrder = (needsOrder && !stored) || !event.merchantId || (event.code === 'PLC' && client.config.autoConfirm);
+  const order = fetchOrder ? await client.getOrder(event.orderId) : null;
+  if (fetchOrder && !order) throw new Error('Detalhes do pedido indisponíveis');
+  if (order && order.id !== event.orderId) throw new Error('ID do pedido diverge do evento');
+  resolveMerchant(client.config.merchants, event.merchantId, order?.merchant?.id);
+  await handler(event, order, client);
+}
+
 /** Um evento com erro não impede as demais lojas; ACK só após persistir. */
 export async function pollCycle(client: IfoodClient, handler: OrderHandler = defaultHandler, hasOrder = hasStoredIfoodOrder, merchantIds?: string[]) {
   const events = await client.pollEvents(merchantIds ? { merchantIds } : {});
@@ -35,18 +51,7 @@ export async function pollCycle(client: IfoodClient, handler: OrderHandler = def
   let failed = 0;
   for (const event of events) {
     try {
-      if (!event.id || !event.orderId || !event.code) throw new Error('Evento iFood incompleto');
-      // Não buscar nem consumir pedidos de outras lojas em caso de filtro ignorado.
-      if (event.merchantId) resolveMerchant(client.config.merchants, event.merchantId);
-      const needsOrder = ['PLC', 'CFM', 'PRS', 'RTP', 'DSP', 'CON', 'CAN'].includes(event.code);
-      const knownMerchant = event.merchantId ? resolveMerchant(client.config.merchants, event.merchantId) : undefined;
-      const stored = needsOrder && !client.config.dryRun && knownMerchant ? await hasOrder(event.orderId, knownMerchant.brand) : false;
-      const fetchOrder = (needsOrder && !stored) || !event.merchantId || (event.code === 'PLC' && client.config.autoConfirm);
-      const order = fetchOrder ? await client.getOrder(event.orderId) : null;
-      if (fetchOrder && !order) throw new Error('Detalhes do pedido indisponíveis');
-      if (order && order.id !== event.orderId) throw new Error('ID do pedido diverge do evento');
-      resolveMerchant(client.config.merchants, event.merchantId, order?.merchant?.id);
-      await handler(event, order, client);
+      await processEvent(client, event, handler, hasOrder);
       processed.push(event.id);
     } catch (err) {
       failed++;
