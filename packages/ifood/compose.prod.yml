@@ -2,7 +2,7 @@
 name: barbacue-ifood
 services:
   webhook:
-    image: barbacue-ifood:webhook-20261023
+    image: barbacue-ifood:webhook-audit-20261023
     command: [node, packages/ifood/dist/webhook.js]
     restart: unless-stopped
     init: true

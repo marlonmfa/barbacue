@@ -3,6 +3,8 @@
 **Atualização de 23/10/2026:** webhook das três lojas publicado usando o aplicativo
 Food Cog e o receptor central COG, com fila persistente no Barbacue e polling
 mantido como contingência. [Publicação, testes e recuperação](ops/webhook-20261023/README.md).
+O registro agora preserva pedido, tipo/horários do evento e vínculo com o painel,
+mesmo após apagar o payload. [Auditoria e consulta](ops/webhook-audit-20261023/README.md).
 
 Cliente da Merchant API e monitor contínuo dos pedidos das três lojas. Reutiliza o
 Postgres e o painel `/admin/orders` existentes; pedidos entram pelo canal `ifood`

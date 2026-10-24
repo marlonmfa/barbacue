@@ -7,11 +7,22 @@ import { loadConfig, IfoodConfig } from './config';
 import { IfoodClient } from './client';
 import { resolveMerchant } from './merchants';
 import { processEvent } from './poller';
-import { storeIfoodEvent } from './order-store';
+import { ifoodLocalId, storeIfoodEvent } from './order-store';
 import { IfoodEvent } from './types';
 
 type Enqueue = (events: IfoodEvent[]) => Promise<void>;
 const MAX_BODY = 1_048_576;
+
+/** Metadados sem dados pessoais, preservados mesmo após apagar o payload. */
+export function eventAudit(event: IfoodEvent) {
+  const timestamp = typeof event.createdAt === 'string' ? Date.parse(event.createdAt) : NaN;
+  return {
+    order_id: event.orderId,
+    event_code: event.code,
+    event_full_code: typeof event.fullCode === 'string' ? event.fullCode : null,
+    event_created_at: Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : null,
+  };
+}
 
 /** Valida os bytes originais antes de interpretar ou persistir qualquer evento. */
 export async function receiveWebhook(raw: Buffer, header: string | undefined, config: IfoodConfig, enqueue: Enqueue): Promise<number> {
@@ -45,12 +56,32 @@ export async function enqueueEvents(pool: Pool, events: IfoodEvent[]) {
     await db.query('BEGIN');
     await db.query("SET LOCAL statement_timeout = '2000ms'");
     // Inserção única: lote atômico e deduplicação pelo ID oficial do evento.
-    await db.query(`INSERT INTO ifood_webhook_inbox (event_id, merchant_id, payload)
-      SELECT e->>'id', (e->>'merchantId')::uuid, e FROM jsonb_array_elements($1::jsonb) e
-      ON CONFLICT (event_id) DO NOTHING`, [JSON.stringify(events)]);
+    await db.query(`INSERT INTO ifood_webhook_inbox
+      (event_id, merchant_id, payload, order_id, event_code, event_full_code, event_created_at)
+      SELECT e->>'id', (e->>'merchantId')::uuid, e->'payload', e->>'order_id',
+        e->>'event_code', e->>'event_full_code', (e->>'event_created_at')::timestamptz
+      FROM jsonb_array_elements($1::jsonb) e
+      ON CONFLICT (event_id) DO UPDATE SET
+        order_id=COALESCE(ifood_webhook_inbox.order_id, EXCLUDED.order_id),
+        event_code=COALESCE(ifood_webhook_inbox.event_code, EXCLUDED.event_code),
+        event_full_code=COALESCE(ifood_webhook_inbox.event_full_code, EXCLUDED.event_full_code),
+        event_created_at=COALESCE(ifood_webhook_inbox.event_created_at, EXCLUDED.event_created_at)
+      WHERE ifood_webhook_inbox.merchant_id=EXCLUDED.merchant_id`,
+      [JSON.stringify(events.map(event => ({ id: event.id, merchantId: event.merchantId, payload: event, ...eventAudit(event) })))]);
     await db.query('COMMIT');
   } catch (error) { await db.query('ROLLBACK'); throw error; }
   finally { db.release(); }
+}
+
+/** Confirma persistência no painel sem guardar nome, telefone, endereço ou itens. */
+export async function recordProcessedEvent(pool: Pool, event: IfoodEvent, brand: string) {
+  const audit = eventAudit(event);
+  const local = await pool.query("SELECT id,status FROM orders WHERE id=$1 AND brand=$2 AND channel='ifood'", [ifoodLocalId(event.orderId), brand]);
+  await pool.query(`UPDATE ifood_webhook_inbox SET processed_at=now(), payload=NULL,
+    attempts=attempts+1, order_id=$2, event_code=$3, event_full_code=$4,
+    event_created_at=$5, local_order_id=$6, local_status_at_processing=$7 WHERE event_id=$1`,
+    [event.id, audit.order_id, audit.event_code, audit.event_full_code, audit.event_created_at,
+      local.rows[0]?.id || null, local.rows[0]?.status || null]);
 }
 
 export async function runWebhook() {
@@ -59,7 +90,7 @@ export async function runWebhook() {
   const port = Number(process.env.IFOOD_WEBHOOK_PORT || 3467);
   if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('IFOOD_WEBHOOK_PORT inválida');
   const pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 4, connectionTimeoutMillis: 1500, query_timeout: 2500, application_name: 'barbacue-ifood-webhook' });
-  await pool.query('SELECT event_id, payload, next_attempt_at FROM ifood_webhook_inbox LIMIT 0');
+  await pool.query('SELECT event_id, payload, next_attempt_at, order_id, event_code, event_created_at, local_order_id, local_status_at_processing FROM ifood_webhook_inbox LIMIT 0');
   const client = new IfoodClient(config);
   const controller = new AbortController();
   const stop = () => controller.abort();
@@ -103,7 +134,8 @@ export async function runWebhook() {
               const merchant = resolveMerchant(config.merchants, event.merchantId, order?.merchant?.id);
               await storeIfoodEvent(event, order, merchant.brand, false);
             });
-            await pool.query('UPDATE ifood_webhook_inbox SET processed_at=now(), payload=NULL, attempts=attempts+1 WHERE event_id=$1', [row.event_id]);
+            const merchant = resolveMerchant(config.merchants, row.payload.merchantId);
+            await recordProcessedEvent(pool, row.payload, merchant.brand);
           } catch {
             await pool.query("UPDATE ifood_webhook_inbox SET attempts=attempts+1, next_attempt_at=now()+interval '30 seconds' WHERE event_id=$1", [row.event_id]);
             console.error('[ifood webhook] evento pendente para nova tentativa');

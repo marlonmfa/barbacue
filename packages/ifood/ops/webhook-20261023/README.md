@@ -1,5 +1,10 @@
 # Webhook Food Cog — Chelas, Barbacue e Hotdog
 
+Atualização posterior: o receptor recebeu uma
+[auditoria persistente de pedido, tipo e horários](../webhook-audit-20261023/README.md).
+Para instalação nova, aplicar também a migração de auditoria e usar a imagem
+indicada nessa atualização. Os detalhes abaixo registram a primeira publicação.
+
 Publicado em 23/10/2026, America/Sao_Paulo. Aplicativo centralizado Food Cog,
 `19e6ca56-1a7a-483d-b28b-c945990154c7`. Não depende da homologação de MERCHANT:
 as três lojas já têm ORDER e EVENTS autorizados.
