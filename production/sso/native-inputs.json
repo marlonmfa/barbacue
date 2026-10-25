@@ -1,0 +1,3045 @@
+{
+  "base_revision": "60d599060578faa1ee81e1ca7a15ab388adf6e23",
+  "native_source_hashes": {
+    "apps/web/src/proxy.ts": "707d0757f1fdfcb412515555b7fe95a111a8777a5f89a6aa8bbb061f882ab9d1",
+    "apps/web/src/app/layout.tsx": "705d1d2d057ab8fbde3b391cd2f63ec509e0dc0d2a5d018b252ab36062efe076",
+    "apps/web/src/app/loading.tsx": "4241ec0d0dd83cb788a0064d8f0875bd9077146ffcc5559d1e5ef68104962fc2",
+    "apps/web/src/app/page.tsx": "e6609681e73a7b077d8e9611e3de4fd74c2894a9a45d6410b63b835854480aa0",
+    "apps/web/src/app/globals.css": "2388549e6b5605856ce9ddb2f0494836d95c688bfbba9d8edd35dfa1516d6a9b",
+    "apps/web/src/app/beta/page.tsx": "b28ab9e427d3a0df90e6d5ef729e1bfbecd9ce5e2a2fa79c45ed465e122db66b",
+    "apps/web/src/app/mesa/[token]/route.ts": "5ed0eb6536edf7057c61af0c60ef9b16784b85288eefb9857ec2aaafa81dcc6f",
+    "apps/web/src/app/icon.png/route.ts": "234613e812e8279ac6cab81fec5a2ef26a06bf22363f2435f51dfcd134084ace",
+    "apps/web/src/app/favicon.ico/route.ts": "234613e812e8279ac6cab81fec5a2ef26a06bf22363f2435f51dfcd134084ace",
+    "apps/web/src/app/apple-icon.png/route.ts": "eb21669defd12c0539db1df81e948dba8317ac1752c1ecc8e846fa2e50027393",
+    "apps/web/src/app/pedir/page.tsx": "96d2f642d0550d626c79b0d7c6ea9cec099d074764def1b88a8dde7de78cfe95",
+    "apps/web/src/app/payment/page.tsx": "fbc0f6faf392923fc4639c648eeae91aa6c3b36bab97cf40186640e7883c0f16",
+    "apps/web/src/app/admin/layout.tsx": "0854b9a68c7f09f260651c70b16a77b4c8464aee660255ac551884dc545e35db",
+    "apps/web/src/app/admin/page.tsx": "142411bb1dcc7305be18e794106e371800c8323bf62af8ee6a966f4a115c4564",
+    "apps/web/src/app/admin/customers/page.tsx": "463d46f8d74207f10510f566b38342c12f5cfe9ff0d24ca7ccfac67a4af4d9a3",
+    "apps/web/src/app/admin/beta/page.tsx": "e7e7f699e2f084dcc2bda20d97266b8ecf47fb7dbe596d1c1dc65d0c7f26ac6a",
+    "apps/web/src/app/admin/settings/page.tsx": "9083b31b116806cc61d4831edb649dcf8f88ee8234dbc28a9cf6488313cfd8a1",
+    "apps/web/src/app/admin/tables/page.tsx": "c684b05e7885ac6a97f94ee37f39c42fba4e214d580db61f7c4e91810bcb9ae5",
+    "apps/web/src/app/admin/products/page.tsx": "8b1dea7eb163c00f8cbf3061697921b7dc145eb1210f64f1a52dc0a2a1305226",
+    "apps/web/src/app/admin/workspace/page.tsx": "21a95d3c26ccf85c7a89816d0e5710a530e29e3bf10e66595c4444a1d7b5a843",
+    "apps/web/src/app/admin/delivery-settings/page.module.css": "0ddd1804e952b9cc272bf1b103bcff08dea06935e355f550991e624d6549ef44",
+    "apps/web/src/app/admin/delivery-settings/page.tsx": "b9dcef7aee7b13aaf03efd8e04a0027e1484d450755470fa3aeed6ead977d4eb",
+    "apps/web/src/app/admin/system/page.tsx": "2a19ca1678514685b1406855765cb372434fd818dc487d6cf40a3b493e8b4cb9",
+    "apps/web/src/app/admin/coupons/page.tsx": "e15a3f227b9d5d67d33cbe800d4cd865655b28bd61d5bde93b5b3680306c482d",
+    "apps/web/src/app/admin/team/team.module.css": "d980866110566711e33235ae5a5bfd7b36662962dbc9e6246430a54611a26f42",
+    "apps/web/src/app/admin/team/page.tsx": "f5e36c40d818ec6156578590c0360701ddf220c63869dac0d62d676ba3e21469",
+    "apps/web/src/app/admin/catalogs/catalogs.module.css": "4fa503092c72965713ad3a9a6172e7e7c8bc8b79896dd0f044067066a4f60e04",
+    "apps/web/src/app/admin/catalogs/page.tsx": "e3d4c2b28af94bc7c1180b43bf1158b642006ee6c342c30a71c887a545de01ae",
+    "apps/web/src/app/admin/waiter/page.tsx": "858a6c6710956b07d7116dbc03617af15f7e474e2539db164342adf242304965",
+    "apps/web/src/app/admin/delivery/page.tsx": "6ecdafd9848f5d3d59b67938249586cc49c91fcbf9a9823bbd8c7421bee1ec93",
+    "apps/web/src/app/admin/staff/page.tsx": "0a8568dda2808387158033526d47f97a69431a0131bc9027f38e0d7394f68aee",
+    "apps/web/src/app/admin/orders/page.tsx": "38b81dd98c86ccb438dc342aec6f2dd8b56a3fe0b996c97e1f9d9bf7b063b7e8",
+    "apps/web/src/app/admin/erp/erp.module.css": "382665b28ea2527d5d180948af90793e0da56bd069ed86f2b6da4dba28e026d8",
+    "apps/web/src/app/admin/erp/page.tsx": "9f59da42b31c88f6475c981276e0d20cc4c60d157530f0069ff7241e84bcab48",
+    "apps/web/src/app/admin/kitchen/page.tsx": "fce1bb680974d9ec08f1c80574c1e2e86a006a7af90e81edfad56c0de9275696",
+    "apps/web/src/app/admin/downloads/page.tsx": "cde922334dda98b2e4db740101f6f7dec3e551fc6fb4cafff2c2b77660b72710",
+    "apps/web/src/app/admin/categories/page.tsx": "ea687e7b8bed71aed5ca1b43bfde04a2ad9f8ec26b70d825e8a0968e4928092f",
+    "apps/web/src/app/admin/impersonate/page.tsx": "6edae63559a60ccc3edcdb593b1d387508ea7ad753c8f91b1c1945a4a28f00a3",
+    "apps/web/src/app/admin/ifood/page.tsx": "ec2f01239b105ca2b9687c6c59a4fc6239007c8bdc35fc3501a2991aca6a1187",
+    "apps/web/src/app/admin/change-password/page.tsx": "58141f0127b3d9a3d07d4bfed8b5099ee20fdbbf67d39d4deb283df62606eb92",
+    "apps/web/src/app/admin/login/page.tsx": "1d34302b47358805defb3fec6e9b8cd433a1a642e60365d625a81da3cfb5e953",
+    "apps/web/src/app/admin/whatsapp/page.tsx": "689eebe78979842bcce48911fd98f24de27c74473b7a3d683a2791b8a8153db3",
+    "apps/web/src/app/confirmation/page.tsx": "84d68f66bf52866e83f9c46668d1078ed5d9819e6f2fdece26d33b3daf20bcaa",
+    "apps/web/src/app/chelas/page.tsx": "8dbfcef3b485942bf955d5f14ddc3f776a3a22c4762750074b2244d2e36b5f72",
+    "apps/web/src/app/cart/page.tsx": "1044b8ee48a19b7d2420940469158ef5d67074e7b8bfa6ef7d7f36be0e716869",
+    "apps/web/src/app/api/beta/route.ts": "4c2d5054130dcf31e8e3b2f5fd05b481cd7da92495e9d6c24455f2be004806d1",
+    "apps/web/src/app/api/settings/route.ts": "528003478a306d803958917a72295cb5b316b941e3a88718b66a19acde8f6dc2",
+    "apps/web/src/app/api/tables/resolve/route.ts": "f4b2a7392ae0df6cf44b5938bd20b4423f8073387d9118c136e46fc8bb60642f",
+    "apps/web/src/app/api/print-agent/status/route.ts": "fc479ec583663b5d24ff6dae4fef25ab18ff957f224c3080638e0f7d9a2e0273",
+    "apps/web/src/app/api/print-agent/jobs/[id]/fail/route.ts": "c85c61063328188fb34c65795056941cb8554fe4f1be6116e2e013a6fc604316",
+    "apps/web/src/app/api/print-agent/jobs/[id]/complete/route.ts": "a94026e65b1ca10ed0b6bbf17e3bd874237b9e10076dfe78be9222233bebda17",
+    "apps/web/src/app/api/print-agent/jobs/claim/route.ts": "03f404aa1de8c17e341603b83f041a599e1b6794775ec63f43a47bc5839ecf20",
+    "apps/web/src/app/api/products/route.ts": "ba13f5a6098a78c217c72de8da3b91a2c16e9226009143758b405e070c35c4f2",
+    "apps/web/src/app/api/chat/route.ts": "79f6d3e1e2305e8426e25cc0926a43499b4980f1f9171084429a3085ea2389b0",
+    "apps/web/src/app/api/auth/[provider]/route.ts": "bd59b70cf1213dba5d87a584294db3f9c1c55d0052ffb75110e08abd4bcab8e2",
+    "apps/web/src/app/api/auth/[provider]/callback/route.ts": "6d1ec44d30fbf32b621443e787cf1cd0624b2d3ec526708b397b3185971f3cc2",
+    "apps/web/src/app/api/self-service/orders/route.ts": "dded18b29f14b0ab111ac3c6688632a7bce4f6161f9afbd9115726aee35fe090",
+    "apps/web/src/app/api/admin/customers/route.ts": "7ac64d18ed84e61365d0873d44386ab71e920325d5999d0e94676cd7629f0902",
+    "apps/web/src/app/api/admin/beta/route.ts": "637357a3ab3e2ca8fab06fbfd027389e3cef79834e3cc9505b61f28ec80a3fdb",
+    "apps/web/src/app/api/admin/settings/route.ts": "282e87314e1b961e2be2b2ca97d1f43847bf7724c112ea3c2c35268895fe0491",
+    "apps/web/src/app/api/admin/tables/route.ts": "eb1c5d80acac62155105dc774b644037ffc4ef6fc1a2a006adadd18b092d386d",
+    "apps/web/src/app/api/admin/tables/[id]/route.ts": "98798fbb72d391ec97544a70a37e029c26dd0dea89fa3d6145eccefdff555c29",
+    "apps/web/src/app/api/admin/products/route.ts": "a814b2035cf25b3618b7e2f14d9c60eadba51a7979626d60c9d5770b5985bb5e",
+    "apps/web/src/app/api/admin/products/[id]/route.ts": "c31cb6124070fc85f2ed576cee66cbf0dd59f0197f109a30051889ec4de33d60",
+    "apps/web/src/app/api/admin/auth/route.ts": "e449be719a413e8abdea9a7cbf3ff62f2f5425073aac980c47f3ae158aa1b106",
+    "apps/web/src/app/api/admin/closed-days/route.ts": "0e52ac9168b0b523834c7db48343e7cf9668b19692bfef3657251c016106c94d",
+    "apps/web/src/app/api/admin/closed-days/[id]/route.ts": "e1a6d1ed519edcc2e46924aa290c04081e69f71cee01148c7ef7707fd7e65410",
+    "apps/web/src/app/api/admin/delivery-settings/route.ts": "9f6e70bac408efacf32c8987abb9bd8337075bdd46ca1b012dda966a99c01621",
+    "apps/web/src/app/api/admin/delivery-settings/geocode/route.ts": "a6a0090dc59633f787bd3a1db32d81d3f1f2e3ba4d9b396f75c98c0f46a8a39c",
+    "apps/web/src/app/api/admin/dashboard/route.ts": "8e345ec1535b431eaf344d16fb8d0d667042907c285e0a2283ac7675faafb9fa",
+    "apps/web/src/app/api/admin/system/route.ts": "834fd324f43451e5fb0fa74d9a71866bbec2f47e164f8b8997ccc7c01445a361",
+    "apps/web/src/app/api/admin/coupons/route.ts": "796a28bfa833fbce8e4230da540c5649e1a8ec687045b309c2139a4195f0aba6",
+    "apps/web/src/app/api/admin/coupons/[id]/route.ts": "ecb8521e960ee9b300603522790127864ff800f40a86af4f6df8c6b8044f8ba4",
+    "apps/web/src/app/api/admin/catalogs/route.ts": "bd055854b567d21c758e1b311a11fdd17464b202efc3d5df46713caee9d181e9",
+    "apps/web/src/app/api/admin/catalogs/[brand]/[id]/route.ts": "f13fa419938ac24cd7caf56ed1641e35f411b312ab3bb8dd8e540cf4364ce19f",
+    "apps/web/src/app/api/admin/waiter/route.ts": "e83607a0501b92bd656686e5b9eb071d9ea87fbc2b70cf72741848ce07add525",
+    "apps/web/src/app/api/admin/delivery/route.ts": "546859010f0014b1df06c1985381c732b8090160ba6e182381f6ab46ada7c8f7",
+    "apps/web/src/app/api/admin/staff/route.ts": "85c1aa2bdb1fc08f95a57e42aa0bea010ff3b0f05983e1b274301d1d62949cb2",
+    "apps/web/src/app/api/admin/staff/[id]/route.ts": "5d46a2d0b081445ba6b6f747286334952d8c2722e7be414ef7bff7d971bfca91",
+    "apps/web/src/app/api/admin/orders/route.ts": "ebb66a54a0fc44bdd5190b6f86804720e1951b7601c192773b14efa70d561414",
+    "apps/web/src/app/api/admin/orders/[id]/route.ts": "f658c0b7714f884e951f4027088665899086b7a7626eed3a009463d091ab6662",
+    "apps/web/src/app/api/admin/orders/import/route.ts": "9cc8cfad76bee2825ba3b679a774681095932b0f581b6c2694ee5cac24a4d336",
+    "apps/web/src/app/api/admin/erp/route.ts": "1cb26a67d89794d271c73fda0a7a2deaefabb4f111f589ce7855636b29dcb49e",
+    "apps/web/src/app/api/admin/kitchen/route.ts": "a605970fad73565cc882ba094166d79c9b55f6834aaf5d1d7341018d334e82c0",
+    "apps/web/src/app/api/admin/kitchen/printing/route.ts": "5b1cbfb3e4ef2433876fbf4171f839a37482bff4db32411330e4e28e58e14031",
+    "apps/web/src/app/api/admin/downloads/windows/route.ts": "c94d6b183fb9c5112a7b9cbdb42cec13a3264e231b177d6376d49c74124088a1",
+    "apps/web/src/app/api/admin/categories/route.ts": "60d864dce07b664bff14ac482abfdd830ac60900e9c664db1e8fd8b6e3f3a693",
+    "apps/web/src/app/api/admin/categories/[id]/route.ts": "d3286fae3df0ee57bb97898b3a6f3166773b752caee70ecb6dfa98398bd9259e",
+    "apps/web/src/app/api/admin/impersonate/route.ts": "ef2dd3ea63d450751ca2420c07d087004ec6b0c839357763d3a92bc9db0b9511",
+    "apps/web/src/app/api/admin/ifood/route.ts": "c4bb03975cdbc4d8c0b77560f58007d2c62b88aec8ee66d90a70df2d6f84e742",
+    "apps/web/src/app/api/admin/ifood/stores/[storeId]/route.ts": "b177df1e0526bea18060952e8b0476ff7b0bfb1cffd95e53db89babb181e9e17",
+    "apps/web/src/app/api/admin/ifood/orders/[id]/route.ts": "44712340cf87d1b90a578bbc0e86e4be2f86987592bfc5419f0062391e7d43d4",
+    "apps/web/src/app/api/admin/change-password/route.ts": "d0b473f309f86590e94e25052cc23db0128e3e1ebc4b019f4d550521ed77c705",
+    "apps/web/src/app/api/admin/whatsapp/route.ts": "13d43c8c210e98f591de8a45b39b32dd4a2a65c146a93d133c9e4824b4026ff0",
+    "apps/web/src/app/api/admin/whatsapp/[...path]/route.ts": "cbadb32ff449a2f1f93dad6efd745f13643344cefaf680c94bfe8c051ff2bef3",
+    "apps/web/src/app/api/admin/upload/route.ts": "e7c76db9688c8205ec76f2b347f4416105a633fa06dac63c4a753bd0138b878e",
+    "apps/web/src/app/api/admin/employees/route.ts": "326d24b83ab59ed2d7562f2c73feab1a446b3168013f2a0cfbfa9ab4eef16415",
+    "apps/web/src/app/api/admin/employees/[id]/route.ts": "be57fdbda7f66323ec7ae3bd478adcabb08fb37409dc75ad2699bf8f6d1b1ffb",
+    "apps/web/src/app/api/checkout/route.ts": "a35b8584d2b9191ca7c15d168cacd62a7fa739a74594f20aad4c7d7cc8f05524",
+    "apps/web/src/app/api/checkout/[id]/route.ts": "f86e371c18b85bb53fd1b345b42b9b08957c9ca02d8ffca10a1c5e6b2c9bb42f",
+    "apps/web/src/app/api/store-status/route.ts": "7914e18fb1ccea90afe92dd17c723204df42436f3cdca91929689d2d3c2eccf8",
+    "apps/web/src/app/api/coupons/route.ts": "35ba0ac444a113b1bc7f06116e4297cb798c654368131c970fb002f47ef4a719",
+    "apps/web/src/app/api/delivery/quote/route.ts": "871042ee7401eaabcefed6b8412c17537d43b1b5297394919e19a6ba4db65290",
+    "apps/web/src/app/api/orders/route.ts": "4d13f85f89db0e5dc9c674e63fe995c491988ecdb62a809798186c2d3ad784af",
+    "apps/web/src/app/api/orders/history/route.ts": "20c12a8fc2e46b9602e1822c3399bcdab16443ea27c443af9cb0da2566e2d53c",
+    "apps/web/src/app/api/account/route.ts": "5e077366a85e933d4860a1d84787a560e73410f902912bddfe7da214ca525a84",
+    "apps/web/src/app/api/webhooks/zap/route.ts": "5e26b33d27a16c76f55dd7f8487ea21949787e358ea13357af68f2f1b553793c",
+    "apps/web/src/app/api/webhooks/asaas/route.ts": "048ebae0d062a50571faec3564f778bd517ed5655a5c817c823e565493ba8193",
+    "apps/web/src/app/api/instagram/route.ts": "540c892eed177a8ba622b3590231cc62bd672a671c5cd52919d26f09332b7834",
+    "apps/web/src/app/api/transcribe/route.ts": "3cb3fbd4e48bf9c571ee2cf0e78a7e43fc880bbc2d4d17d3a5a5f0afaa996a0b",
+    "apps/web/src/app/api/media/[id]/route.ts": "f8bf40424d2597ed4212733b43634b1d4da9c711fc9c915ce2be21118d5b51a7",
+    "apps/web/src/app/conta/AccountForm.tsx": "ea5406f97358ab097bbc9f8a1bdcbeb1620f02304316e3bc1c804ffe766e7518",
+    "apps/web/src/app/conta/page.tsx": "fd6cd563f779271369b9a0dc765d44d93f4016cc5790c9027c0d69b0946625b3",
+    "apps/web/src/app/barbacue/page.tsx": "6bcb47fcbc39883df02eb518869a9c14a9f5012bd12aa442f16b46d76f45cf5e",
+    "apps/web/src/app/teste_pedido/page.tsx": "e901a1a6a0894ef4dc811ed10bf64b2affa33d2d21ff349d4adb35e76e0b1456",
+    "apps/web/src/app/totem/page.tsx": "ec8371c5193fccb0b9b6712d427cec4aace07f3d108d92a0f3fcce3aee0fccd5",
+    "apps/web/src/app/barbadog/page.tsx": "8f87ad0781cad51622e60ed13e9e3b34ca0881dcbf213478576b30ccd0794a31",
+    "apps/web/src/app/whatsapp/WhatsAppPortal.tsx": "98bb3c5d4d5b3d70ae7ead81d19d2a19223661abb817cc4ca28604f85692e3fc",
+    "apps/web/src/app/whatsapp/whatsapp.module.css": "6a955da98cf932ec7a68171e71752a0681732099d5f7dabc8d3d5c422804a6db",
+    "apps/web/src/app/whatsapp/page.tsx": "ff8131a6dd9d20752579ccf01d66ef8204114df5d17a41ec6e218c0aff104313",
+    "apps/web/src/app/atendimento/page.tsx": "8d6e437cc6a9fff183752b47abca30b135271b46cf1e48856c52abcd8a188c3b",
+    "apps/web/src/app/atendimento/[brand]/page.tsx": "d4b4608db452dce0c02bacb5a97d68423ccfcfd1c66c73555e4de41defab9387",
+    "apps/web/src/components/CartClient.tsx": "b7fe06d84c95ff5de58523febbd2e19d7052cccfb51a03d615e745a968332bbe",
+    "apps/web/src/components/InstagramFeed.tsx": "eb84fc1b97408036d273b22401fad5a1814aae89d6f0098e377df21206b59cec",
+    "apps/web/src/components/Hero.tsx": "01c2f55027a247c473460510838f0b07d6aa1880de3f6727b029db5b41c3077b",
+    "apps/web/src/components/CartProvider.tsx": "370c0c00a4093f6e12dfd00fcf712cf2438aaf50c494633fa822d46eb3932c0e",
+    "apps/web/src/components/OrderChat.tsx": "84fcbeba48338c7419d359bac529a0d3f33abd7286d3668293bf5f7831bd39b2",
+    "apps/web/src/components/AppDownloadSection.tsx": "60bd9172e81cdbf11379b23851bf85f5f9d1ce4f411b6f4fc46aa68953d82254",
+    "apps/web/src/components/TestOrderChat.module.css": "2f31f7055d969822ad175890d3a4b7d60cb592841f87f57cd14eaf4082bab19d",
+    "apps/web/src/components/DeliveryQuote.tsx": "4d397c5fabe4ddd4a0569916fdcaaf9798127f85ca4f4130bd982992e30c7421",
+    "apps/web/src/components/OnlineMenuBase.module.css": "cfc7599fe80076c1285026a0f589529b76f734f84029e71a16f620bbee380d09",
+    "apps/web/src/components/ChatAgent.tsx": "d3db32ee0bd2d9af2406592b868d833b86a75fe46ab2ba1385faa4543b0fe264",
+    "apps/web/src/components/AdminLogout.tsx": "f7cc10fe609411b3786c0d5248a8e161c5ba2e5bb008cc41eadc77f5bb56660c",
+    "apps/web/src/components/BrandStorefront.tsx": "fa5bdcb27638667ab0868c1c055e6342162dd8ee46e20ab05aa49d11acfdcf57",
+    "apps/web/src/components/BetaSignupClient.tsx": "91d51eee9dab02c12374ce78de35881a9f31b0031bb49a729694a9a35bf9a79a",
+    "apps/web/src/components/SelfServiceMenu.module.css": "4b377ec0a41863221816f5b33ee0be63c7c54d19fdfd3036c86b13a158070544",
+    "apps/web/src/components/ProductImage.tsx": "9cb03ea72a3a28381c6daab951f4174224f6e8f2992dac4d0ada737d50a9a0ef",
+    "apps/web/src/components/SelfServiceMenu.tsx": "83eb20392e17de525d5070b24a95df219ce21b1e52ee4bad2f3c5f2fc229ccf4",
+    "apps/web/src/components/ProductCard.tsx": "8f4c25cbb83db4bc071b8672019323bbc6380dac2dd6c2a8bd7fc66ef6b3b315",
+    "apps/web/src/components/Footer.tsx": "af0380f146c6119e181de10d377b75413f482bacddbb8f60c7a716a926e416b7",
+    "apps/web/src/components/CategoryNav.tsx": "083dd7ef20f2d090a383b637854706e3e0a71503dfde12ac2c0f524ef759455e",
+    "apps/web/src/components/TableBanner.tsx": "601909d7017c9e62da59cc5947bb6c7bdce3848e054a3bc40f344ce3b3475e7c",
+    "apps/web/src/components/OnlineMenu.module.css": "80a3025603da2055bf6d5760972a3d4a6a62a2d60c9a682fd255c3605d775281",
+    "apps/web/src/components/ChatAudio.tsx": "0ba5c0e2235fed9375735aaf5e4d724bc39153aa47fce7e82a8a76d0d2f79e45",
+    "apps/web/src/components/CartDrawer.tsx": "f67c6c11c16092f6b7b4979732a855429acf60a9b0544fdd7800bcb97144f429",
+    "apps/web/src/components/PaymentClient.tsx": "155a866a041bfef272228c7744f8f56bdc91b896284b00d0222aaa539d84cf21",
+    "apps/web/src/components/CustomerEntry.tsx": "90b2df82891cd0ae9fd655372efa01451ec3064274fdac7ca4b1b087d77d953a",
+    "apps/web/src/components/BrandNavigation.tsx": "103d462b5294ed48c22e13565d4ce8955b4ef2ea7159dc2eb34ef2b2165d1fe5",
+    "apps/web/src/components/CustomerLogout.tsx": "f1fe69a0c45e9925b5cba95b228e68c2d01c4108d94ce040ce3e61b5f82a9268",
+    "apps/web/src/components/DeliveryQuote.module.css": "3244e5c16fa24de1cff1b2559707b88ae903b094924855a802bbbc7293f6a53c",
+    "apps/web/src/components/TestOrderChat.tsx": "69ffe74e811f4f898ad85f2dc0bd36482c6be0a3da35aa8885de23bc53454e49",
+    "apps/web/src/components/OnlineMenu.tsx": "1f43ef375b241c29b751409b954819e8a4f392f563076483c3bb0d94bf440a83",
+    "apps/web/src/components/admin/AdminShell.tsx": "1e4c35dc849f944c8b7da18fec8e51c6033148ecbb7c1db8f815a1afbaa29f07",
+    "apps/web/src/components/admin/ImageUploader.tsx": "4f8058c7178579be6f6c66a11e22210ef63a212410b5853e9ba455116586bdac",
+    "apps/web/src/components/admin/OperationalQueue.module.css": "31c55dc4c545cd5173770833bb2b59be88a6da9a8b7afdb2c941efe1f7e46a41",
+    "apps/web/src/components/admin/KitchenPrinting.tsx": "f344d515437c45e3a69a2628036be0b410b6808800de78a22592a0a8b19893ab",
+    "apps/web/src/components/admin/OperationsDashboard.module.css": "8827b40fcc7cdb288d9a18e92b3724576d5cb3bf6fb37e7d8e16f882649f4b51",
+    "apps/web/src/components/admin/Access.module.css": "02849d3ba81adda9bdeb2340ec069100057baf827ab688904088b34f681fbfcb",
+    "apps/web/src/components/admin/OperationsDashboard.tsx": "5cd93553abbadf18d8fd5b140ebb11dfddeb9e3b22911b531b21e4ae73ae2271",
+    "apps/web/src/components/admin/AdminIcons.tsx": "7067a02e9240ad36d0f07229bb3406e4f416d3b6977d0f771012eebac5f5d802",
+    "apps/web/src/components/admin/AdminShell.module.css": "1ad2cd4bad2e33013b7d0dc51e93099371dff0db6f8514f4c524467dc66ba9f2",
+    "apps/web/src/components/admin/OrderImport.tsx": "cd0c4b101d6d488bbe9bbdfe2f5b3fd1b0bfdfbf009ead63f04dd50a4caeee19",
+    "apps/web/src/lib/imported-orders.ts": "5d20090e87154adedf322beea52f22a7cfa88834f18ee00bb6d9305a72c99d83",
+    "apps/web/src/lib/menu-image-classify.ts": "db6895ba878c287e11844ff15d6171013e6694bf2a8ff1be881a71deaf8fcc3b",
+    "apps/web/src/lib/customer-session.ts": "d09bb17e9e894880266e20ca69cad5d6d8edbbfc2711564034fc002390ce3f03",
+    "apps/web/src/lib/order-totals.ts": "f948ebc281d40a86d806d336ba1849f6aa43df9266c1891ed8a4ae736c3ef14f",
+    "apps/web/src/lib/kitchen-print-auth.ts": "7ddabc4589d4eca8e0c986e346e2c0599192f40846e383b341bf4fbbce880cd0",
+    "apps/web/src/lib/admin-dashboard.ts": "508e32036a5e73c795f5ec08007847687243e0c0f624c307b80eca2eafbaacf7",
+    "apps/web/src/lib/self-service-orders.ts": "14f99d0ea193b1c4052e2b4e7ce9e0e714be79aae61cb05b642e1a653050f247",
+    "apps/web/src/lib/self-service-pending.ts": "f5184bc5d7409ecbcb8c0cd04d1ee69349c282e181196db8170c89f0273245f5",
+    "apps/web/src/lib/online-checkout.ts": "f23379d7ea678449749dc61c1868cafa3226f177b0a4e6729555b47447a26bb8",
+    "apps/web/src/lib/erp-validation.ts": "dec2d1263ef9784025f13860aab811a0a85a065cbc3b89dd683972a3783d6517",
+    "apps/web/src/lib/brand-icons.ts": "8943104c850aeeebd8ba031730a1a0a1fab0ca84301d7132fed0bba5b75fb528",
+    "apps/web/src/lib/self-service.ts": "dfedf6ec755dcc869dcbdf5c31d6ec47f360110bceb4384b23824ec6bb294f88",
+    "apps/web/src/lib/instagram-fallback.ts": "6a1d5387276ef73627eabbf73ac21a84e357fe8a51a5ed08dbd00f64f8b8726a",
+    "apps/web/src/lib/permissions.ts": "7cc919a82e66c2672778b2228919469f4f8bfbc496ef443da9f9210480411447",
+    "apps/web/src/lib/pricing.ts": "47422f71c1180375be90205611e219d601c19d876604b4592ae8c439a32e32ef",
+    "apps/web/src/lib/brands.ts": "488370dc3e2c94cc23f6448bbd088fa4cb8e7381f59786237eb5b7ebe6dc62ea",
+    "apps/web/src/lib/table-session.ts": "553582c700a3efd886f8a9564dedd7ee381c8599b923ebc5c75def92d321e659",
+    "apps/web/src/lib/table-session-shared.ts": "8b9991418da098e7e2d407d65731488a50e24c80095d4f9757ee7adae2d9ec4f",
+    "apps/web/src/lib/checkout.ts": "d73f4c581bc150f275e22319d61cc089930d93d2fd6a097f30bddc995fc3fc30",
+    "apps/web/src/lib/staff-auth.ts": "e4710622a8e328d69d6554093a1e623f2d1ca68f511a49cd2ce04c7f3e749890",
+    "apps/web/src/lib/delivery-provider.ts": "860a7f96bae3fe5012e287d046c92101a0b6c22d86e84e70e60bdffa760824c2",
+    "apps/web/src/lib/kitchen-print-queue.ts": "30b6836c3fddb081e4eb23ac52c0c0d2dd5b4d1c7bf8ec7999ec3ddd373170f1",
+    "apps/web/src/lib/asaas.ts": "dfbd9e428c145244fe94aa65f8c5eef1087e9c5498a2b4397c846efec8439618",
+    "apps/web/src/lib/delivery-settings-form.ts": "d9a3dc5601d46b5905a81424b4b70b6c9107c183f26e093da766e4f65084cc92",
+    "apps/web/src/lib/delivery-service.ts": "e5c959e836add2db1f1a74e1b36ca399bc04bbc75ac9f7ab4a71bdffa68a0041",
+    "apps/web/src/lib/beta-validation.ts": "7b2bbeb0120433cad8b16735520acbcb856e4f794a403db0aef1ba32ccb6f0f3",
+    "apps/web/src/lib/delivery-navigation.ts": "03d78171a7d8638dc2d338aeb1b48f9d7fe074b0425d8904dbd64afd13d54f39",
+    "apps/web/src/lib/kitchen-print.ts": "45c9feb6b22db0b77a29082a0a0a54689fa84e074a50c46e938914ad761b6147",
+    "apps/web/src/lib/generated-brand-images.ts": "986777a448fc8b1ee58743e205653124b5f1a3bd05df9c654a2e57ec24a7b45f",
+    "apps/web/src/lib/social-accounts.ts": "dc579e32573e8687c2b038075fd8f0ba9fc9d805f0af881985a9171ea7a61abf",
+    "apps/web/src/lib/pix.ts": "6dbcf98f6f8f2ded317b72e9bb235c73274a7d38f84ce38a801e2d77984074b3",
+    "apps/web/src/lib/online-payment.ts": "569850259dcd8f2b273ed154446b04e0d81a9ac1f4abfc5538dff0c24afef0e5",
+    "apps/web/src/lib/desktop-download.ts": "e47645ab02e2f50e5079bb2367855fce8dad2cadbd3a1a62cf36d69b0ee23a58",
+    "apps/web/src/lib/category-art.ts": "04bffc2389b539d491f72e3a1b575c19c0ca61f5a20ab93a5efb1ac6e9e17a55",
+    "apps/web/src/lib/admin-auth.ts": "bd6a913558f50b49d06e9a21cad27d5ab79e237e15c955bfaa7a49ff40e08219",
+    "apps/web/src/lib/store-hours.ts": "44f358ebde49b6954e9bb16d62353920be40c7a2d839fc01eff45eba0c8f5697",
+    "apps/web/src/lib/ifood.ts": "38d02d5377b19ac8006af26fe9e5ab4f6dbd2c6f6ee3c1d964175007658bc8b9",
+    "apps/web/src/lib/ordering-images.ts": "c7ece82bcd74b6254fff81a33c5121538e78deeba166212898677f54a2e488e1",
+    "apps/web/src/lib/erp.ts": "064feda6405ab0a8338ed410051d44474e9a632c5ceba8e7d6685ae26af0d59f",
+    "apps/web/src/lib/upload.ts": "2005df090d86085e3324cbdd12302afca460387d77b1693fbbc4f2da61bfb673",
+    "apps/web/src/lib/ifood-api.ts": "a1785bb37a27537b725b14e668130f3f04d143738d656fc4304a11b41ba1ced9",
+    "apps/web/src/lib/rate-limit.ts": "9cf0579434bb4cc95edaa6ad1b59e9d9b07dd1d968145dd207aa45df76de8d47",
+    "apps/web/src/lib/social-auth.ts": "fa366ebb5c315c4d85e1e22bb97f7bd2bc936c9fc1cde28b63121f7195a2d2e0",
+    "apps/web/src/lib/brand-storefront.ts": "229a2d18e8f90e135f69820a90a2a564f8df5af066234e6773cc5ff005f7e690",
+    "apps/web/src/lib/cart.ts": "5c3231130207c84d686d142e98e237111ed8c9d878e30b515b15efd55dff14c2",
+    "apps/web/src/lib/managed-catalog.ts": "98d9425a7cfd040f222b76d5afb6a24fc56aab72bfff22923c5858f074547bee",
+    "apps/web/src/lib/member-auth.ts": "54a8af3d9cc60e0e534d16ef584fdba3cf13762d46855b8ca195b48300e6bb39",
+    "apps/web/src/lib/delivery.ts": "edaf00dcf83acc393f69b0aaf9be2cadaea505e32647d10c6f7c7ce5365a4cca",
+    "apps/web/src/lib/delivery-checkout.ts": "79077d98478a28fc29abdd1bc67d919798508cface34e44f652acfbcc6134196",
+    "apps/web/src/lib/__tests__/ifood.test.ts": "205ad79767619422bc0791f703939a08cd0c72bf95854e8ee773f681203e8c6b",
+    "apps/web/src/lib/__tests__/self-service.test.ts": "64060d23e40251d8518f50144902b6a8c731c852de11451161d2241afeb722c1",
+    "apps/web/src/lib/__tests__/category-art.test.ts": "fe4bcec9efbc5c0b2b478ee800a0da8c09b60af02bbcc7ff1e51f9a420e043dd",
+    "apps/web/src/lib/__tests__/delivery.test.ts": "25db5891545dfbc9482315db504429cf8710b00b621ba42f31b345a44970e9e5",
+    "apps/web/src/lib/__tests__/permissions.test.ts": "e3124c128ed200da94c22d0f86b8b13715c5e3b64352fe6287407750b00af380",
+    "apps/web/src/db/schema.ts": "1138d0a588cbd16b8c35338f06cda830f1376530d28de5e9adc109fee18344dc",
+    "apps/web/src/db/index.ts": "f45d9d159a83240bf67c4ec03eae4925e8fdbee087137b9887ada76f0919997f",
+    "apps/web/src/data/pedir-product-images.json": "37a1870c759b72c1b9f77aa8d717f403740de11f7465a869842f488c9c4640fb",
+    "apps/web/src/data/barbadog.json": "07ba33504508f192c95970ec44089105a4313bd12a80cebc1a74b7ba322c1743",
+    "apps/web/src/data/generated-brand-images.json": "4599f04fef785f3dd0e37f478a642bd0271f7a74c25c240298758faec8806c93",
+    "apps/web/src/data/chelas.json": "f19a82a739ce59c82bf123f7e4d51230ce27bd1a79d0da35337eaf06fb890dcd"
+  },
+  "inputs": {
+    "package-lock.json": {
+      "sha256": "35592e6d1d80982b83f66113209c09ed04a7c6d6ddac72ec146e5ac834699810",
+      "git": true
+    },
+    "package.json": {
+      "sha256": "c189c3963ac6bb5f2bbc2825f00344ae1181b19a8ce096a6d6a21244d799c447",
+      "git": true
+    },
+    "packages/ifood/package.json": {
+      "sha256": "e915f3c6fad35c1337152ae672370571ca0336ab9c7345a28c17431675301a37",
+      "git": true
+    },
+    "packages/ifood/tsconfig.json": {
+      "sha256": "fd104f866a8ab988e8d1e53100e6163e95ca7cb78247885202688a0bcdd4efce",
+      "git": true
+    },
+    "packages/ifood/src/sync-menu.ts": {
+      "sha256": "aedc4d82dac0dcb1737aa57f2cb90761ccea582b118d144cf48ba100710d6f66",
+      "git": true
+    },
+    "packages/ifood/src/doctor.ts": {
+      "sha256": "bdba8511c63c2c3de37656283426997a925771ecc68d8f7d6dca1dd1ce17d316",
+      "git": true
+    },
+    "packages/ifood/src/merchants.ts": {
+      "sha256": "02813b3d7416c5dec021b27dc30c90f9be0d558419d84ee82cb6686edfd9ee39",
+      "git": true
+    },
+    "packages/ifood/src/http.ts": {
+      "sha256": "d31b3adda25c3be0390b335349836eccdb27c7784a65ba92d06da56490908910",
+      "git": true
+    },
+    "packages/ifood/src/poller.ts": {
+      "sha256": "226195342c93916bb5061ee1b5c256e2bc6929c561fea5e87e5195baee717de7",
+      "git": true
+    },
+    "packages/ifood/src/types.ts": {
+      "sha256": "ce23948936060d309010ef4fe0e5acb65a7190cc5338d361cc108e474884fe09",
+      "git": true
+    },
+    "packages/ifood/src/client.ts": {
+      "sha256": "30eadcedc060609556104708e915e50f45e9675eb2c09e340b9adf9f8f7d53bc",
+      "git": true
+    },
+    "packages/ifood/src/webhook.ts": {
+      "sha256": "372124e04b31bc119e0cc23d205736ca910d32f996d1a7a73e2cd165518bc860",
+      "git": false
+    },
+    "packages/ifood/src/index.ts": {
+      "sha256": "9ccfccf2076a2dfa6a12e53c161056f3ff26599b0480ae3920e153736f67847e",
+      "git": true
+    },
+    "packages/ifood/src/config.ts": {
+      "sha256": "40ea1786f2d79dbbe8b8aac900b656921f1f0a3607f8c500ba07131d636fdf41",
+      "git": true
+    },
+    "packages/ifood/src/order-store.ts": {
+      "sha256": "ea9135cc5483edd37eafded6d6d9cac8a983c0e26361feacdd3bf8a9b03cb8be",
+      "git": true
+    },
+    "packages/ifood/src/auth.ts": {
+      "sha256": "c43f96995eafe95689a45003cddf1d1a72e56fdc710415c385656b16f8048a43",
+      "git": true
+    },
+    "apps/web/postcss.config.mjs": {
+      "sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde",
+      "git": true
+    },
+    "apps/web/next-env.d.ts": {
+      "sha256": "826d5af45dfff65ebcecf79536045090d8d7ab64493e36e4d2518ea131ada3b2",
+      "git": false
+    },
+    "apps/web/package.json": {
+      "sha256": "b73ddf665396e0a4705b00877930b2c1626b0f76ed94eb83ea29ba0f183221d4",
+      "git": true
+    },
+    "apps/web/tsconfig.json": {
+      "sha256": "f6471e5df687fef9a8220feb881a0a44f72598131ce03b614dde5d1df29f447f",
+      "git": false
+    },
+    "apps/web/drizzle.config.ts": {
+      "sha256": "32b0f728e745abbfd405c1b973c243702a9cc6ff3b7cc4c79f184c77a26321c1",
+      "git": true
+    },
+    "apps/web/next.config.ts": {
+      "sha256": "f4933199294ebc95fe28027deae61b39ffc25988e05eb2f9e56b3cae1fa416e8",
+      "git": false
+    },
+    "apps/web/public/file.svg": {
+      "sha256": "2b67812c325c199a02536cdbeea0c593a72f707d323b72ee3e08dbab06753bd4",
+      "git": true
+    },
+    "apps/web/public/data-deletion.html": {
+      "sha256": "07e9e8aabfc02f42a58b2c93128a09afde66d2e79934757ee837d6495ead9ac1",
+      "git": true
+    },
+    "apps/web/public/vercel.svg": {
+      "sha256": "f081337b2fee635b455b63275406a3e7f39d6a014e25ad90dab5a67e62a12ac4",
+      "git": true
+    },
+    "apps/web/public/next.svg": {
+      "sha256": "55995dfad6ecb4945a1e856ddca03c5e16aa5bf13fd21b4df6a74ae79357bcfc",
+      "git": true
+    },
+    "apps/web/public/globe.svg": {
+      "sha256": "b614b9bf183925957661ac851498fe1d8029fd43a62fbfed86f9e2624a57e7cf",
+      "git": true
+    },
+    "apps/web/public/window.svg": {
+      "sha256": "644768c4aaeb4767bce293344eeb0c125fb804a94d801440424072202d85e3a1",
+      "git": true
+    },
+    "apps/web/public/privacy.html": {
+      "sha256": "e25a5ce8d1d6709248c4e0c5ae0df2dd9536fa771de524ead74ba9202f4250cb",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-burger.png": {
+      "sha256": "b5ea726505e27cbf72ddadc1038eb3628a3361def5b2471a9ed5ac9d02809f8a",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-sauce.png": {
+      "sha256": "b7c792f172dbeb362f452e77cd6840bde0c94becde710b8ad5c43658cebccbe8",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-sauce-2.png": {
+      "sha256": "2612c4693c42bbb284a9ccb375d51451d17ef9e34812f0d625c06865ddf57d63",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-drink.png": {
+      "sha256": "6c92d010faaa6bc95371ecd902b8fa7b022063e68ed12d79b0450e1b73a29fef",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-sauce-3.png": {
+      "sha256": "9e1dc95f38f0719ca707f90eb389ac255641b64d0ee681b3d0f488722e324e6a",
+      "git": true
+    },
+    "apps/web/public/generated/hero.png": {
+      "sha256": "e2bb3dedb7567e4dcbee742a57691f02e9f8136763684295bddfd8d8f2f14a5e",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-dessert.png": {
+      "sha256": "1ac3bee65fb88422e392e8d3bcb1e55156a46478cee2a64b6a55205073f52879",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-burger-3.png": {
+      "sha256": "b41356740ce14c01d5521befdcf5ad1f1a24139bb8d81da8947200c992cd1a82",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-burger-2.png": {
+      "sha256": "f596987b8b4f11fb663470267c5e48e095ad070c62eaa61f3e781597d03ef17e",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-combo.png": {
+      "sha256": "22eb521e53652b587b0a46ef79839bff58cead880b07d9ad8858650c925c527f",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-dessert-3.png": {
+      "sha256": "d1bc5631e184135142b605967799e54ff566c98e7d9e2397c292747830c98a46",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-dessert-2.png": {
+      "sha256": "639c66015f14eb34484f1082924ce0b0fd8a7959ae96f3a849814caa8212f5c0",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-sides-3.png": {
+      "sha256": "4a46dbc12088c5d092cb25b0cd05a1ba8cf4893020c826b545173461d6f1e9b6",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-sides-2.png": {
+      "sha256": "0370561f4cf0112dc4e81bffd5db033529ef1d00de8e152a7a66906a524eba53",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-combo-2.png": {
+      "sha256": "22d7d41f4eca755ada000b0663ee12701acfea5d49a5a52420f4bbd584b11d74",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-combo-3.png": {
+      "sha256": "b10bc4d6beb44e74bf52eab906c6f391797151d3b18a3eaef9c9d1466d9ab84f",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-drink-2.png": {
+      "sha256": "edde428b90d88fad578b8f7846b53c994f0970b30652402ff2e981145dc54662",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-cocktail-2.png": {
+      "sha256": "eed209febded8d8e2fbaab3655d8e9e35932ef6d39eda320490dce3a74c240a8",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-cocktail-3.png": {
+      "sha256": "ec0c1c12b6b8d73d825c0f9f44d75183f8758ff4c69a14db0ceb24a8a2f6516e",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-drink-3.png": {
+      "sha256": "0c7a1c48622f3b52ec50d5ed3347aad956750ed4446d1a86bafb21427c31ed9e",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-cocktail.png": {
+      "sha256": "76d90fe2be92e0247ef1f9b1502e9b3a2862eaa6b2fcaa00bd5c48f0f4940096",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-beer.png": {
+      "sha256": "9d2719bc7fd365fc235d7b0104f3478ce2732274e147b7dcfd7885e9dbdf2cf3",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-sides.png": {
+      "sha256": "751535780226da200792d969b3913553b02138a7a75a0a6f9162e4dc465eace7",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-beer-2.png": {
+      "sha256": "49c1290a5ee57ea2d612f30cf29b017ba7c1baa4b5a500fd29873589e94fb80d",
+      "git": true
+    },
+    "apps/web/public/generated/fallback-beer-3.png": {
+      "sha256": "dfa9a66ae7411d7da9751865619093c05cb05d3742027795b53bf5a3800fb95c",
+      "git": true
+    },
+    "apps/web/public/generated/products/162.jpg": {
+      "sha256": "ebceacc88b746164feae30593ca1eee9a143f23299d12b7794020fcedb9203d0",
+      "git": true
+    },
+    "apps/web/public/generated/products/176.jpg": {
+      "sha256": "1e87c2000c764b40dfb3978297bb5096decf602799d6f08bd25e8eec3dcfd6cd",
+      "git": true
+    },
+    "apps/web/public/generated/products/189.png": {
+      "sha256": "abae7172b684c7096d560c09e2c630c590136c903e3a164e4244f1cd844cde43",
+      "git": true
+    },
+    "apps/web/public/generated/products/177.jpg": {
+      "sha256": "44d51d6d13640c8eecef2438d851e557c856185f4719965834eaee8332596d07",
+      "git": true
+    },
+    "apps/web/public/generated/products/163.jpg": {
+      "sha256": "c77d7d14daceb60a3baffe9a3e5e0e7444659ff3e849f33c03bc9eea384442ec",
+      "git": true
+    },
+    "apps/web/public/generated/products/149.jpg": {
+      "sha256": "5a62f13e22bfd1a05857c0a05fab07b87314e367ec974a817d69962107bf9cb8",
+      "git": true
+    },
+    "apps/web/public/generated/products/175.jpg": {
+      "sha256": "4f25dff9d990e55c665937d7109c875f332bf8ac6729d5c47ab4710a5e6756cd",
+      "git": true
+    },
+    "apps/web/public/generated/products/161.jpg": {
+      "sha256": "7c566fccc1370cb47a11cac5d32d2af4b049701ea1886a9046fe03fd85721de5",
+      "git": true
+    },
+    "apps/web/public/generated/products/160.jpg": {
+      "sha256": "9b83cc8566dfed84ca95a1b37f09c45650e01f45c2d692e11ba7435b641c918e",
+      "git": true
+    },
+    "apps/web/public/generated/products/174.jpg": {
+      "sha256": "8c7ade8e7569f46cd659c9020da74ebd44b3c20b68de79a322b12a3b053a5142",
+      "git": true
+    },
+    "apps/web/public/generated/products/148.jpg": {
+      "sha256": "8c30aca49ae78a082b733b2696f2ebb813d561e8624fca4e672552d7ce711542",
+      "git": true
+    },
+    "apps/web/public/generated/products/49.jpg": {
+      "sha256": "8798e62a0099deb8b47adc485b9eae1e06edc4e312376a263246f57ba7059433",
+      "git": true
+    },
+    "apps/web/public/generated/products/170.jpg": {
+      "sha256": "8c7ade8e7569f46cd659c9020da74ebd44b3c20b68de79a322b12a3b053a5142",
+      "git": true
+    },
+    "apps/web/public/generated/products/164.jpg": {
+      "sha256": "c77d7d14daceb60a3baffe9a3e5e0e7444659ff3e849f33c03bc9eea384442ec",
+      "git": true
+    },
+    "apps/web/public/generated/products/158.jpg": {
+      "sha256": "fcc2663d2459a6f6c735f74d4c00c557851586a32e63af3930063bb27c6b80e2",
+      "git": true
+    },
+    "apps/web/public/generated/products/159.jpg": {
+      "sha256": "538388c8fd0b7eb5766467218eb17a5d8c2162464f06226e543aae695bbff477",
+      "git": true
+    },
+    "apps/web/public/generated/products/165.jpg": {
+      "sha256": "c77d7d14daceb60a3baffe9a3e5e0e7444659ff3e849f33c03bc9eea384442ec",
+      "git": true
+    },
+    "apps/web/public/generated/products/171.jpg": {
+      "sha256": "8c7ade8e7569f46cd659c9020da74ebd44b3c20b68de79a322b12a3b053a5142",
+      "git": true
+    },
+    "apps/web/public/generated/products/58.jpg": {
+      "sha256": "41063eef81be6181899f7679f9fed809acb576a098d9159dbc19fe0b2b8cfe40",
+      "git": true
+    },
+    "apps/web/public/generated/products/167.jpg": {
+      "sha256": "8c7ade8e7569f46cd659c9020da74ebd44b3c20b68de79a322b12a3b053a5142",
+      "git": true
+    },
+    "apps/web/public/generated/products/99.jpg": {
+      "sha256": "fcc2663d2459a6f6c735f74d4c00c557851586a32e63af3930063bb27c6b80e2",
+      "git": true
+    },
+    "apps/web/public/generated/products/173.jpg": {
+      "sha256": "8c977342fc5e43d7e13bcea762b97d0c0dc41dc57214ad8e158e56637466783c",
+      "git": true
+    },
+    "apps/web/public/generated/products/172.jpg": {
+      "sha256": "bca8ecae0e632c65bb7b173c82529790a686b15ce9ef13a61fd49ace51a0c0ce",
+      "git": true
+    },
+    "apps/web/public/generated/products/166.jpg": {
+      "sha256": "c77d7d14daceb60a3baffe9a3e5e0e7444659ff3e849f33c03bc9eea384442ec",
+      "git": true
+    },
+    "apps/web/public/generated/products/98.jpg": {
+      "sha256": "7ce23b7b0953039dc9c1f5647ad4e1d04503474e1568b93f28d3227072477cf8",
+      "git": true
+    },
+    "apps/web/public/generated/products/129.jpg": {
+      "sha256": "8624d4ab4f2ac1895093ce168189e13cf1dc9928bce7c18df15953cca7570a36",
+      "git": true
+    },
+    "apps/web/public/generated/products/101.jpg": {
+      "sha256": "7c566fccc1370cb47a11cac5d32d2af4b049701ea1886a9046fe03fd85721de5",
+      "git": true
+    },
+    "apps/web/public/generated/products/115.jpg": {
+      "sha256": "ad2da00c767c3270364d689add981a12985254034e4b2b16de5524961660ad82",
+      "git": true
+    },
+    "apps/web/public/generated/products/114.jpg": {
+      "sha256": "956deed0fd313b4b241d9ad307f046f088cbfdb07d74257411ff6677dd097d8f",
+      "git": true
+    },
+    "apps/web/public/generated/products/100.jpg": {
+      "sha256": "538388c8fd0b7eb5766467218eb17a5d8c2162464f06226e543aae695bbff477",
+      "git": true
+    },
+    "apps/web/public/generated/products/128.jpg": {
+      "sha256": "d94434a6e942b0ac00141941e25f664c0d843f906fe6d3ff2c6b294ef0eea998",
+      "git": true
+    },
+    "apps/web/public/generated/products/116.jpg": {
+      "sha256": "bf08ff7521fdc33107d7c02ed8591ed2f033111bd42423002d11120fe7932a52",
+      "git": true
+    },
+    "apps/web/public/generated/products/102.jpg": {
+      "sha256": "b75459b3f6be62fff7714b0dd5ecd3efea305423a2b2e18b6ff60516b1cd606e",
+      "git": true
+    },
+    "apps/web/public/generated/products/17.png": {
+      "sha256": "285f680086f2eb8fd9f887119bebb59c08314af2be3f3abe85540e69b61286b9",
+      "git": true
+    },
+    "apps/web/public/generated/products/103.jpg": {
+      "sha256": "8c30aca49ae78a082b733b2696f2ebb813d561e8624fca4e672552d7ce711542",
+      "git": true
+    },
+    "apps/web/public/generated/products/117.jpg": {
+      "sha256": "6186ba284aa7a3ea87ab0074266de385c7676204df3705fd25b608a5d69a060e",
+      "git": true
+    },
+    "apps/web/public/generated/products/113.jpg": {
+      "sha256": "a0bd6e952838ddbbab427e74837ea2b3e35bf4c2c6bb33067754a99b3a537d77",
+      "git": true
+    },
+    "apps/web/public/generated/products/107.jpg": {
+      "sha256": "7f781e6fc158738cdb3355d0e4da67c37a24aa7d2c27b9a161ef3fa7925a98f6",
+      "git": true
+    },
+    "apps/web/public/generated/products/106.jpg": {
+      "sha256": "df98e6559357454cff4ee7d38cfa37d3beaef49451e3bf0280a8115443a15100",
+      "git": true
+    },
+    "apps/web/public/generated/products/112.jpg": {
+      "sha256": "30115e93e11a34e4c89bc756b7c411ae4cf5ab494fe2ff22572076199203213d",
+      "git": true
+    },
+    "apps/web/public/generated/products/104.jpg": {
+      "sha256": "6e8223b8ddda90c9742672650553084719ab512a4ff5332c0c88f448a03c6e77",
+      "git": true
+    },
+    "apps/web/public/generated/products/138.jpg": {
+      "sha256": "a0bd6e952838ddbbab427e74837ea2b3e35bf4c2c6bb33067754a99b3a537d77",
+      "git": true
+    },
+    "apps/web/public/generated/products/110.png": {
+      "sha256": "d536935d3c3e222c29e12a2a5ac8c0d59013d7312967c6f176b3d2037d0b0fc1",
+      "git": true
+    },
+    "apps/web/public/generated/products/111.png": {
+      "sha256": "f891962141eefe7ba67008a8946b6a1bc3e8f35ab2e6ad0441d686a777cf7946",
+      "git": true
+    },
+    "apps/web/public/generated/products/139.jpg": {
+      "sha256": "45f7148514e35beeb06352df8e3eca2971f951f2e1ae0d616c88c2b00e1880a4",
+      "git": true
+    },
+    "apps/web/public/generated/products/105.jpg": {
+      "sha256": "df98e6559357454cff4ee7d38cfa37d3beaef49451e3bf0280a8115443a15100",
+      "git": true
+    },
+    "apps/web/public/generated/products/38.jpg": {
+      "sha256": "de1c842b5d9386e299f0a09237574f5e93de585afeb34cd0d670a4f67c2578db",
+      "git": true
+    },
+    "apps/web/public/generated/products/108.jpg": {
+      "sha256": "d690613747fed1578e28b8f4c0f21b84f81d6c6d115281366013a04292d8caf2",
+      "git": true
+    },
+    "apps/web/public/generated/products/120.jpg": {
+      "sha256": "adcdc31a2f12286981636ab4b3b03ef37920221c4e67e55b8bf8e6f4ed36a575",
+      "git": true
+    },
+    "apps/web/public/generated/products/134.jpg": {
+      "sha256": "a9fdaaba4dee469545f0734e577ee5a64e78c26067fbfb22871bc5c0302cfa74",
+      "git": true
+    },
+    "apps/web/public/generated/products/21.png": {
+      "sha256": "5d10f6183b8c33c60303078c96f1b8a8f0dc8bfc7b85dccbb2f26cbc2e6a9e53",
+      "git": true
+    },
+    "apps/web/public/generated/products/135.jpg": {
+      "sha256": "6c471b0576585b35e5da88d938011ac7664db6d899a0a192e162e41dc79a3ded",
+      "git": true
+    },
+    "apps/web/public/generated/products/121.jpg": {
+      "sha256": "fcc2663d2459a6f6c735f74d4c00c557851586a32e63af3930063bb27c6b80e2",
+      "git": true
+    },
+    "apps/web/public/generated/products/137.jpg": {
+      "sha256": "30115e93e11a34e4c89bc756b7c411ae4cf5ab494fe2ff22572076199203213d",
+      "git": true
+    },
+    "apps/web/public/generated/products/123.jpg": {
+      "sha256": "9b83cc8566dfed84ca95a1b37f09c45650e01f45c2d692e11ba7435b641c918e",
+      "git": true
+    },
+    "apps/web/public/generated/products/22.png": {
+      "sha256": "2b03cb5ac968301ec4a4bd0f635cf1b7a5665c96737d8bbe788adfacd958376d",
+      "git": true
+    },
+    "apps/web/public/generated/products/122.jpg": {
+      "sha256": "69fd562f34c623c1777e634c49e0ccddd099cc8af825cfa4ce22fd0bc0c89493",
+      "git": true
+    },
+    "apps/web/public/generated/products/136.jpg": {
+      "sha256": "6c471b0576585b35e5da88d938011ac7664db6d899a0a192e162e41dc79a3ded",
+      "git": true
+    },
+    "apps/web/public/generated/products/132.jpg": {
+      "sha256": "bb121eef1356c286f677c3ac45a9965d36d2aa195ef24f526a48860881638c18",
+      "git": true
+    },
+    "apps/web/public/generated/products/126.jpg": {
+      "sha256": "538388c8fd0b7eb5766467218eb17a5d8c2162464f06226e543aae695bbff477",
+      "git": true
+    },
+    "apps/web/public/generated/products/127.jpg": {
+      "sha256": "ebceacc88b746164feae30593ca1eee9a143f23299d12b7794020fcedb9203d0",
+      "git": true
+    },
+    "apps/web/public/generated/products/133.jpg": {
+      "sha256": "130776c547a3ab9a55399d1da68b908e677429fff241229f65292db995ab5ad7",
+      "git": true
+    },
+    "apps/web/public/generated/products/125.jpg": {
+      "sha256": "2549aae4aa2649b0390ac725f7e797b11d57d2c6305f12bd39244d5febb8abd1",
+      "git": true
+    },
+    "apps/web/public/generated/products/131.jpg": {
+      "sha256": "119b72c0e9a16e281a466b9cc0a041e3473d5cada98d143b9a8328d7b8f24b30",
+      "git": true
+    },
+    "apps/web/public/generated/products/119.jpg": {
+      "sha256": "b75459b3f6be62fff7714b0dd5ecd3efea305423a2b2e18b6ff60516b1cd606e",
+      "git": true
+    },
+    "apps/web/public/generated/products/118.jpg": {
+      "sha256": "ebceacc88b746164feae30593ca1eee9a143f23299d12b7794020fcedb9203d0",
+      "git": true
+    },
+    "apps/web/public/generated/products/130.jpg": {
+      "sha256": "6e8223b8ddda90c9742672650553084719ab512a4ff5332c0c88f448a03c6e77",
+      "git": true
+    },
+    "apps/web/public/generated/products/124.jpg": {
+      "sha256": "538388c8fd0b7eb5766467218eb17a5d8c2162464f06226e543aae695bbff477",
+      "git": true
+    },
+    "apps/web/public/generated/products/180.jpg": {
+      "sha256": "7c566fccc1370cb47a11cac5d32d2af4b049701ea1886a9046fe03fd85721de5",
+      "git": true
+    },
+    "apps/web/public/generated/products/194.jpg": {
+      "sha256": "130776c547a3ab9a55399d1da68b908e677429fff241229f65292db995ab5ad7",
+      "git": true
+    },
+    "apps/web/public/generated/products/95.jpg": {
+      "sha256": "3dbbd8d5cd63f30e365c6cfe7055126083c7abd293e983b83f7b887a2d6ac535",
+      "git": true
+    },
+    "apps/web/public/generated/products/143.jpg": {
+      "sha256": "6186ba284aa7a3ea87ab0074266de385c7676204df3705fd25b608a5d69a060e",
+      "git": true
+    },
+    "apps/web/public/generated/products/157.jpg": {
+      "sha256": "7ce23b7b0953039dc9c1f5647ad4e1d04503474e1568b93f28d3227072477cf8",
+      "git": true
+    },
+    "apps/web/public/generated/products/156.jpg": {
+      "sha256": "ebceacc88b746164feae30593ca1eee9a143f23299d12b7794020fcedb9203d0",
+      "git": true
+    },
+    "apps/web/public/generated/products/142.jpg": {
+      "sha256": "956deed0fd313b4b241d9ad307f046f088cbfdb07d74257411ff6677dd097d8f",
+      "git": true
+    },
+    "apps/web/public/generated/products/94.jpg": {
+      "sha256": "adcdc31a2f12286981636ab4b3b03ef37920221c4e67e55b8bf8e6f4ed36a575",
+      "git": true
+    },
+    "apps/web/public/generated/products/195.jpg": {
+      "sha256": "8a3405152ebc244388ce52eeaa40f7e5d52ee4c2652c4542d1b4f8e55bb82dcd",
+      "git": true
+    },
+    "apps/web/public/generated/products/197.jpg": {
+      "sha256": "81bd12da48da3f1214a7f36222e7a42c7ddfd733af1c2c961bfa6e57425043da",
+      "git": true
+    },
+    "apps/web/public/generated/products/96.jpg": {
+      "sha256": "ebceacc88b746164feae30593ca1eee9a143f23299d12b7794020fcedb9203d0",
+      "git": true
+    },
+    "apps/web/public/generated/products/168.jpg": {
+      "sha256": "d84107073f680905d9b30cda76bdcff0d101f3e45631654b7a3b53b151c3d7ff",
+      "git": true
+    },
+    "apps/web/public/generated/products/154.jpg": {
+      "sha256": "ad2da00c767c3270364d689add981a12985254034e4b2b16de5524961660ad82",
+      "git": true
+    },
+    "apps/web/public/generated/products/140.jpg": {
+      "sha256": "9b83cc8566dfed84ca95a1b37f09c45650e01f45c2d692e11ba7435b641c918e",
+      "git": true
+    },
+    "apps/web/public/generated/products/141.jpg": {
+      "sha256": "2549aae4aa2649b0390ac725f7e797b11d57d2c6305f12bd39244d5febb8abd1",
+      "git": true
+    },
+    "apps/web/public/generated/products/155.jpg": {
+      "sha256": "5a62f13e22bfd1a05857c0a05fab07b87314e367ec974a817d69962107bf9cb8",
+      "git": true
+    },
+    "apps/web/public/generated/products/97.jpg": {
+      "sha256": "ebceacc88b746164feae30593ca1eee9a143f23299d12b7794020fcedb9203d0",
+      "git": true
+    },
+    "apps/web/public/generated/products/169.jpg": {
+      "sha256": "81bd12da48da3f1214a7f36222e7a42c7ddfd733af1c2c961bfa6e57425043da",
+      "git": true
+    },
+    "apps/web/public/generated/products/196.jpg": {
+      "sha256": "d84107073f680905d9b30cda76bdcff0d101f3e45631654b7a3b53b151c3d7ff",
+      "git": true
+    },
+    "apps/web/public/generated/products/40.jpg": {
+      "sha256": "2c912e30024aa245a258af62f38db20a98efbd3cbe8c3a202a6ee44dc8d6607f",
+      "git": true
+    },
+    "apps/web/public/generated/products/192.jpg": {
+      "sha256": "a9fdaaba4dee469545f0734e577ee5a64e78c26067fbfb22871bc5c0302cfa74",
+      "git": true
+    },
+    "apps/web/public/generated/products/186.jpg": {
+      "sha256": "871a6322389361603aa804adbe6ee569db723d198fb08cef2afb0561daa84921",
+      "git": true
+    },
+    "apps/web/public/generated/products/151.jpg": {
+      "sha256": "bf08ff7521fdc33107d7c02ed8591ed2f033111bd42423002d11120fe7932a52",
+      "git": true
+    },
+    "apps/web/public/generated/products/145.jpg": {
+      "sha256": "b75459b3f6be62fff7714b0dd5ecd3efea305423a2b2e18b6ff60516b1cd606e",
+      "git": true
+    },
+    "apps/web/public/generated/products/93.jpg": {
+      "sha256": "ad2da00c767c3270364d689add981a12985254034e4b2b16de5524961660ad82",
+      "git": true
+    },
+    "apps/web/public/generated/products/179.jpg": {
+      "sha256": "956deed0fd313b4b241d9ad307f046f088cbfdb07d74257411ff6677dd097d8f",
+      "git": true
+    },
+    "apps/web/public/generated/products/178.jpg": {
+      "sha256": "bb121eef1356c286f677c3ac45a9965d36d2aa195ef24f526a48860881638c18",
+      "git": true
+    },
+    "apps/web/public/generated/products/92.jpg": {
+      "sha256": "bf08ff7521fdc33107d7c02ed8591ed2f033111bd42423002d11120fe7932a52",
+      "git": true
+    },
+    "apps/web/public/generated/products/144.jpg": {
+      "sha256": "7f74bc7b184f5e05d036d89a291c9410fd3fc6cfbfa70eb9a3aa7a049047fbef",
+      "git": true
+    },
+    "apps/web/public/generated/products/150.jpg": {
+      "sha256": "7c566fccc1370cb47a11cac5d32d2af4b049701ea1886a9046fe03fd85721de5",
+      "git": true
+    },
+    "apps/web/public/generated/products/193.jpg": {
+      "sha256": "bb121eef1356c286f677c3ac45a9965d36d2aa195ef24f526a48860881638c18",
+      "git": true
+    },
+    "apps/web/public/generated/products/185.jpg": {
+      "sha256": "a9fdaaba4dee469545f0734e577ee5a64e78c26067fbfb22871bc5c0302cfa74",
+      "git": true
+    },
+    "apps/web/public/generated/products/146.jpg": {
+      "sha256": "69fd562f34c623c1777e634c49e0ccddd099cc8af825cfa4ce22fd0bc0c89493",
+      "git": true
+    },
+    "apps/web/public/generated/products/152.jpg": {
+      "sha256": "adcdc31a2f12286981636ab4b3b03ef37920221c4e67e55b8bf8e6f4ed36a575",
+      "git": true
+    },
+    "apps/web/public/generated/products/191.png": {
+      "sha256": "2d50aaf22e5d77ab958d125fb4a5b02ab9368548385e43322eddc0852669df3b",
+      "git": true
+    },
+    "apps/web/public/generated/products/190.png": {
+      "sha256": "d22a0940274686a9de54d632e38b66d8f36d2dcb8e6a3ba2084421816460c4c2",
+      "git": true
+    },
+    "apps/web/public/generated/products/153.jpg": {
+      "sha256": "3dbbd8d5cd63f30e365c6cfe7055126083c7abd293e983b83f7b887a2d6ac535",
+      "git": true
+    },
+    "apps/web/public/generated/products/147.jpg": {
+      "sha256": "51d28b2801d6922e626649ee27ccc263047797a693ddf62d78baacb94e7fa94c",
+      "git": true
+    },
+    "apps/web/public/generated/products/184.jpg": {
+      "sha256": "130776c547a3ab9a55399d1da68b908e677429fff241229f65292db995ab5ad7",
+      "git": true
+    },
+    "apps/web/public/.well-known/apple-app-site-association": {
+      "sha256": "cee11477065ec84ab37f951c0e3616385500ba6b364c638a977a8c371f775ff7",
+      "git": true
+    },
+    "apps/web/public/.well-known/assetlinks.json": {
+      "sha256": "ccf82bcb641cd00401ee05fa3829e94583c8c2f98e1f4b6e75f8184b52c10a3e",
+      "git": true
+    },
+    "apps/web/public/brand/barbacue-logo.png": {
+      "sha256": "fccfe75b773d865c32ab6c86337b26292edebb3c1b0871959693b462049c5b3b",
+      "git": true
+    },
+    "apps/web/public/brand/og.png": {
+      "sha256": "6bcb7450e285ba4113dae1b3ad0cf033b4dc60e7b6dc2eec11fdd92eec6377f8",
+      "git": true
+    },
+    "apps/web/public/brand/barbacue-logo-t.png": {
+      "sha256": "9709481cef6f7fda36bbc36eb4cb21aec979a6632f703500b45990f169518eb8",
+      "git": true
+    },
+    "apps/web/public/brand/icons/chelas-original.png": {
+      "sha256": "878186a5377885280b55e1cc4547936039328996829bb63b8615a6463478a3db",
+      "git": true
+    },
+    "apps/web/public/brand/icons/barbacue-icon.png": {
+      "sha256": "193a4261780852b2ed98d217f555cfe7165e86cd431648308785821e02e84656",
+      "git": true
+    },
+    "apps/web/public/brand/icons/barbacue-original.ico": {
+      "sha256": "45f310e93c85f9e2ac065222a0e50da8f86ade70fc62c0ba5edd0fde7c2a8778",
+      "git": true
+    },
+    "apps/web/public/brand/icons/barbadog-apple.png": {
+      "sha256": "a14916da94487be128d4f2bac6751dfe03dbf3aa1de8d515c4778511c1f085e1",
+      "git": true
+    },
+    "apps/web/public/brand/icons/barbacue-apple-original.png": {
+      "sha256": "6259caec0d7848b3143126d2b3f6bcc478f83c0c5c17169e4958f4ecc86a62a7",
+      "git": true
+    },
+    "apps/web/public/brand/icons/barbadog-icon.png": {
+      "sha256": "1fd6c1d8058f674bbd28db8b34bf7eb70c4468c9953d5b1c808d53ae76a76fdd",
+      "git": true
+    },
+    "apps/web/public/brand/icons/chelas-apple.png": {
+      "sha256": "3113d398009915b12b8301440a7c0b7d3913024bffe4c1b12563e56dac9376e0",
+      "git": true
+    },
+    "apps/web/public/brand/icons/chelas-icon.png": {
+      "sha256": "8c02209dd53e5ef60d321071b5ac4913d1d7b35e7525e79486298b329329f2ce",
+      "git": true
+    },
+    "apps/web/public/brand/icons/barbacue-original.png": {
+      "sha256": "d5bb6d9a2db764a0b2c0003214c96d4f202e58379adfb9e6a8278f43e01f84d7",
+      "git": true
+    },
+    "apps/web/public/brand/icons/barbadog-original.png": {
+      "sha256": "1ef34715ab60028c66c371e0a21c81961bf086530b12b1a6bf8d5963b819fa5f",
+      "git": true
+    },
+    "apps/web/public/brand/icons/barbacue-apple.png": {
+      "sha256": "e9961cde8ef9db107768df18317c8c09875c6ab349277e3f797bcb007d9cfb50",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/manga.webp": {
+      "sha256": "9940ea9bd6c5d22251f325fb7ebfe8eedbb9d14628c105c4ccf5c9e3f8baf6f1",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/agua-com-gas.webp": {
+      "sha256": "4740b5ff7c75b01e2851f4b28ecacc9dcd5e655a4c3f1110173599a734db84fd",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/quesadilla-doce.webp": {
+      "sha256": "a70bc24c93cbbfd7485344185e8f2722c51988f0210d6b474693fe07e89aa332",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/barbecue.webp": {
+      "sha256": "4aad2bc1157dfb00f16a6e0f7dad6396c5626ae725c7b18e25a2840d530d976e",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/cheddar.webp": {
+      "sha256": "a9d507697cdd288c579d930aebe4b14830c88dadc97ea08d0cd3765fc325bd30",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/caipirinha-morango.webp": {
+      "sha256": "ebda22117347e42a0ea097b4d0d8ea16ccb26eafc60bc9f2448f3b934703f393",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/gorgonzola.webp": {
+      "sha256": "859addd7f1e3ace64df1a28a6971638674f478a4b768f7ffea08fbe14cc9473e",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/ovomaltine.webp": {
+      "sha256": "a4db9c2276467072ba0ce304a726a7c70d3963a67224c61540cd5970405d49c3",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/onion-rings.webp": {
+      "sha256": "7f96b2e2b44df66f86629c39da4a5f6e8e7f955730f046da8ef399ca9a1aaf80",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/white-rose.webp": {
+      "sha256": "a91240c767402242e1ab5ed99a198ec480f5a94d3a086f6e9c3e9b7cfb0026d0",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/vegetariano-cevada.webp": {
+      "sha256": "44343d87a19c16766d282aba24b302219be3e4f5da8c092306a70faa64d0f223",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/combo-supreme.webp": {
+      "sha256": "437edea648de330902f2e0b169523fb88a975b4f1a3ba8ed5b0c67a7e3fa21d9",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/chipotle.webp": {
+      "sha256": "a691da907e1ccf0d72f4677a9964468e630f2de145c6f8f69cabde73203d06e7",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/brigadeiro-negresco.webp": {
+      "sha256": "2fca5bba7a672140ec6d445ab836eb27d25face6b6a34dbb6959bb95dab4831e",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/geleia-tomate.webp": {
+      "sha256": "4a3f298fdaa1fa3defd44ce0d69347e9f8b37fbb2b7173bf26e8f55219c71a79",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/creme-queijos.webp": {
+      "sha256": "69124add28e488e568233eb9581ad320525a1e70206dfbbe0aa5c935407c8f30",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/caipirinha-abacaxi.webp": {
+      "sha256": "609dbf781ff40ee5fe49d62e3d1e1187bca5b0dbea5e447c5efc2c1a702dfcd8",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/combo-1.webp": {
+      "sha256": "829f08c0f1aa928d2759692ea99243776b643972a51e9e8ec178868887832708",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/gin-melancia.webp": {
+      "sha256": "f75e2b6a0c1483be567c89b65b82c4d7fef814aa627e2cf6201482a6f190d6df",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/creme-avela.webp": {
+      "sha256": "37115a217b7f99145288760665ed2b41f916416517c14b1153a0e9c7d5f5d4a0",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/alface.webp": {
+      "sha256": "1c9c9379a4447d6344a07ae49cb4772877dd09a46680f9570030a2e19e8b9ebe",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/hamburguer-extra.webp": {
+      "sha256": "a00356c77dae9dd2a1cf2a09284aa95b00ab08e3fd4c4c7e8f076d5f2440f96e",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/uva.webp": {
+      "sha256": "6f37d2fe0849f9a88a8647d329807d53d1e7946d390bfef753898460b600ccb9",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/bacon.webp": {
+      "sha256": "2f79c1fffc9bd22467ec93a1dd444f364afef1c95251a3b7a0b002ad652e6596",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/costela.webp": {
+      "sha256": "e1d54d5a37d9b60a6f867f148128af0a012f987e0769462d2e81c4b7231c0bc3",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/chutney-cebola.webp": {
+      "sha256": "cd93f79660ec933d8e365219eade71d9cf5e9501d2b5c26fc4905d2bf7a874ba",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/catupiry.webp": {
+      "sha256": "874334d47151c3d053675efad3055a35cd2a3bc7686dace301f7264f9f1bff2b",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/mini-churros.webp": {
+      "sha256": "ef28a9a77f52f462dddd7dc7b0c434b23771c5cd6acfbb524d281b5f400f7424",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/beef-melt-fries.webp": {
+      "sha256": "c8eda1b5e1f7e47c184f97ac7b841369e36e56fe540c54aa270767c58a4926e2",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/farofa.webp": {
+      "sha256": "69f08d02a0680b4fd2a9608854f55c0491a0931f2a5c5c82abb6f57956ffb2b4",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/combo-3.webp": {
+      "sha256": "fba019a9a729235ede57ea729df668b2a535593325fbc8ed0b9440cac883b172",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/combo-tex-mex.webp": {
+      "sha256": "a55aa841d0a85ba9d364053675c498eefc6c9cc66319f40c6b2a1e6dd2a5ee4f",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/agua-sem-gas.webp": {
+      "sha256": "22e86221dea11a4a5b40820cdb8bb24fec15372ff573458081e9a22a42ba4b91",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/vegetariano-couve.webp": {
+      "sha256": "bddb7124114d75bf5ccf56f186669df634c8d1a1296934791c7cc330df1310a5",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/entrecot.webp": {
+      "sha256": "b471bdc6461fd0b2e835dcfb770b9f0a37346229467b3ee96a3d5405792d6f95",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/combo-2.webp": {
+      "sha256": "f4332d47101893745df20b698cebcd53a32f062bb1b4d8bd3623357240b7b223",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/maionese-verde.webp": {
+      "sha256": "625d334e4dd9b0f104f53094fdb6952371b0b379e2186a95f2d98af92b33073f",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/gouda-empanado.webp": {
+      "sha256": "da6a84a0836da522939f24e0b09d96b8a618659faf24fc9a7d549ff19cb835a5",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/creme-maracuja.webp": {
+      "sha256": "4cef0a032d4f135b20aff0390f450c966841b7ca45ac38072e6a89f66c0a8d5d",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/brie.webp": {
+      "sha256": "b2837d29150fe2401d4cb9c5fe777b7cb30fc98b374a25955af582a53c1069e5",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/maracuja.webp": {
+      "sha256": "f1bb6d72d2ca6ee0e5085f70a5af1ae00e0908fa3a1270e0c07ca42d72759bc2",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/rucula.webp": {
+      "sha256": "c313d809b93cbe0d4aff378870cbeea9dde8e4aa48de241e0d5efa98290f1a92",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/sweet-chilli.webp": {
+      "sha256": "4e1cfcdbd90a36cac0b339f9a4c8029e6a9b2033db55493d0a157e194d1021e7",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/tortillas.webp": {
+      "sha256": "6384ba58f991a4cf2aed5eb63daeb08e49c1cfae594ebf662be4c1d18d5d9216",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/pessego.webp": {
+      "sha256": "04e95055cb0b859e8cb06ab7b56b36e7d78e7c8fdebbbffd6a2604d05ef63066",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/gin-tropical.webp": {
+      "sha256": "04c059ddee2851db366799778313ac0b0e3a31ff481b34a64a91546f95c4b68e",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/brigadeiro.webp": {
+      "sha256": "aedf1a2ecdfa631cebff7748de73022ce1e78d1c348d8f9b9509cf9ca8cfcdf0",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/salada.webp": {
+      "sha256": "acb424e6a65af2ee37e03048735f5c40b44d9dc895bef183f7ad7fa09f188d53",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/entrecot-fritas.webp": {
+      "sha256": "86f3ab8804c172613965af92819c30478f3b379f64cc563a90e919e3d2db0fd7",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/combo-semana.webp": {
+      "sha256": "2e293b1258abdb3b51e32c3e5418a94a05466dcdf2dee57f5f78a532853905b3",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/chimichurri.webp": {
+      "sha256": "4a50252433b40e76a05040330877d6d8bb32fca5b8a12b790805421bbbb3f840",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/combo-cordeiro.webp": {
+      "sha256": "abdf598582c18acd54e3fca59e19a00202e748ce019aa2be903505896e57484e",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/strogonoff-nozes.webp": {
+      "sha256": "07323d7ed376a41e3853b61c39b68f4a53bb5f385f45fc39defe4b70b6daa243",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/maionese.webp": {
+      "sha256": "074c763483c419303fad9afdd1c6d3659042633d272af89000ab881941dd2f56",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/prestigio.webp": {
+      "sha256": "c652b614c5cae30a04908f47be6bd2adc866e7c19c84219e523e955edbc5c82b",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/gelado-uva.webp": {
+      "sha256": "e7457ee4dd050ba59cf1734a037454c91fdca19eea83ed25712b333aad5c2aee",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/doce-leite.webp": {
+      "sha256": "52105c0974cc07d430a62607f3f85bfc0f8f4a14d185e4c45a996cd7f063c5e4",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/combo-crunch.webp": {
+      "sha256": "1e40397ad5b10b353a56f181a6c67e845da7f3aebc8fd72192f7d8d87f50cfc8",
+      "git": true
+    },
+    "apps/web/public/menu/review-2026-09/gelado-morango.webp": {
+      "sha256": "ed61fa75d52e1059b073bb6b59e412cc43b7d7c2653b70a7b2f7e81edb1c8ec5",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/chilli-nachos.webp": {
+      "sha256": "97ccbe88711e689941ecea943a5e57f19b3330a38a75b4d03479f23f1086cdb3",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/brasinha-chicken-jr.webp": {
+      "sha256": "34c1e27b09b9ad585ea6005d4c4e659b1872adc18d063ab62630d0c4de681dda",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/croissant-double-smash.webp": {
+      "sha256": "c52ef7f5e2cf2779ee53619c6ebe193bc73c0da50ecbdfa2127a31a9e5160047",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/ciabatta-veggie-brie-e-geleia-de-tomate.webp": {
+      "sha256": "abf5def80b00b49b7ff4aea15249bb36a4345bfec967a5e4653adb4717eadde2",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/ciabatta-parmegiana.webp": {
+      "sha256": "fdf8e080067d2e81787185238616c97c3e2a1cbca974cd63d05591cbab00e673",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/burrito-de-frango.webp": {
+      "sha256": "a204c6ecea03e46ff7f90c1dc40ff587f66e2865711b9ae1f5e10f23bc95a54a",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/quesadilla-de-frango-com-catupiry.webp": {
+      "sha256": "1d241d9c6990a4a7fc55341bee2f94dea7121345a5ec0db7341eaa1d5aa8cdf7",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/quesadilla-de-mussarela.webp": {
+      "sha256": "2efa8237b1fe5146954851d48705dc8f08008b8509653009eb58a6266221af88",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/nacho-pulled-pork.webp": {
+      "sha256": "d063d04d78e0f508a4771c6d802c71694837ac3c3d1d4fc93957125d4c32dd1b",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/quesadilla-carne-de-panela.webp": {
+      "sha256": "4143e0265a9ff190ca0761c910dc4362cc7be539678de435abe65ed6b1e35357",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/tacos-do-chelas.webp": {
+      "sha256": "9b4910228f0837dc3a6a3d4be7dff382a2ddc2bbb91f90a10f023d0954c53543",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/ciabatta-pulled-pork-chipotle.webp": {
+      "sha256": "ef99c426f315e9a5737b194a80cc10cd6a7a3466709cdfa75d37f04730a73b8d",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/burrito-chilli-veggie.webp": {
+      "sha256": "38c57e392175a44de2792566c78dc835875e829ba525ff333ad79eaae804f8b6",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/brasinha-salada.webp": {
+      "sha256": "c7063a5e8fd34bb592b31ebe1acaf4859e492b96eed01b36b35eae3d30051a96",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/barbadog-chilli-nachos.webp": {
+      "sha256": "d91e263f88b4f533c6956717b9c1b65f3faf02dba7e3168fe23b5aea91b0e003",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/barbadog-corn-bacon-caramelizado.webp": {
+      "sha256": "3c4972a2418b0d7338d4a8a8ee26b2fdc61e2db76f129e11b0c67304e0fcf08f",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/brasinha-bacon.webp": {
+      "sha256": "2f51f6d4d39a985ceb36d9564fa205af3648ff66980340075e5fc50ba9c09c94",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/nachos-chilli-vegetariano.webp": {
+      "sha256": "39ef62172fbb2d8ce92f1ee4230b4cbcd3ae491f7f6b201a3024e7bd48601ef3",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/barbadog-coracao-catupiry.webp": {
+      "sha256": "05ef2d2ecbbf670258b39ed160fee4f35927711fee957d4c3845b7fe0af858de",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/brasinha-cheeseburguer.webp": {
+      "sha256": "44142ff9d03a6cf59a51dcc4f72bfeb318633ac7ebc61e5f3ee92a87d7fa6596",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/chilli-bowl.webp": {
+      "sha256": "4a79052ec3e4427430b0836dbad769e8ad5b2fb214fa87eb3d3d13f62d55b857",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/burrito-de-camarao.webp": {
+      "sha256": "f4709d4c0a11d4196e6794a4d3444b47245dc656daae4a3a1742ea1f8d6ca142",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/burrito-pulled-pork.webp": {
+      "sha256": "138226bc0105a8e7a992aefe0ea2e14ecd2c88d142b91684884647379ebbdfea",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/burrito-burguer.webp": {
+      "sha256": "d06fbec04719e0ee9f5b83672f9055d83b1ce456a3e76201bb3b32c1ccba253b",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/barbadog-calabresa-biquinho.webp": {
+      "sha256": "ce67e49d744f0931e5d62de471de913f0d38c1a6dafd2d599c9f9462d5c8f9b7",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/burrito-chillicious.webp": {
+      "sha256": "c43ed66c664da6bbbe7829b461adac77b25634e51334eb21928588f01e4c1089",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/ciabatta-carne-de-panela-catupiry.webp": {
+      "sha256": "80e4072c3860ce21230a6af078d6f7b00bc95b87c689ef3aa953f711735f2abc",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/barbadog-frango-com-catupiry.webp": {
+      "sha256": "ebb30bfcf24a924240d21b568eb0365066b511584d7193078778d7e26541f7b1",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/chicken-sweet-crispy.webp": {
+      "sha256": "cd10ce9846ebcadce3f7667b3bf21157ca56abc3f33ee2ec02de6e74266c5e3f",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/burrito-carne-de-panela.webp": {
+      "sha256": "cbb6b08a7ea398a98f8ca86bcaf41dc5daa09acec58ea4bbf82ea24976e53d57",
+      "git": true
+    },
+    "apps/web/public/menu/brands-2026-09/quesadilla-de-pulled-pork.webp": {
+      "sha256": "ced78756619c2ee4d36fd14b2b362bae54c61c7d5d9e9fa8fdef68104e3b2f28",
+      "git": true
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-14.webp": {
+      "sha256": "af06fce239e8c97e3ceebbcfc6035bf81ba960397cf35f3c80b990424c201f16",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-183.webp": {
+      "sha256": "fdbba4a8b233c07db22bd122b72aebe807a7a5783b71c01807e391917bb2b132",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-195.webp": {
+      "sha256": "7a6b5e9b58dbec1a3926f74462dc1c220011768922076eb6ad07ecc525886ddc",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-2.webp": {
+      "sha256": "50b06af038027767c4cfa95d789a36838ab2a00b50e058100babc6dccd8a077c",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-21.webp": {
+      "sha256": "1f059ee0834e2c0aaf9fdb6438d65019dee71fc192c68f964db6c904c498a5b7",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-75.webp": {
+      "sha256": "f1b1636844fa3dc85483d415d07ea6bc47744aecde4e1c71ac98d548544aaa9e",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-99.webp": {
+      "sha256": "ffce751eee3a9ba35dab24bc58cfa4e0f0b20f449f0d2e3657289cd931a4982f",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-101.webp": {
+      "sha256": "f72d209fc487d37112d0aeb3c78f2864ea4e1491e6fefc281fa3b7e02c1aeb22",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-117.webp": {
+      "sha256": "534c5cd02de730a0a23241f3b8b779dad18da02e43509e31156dbf2d21302375",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-37.webp": {
+      "sha256": "20c06e7677c4aea02b200ebeb0035b8b77656603ee18c125a85e2b01219574c0",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-40.webp": {
+      "sha256": "5c90aba4756b0a53d7f3d7e45e3962c74cd855fc8b4dc9400b997f26ce10ab16",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-18.webp": {
+      "sha256": "f780f83d98aa3a84a0562d1d57c1a133291bad061b7afd5ffd13e8aa4db3115f",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-17.webp": {
+      "sha256": "aed384e4450f3764bbcd8bf81db802e7770825080f1f16d2fe57470985f6033e",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-59.webp": {
+      "sha256": "d2219207d3f821e2b961db20f715c85c643048e37fc5528c02b4556169f73cc9",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-56.webp": {
+      "sha256": "c55f2fbd09d63719c6f2159ab56c90ed14aa2e3aafa4fbf47d1ede6572907397",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-79.webp": {
+      "sha256": "a8348d23ecb9c6b0e4088bee33f5973be0198a4d19258a762a785d2b3dcd3159",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-95.webp": {
+      "sha256": "1b95edbb3b25b8e140a14ce9394531854482d89d927b3de9c30389275df960a4",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-1.webp": {
+      "sha256": "e2c37168f8972e7e59274739573f420ad5ae8d09911c0bdb88f9cf633cf4d787",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-80.webp": {
+      "sha256": "4b7b34672117884ceb9e4c146172e20554eaccf4334f836f6889e2f8162ea2cb",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-81.webp": {
+      "sha256": "93d081ab3da7cd0957b59720ee88e4c1aa197efc9b9066aa76840d2d4e3778e6",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-94.webp": {
+      "sha256": "2cc8c042239f42b1fc38dca928ed46745ec1f29a635e9ce95fb1d8068e2dfb3e",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-78.webp": {
+      "sha256": "9ae36d40ad3d296dbf2902ae304cecd01014e0ef51d49f32e3f1d38bdef89ec4",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-57.webp": {
+      "sha256": "07797c209a16daaeb418bc9c37ef19138a25676816697dd868bb4f74a05b6add",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-177.webp": {
+      "sha256": "4c9ee2517646dcd439af7e964b242ac61f57f324a54ba7880a4fb04c350ed959",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-19.webp": {
+      "sha256": "6bf263cd3b9785127970e479416e21eeb075cd7ad1cf2404769dedd63664c09c",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-16.webp": {
+      "sha256": "81824bb95215a6cea49ff14a84f7361f71c4d297678531c31bcd33cbd014dd83",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-36.webp": {
+      "sha256": "68b1d05d9f6ca704d0eacb6b8b93a537bd9e9ec4d0cfb075eff317ca485789f9",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-105.webp": {
+      "sha256": "9bfe2210585e94f9fd514cd6a421a25a63041c802a52842d0663705884831845",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-100.webp": {
+      "sha256": "4cff0ed777595e463be991e60039aef8cd037cf37035cc2852c6380031546d97",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-98.webp": {
+      "sha256": "8f8b7d6a5d0109093072246c87946a3f1f60cdc2219117ed8deb1dca00f350c9",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-74.webp": {
+      "sha256": "98d4467fb94188c67d3cc70752c4e8b1fbb9403c9055198f3c27dd05b8d180ec",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-20.webp": {
+      "sha256": "5424cbf000cb8fe770701290edaaa87f44bc1113ae1736142bb6cef78404ee65",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-3.webp": {
+      "sha256": "cec86bdc00b78a924f49871f25a2ee8e3b078d3c5255ad9838bd7ebdadfc9c10",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-182.webp": {
+      "sha256": "429072e0c34bb1c3f70e5128490038ea1fe88d47e390a19dabf0c4a182a21b70",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-15.webp": {
+      "sha256": "8f90d0426ae859fb3ed4968f290467a01f1eca757a5cdadea1ca23d4cdf63f19",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-131.webp": {
+      "sha256": "918e69e29c92f12cc5eb02a5ca66d4018774a1f74daf1fa77b71b43c3051f672",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-46.webp": {
+      "sha256": "f29c1abb091473275e18018ece7f3aa4c6c9fef037e9fbff7f00b102973bbd27",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-11.webp": {
+      "sha256": "af9dcecf31ea58220eb741802794962d44dfc15b67d151e121154edbcd868456",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-8.webp": {
+      "sha256": "78a825af44c1c188d94d587dde5dd5692084c3e5d0fc29d0038de01cfa284752",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-50.webp": {
+      "sha256": "52f3a49d490a1c1e4462dc9639f1610f011ecced2bfc63755ad5136065574164",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-90.webp": {
+      "sha256": "bc7256c20b86463b45b89f2d84b79c0f6929c8804a25a7deb6e25036625e931d",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-93.webp": {
+      "sha256": "f2397b722bb6d6c1b0af758b2345a9b7a61e21c94dae3a67a73a06f5b87336c5",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-86.webp": {
+      "sha256": "3715a16db2262af5b5f5d9b574f379afa67480d15594b1ee24b5c77e3ad502fa",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-7.webp": {
+      "sha256": "6554f5221b12cdfa3a0f3bfad19299e66ca3d26d1184f661674fe581dbeeb686",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-12.webp": {
+      "sha256": "381b5dbdddec3a9ad92118909d1673f5f4c6d54ef45fdecb74fedf23e42d4185",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-4.webp": {
+      "sha256": "c94afb8e8234286f87213d1f1e9abb5728e8385bf0470511a81130a2cff46cc6",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-27.webp": {
+      "sha256": "177872c76594f8e8fd94f7fe57d8d0e365126e783b7f2c433924bb69fb87e3c1",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-150.webp": {
+      "sha256": "bc6dccfabc3d1a5ed6e6af280ff5729cab2c80dd1b878668ca90e3ce43506485",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-73.webp": {
+      "sha256": "b335b26bee7585361945bea9e9be7eb4ae133cad98f42a25014c71999d1ed0ff",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-111.webp": {
+      "sha256": "0fc44a802a844f361f8177fecdbf9e3f8264bb80799e4d3d79ec9b52a8d9d779",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-31.webp": {
+      "sha256": "0b0c5af4cf84177e06a6722306c6f5bcc0fa5bf5a2cf9b51b239191f032bc0b8",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-147.webp": {
+      "sha256": "2e4ef5f40240990a2461b78ede8d790ef623ff33c5db1bf32677c92abde94128",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-30.webp": {
+      "sha256": "64e5f79ebb8525eb6c9ac26d2557f17ef04c34f2f3ace18d0a69b98b040b5d74",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-110.webp": {
+      "sha256": "0eb047be564d980f1e29f768103bba20599ecc3b38e55f8c8dc9b80b67a15d15",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-72.webp": {
+      "sha256": "464595466ca0c2c9326ef3826e7500f6f762ea5dcb873fa5c667dc76a41797cd",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-26.webp": {
+      "sha256": "7640764f429a2617f2990ee14eda2adf7a73fee987ef6a665510916f497f3e37",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-5.webp": {
+      "sha256": "4a5814897643a5059e8a3cd53c951fdae2f3f2bb83d8e50aecaa87aa0b2a01e3",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-13.webp": {
+      "sha256": "24f9378e7b9077be7bb9f1a42a780bd593649cd1f1b6d521bb03871ea8e80a8e",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-87.webp": {
+      "sha256": "b2ae230ce5a85f271a59f7aadd3a2b62fbb19003e1fdd5efb1a03f16a7e5fab3",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-6.webp": {
+      "sha256": "e694c29ab33ce2333dc65f657f7433029b34dcc4e400ff73785d9c17a4f418ba",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-92.webp": {
+      "sha256": "741ad3bfe23f433256f11f1f4568566bb0cfbc7585efbe753461b583d3d9643c",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-91.webp": {
+      "sha256": "c4b0c225e8b852447c79f44cc329b73b6db3127ac9083480976682eeff288b0a",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-51.webp": {
+      "sha256": "302411750b292a431515b1b356e5802ac79aa74a93583550d51b47b4ff7b40e6",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-9.webp": {
+      "sha256": "1c06424cfa381d249087e23635641defd44330baee266e1663e999955e1b5611",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-10.webp": {
+      "sha256": "07d08ed6b257c0373b439b5292d12f620b92470841b5bd680294b65a5da5fe60",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-188.webp": {
+      "sha256": "e5f2a750cb9f88d15cbc42ff0070e3667966953e1004b167392b4430ebdb858f",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-47.webp": {
+      "sha256": "9ac1d65ebf03a9b57ce246194e134f891a1484073365e37a5b84e8385844d853",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-148.webp": {
+      "sha256": "be072ab1326bc49b5b8c8b3e60ab8c2e1ee93506abbe740b3d1396f9133f5c74",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-5.webp": {
+      "sha256": "a248d6dcdccbb6c989abf08aa1b9995bf962a482591a3635b3ef244ae2c700f0",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-84.webp": {
+      "sha256": "a4c05c919e523a70b046318fa4761b99718a914139ea8b6c889879a209c501b6",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-29.webp": {
+      "sha256": "cb9754083a4a0f2188663cdd38c77ae2788a45792db89c45929d2c0ac42c7069",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-92.webp": {
+      "sha256": "f97a8312728627fa5899656e42d9a8340849bc03dc8043e1e1f0bac5143c4d40",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-52.webp": {
+      "sha256": "486648e6618c73db546adab6bc840635bc7a66378804282962abb56d320134fe",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-125.webp": {
+      "sha256": "bc25fa11e1942f47bc1d20f2af13c7077e9a13a5e35a48df1b1caf788713807e",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-172.webp": {
+      "sha256": "3dba39b95e7a75b1c37bae67a92746d3436a31f7ac55a9414b5cc0aaa01373d4",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-13.webp": {
+      "sha256": "4dedcac0f98f77d32217513120ec775436c2906a64d44622d67de3ce4d87109a",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-44.webp": {
+      "sha256": "89fdfcd4558c5c579062b2772109a8f32134e1e3cf60e62131af43f7137a7ca2",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-133.webp": {
+      "sha256": "ce8d44978fd2182327adc227d5f79781fc5e741377b2989d3ff2f0d5dbaa12d8",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-88.webp": {
+      "sha256": "864e6e0f2247f5a0f9b57f424e989f7546764fd24f6b3e4ac6e8a401a37f25d0",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-9.webp": {
+      "sha256": "241076b27a5b139f60466587d29239b0aada8e087150d762a615483dd45ff877",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-144.webp": {
+      "sha256": "5caeb36bc6cba6a926cb211ed91881e8aab039e48098ba9ee63ffacd3ebbc1e3",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-33.webp": {
+      "sha256": "1d0dffc52c750782888fd41f022c98c81014082a66071ad34dbb93f9138ab718",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-113.webp": {
+      "sha256": "4c09509c70b5c78dc9bf9f8015ce40490f73f0cf9a2c950c7b0e2d0e55cb705b",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-25.webp": {
+      "sha256": "51363cff4649958874e0ffeb764404f087722b8be11e8307ee8ea7fe77051be2",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-129.webp": {
+      "sha256": "00893c3f00341d2cc43bed3ecd55d2763355243faa5bc8b0db2d163036e2f768",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-6.webp": {
+      "sha256": "d89a160c291b685ac1814ab8f62a104835e5f88ce6cec223f294fccad22cd1e6",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-187.webp": {
+      "sha256": "0a987f00bb834d93a9743f293ecc98eda9d4f8413c15fe5166e3801f4ec0f8b2",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-10.webp": {
+      "sha256": "e5790592439e0bd125e98c498e0bfc5241ac102830bb59912d2215b45c3ea5da",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-48.webp": {
+      "sha256": "b025a850f6a6e0e40f1ae44dc2f543ace7939fd02e79a813837a8ec0e18fe621",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-49.webp": {
+      "sha256": "b7d2a46c587063d71138a25e561986c4260c4bb32ee70c2ca3bac5831dea9ee7",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-11.webp": {
+      "sha256": "42921893b8e8f003b5827a9b1ff0a4b74f48e7ffdc0f14b8d3eb06254b3d099b",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-186.webp": {
+      "sha256": "e19183f399d5abb15cff6953c70a58c0eb9c80d180ec26c2c1dc58d5a4fbf9f4",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-7.webp": {
+      "sha256": "6ae942ee51ff7e67fb25b50ed959b0d8aed600dde8e480aa9b426a8955d3a86f",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-128.webp": {
+      "sha256": "bede5962282c19951a97430e6e793c576f04439136f0912e6704f43cb60dec79",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-24.webp": {
+      "sha256": "64a612ffaac90d29077e676c428a3a2e5f1efce3e6445cb797b9e4c271c806e6",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-104.webp": {
+      "sha256": "24e90b0c4a7d1f72b3f4615623682dbca988aaff63264e573fd17ac81b053b5c",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-112.webp": {
+      "sha256": "76acc33642eebb9cf56f43c8482645007f80fcaa3d18d3393ba12a1821b17378",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-32.webp": {
+      "sha256": "90aaf7d4af8821a7f1cf67615714992bfb689633eea82ced1d42a155155c3d05",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-89.webp": {
+      "sha256": "43631d1c752c9c43e8ff102e2f7aa4a1c7f1c24510166c894338bcea65afb81a",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-8.webp": {
+      "sha256": "929241977dc60c48600673769ff1d5a48be358ca061cb614b357b0f740b82e66",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-132.webp": {
+      "sha256": "424820b82b399fdd722fb0705e00ab9148f2ec82e04dc2d49d542c7d11370f36",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-45.webp": {
+      "sha256": "ea3f7768cfa621f94aaf3bee8ad83a9dee6f41530ca5ef56575d67f9b26dbd23",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-12.webp": {
+      "sha256": "9e0e5c3595e24db0e0edf85d3c1bd6b9023cc206678c49404390d6b8affd3244",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-173.webp": {
+      "sha256": "f6b0f2fbeb0042a39f557d43afff3582a3e53509904e1f8b322651681291c51c",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-53.webp": {
+      "sha256": "3da3b6e59b1491f3b4ee78c448074a49ea8349ddf241311437a68fc1c8d7c155",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-93.webp": {
+      "sha256": "c8ac033d4384b6cf9621d7c48e7d30ded73cf71e4a44cc04111cfa3a568b9ae6",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-28.webp": {
+      "sha256": "20d722763479d47f1204d5ec164e8a3a85f282ce13bde9a2627f9e6b32ebcb82",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-4.webp": {
+      "sha256": "d3d4008030f5e739b90eb9a1b923131f56ebff3eee0f9239031d1e8a7fb0a170",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-149.webp": {
+      "sha256": "753246b052b9a405a721f846beb7eac695ba83bd9f6742bfc10e3859d1c41818",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-85.webp": {
+      "sha256": "59402f43c4b4be6b5f8d79ac90294788737139f02e736c5f3fbba736ce8cc2f5",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-35.webp": {
+      "sha256": "3fac859375fa62fd4bd3c3c0eee24e3700cf5d49433491554858d9b0fffc8353",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-106.webp": {
+      "sha256": "68d963053203697bc023fed53723f6f77f372c1ecf62d15eab699a7b7af19bfa",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-103.webp": {
+      "sha256": "2ea9c8583e3142f197f73017ef017f5e9402769a89ca895e28ad2a09c3f8ae1b",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-77.webp": {
+      "sha256": "8e1480c0b3e8bed8fa6eeab20c43b42aab7d783cd0ed052a8a97d6a6bf00c8b9",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-23.webp": {
+      "sha256": "2635ab8dd2c7ed283d6b4eb88459720c8310e5df922eeaecb4f4ef26923b2f01",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-58.webp": {
+      "sha256": "ed39c047ad953f06bb6209148bd40943d2eb5eebfd967337ba2ea77a035a1079",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-181.webp": {
+      "sha256": "74ab88aa75b243fa6d27e9248c1f13bc2d08eef9e5eef5a026d19350e82d32a6",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-16.webp": {
+      "sha256": "cb537fd0a8b0b35cc52eebf4ab1815cddcb7cddba2b77bf083d50d3f532ab575",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-19.webp": {
+      "sha256": "1812586adf39ac063b6563b8bdfbcdc6beed31b742694ea93a6963a9b665b80e",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-139.webp": {
+      "sha256": "66687eba00b42a76344f4475efd116f9f673e0953cfbe0fb2e3f7de7ed37e3e7",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-82.webp": {
+      "sha256": "789158a2101b6aefbbc8bf00cbcc21bab660e4a37644ad44b37fb12f89843a78",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-3.webp": {
+      "sha256": "31d2ac212e8588a17673fc6e67aa2a7fb9b1788654dee6618a05fc94915e1689",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-61.webp": {
+      "sha256": "ed18037e7ffd6f9fffd5c61a6ea7a23235d2148b4b8905790723cb2ea4ae7cb5",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-97.webp": {
+      "sha256": "d183478d4f12e00eae2e3465e2f063aaa83111d18b911d90adfdb98d7ab044dd",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-54.webp": {
+      "sha256": "b5efad06e1cd13889f8749d0d278a973b6d34eda39a60832e63c2e71a9546d58",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-123.webp": {
+      "sha256": "9b6059c107cbc3bc8f482e9693022e9f5357c1346e89c2a09290895e7023cdd1",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-174.webp": {
+      "sha256": "b0122c1fab923f84f7984631e259b43a06273a7d25b3de13ab9daf4b1f6ab6db",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-15.webp": {
+      "sha256": "1e568d68e4de84bbca2d1918ee75327aacf08a12e3fd54017deebda0e4808c66",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-134.webp": {
+      "sha256": "f0962f4a286e5cd59ed413ce2b8dd59486bf41d9c4d4168a84239f995bae2dfa",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-43.webp": {
+      "sha256": "870fa695787a790784f635b8baa1d765094ee2ab9169258f4a63c8280f4f88c6",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-14.webp": {
+      "sha256": "f7218a47eeca8999bcde8b7d039ddfa9d3bd6730bcfc4bcf40990fb7aa9feb6e",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-122.webp": {
+      "sha256": "260e9e7cbc432bb991f60fedff03467396af7b1765d8b1d2548d3951a21b46d9",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-55.webp": {
+      "sha256": "9d1495261c87cd3d3a1401049b69267e1aab7e8180b04e5d10579ae053d8926b",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-96.webp": {
+      "sha256": "19eb3d3cc91885c976af18b509f82caa2553d14fd2e78190c3cad77fdb3f5454",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-60.webp": {
+      "sha256": "60b23a9c61840a610357c60b57a6c8ed568059512804325983c9310228dffb27",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-83.webp": {
+      "sha256": "f36904eb441a92a81b42d804853cf65041da4aa539abe2affe5d3a7428f6dc06",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-2.webp": {
+      "sha256": "94a510865c6d414913226b1969c83b891d2e8cff196bb707503018d6a44e2106",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-38.webp": {
+      "sha256": "4c57c04842d70e8b0e2775b90e3969f76612522dc23546f04812bfb8454c61b2",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-138.webp": {
+      "sha256": "0feaa4af8498f3708c7d90b8591015ee25813ff40b2b7456b8b397652dc4d6de",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-17.webp": {
+      "sha256": "4f4e67173dbde487b8fa48ff242969f1c0ecb86d6cb8e520a84b40ad7ca86964",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-18.webp": {
+      "sha256": "3ad73d0841e48d824268d545c7a37a41ac8ac4292e25cb1ade62a9b874fa9f22",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbadog-1.webp": {
+      "sha256": "da8b8f43f0a4ad383bc859b40e63078e0fb0184b16a44c637ebec973796e5550",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-22.webp": {
+      "sha256": "078bc30e664bbf5e2c79dc82d029cb3cb9845204440a7c170e8a4180c1645f09",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-76.webp": {
+      "sha256": "87f2d819532173802141daf210b2c7b5069242ffc34ab51bb2c071cdad04e34b",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-102.webp": {
+      "sha256": "8de20314237dd727d41a873a72de2df792d7e28a8573697e63f7f16ec89e1c36",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/chelas-107.webp": {
+      "sha256": "eb4815054185f8dee80496716825333e4529d38f964aff87f06bc457fcd5a2a2",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-114.webp": {
+      "sha256": "9f24eb88f2399f6b9279fff5401de73dfdab0c331b352088e3c1b7f0db9cf772",
+      "git": false
+    },
+    "apps/web/public/menu/pedir-2026-10/barbacue-34.webp": {
+      "sha256": "04475c4b5729f987ca610506d59dd997b756110cf6394bd9e34786753f429a6c",
+      "git": false
+    },
+    "apps/web/public/legal/chelas/support.html": {
+      "sha256": "31d96c163605ac4ebf0e4e8131936f4b408dfd017221e5259629e434195f569e",
+      "git": true
+    },
+    "apps/web/public/legal/chelas/terms.html": {
+      "sha256": "68e82cac5b63e6edce667ba7b1107cf02314da84eae0c9c8eff4837d33eed7c2",
+      "git": true
+    },
+    "apps/web/public/legal/chelas/consent.html": {
+      "sha256": "b7dd7633a1274b43b129dc776a7f0d09b18b7c21a2e2c2bc6975247bb7c62745",
+      "git": true
+    },
+    "apps/web/public/legal/chelas/data-deletion.html": {
+      "sha256": "2f14b3432180c57e3eb526d310cd60f2d1d3356c080d13b4785cce8cb716c6f9",
+      "git": true
+    },
+    "apps/web/public/legal/chelas/privacy.html": {
+      "sha256": "edf49acad2f6683e012f41e49c4893a6115261dea69d9544e56e4adca01015ce",
+      "git": true
+    },
+    "apps/web/public/legal/barbacue/support.html": {
+      "sha256": "e88c721ba58d2c029d7af3bebbdc731f2176e02681781064a4fa40f1c72cc473",
+      "git": true
+    },
+    "apps/web/public/legal/barbacue/terms.html": {
+      "sha256": "3431a986e93950507b839a403d434736b334ba68b2f0adf4cd8806f2a8df5905",
+      "git": true
+    },
+    "apps/web/public/legal/barbacue/consent.html": {
+      "sha256": "1ef3bdf5b1196cb636076f7c001faa634ee8366a6332c41d04fa695e225f8c47",
+      "git": true
+    },
+    "apps/web/public/legal/barbacue/data-deletion.html": {
+      "sha256": "925993347158a2daf0be3fd301dbb77bc98d96614262e3299e22ecf9ddb44fc1",
+      "git": true
+    },
+    "apps/web/public/legal/barbacue/privacy.html": {
+      "sha256": "b7ccf0172b106e9e3ccd1dbb02a8105b84e62a39770f8abc6d974f22bccdd85c",
+      "git": true
+    },
+    "apps/web/public/legal/barbadog/support.html": {
+      "sha256": "3b5084f7cca1611d61cbc08140717dd0e8e2cc26fab463d76da93c296cf6cb26",
+      "git": true
+    },
+    "apps/web/public/legal/barbadog/terms.html": {
+      "sha256": "49bdb871c47fb154f96b6ffc23dc446a0e750c6971ae74da4571b2377089c8a0",
+      "git": true
+    },
+    "apps/web/public/legal/barbadog/consent.html": {
+      "sha256": "aa743c1e848b8c0f81a30725fb672ef6382da6ca53e090548c7065f737e0ec21",
+      "git": true
+    },
+    "apps/web/public/legal/barbadog/data-deletion.html": {
+      "sha256": "c0138ccf06c7d282a398437e648b46f77964f0572bd955cb01411d9da0d2a6ba",
+      "git": true
+    },
+    "apps/web/public/legal/barbadog/privacy.html": {
+      "sha256": "c2d083f1612c719c0b773496c4b480e518e4a85909aa57d525e955b8a0574a38",
+      "git": true
+    },
+    "apps/web/public/instagram/logo.jpg": {
+      "sha256": "4ca3f9fbdcc40c780f7b6c6733edbfed4ccfeb911741b2c77ae9507042591877",
+      "git": true
+    },
+    "apps/web/public/instagram/app-icon.png": {
+      "sha256": "a4f518a40384e7dd442396c69ac27028be908705ef314dd3fcfdea43c4208cd2",
+      "git": true
+    },
+    "apps/web/public/instagram/manifest.json": {
+      "sha256": "be14e9e38a0e92f931a61e18975b5c62485380078dfcc7afb379f8d455a17e07",
+      "git": true
+    },
+    "apps/web/public/instagram/post5.jpg": {
+      "sha256": "1a86c411c56a278185e6c25df30313b7ffdd7d68e89afa962883d8f61f84517f",
+      "git": true
+    },
+    "apps/web/public/instagram/post4.jpg": {
+      "sha256": "de63461d419eaaa4d05bd986df4e811fb293133573ffb293eb4763599fd922c7",
+      "git": true
+    },
+    "apps/web/public/instagram/post6.jpg": {
+      "sha256": "7a27566904bc5d1a49acbd418d22a3bdf71e7f412910e2c5dfc62fbff83b0971",
+      "git": true
+    },
+    "apps/web/public/instagram/logo-full.png": {
+      "sha256": "92698b95391783f63a27e9e86eb90960515e93479ad9c033834b82838763b8ae",
+      "git": true
+    },
+    "apps/web/public/instagram/post3.jpg": {
+      "sha256": "763a085741ff948c6bc60aa6897722b9487e694ab5c4ae864e9dc57c0c6e3fbe",
+      "git": true
+    },
+    "apps/web/public/instagram/post2.jpg": {
+      "sha256": "daa0cea68a40793c0c91a181d0713f9cc148b87dac2fa56e1b97ca6206812f1f",
+      "git": true
+    },
+    "apps/web/public/instagram/post1.jpg": {
+      "sha256": "f55389a584586b5f528e10e63061e8d2103a74eacb2a88af3edd25bfdb4f6e0c",
+      "git": true
+    },
+    "apps/web/public/instagram/posts/post_09.jpg": {
+      "sha256": "de63461d419eaaa4d05bd986df4e811fb293133573ffb293eb4763599fd922c7",
+      "git": true
+    },
+    "apps/web/public/instagram/posts/post_08.jpg": {
+      "sha256": "1b77697e40962734b29d2ec07d5ac81690ac7b2f05dd59222b2edb61b47c1d69",
+      "git": true
+    },
+    "apps/web/public/instagram/posts/post_05.jpg": {
+      "sha256": "025d49b2301a3a336530a7af5e411ca65dfa7c70686ed164702728c5829217d6",
+      "git": true
+    },
+    "apps/web/public/instagram/posts/post_11.jpg": {
+      "sha256": "7a27566904bc5d1a49acbd418d22a3bdf71e7f412910e2c5dfc62fbff83b0971",
+      "git": true
+    },
+    "apps/web/public/instagram/posts/post_10.jpg": {
+      "sha256": "1a86c411c56a278185e6c25df30313b7ffdd7d68e89afa962883d8f61f84517f",
+      "git": true
+    },
+    "apps/web/public/instagram/posts/post_04.jpg": {
+      "sha256": "e165702a86e167cd158cd169eeff3c0a7d3a148f515eb4d96a14183b93cf796e",
+      "git": true
+    },
+    "apps/web/public/instagram/posts/post_12.jpg": {
+      "sha256": "0e408dd19ea97a9f825bb5cbd594ccb2a1d8aca7ebb2714d6b12628d118978e6",
+      "git": true
+    },
+    "apps/web/public/instagram/posts/post_06.jpg": {
+      "sha256": "d6b56b20ecbc873adcb574b0b10f194b73597fd3d9c8398458f5c5b1d7537c6d",
+      "git": true
+    },
+    "apps/web/public/instagram/posts/post_07.jpg": {
+      "sha256": "b375dd432d787b2456397b6e1adc3705bfe22f267081e5b71818f4e3dcdb5518",
+      "git": true
+    },
+    "apps/web/public/instagram/posts/post_03.jpg": {
+      "sha256": "763a085741ff948c6bc60aa6897722b9487e694ab5c4ae864e9dc57c0c6e3fbe",
+      "git": true
+    },
+    "apps/web/public/instagram/posts/post_02.jpg": {
+      "sha256": "daa0cea68a40793c0c91a181d0713f9cc148b87dac2fa56e1b97ca6206812f1f",
+      "git": true
+    },
+    "apps/web/public/instagram/posts/post_01.jpg": {
+      "sha256": "f55389a584586b5f528e10e63061e8d2103a74eacb2a88af3edd25bfdb4f6e0c",
+      "git": true
+    },
+    "apps/web/src/proxy.ts": {
+      "sha256": "707d0757f1fdfcb412515555b7fe95a111a8777a5f89a6aa8bbb061f882ab9d1",
+      "git": false
+    },
+    "apps/web/src/app/layout.tsx": {
+      "sha256": "705d1d2d057ab8fbde3b391cd2f63ec509e0dc0d2a5d018b252ab36062efe076",
+      "git": true
+    },
+    "apps/web/src/app/loading.tsx": {
+      "sha256": "4241ec0d0dd83cb788a0064d8f0875bd9077146ffcc5559d1e5ef68104962fc2",
+      "git": true
+    },
+    "apps/web/src/app/page.tsx": {
+      "sha256": "e6609681e73a7b077d8e9611e3de4fd74c2894a9a45d6410b63b835854480aa0",
+      "git": true
+    },
+    "apps/web/src/app/globals.css": {
+      "sha256": "2388549e6b5605856ce9ddb2f0494836d95c688bfbba9d8edd35dfa1516d6a9b",
+      "git": true
+    },
+    "apps/web/src/app/beta/page.tsx": {
+      "sha256": "b28ab9e427d3a0df90e6d5ef729e1bfbecd9ce5e2a2fa79c45ed465e122db66b",
+      "git": true
+    },
+    "apps/web/src/app/mesa/[token]/route.ts": {
+      "sha256": "5ed0eb6536edf7057c61af0c60ef9b16784b85288eefb9857ec2aaafa81dcc6f",
+      "git": true
+    },
+    "apps/web/src/app/icon.png/route.ts": {
+      "sha256": "234613e812e8279ac6cab81fec5a2ef26a06bf22363f2435f51dfcd134084ace",
+      "git": true
+    },
+    "apps/web/src/app/favicon.ico/route.ts": {
+      "sha256": "234613e812e8279ac6cab81fec5a2ef26a06bf22363f2435f51dfcd134084ace",
+      "git": true
+    },
+    "apps/web/src/app/apple-icon.png/route.ts": {
+      "sha256": "eb21669defd12c0539db1df81e948dba8317ac1752c1ecc8e846fa2e50027393",
+      "git": true
+    },
+    "apps/web/src/app/pedir/page.tsx": {
+      "sha256": "96d2f642d0550d626c79b0d7c6ea9cec099d074764def1b88a8dde7de78cfe95",
+      "git": false
+    },
+    "apps/web/src/app/payment/page.tsx": {
+      "sha256": "fbc0f6faf392923fc4639c648eeae91aa6c3b36bab97cf40186640e7883c0f16",
+      "git": true
+    },
+    "apps/web/src/app/admin/layout.tsx": {
+      "sha256": "0854b9a68c7f09f260651c70b16a77b4c8464aee660255ac551884dc545e35db",
+      "git": true
+    },
+    "apps/web/src/app/admin/page.tsx": {
+      "sha256": "142411bb1dcc7305be18e794106e371800c8323bf62af8ee6a966f4a115c4564",
+      "git": true
+    },
+    "apps/web/src/app/admin/customers/page.tsx": {
+      "sha256": "463d46f8d74207f10510f566b38342c12f5cfe9ff0d24ca7ccfac67a4af4d9a3",
+      "git": true
+    },
+    "apps/web/src/app/admin/beta/page.tsx": {
+      "sha256": "e7e7f699e2f084dcc2bda20d97266b8ecf47fb7dbe596d1c1dc65d0c7f26ac6a",
+      "git": true
+    },
+    "apps/web/src/app/admin/settings/page.tsx": {
+      "sha256": "9083b31b116806cc61d4831edb649dcf8f88ee8234dbc28a9cf6488313cfd8a1",
+      "git": true
+    },
+    "apps/web/src/app/admin/tables/page.tsx": {
+      "sha256": "c684b05e7885ac6a97f94ee37f39c42fba4e214d580db61f7c4e91810bcb9ae5",
+      "git": true
+    },
+    "apps/web/src/app/admin/products/page.tsx": {
+      "sha256": "8b1dea7eb163c00f8cbf3061697921b7dc145eb1210f64f1a52dc0a2a1305226",
+      "git": true
+    },
+    "apps/web/src/app/admin/workspace/page.tsx": {
+      "sha256": "21a95d3c26ccf85c7a89816d0e5710a530e29e3bf10e66595c4444a1d7b5a843",
+      "git": true
+    },
+    "apps/web/src/app/admin/delivery-settings/page.module.css": {
+      "sha256": "0ddd1804e952b9cc272bf1b103bcff08dea06935e355f550991e624d6549ef44",
+      "git": true
+    },
+    "apps/web/src/app/admin/delivery-settings/page.tsx": {
+      "sha256": "b9dcef7aee7b13aaf03efd8e04a0027e1484d450755470fa3aeed6ead977d4eb",
+      "git": true
+    },
+    "apps/web/src/app/admin/system/page.tsx": {
+      "sha256": "2a19ca1678514685b1406855765cb372434fd818dc487d6cf40a3b493e8b4cb9",
+      "git": false
+    },
+    "apps/web/src/app/admin/coupons/page.tsx": {
+      "sha256": "e15a3f227b9d5d67d33cbe800d4cd865655b28bd61d5bde93b5b3680306c482d",
+      "git": true
+    },
+    "apps/web/src/app/admin/team/team.module.css": {
+      "sha256": "d980866110566711e33235ae5a5bfd7b36662962dbc9e6246430a54611a26f42",
+      "git": true
+    },
+    "apps/web/src/app/admin/team/page.tsx": {
+      "sha256": "f5e36c40d818ec6156578590c0360701ddf220c63869dac0d62d676ba3e21469",
+      "git": true
+    },
+    "apps/web/src/app/admin/catalogs/catalogs.module.css": {
+      "sha256": "4fa503092c72965713ad3a9a6172e7e7c8bc8b79896dd0f044067066a4f60e04",
+      "git": true
+    },
+    "apps/web/src/app/admin/catalogs/page.tsx": {
+      "sha256": "e3d4c2b28af94bc7c1180b43bf1158b642006ee6c342c30a71c887a545de01ae",
+      "git": true
+    },
+    "apps/web/src/app/admin/waiter/page.tsx": {
+      "sha256": "858a6c6710956b07d7116dbc03617af15f7e474e2539db164342adf242304965",
+      "git": true
+    },
+    "apps/web/src/app/admin/delivery/page.tsx": {
+      "sha256": "6ecdafd9848f5d3d59b67938249586cc49c91fcbf9a9823bbd8c7421bee1ec93",
+      "git": true
+    },
+    "apps/web/src/app/admin/staff/page.tsx": {
+      "sha256": "0a8568dda2808387158033526d47f97a69431a0131bc9027f38e0d7394f68aee",
+      "git": true
+    },
+    "apps/web/src/app/admin/orders/page.tsx": {
+      "sha256": "38b81dd98c86ccb438dc342aec6f2dd8b56a3fe0b996c97e1f9d9bf7b063b7e8",
+      "git": false
+    },
+    "apps/web/src/app/admin/erp/erp.module.css": {
+      "sha256": "382665b28ea2527d5d180948af90793e0da56bd069ed86f2b6da4dba28e026d8",
+      "git": true
+    },
+    "apps/web/src/app/admin/erp/page.tsx": {
+      "sha256": "9f59da42b31c88f6475c981276e0d20cc4c60d157530f0069ff7241e84bcab48",
+      "git": true
+    },
+    "apps/web/src/app/admin/kitchen/page.tsx": {
+      "sha256": "fce1bb680974d9ec08f1c80574c1e2e86a006a7af90e81edfad56c0de9275696",
+      "git": true
+    },
+    "apps/web/src/app/admin/downloads/page.tsx": {
+      "sha256": "cde922334dda98b2e4db740101f6f7dec3e551fc6fb4cafff2c2b77660b72710",
+      "git": true
+    },
+    "apps/web/src/app/admin/categories/page.tsx": {
+      "sha256": "ea687e7b8bed71aed5ca1b43bfde04a2ad9f8ec26b70d825e8a0968e4928092f",
+      "git": true
+    },
+    "apps/web/src/app/admin/impersonate/page.tsx": {
+      "sha256": "6edae63559a60ccc3edcdb593b1d387508ea7ad753c8f91b1c1945a4a28f00a3",
+      "git": false
+    },
+    "apps/web/src/app/admin/ifood/page.tsx": {
+      "sha256": "ec2f01239b105ca2b9687c6c59a4fc6239007c8bdc35fc3501a2991aca6a1187",
+      "git": true
+    },
+    "apps/web/src/app/admin/change-password/page.tsx": {
+      "sha256": "58141f0127b3d9a3d07d4bfed8b5099ee20fdbbf67d39d4deb283df62606eb92",
+      "git": false
+    },
+    "apps/web/src/app/admin/login/page.tsx": {
+      "sha256": "1d34302b47358805defb3fec6e9b8cd433a1a642e60365d625a81da3cfb5e953",
+      "git": false
+    },
+    "apps/web/src/app/admin/whatsapp/page.tsx": {
+      "sha256": "689eebe78979842bcce48911fd98f24de27c74473b7a3d683a2791b8a8153db3",
+      "git": true
+    },
+    "apps/web/src/app/confirmation/page.tsx": {
+      "sha256": "84d68f66bf52866e83f9c46668d1078ed5d9819e6f2fdece26d33b3daf20bcaa",
+      "git": true
+    },
+    "apps/web/src/app/chelas/page.tsx": {
+      "sha256": "8dbfcef3b485942bf955d5f14ddc3f776a3a22c4762750074b2244d2e36b5f72",
+      "git": true
+    },
+    "apps/web/src/app/cart/page.tsx": {
+      "sha256": "1044b8ee48a19b7d2420940469158ef5d67074e7b8bfa6ef7d7f36be0e716869",
+      "git": true
+    },
+    "apps/web/src/app/api/beta/route.ts": {
+      "sha256": "4c2d5054130dcf31e8e3b2f5fd05b481cd7da92495e9d6c24455f2be004806d1",
+      "git": true
+    },
+    "apps/web/src/app/api/settings/route.ts": {
+      "sha256": "528003478a306d803958917a72295cb5b316b941e3a88718b66a19acde8f6dc2",
+      "git": true
+    },
+    "apps/web/src/app/api/tables/resolve/route.ts": {
+      "sha256": "f4b2a7392ae0df6cf44b5938bd20b4423f8073387d9118c136e46fc8bb60642f",
+      "git": true
+    },
+    "apps/web/src/app/api/print-agent/status/route.ts": {
+      "sha256": "fc479ec583663b5d24ff6dae4fef25ab18ff957f224c3080638e0f7d9a2e0273",
+      "git": true
+    },
+    "apps/web/src/app/api/print-agent/jobs/[id]/fail/route.ts": {
+      "sha256": "c85c61063328188fb34c65795056941cb8554fe4f1be6116e2e013a6fc604316",
+      "git": true
+    },
+    "apps/web/src/app/api/print-agent/jobs/[id]/complete/route.ts": {
+      "sha256": "a94026e65b1ca10ed0b6bbf17e3bd874237b9e10076dfe78be9222233bebda17",
+      "git": true
+    },
+    "apps/web/src/app/api/print-agent/jobs/claim/route.ts": {
+      "sha256": "03f404aa1de8c17e341603b83f041a599e1b6794775ec63f43a47bc5839ecf20",
+      "git": true
+    },
+    "apps/web/src/app/api/products/route.ts": {
+      "sha256": "ba13f5a6098a78c217c72de8da3b91a2c16e9226009143758b405e070c35c4f2",
+      "git": false
+    },
+    "apps/web/src/app/api/chat/route.ts": {
+      "sha256": "79f6d3e1e2305e8426e25cc0926a43499b4980f1f9171084429a3085ea2389b0",
+      "git": true
+    },
+    "apps/web/src/app/api/auth/[provider]/route.ts": {
+      "sha256": "bd59b70cf1213dba5d87a584294db3f9c1c55d0052ffb75110e08abd4bcab8e2",
+      "git": true
+    },
+    "apps/web/src/app/api/auth/[provider]/callback/route.ts": {
+      "sha256": "6d1ec44d30fbf32b621443e787cf1cd0624b2d3ec526708b397b3185971f3cc2",
+      "git": true
+    },
+    "apps/web/src/app/api/self-service/orders/route.ts": {
+      "sha256": "dded18b29f14b0ab111ac3c6688632a7bce4f6161f9afbd9115726aee35fe090",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/customers/route.ts": {
+      "sha256": "7ac64d18ed84e61365d0873d44386ab71e920325d5999d0e94676cd7629f0902",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/beta/route.ts": {
+      "sha256": "637357a3ab3e2ca8fab06fbfd027389e3cef79834e3cc9505b61f28ec80a3fdb",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/settings/route.ts": {
+      "sha256": "282e87314e1b961e2be2b2ca97d1f43847bf7724c112ea3c2c35268895fe0491",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/tables/route.ts": {
+      "sha256": "eb1c5d80acac62155105dc774b644037ffc4ef6fc1a2a006adadd18b092d386d",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/tables/[id]/route.ts": {
+      "sha256": "98798fbb72d391ec97544a70a37e029c26dd0dea89fa3d6145eccefdff555c29",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/products/route.ts": {
+      "sha256": "a814b2035cf25b3618b7e2f14d9c60eadba51a7979626d60c9d5770b5985bb5e",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/products/[id]/route.ts": {
+      "sha256": "c31cb6124070fc85f2ed576cee66cbf0dd59f0197f109a30051889ec4de33d60",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/auth/route.ts": {
+      "sha256": "e449be719a413e8abdea9a7cbf3ff62f2f5425073aac980c47f3ae158aa1b106",
+      "git": false
+    },
+    "apps/web/src/app/api/admin/closed-days/route.ts": {
+      "sha256": "0e52ac9168b0b523834c7db48343e7cf9668b19692bfef3657251c016106c94d",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/closed-days/[id]/route.ts": {
+      "sha256": "e1a6d1ed519edcc2e46924aa290c04081e69f71cee01148c7ef7707fd7e65410",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/delivery-settings/route.ts": {
+      "sha256": "9f6e70bac408efacf32c8987abb9bd8337075bdd46ca1b012dda966a99c01621",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/delivery-settings/geocode/route.ts": {
+      "sha256": "a6a0090dc59633f787bd3a1db32d81d3f1f2e3ba4d9b396f75c98c0f46a8a39c",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/system/route.ts": {
+      "sha256": "834fd324f43451e5fb0fa74d9a71866bbec2f47e164f8b8997ccc7c01445a361",
+      "git": false
+    },
+    "apps/web/src/app/api/admin/coupons/route.ts": {
+      "sha256": "796a28bfa833fbce8e4230da540c5649e1a8ec687045b309c2139a4195f0aba6",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/coupons/[id]/route.ts": {
+      "sha256": "ecb8521e960ee9b300603522790127864ff800f40a86af4f6df8c6b8044f8ba4",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/catalogs/route.ts": {
+      "sha256": "bd055854b567d21c758e1b311a11fdd17464b202efc3d5df46713caee9d181e9",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/catalogs/[brand]/[id]/route.ts": {
+      "sha256": "f13fa419938ac24cd7caf56ed1641e35f411b312ab3bb8dd8e540cf4364ce19f",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/waiter/route.ts": {
+      "sha256": "e83607a0501b92bd656686e5b9eb071d9ea87fbc2b70cf72741848ce07add525",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/delivery/route.ts": {
+      "sha256": "546859010f0014b1df06c1985381c732b8090160ba6e182381f6ab46ada7c8f7",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/staff/route.ts": {
+      "sha256": "85c1aa2bdb1fc08f95a57e42aa0bea010ff3b0f05983e1b274301d1d62949cb2",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/staff/[id]/route.ts": {
+      "sha256": "5d46a2d0b081445ba6b6f747286334952d8c2722e7be414ef7bff7d971bfca91",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/orders/route.ts": {
+      "sha256": "ebb66a54a0fc44bdd5190b6f86804720e1951b7601c192773b14efa70d561414",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/orders/[id]/route.ts": {
+      "sha256": "f658c0b7714f884e951f4027088665899086b7a7626eed3a009463d091ab6662",
+      "git": false
+    },
+    "apps/web/src/app/api/admin/orders/import/route.ts": {
+      "sha256": "9cc8cfad76bee2825ba3b679a774681095932b0f581b6c2694ee5cac24a4d336",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/erp/route.ts": {
+      "sha256": "1cb26a67d89794d271c73fda0a7a2deaefabb4f111f589ce7855636b29dcb49e",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/kitchen/route.ts": {
+      "sha256": "a605970fad73565cc882ba094166d79c9b55f6834aaf5d1d7341018d334e82c0",
+      "git": false
+    },
+    "apps/web/src/app/api/admin/kitchen/printing/route.ts": {
+      "sha256": "5b1cbfb3e4ef2433876fbf4171f839a37482bff4db32411330e4e28e58e14031",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/downloads/windows/route.ts": {
+      "sha256": "c94d6b183fb9c5112a7b9cbdb42cec13a3264e231b177d6376d49c74124088a1",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/categories/route.ts": {
+      "sha256": "60d864dce07b664bff14ac482abfdd830ac60900e9c664db1e8fd8b6e3f3a693",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/categories/[id]/route.ts": {
+      "sha256": "d3286fae3df0ee57bb97898b3a6f3166773b752caee70ecb6dfa98398bd9259e",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/impersonate/route.ts": {
+      "sha256": "ef2dd3ea63d450751ca2420c07d087004ec6b0c839357763d3a92bc9db0b9511",
+      "git": false
+    },
+    "apps/web/src/app/api/admin/ifood/route.ts": {
+      "sha256": "c4bb03975cdbc4d8c0b77560f58007d2c62b88aec8ee66d90a70df2d6f84e742",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/ifood/stores/[storeId]/route.ts": {
+      "sha256": "b177df1e0526bea18060952e8b0476ff7b0bfb1cffd95e53db89babb181e9e17",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/ifood/orders/[id]/route.ts": {
+      "sha256": "44712340cf87d1b90a578bbc0e86e4be2f86987592bfc5419f0062391e7d43d4",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/change-password/route.ts": {
+      "sha256": "d0b473f309f86590e94e25052cc23db0128e3e1ebc4b019f4d550521ed77c705",
+      "git": false
+    },
+    "apps/web/src/app/api/admin/whatsapp/route.ts": {
+      "sha256": "13d43c8c210e98f591de8a45b39b32dd4a2a65c146a93d133c9e4824b4026ff0",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/whatsapp/[...path]/route.ts": {
+      "sha256": "cbadb32ff449a2f1f93dad6efd745f13643344cefaf680c94bfe8c051ff2bef3",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/upload/route.ts": {
+      "sha256": "e7c76db9688c8205ec76f2b347f4416105a633fa06dac63c4a753bd0138b878e",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/employees/route.ts": {
+      "sha256": "326d24b83ab59ed2d7562f2c73feab1a446b3168013f2a0cfbfa9ab4eef16415",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/employees/[id]/route.ts": {
+      "sha256": "be57fdbda7f66323ec7ae3bd478adcabb08fb37409dc75ad2699bf8f6d1b1ffb",
+      "git": true
+    },
+    "apps/web/src/app/api/checkout/route.ts": {
+      "sha256": "a35b8584d2b9191ca7c15d168cacd62a7fa739a74594f20aad4c7d7cc8f05524",
+      "git": false
+    },
+    "apps/web/src/app/api/checkout/[id]/route.ts": {
+      "sha256": "f86e371c18b85bb53fd1b345b42b9b08957c9ca02d8ffca10a1c5e6b2c9bb42f",
+      "git": false
+    },
+    "apps/web/src/app/api/store-status/route.ts": {
+      "sha256": "7914e18fb1ccea90afe92dd17c723204df42436f3cdca91929689d2d3c2eccf8",
+      "git": true
+    },
+    "apps/web/src/app/api/coupons/route.ts": {
+      "sha256": "35ba0ac444a113b1bc7f06116e4297cb798c654368131c970fb002f47ef4a719",
+      "git": true
+    },
+    "apps/web/src/app/api/delivery/quote/route.ts": {
+      "sha256": "871042ee7401eaabcefed6b8412c17537d43b1b5297394919e19a6ba4db65290",
+      "git": true
+    },
+    "apps/web/src/app/api/orders/route.ts": {
+      "sha256": "4d13f85f89db0e5dc9c674e63fe995c491988ecdb62a809798186c2d3ad784af",
+      "git": true
+    },
+    "apps/web/src/app/api/orders/history/route.ts": {
+      "sha256": "20c12a8fc2e46b9602e1822c3399bcdab16443ea27c443af9cb0da2566e2d53c",
+      "git": true
+    },
+    "apps/web/src/app/api/account/route.ts": {
+      "sha256": "5e077366a85e933d4860a1d84787a560e73410f902912bddfe7da214ca525a84",
+      "git": true
+    },
+    "apps/web/src/app/api/webhooks/zap/route.ts": {
+      "sha256": "5e26b33d27a16c76f55dd7f8487ea21949787e358ea13357af68f2f1b553793c",
+      "git": false
+    },
+    "apps/web/src/app/api/webhooks/asaas/route.ts": {
+      "sha256": "048ebae0d062a50571faec3564f778bd517ed5655a5c817c823e565493ba8193",
+      "git": false
+    },
+    "apps/web/src/app/api/instagram/route.ts": {
+      "sha256": "540c892eed177a8ba622b3590231cc62bd672a671c5cd52919d26f09332b7834",
+      "git": true
+    },
+    "apps/web/src/app/api/transcribe/route.ts": {
+      "sha256": "3cb3fbd4e48bf9c571ee2cf0e78a7e43fc880bbc2d4d17d3a5a5f0afaa996a0b",
+      "git": true
+    },
+    "apps/web/src/app/api/media/[id]/route.ts": {
+      "sha256": "f8bf40424d2597ed4212733b43634b1d4da9c711fc9c915ce2be21118d5b51a7",
+      "git": true
+    },
+    "apps/web/src/app/conta/AccountForm.tsx": {
+      "sha256": "ea5406f97358ab097bbc9f8a1bdcbeb1620f02304316e3bc1c804ffe766e7518",
+      "git": true
+    },
+    "apps/web/src/app/conta/page.tsx": {
+      "sha256": "fd6cd563f779271369b9a0dc765d44d93f4016cc5790c9027c0d69b0946625b3",
+      "git": true
+    },
+    "apps/web/src/app/barbacue/page.tsx": {
+      "sha256": "6bcb47fcbc39883df02eb518869a9c14a9f5012bd12aa442f16b46d76f45cf5e",
+      "git": true
+    },
+    "apps/web/src/app/teste_pedido/page.tsx": {
+      "sha256": "e901a1a6a0894ef4dc811ed10bf64b2affa33d2d21ff349d4adb35e76e0b1456",
+      "git": true
+    },
+    "apps/web/src/app/totem/page.tsx": {
+      "sha256": "ec8371c5193fccb0b9b6712d427cec4aace07f3d108d92a0f3fcce3aee0fccd5",
+      "git": true
+    },
+    "apps/web/src/app/barbadog/page.tsx": {
+      "sha256": "8f87ad0781cad51622e60ed13e9e3b34ca0881dcbf213478576b30ccd0794a31",
+      "git": true
+    },
+    "apps/web/src/app/whatsapp/WhatsAppPortal.tsx": {
+      "sha256": "98bb3c5d4d5b3d70ae7ead81d19d2a19223661abb817cc4ca28604f85692e3fc",
+      "git": true
+    },
+    "apps/web/src/app/whatsapp/whatsapp.module.css": {
+      "sha256": "6a955da98cf932ec7a68171e71752a0681732099d5f7dabc8d3d5c422804a6db",
+      "git": true
+    },
+    "apps/web/src/app/whatsapp/page.tsx": {
+      "sha256": "ff8131a6dd9d20752579ccf01d66ef8204114df5d17a41ec6e218c0aff104313",
+      "git": true
+    },
+    "apps/web/src/app/atendimento/page.tsx": {
+      "sha256": "8d6e437cc6a9fff183752b47abca30b135271b46cf1e48856c52abcd8a188c3b",
+      "git": true
+    },
+    "apps/web/src/app/atendimento/[brand]/page.tsx": {
+      "sha256": "d4b4608db452dce0c02bacb5a97d68423ccfcfd1c66c73555e4de41defab9387",
+      "git": true
+    },
+    "apps/web/src/components/CartClient.tsx": {
+      "sha256": "b7fe06d84c95ff5de58523febbd2e19d7052cccfb51a03d615e745a968332bbe",
+      "git": true
+    },
+    "apps/web/src/components/InstagramFeed.tsx": {
+      "sha256": "eb84fc1b97408036d273b22401fad5a1814aae89d6f0098e377df21206b59cec",
+      "git": true
+    },
+    "apps/web/src/components/Hero.tsx": {
+      "sha256": "01c2f55027a247c473460510838f0b07d6aa1880de3f6727b029db5b41c3077b",
+      "git": true
+    },
+    "apps/web/src/components/CartProvider.tsx": {
+      "sha256": "370c0c00a4093f6e12dfd00fcf712cf2438aaf50c494633fa822d46eb3932c0e",
+      "git": true
+    },
+    "apps/web/src/components/OrderChat.tsx": {
+      "sha256": "84fcbeba48338c7419d359bac529a0d3f33abd7286d3668293bf5f7831bd39b2",
+      "git": true
+    },
+    "apps/web/src/components/AppDownloadSection.tsx": {
+      "sha256": "60bd9172e81cdbf11379b23851bf85f5f9d1ce4f411b6f4fc46aa68953d82254",
+      "git": true
+    },
+    "apps/web/src/components/TestOrderChat.module.css": {
+      "sha256": "2f31f7055d969822ad175890d3a4b7d60cb592841f87f57cd14eaf4082bab19d",
+      "git": true
+    },
+    "apps/web/src/components/DeliveryQuote.tsx": {
+      "sha256": "4d397c5fabe4ddd4a0569916fdcaaf9798127f85ca4f4130bd982992e30c7421",
+      "git": true
+    },
+    "apps/web/src/components/OnlineMenuBase.module.css": {
+      "sha256": "cfc7599fe80076c1285026a0f589529b76f734f84029e71a16f620bbee380d09",
+      "git": false
+    },
+    "apps/web/src/components/ChatAgent.tsx": {
+      "sha256": "d3db32ee0bd2d9af2406592b868d833b86a75fe46ab2ba1385faa4543b0fe264",
+      "git": true
+    },
+    "apps/web/src/components/AdminLogout.tsx": {
+      "sha256": "f7cc10fe609411b3786c0d5248a8e161c5ba2e5bb008cc41eadc77f5bb56660c",
+      "git": true
+    },
+    "apps/web/src/components/BrandStorefront.tsx": {
+      "sha256": "fa5bdcb27638667ab0868c1c055e6342162dd8ee46e20ab05aa49d11acfdcf57",
+      "git": true
+    },
+    "apps/web/src/components/BetaSignupClient.tsx": {
+      "sha256": "91d51eee9dab02c12374ce78de35881a9f31b0031bb49a729694a9a35bf9a79a",
+      "git": true
+    },
+    "apps/web/src/components/SelfServiceMenu.module.css": {
+      "sha256": "4b377ec0a41863221816f5b33ee0be63c7c54d19fdfd3036c86b13a158070544",
+      "git": true
+    },
+    "apps/web/src/components/ProductImage.tsx": {
+      "sha256": "9cb03ea72a3a28381c6daab951f4174224f6e8f2992dac4d0ada737d50a9a0ef",
+      "git": true
+    },
+    "apps/web/src/components/SelfServiceMenu.tsx": {
+      "sha256": "83eb20392e17de525d5070b24a95df219ce21b1e52ee4bad2f3c5f2fc229ccf4",
+      "git": true
+    },
+    "apps/web/src/components/ProductCard.tsx": {
+      "sha256": "8f4c25cbb83db4bc071b8672019323bbc6380dac2dd6c2a8bd7fc66ef6b3b315",
+      "git": true
+    },
+    "apps/web/src/components/Footer.tsx": {
+      "sha256": "af0380f146c6119e181de10d377b75413f482bacddbb8f60c7a716a926e416b7",
+      "git": true
+    },
+    "apps/web/src/components/CategoryNav.tsx": {
+      "sha256": "083dd7ef20f2d090a383b637854706e3e0a71503dfde12ac2c0f524ef759455e",
+      "git": true
+    },
+    "apps/web/src/components/TableBanner.tsx": {
+      "sha256": "601909d7017c9e62da59cc5947bb6c7bdce3848e054a3bc40f344ce3b3475e7c",
+      "git": true
+    },
+    "apps/web/src/components/OnlineMenu.module.css": {
+      "sha256": "80a3025603da2055bf6d5760972a3d4a6a62a2d60c9a682fd255c3605d775281",
+      "git": false
+    },
+    "apps/web/src/components/ChatAudio.tsx": {
+      "sha256": "0ba5c0e2235fed9375735aaf5e4d724bc39153aa47fce7e82a8a76d0d2f79e45",
+      "git": true
+    },
+    "apps/web/src/components/CartDrawer.tsx": {
+      "sha256": "f67c6c11c16092f6b7b4979732a855429acf60a9b0544fdd7800bcb97144f429",
+      "git": true
+    },
+    "apps/web/src/components/PaymentClient.tsx": {
+      "sha256": "155a866a041bfef272228c7744f8f56bdc91b896284b00d0222aaa539d84cf21",
+      "git": true
+    },
+    "apps/web/src/components/CustomerEntry.tsx": {
+      "sha256": "90b2df82891cd0ae9fd655372efa01451ec3064274fdac7ca4b1b087d77d953a",
+      "git": true
+    },
+    "apps/web/src/components/BrandNavigation.tsx": {
+      "sha256": "103d462b5294ed48c22e13565d4ce8955b4ef2ea7159dc2eb34ef2b2165d1fe5",
+      "git": true
+    },
+    "apps/web/src/components/CustomerLogout.tsx": {
+      "sha256": "f1fe69a0c45e9925b5cba95b228e68c2d01c4108d94ce040ce3e61b5f82a9268",
+      "git": true
+    },
+    "apps/web/src/components/DeliveryQuote.module.css": {
+      "sha256": "3244e5c16fa24de1cff1b2559707b88ae903b094924855a802bbbc7293f6a53c",
+      "git": true
+    },
+    "apps/web/src/components/TestOrderChat.tsx": {
+      "sha256": "69ffe74e811f4f898ad85f2dc0bd36482c6be0a3da35aa8885de23bc53454e49",
+      "git": true
+    },
+    "apps/web/src/components/OnlineMenu.tsx": {
+      "sha256": "1f43ef375b241c29b751409b954819e8a4f392f563076483c3bb0d94bf440a83",
+      "git": false
+    },
+    "apps/web/src/components/admin/AdminShell.tsx": {
+      "sha256": "1e4c35dc849f944c8b7da18fec8e51c6033148ecbb7c1db8f815a1afbaa29f07",
+      "git": true
+    },
+    "apps/web/src/components/admin/ImageUploader.tsx": {
+      "sha256": "4f8058c7178579be6f6c66a11e22210ef63a212410b5853e9ba455116586bdac",
+      "git": true
+    },
+    "apps/web/src/components/admin/OperationalQueue.module.css": {
+      "sha256": "31c55dc4c545cd5173770833bb2b59be88a6da9a8b7afdb2c941efe1f7e46a41",
+      "git": true
+    },
+    "apps/web/src/components/admin/KitchenPrinting.tsx": {
+      "sha256": "f344d515437c45e3a69a2628036be0b410b6808800de78a22592a0a8b19893ab",
+      "git": true
+    },
+    "apps/web/src/components/admin/OperationsDashboard.module.css": {
+      "sha256": "8827b40fcc7cdb288d9a18e92b3724576d5cb3bf6fb37e7d8e16f882649f4b51",
+      "git": true
+    },
+    "apps/web/src/components/admin/Access.module.css": {
+      "sha256": "02849d3ba81adda9bdeb2340ec069100057baf827ab688904088b34f681fbfcb",
+      "git": true
+    },
+    "apps/web/src/components/admin/OperationsDashboard.tsx": {
+      "sha256": "5cd93553abbadf18d8fd5b140ebb11dfddeb9e3b22911b531b21e4ae73ae2271",
+      "git": true
+    },
+    "apps/web/src/components/admin/AdminIcons.tsx": {
+      "sha256": "7067a02e9240ad36d0f07229bb3406e4f416d3b6977d0f771012eebac5f5d802",
+      "git": true
+    },
+    "apps/web/src/components/admin/AdminShell.module.css": {
+      "sha256": "1ad2cd4bad2e33013b7d0dc51e93099371dff0db6f8514f4c524467dc66ba9f2",
+      "git": true
+    },
+    "apps/web/src/components/admin/OrderImport.tsx": {
+      "sha256": "cd0c4b101d6d488bbe9bbdfe2f5b3fd1b0bfdfbf009ead63f04dd50a4caeee19",
+      "git": true
+    },
+    "apps/web/src/lib/imported-orders.ts": {
+      "sha256": "5d20090e87154adedf322beea52f22a7cfa88834f18ee00bb6d9305a72c99d83",
+      "git": true
+    },
+    "apps/web/src/lib/menu-image-classify.ts": {
+      "sha256": "db6895ba878c287e11844ff15d6171013e6694bf2a8ff1be881a71deaf8fcc3b",
+      "git": true
+    },
+    "apps/web/src/lib/customer-session.ts": {
+      "sha256": "d09bb17e9e894880266e20ca69cad5d6d8edbbfc2711564034fc002390ce3f03",
+      "git": true
+    },
+    "apps/web/src/lib/order-totals.ts": {
+      "sha256": "f948ebc281d40a86d806d336ba1849f6aa43df9266c1891ed8a4ae736c3ef14f",
+      "git": true
+    },
+    "apps/web/src/lib/kitchen-print-auth.ts": {
+      "sha256": "7ddabc4589d4eca8e0c986e346e2c0599192f40846e383b341bf4fbbce880cd0",
+      "git": true
+    },
+    "apps/web/src/lib/self-service-orders.ts": {
+      "sha256": "14f99d0ea193b1c4052e2b4e7ce9e0e714be79aae61cb05b642e1a653050f247",
+      "git": true
+    },
+    "apps/web/src/lib/self-service-pending.ts": {
+      "sha256": "f5184bc5d7409ecbcb8c0cd04d1ee69349c282e181196db8170c89f0273245f5",
+      "git": true
+    },
+    "apps/web/src/lib/online-checkout.ts": {
+      "sha256": "f23379d7ea678449749dc61c1868cafa3226f177b0a4e6729555b47447a26bb8",
+      "git": false
+    },
+    "apps/web/src/lib/erp-validation.ts": {
+      "sha256": "dec2d1263ef9784025f13860aab811a0a85a065cbc3b89dd683972a3783d6517",
+      "git": true
+    },
+    "apps/web/src/lib/brand-icons.ts": {
+      "sha256": "8943104c850aeeebd8ba031730a1a0a1fab0ca84301d7132fed0bba5b75fb528",
+      "git": true
+    },
+    "apps/web/src/lib/self-service.ts": {
+      "sha256": "dfedf6ec755dcc869dcbdf5c31d6ec47f360110bceb4384b23824ec6bb294f88",
+      "git": true
+    },
+    "apps/web/src/lib/instagram-fallback.ts": {
+      "sha256": "6a1d5387276ef73627eabbf73ac21a84e357fe8a51a5ed08dbd00f64f8b8726a",
+      "git": true
+    },
+    "apps/web/src/lib/permissions.ts": {
+      "sha256": "7cc919a82e66c2672778b2228919469f4f8bfbc496ef443da9f9210480411447",
+      "git": false
+    },
+    "apps/web/src/lib/pricing.ts": {
+      "sha256": "47422f71c1180375be90205611e219d601c19d876604b4592ae8c439a32e32ef",
+      "git": true
+    },
+    "apps/web/src/lib/brands.ts": {
+      "sha256": "488370dc3e2c94cc23f6448bbd088fa4cb8e7381f59786237eb5b7ebe6dc62ea",
+      "git": true
+    },
+    "apps/web/src/lib/table-session.ts": {
+      "sha256": "553582c700a3efd886f8a9564dedd7ee381c8599b923ebc5c75def92d321e659",
+      "git": true
+    },
+    "apps/web/src/lib/table-session-shared.ts": {
+      "sha256": "8b9991418da098e7e2d407d65731488a50e24c80095d4f9757ee7adae2d9ec4f",
+      "git": true
+    },
+    "apps/web/src/lib/checkout.ts": {
+      "sha256": "d73f4c581bc150f275e22319d61cc089930d93d2fd6a097f30bddc995fc3fc30",
+      "git": true
+    },
+    "apps/web/src/lib/staff-auth.ts": {
+      "sha256": "e4710622a8e328d69d6554093a1e623f2d1ca68f511a49cd2ce04c7f3e749890",
+      "git": false
+    },
+    "apps/web/src/lib/delivery-provider.ts": {
+      "sha256": "860a7f96bae3fe5012e287d046c92101a0b6c22d86e84e70e60bdffa760824c2",
+      "git": true
+    },
+    "apps/web/src/lib/kitchen-print-queue.ts": {
+      "sha256": "30b6836c3fddb081e4eb23ac52c0c0d2dd5b4d1c7bf8ec7999ec3ddd373170f1",
+      "git": false
+    },
+    "apps/web/src/lib/asaas.ts": {
+      "sha256": "dfbd9e428c145244fe94aa65f8c5eef1087e9c5498a2b4397c846efec8439618",
+      "git": false
+    },
+    "apps/web/src/lib/delivery-settings-form.ts": {
+      "sha256": "d9a3dc5601d46b5905a81424b4b70b6c9107c183f26e093da766e4f65084cc92",
+      "git": true
+    },
+    "apps/web/src/lib/delivery-service.ts": {
+      "sha256": "e5c959e836add2db1f1a74e1b36ca399bc04bbc75ac9f7ab4a71bdffa68a0041",
+      "git": true
+    },
+    "apps/web/src/lib/beta-validation.ts": {
+      "sha256": "7b2bbeb0120433cad8b16735520acbcb856e4f794a403db0aef1ba32ccb6f0f3",
+      "git": true
+    },
+    "apps/web/src/lib/delivery-navigation.ts": {
+      "sha256": "03d78171a7d8638dc2d338aeb1b48f9d7fe074b0425d8904dbd64afd13d54f39",
+      "git": true
+    },
+    "apps/web/src/lib/kitchen-print.ts": {
+      "sha256": "45c9feb6b22db0b77a29082a0a0a54689fa84e074a50c46e938914ad761b6147",
+      "git": true
+    },
+    "apps/web/src/lib/generated-brand-images.ts": {
+      "sha256": "986777a448fc8b1ee58743e205653124b5f1a3bd05df9c654a2e57ec24a7b45f",
+      "git": true
+    },
+    "apps/web/src/lib/social-accounts.ts": {
+      "sha256": "dc579e32573e8687c2b038075fd8f0ba9fc9d805f0af881985a9171ea7a61abf",
+      "git": true
+    },
+    "apps/web/src/lib/pix.ts": {
+      "sha256": "6dbcf98f6f8f2ded317b72e9bb235c73274a7d38f84ce38a801e2d77984074b3",
+      "git": true
+    },
+    "apps/web/src/lib/online-payment.ts": {
+      "sha256": "569850259dcd8f2b273ed154446b04e0d81a9ac1f4abfc5538dff0c24afef0e5",
+      "git": false
+    },
+    "apps/web/src/lib/desktop-download.ts": {
+      "sha256": "e47645ab02e2f50e5079bb2367855fce8dad2cadbd3a1a62cf36d69b0ee23a58",
+      "git": true
+    },
+    "apps/web/src/lib/category-art.ts": {
+      "sha256": "04bffc2389b539d491f72e3a1b575c19c0ca61f5a20ab93a5efb1ac6e9e17a55",
+      "git": true
+    },
+    "apps/web/src/lib/admin-auth.ts": {
+      "sha256": "bd6a913558f50b49d06e9a21cad27d5ab79e237e15c955bfaa7a49ff40e08219",
+      "git": false
+    },
+    "apps/web/src/lib/store-hours.ts": {
+      "sha256": "44f358ebde49b6954e9bb16d62353920be40c7a2d839fc01eff45eba0c8f5697",
+      "git": true
+    },
+    "apps/web/src/lib/ifood.ts": {
+      "sha256": "38d02d5377b19ac8006af26fe9e5ab4f6dbd2c6f6ee3c1d964175007658bc8b9",
+      "git": true
+    },
+    "apps/web/src/lib/ordering-images.ts": {
+      "sha256": "c7ece82bcd74b6254fff81a33c5121538e78deeba166212898677f54a2e488e1",
+      "git": false
+    },
+    "apps/web/src/lib/erp.ts": {
+      "sha256": "064feda6405ab0a8338ed410051d44474e9a632c5ceba8e7d6685ae26af0d59f",
+      "git": true
+    },
+    "apps/web/src/lib/upload.ts": {
+      "sha256": "2005df090d86085e3324cbdd12302afca460387d77b1693fbbc4f2da61bfb673",
+      "git": true
+    },
+    "apps/web/src/lib/ifood-api.ts": {
+      "sha256": "a1785bb37a27537b725b14e668130f3f04d143738d656fc4304a11b41ba1ced9",
+      "git": true
+    },
+    "apps/web/src/lib/rate-limit.ts": {
+      "sha256": "9cf0579434bb4cc95edaa6ad1b59e9d9b07dd1d968145dd207aa45df76de8d47",
+      "git": true
+    },
+    "apps/web/src/lib/social-auth.ts": {
+      "sha256": "fa366ebb5c315c4d85e1e22bb97f7bd2bc936c9fc1cde28b63121f7195a2d2e0",
+      "git": true
+    },
+    "apps/web/src/lib/brand-storefront.ts": {
+      "sha256": "229a2d18e8f90e135f69820a90a2a564f8df5af066234e6773cc5ff005f7e690",
+      "git": true
+    },
+    "apps/web/src/lib/cart.ts": {
+      "sha256": "5c3231130207c84d686d142e98e237111ed8c9d878e30b515b15efd55dff14c2",
+      "git": true
+    },
+    "apps/web/src/lib/managed-catalog.ts": {
+      "sha256": "98d9425a7cfd040f222b76d5afb6a24fc56aab72bfff22923c5858f074547bee",
+      "git": true
+    },
+    "apps/web/src/lib/member-auth.ts": {
+      "sha256": "54a8af3d9cc60e0e534d16ef584fdba3cf13762d46855b8ca195b48300e6bb39",
+      "git": true
+    },
+    "apps/web/src/lib/delivery.ts": {
+      "sha256": "edaf00dcf83acc393f69b0aaf9be2cadaea505e32647d10c6f7c7ce5365a4cca",
+      "git": true
+    },
+    "apps/web/src/lib/delivery-checkout.ts": {
+      "sha256": "79077d98478a28fc29abdd1bc67d919798508cface34e44f652acfbcc6134196",
+      "git": true
+    },
+    "apps/web/src/lib/__tests__/ifood.test.ts": {
+      "sha256": "205ad79767619422bc0791f703939a08cd0c72bf95854e8ee773f681203e8c6b",
+      "git": true
+    },
+    "apps/web/src/lib/__tests__/self-service.test.ts": {
+      "sha256": "64060d23e40251d8518f50144902b6a8c731c852de11451161d2241afeb722c1",
+      "git": true
+    },
+    "apps/web/src/lib/__tests__/category-art.test.ts": {
+      "sha256": "fe4bcec9efbc5c0b2b478ee800a0da8c09b60af02bbcc7ff1e51f9a420e043dd",
+      "git": true
+    },
+    "apps/web/src/lib/__tests__/delivery.test.ts": {
+      "sha256": "25db5891545dfbc9482315db504429cf8710b00b621ba42f31b345a44970e9e5",
+      "git": true
+    },
+    "apps/web/src/lib/__tests__/permissions.test.ts": {
+      "sha256": "e3124c128ed200da94c22d0f86b8b13715c5e3b64352fe6287407750b00af380",
+      "git": true
+    },
+    "apps/web/src/db/schema.ts": {
+      "sha256": "1138d0a588cbd16b8c35338f06cda830f1376530d28de5e9adc109fee18344dc",
+      "git": false
+    },
+    "apps/web/src/db/index.ts": {
+      "sha256": "f45d9d159a83240bf67c4ec03eae4925e8fdbee087137b9887ada76f0919997f",
+      "git": true
+    },
+    "apps/web/src/data/pedir-product-images.json": {
+      "sha256": "37a1870c759b72c1b9f77aa8d717f403740de11f7465a869842f488c9c4640fb",
+      "git": false
+    },
+    "apps/web/src/data/barbadog.json": {
+      "sha256": "07ba33504508f192c95970ec44089105a4313bd12a80cebc1a74b7ba322c1743",
+      "git": true
+    },
+    "apps/web/src/data/generated-brand-images.json": {
+      "sha256": "4599f04fef785f3dd0e37f478a642bd0271f7a74c25c240298758faec8806c93",
+      "git": true
+    },
+    "apps/web/src/data/chelas.json": {
+      "sha256": "f19a82a739ce59c82bf123f7e4d51230ce27bd1a79d0da35337eaf06fb890dcd",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0013_all_channel_printing.sql": {
+      "sha256": "5e97bc37780a5dc222f0348075ea7d1d1a865e96221cb8c67c3abe0e6a5b5b51",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0011_self_service_printing.sql": {
+      "sha256": "337a0866ca896f6bffc9a6ad69543508d3a2fb8fa9b5429f75c2e626df97cca8",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0018_online_checkouts.sql": {
+      "sha256": "a1ff92cf874c148d3b0deafce57d26c729ac332ca86520744031b7c579a277a6",
+      "git": false
+    },
+    "apps/web/drizzle/migrations/0000_past_absorbing_man.sql": {
+      "sha256": "0a862d0218c604937c9d82a9fdafe6f4b91e2d75ed303faf275488b725473223",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0008_brand_catalog_products.sql": {
+      "sha256": "bdea5e44ac08763d0fe6d12fd88af26a1017f635e3fed05e9f97d770ec4e3486",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0014_handy_gamora.sql": {
+      "sha256": "1c36b700eb3e0c71c449d871479af9ddc9aa59ef0740bc4331207db41750b1bf",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0015_social_login.sql": {
+      "sha256": "30005ceec7c905e80b51a450bc56f698d08a8c5c795c49d1260545374a4e5ca9",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0009_orders_brand.sql": {
+      "sha256": "b37c692c7a82665d8e8b100cf27e61645aa22f7c713d7bd30d6a017378514308",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0001_lush_lilandra.sql": {
+      "sha256": "eaf66f744de5b5a39e77d0782481d0f9c7251d3b2cdb935db3ea15ae8b285f5f",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0017_restaurant_printers.sql": {
+      "sha256": "479bd861a5ead2346b56a75c705981165c84980356bbd24e8ae6214197309c26",
+      "git": false
+    },
+    "apps/web/drizzle/migrations/0010_access_permissions.sql": {
+      "sha256": "f845781537d1cc320282ed1ef6d353282e086d19ff0e7f3a5a9bfab0b5b4e808",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0012_delivery_and_roles.sql": {
+      "sha256": "2df6413045bd4b0e822a3ff5756a110f88f27cb91057a3812579965055070a14",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0003_typical_rhino.sql": {
+      "sha256": "74f808d72d7bfd4323ed5a4ac138b5761691ec66aaa3dd0382a8cf084dcc8adc",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0002_init.sql": {
+      "sha256": "77f6fee6e5c6b2168cfaf9b50691da954d264715c5658fd44746bae019dc0eca",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0006_fancy_wallop.sql": {
+      "sha256": "f64d6feae5149f38846714483316bd42f2d72f9f33659539918fd245f580641e",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0004_tables_dine_in.sql": {
+      "sha256": "a2da1d004f3f9c1d751c8138406382f40d195731886242d81317865bd044c9fa",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0016_staff_first_login.sql": {
+      "sha256": "bd19000ca296ffe4ce21c5aadf9bd372d9f6b57c1051ceae248d861117287049",
+      "git": false
+    },
+    "apps/web/drizzle/migrations/0007_employees.sql": {
+      "sha256": "42d92b08de9f9e579e8a5271ddfe389fe0f646ffa53908e194c1240e0cb20c2c",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/0005_silly_celestials.sql": {
+      "sha256": "6a1b3a3b99330a6390d126c2aabfbfee95c53d42bbb0beaaaa93e0baa6083a5a",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/meta/0003_snapshot.json": {
+      "sha256": "08c848d7eda3e12e9ecb5047d9d938b2bdc03d23ee3a7319ddf1efb69be0809c",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/meta/0014_snapshot.json": {
+      "sha256": "3eff33658250ab3d28dbb8fb439f708e12e94cadc00297b828388bbaba781ca4",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/meta/0004_snapshot.json": {
+      "sha256": "f24e73e4f3fbae00e6da03da1c809911b8eabe8ee55d6e8d48640167964c9f7f",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/meta/0000_snapshot.json": {
+      "sha256": "dec1e375176894b5f15b0834f6b19497d9be0b71337ad5f64f80f5bc5f98af6f",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/meta/_journal.json": {
+      "sha256": "8679996e4e0e0dd0c17fd443d11915a2498d93f497ec80d5cc62c012062e3bf8",
+      "git": false
+    },
+    "apps/web/drizzle/migrations/meta/0001_snapshot.json": {
+      "sha256": "ccc46bce9e8ee516f84a731f9e29a506aac97a6181cf0a9bcbac6f7613a5ad84",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/meta/0016_snapshot.json": {
+      "sha256": "6ccbd442b6febde476f3fa188128c21474c930c31a2d60c257cc1677566366e9",
+      "git": false
+    },
+    "apps/web/drizzle/migrations/meta/0005_snapshot.json": {
+      "sha256": "97f17a378728325b0b47b70ad96cdb287457fb4b67574ee0292871e556764931",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/meta/0015_snapshot.json": {
+      "sha256": "e9467f15d38891da5fc616bad53a2e83f3dc16f4dc2424a26cb1a832b2a7d80d",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/meta/0002_snapshot.json": {
+      "sha256": "7d2b3716587eafa0e2903ac31b44fd5b80818f1a4e5c267c2a8371d75759c977",
+      "git": true
+    },
+    "apps/web/drizzle/migrations/meta/0006_snapshot.json": {
+      "sha256": "7bd9a354d8b2f6d86841c01f94d8fdf057bd0505aec40b5f76dfda60e3bb8e9c",
+      "git": true
+    },
+    "apps/web/src/app/api/admin/dashboard/route.ts": {
+      "sha256": "8e345ec1535b431eaf344d16fb8d0d667042907c285e0a2283ac7675faafb9fa",
+      "git": false
+    },
+    "apps/web/src/lib/admin-dashboard.ts": {
+      "sha256": "508e32036a5e73c795f5ec08007847687243e0c0f624c307b80eca2eafbaacf7",
+      "git": false
+    }
+  }
+}

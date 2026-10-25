@@ -1,0 +1,9 @@
+{
+  "encrypted_before_disk": true,
+  "consistent_exported_snapshot": true,
+  "restored_to_disposable_postgresql": true,
+  "tables_verified": 34,
+  "plaintext_written_to_disk": false,
+  "temporary_restore_database_removed": true,
+  "production_database_untouched": true
+}

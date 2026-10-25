@@ -1,0 +1,476 @@
+diff --git a/apps/web/src/app/admin/change-password/page.tsx b/apps/web/src/app/admin/change-password/page.tsx
+index d2b7058..f584b67 100644
+--- a/apps/web/src/app/admin/change-password/page.tsx
++++ b/apps/web/src/app/admin/change-password/page.tsx
+@@ -29,8 +29,11 @@ export default function ChangePasswordPage() {
+   }
+ 
+   async function logout() {
+-    await fetch("/api/admin/auth", { method: "DELETE" });
+-    window.location.assign("/admin/login");
++    try {
++      const response=await fetch("/api/admin/auth", { method: "DELETE" });
++      if(!response.ok)throw new Error();
++      window.location.assign("/admin/login");
++    }catch{setError('Não foi possível sair. Tente novamente.');}
+   }
+ 
+   const inputClass = "bg-[#241d18] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#ed1b24]";
+diff --git a/apps/web/src/app/admin/login/LoginForm.tsx b/apps/web/src/app/admin/login/LoginForm.tsx
+new file mode 100644
+index 0000000..d08dc88
+--- /dev/null
++++ b/apps/web/src/app/admin/login/LoginForm.tsx
+@@ -0,0 +1,100 @@
++"use client";
++
++import { useState } from "react";
++import Image from "next/image";
++
++export default function AdminLoginPage() {
++  const [username, setUsername] = useState("");
++  const [password, setPassword] = useState("");
++  const [error, setError] = useState<string | null>(null);
++  const [loading, setLoading] = useState(false);
++
++  async function handleSubmit(e: React.FormEvent) {
++    e.preventDefault();
++    setError(null);
++    setLoading(true);
++    const res = await fetch("/api/admin/auth", {
++      method: "POST",
++      headers: { "Content-Type": "application/json" },
++      body: JSON.stringify({ username, password }),
++    });
++    if (res.ok) {
++      const data = await res.json();
++      // Use a full navigation after authentication. This guarantees the new
++      // httpOnly session cookie is applied before the protected admin request
++      // and avoids a stuck client transition after production redeploys.
++      window.location.assign(data.mustChangePassword ? "/admin/change-password" : "/admin");
++    } else {
++      const data = await res.json();
++      setError(data.error ?? "Erro ao entrar");
++      setLoading(false);
++    }
++  }
++
++  return (
++    <div className="min-h-screen bg-[#0e0b0a] flex items-center justify-center px-4">
++      <div className="w-full max-w-sm bg-[#1a1512] rounded-2xl shadow-xl p-8">
++        <div className="text-center mb-8">
++          <Image
++            src="/brand/barbacue-logo.png"
++            alt="Barbacue & Co"
++            width={160}
++            height={160}
++            preload
++            className="mx-auto h-40 w-40 rounded-xl object-contain"
++          />
++          <h1 className="text-xl font-bold text-white mt-3">Acesso da equipe</h1>
++          <p className="text-[#a89a8c] text-sm mt-1">Barbacue</p>
++        </div>
++
++        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
++          <div className="flex flex-col gap-1.5">
++            <label className="text-sm text-[#a89a8c]" htmlFor="user">
++              Usuário ou e-mail
++            </label>
++            <input
++              id="user"
++              type="text"
++              required
++              autoComplete="username"
++              value={username}
++              onChange={(e) => setUsername(e.target.value)}
++              placeholder="Seu usuário ou e-mail"
++              className="bg-[#241d18] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#ed1b24] placeholder-[#7c6f61]"
++            />
++          </div>
++
++          <div className="flex flex-col gap-1.5">
++            <label className="text-sm text-[#a89a8c]" htmlFor="pw">
++              Senha
++            </label>
++            <input
++              id="pw"
++              type="password"
++              autoComplete="current-password"
++              required
++              value={password}
++              onChange={(e) => setPassword(e.target.value)}
++              placeholder="••••••••"
++              className="bg-[#241d18] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#ed1b24] placeholder-[#7c6f61]"
++            />
++          </div>
++
++          {error && (
++            <p className="text-red-400 text-sm bg-red-900/30 rounded-xl px-4 py-2.5">
++              {error}
++            </p>
++          )}
++
++          <button
++            type="submit"
++            disabled={loading}
++            className="bg-[#ed1b24] hover:bg-[#c8141c] disabled:bg-[#5c1014] text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
++          >
++            {loading ? "Entrando..." : "Entrar"}
++          </button>
++        </form>
++      </div>
++    </div>
++  );
++}
+diff --git a/apps/web/src/app/admin/login/page.tsx b/apps/web/src/app/admin/login/page.tsx
+index d08dc88..a256f3f 100644
+--- a/apps/web/src/app/admin/login/page.tsx
++++ b/apps/web/src/app/admin/login/page.tsx
+@@ -1,100 +1,10 @@
+-"use client";
+-
+-import { useState } from "react";
+-import Image from "next/image";
+-
+-export default function AdminLoginPage() {
+-  const [username, setUsername] = useState("");
+-  const [password, setPassword] = useState("");
+-  const [error, setError] = useState<string | null>(null);
+-  const [loading, setLoading] = useState(false);
+-
+-  async function handleSubmit(e: React.FormEvent) {
+-    e.preventDefault();
+-    setError(null);
+-    setLoading(true);
+-    const res = await fetch("/api/admin/auth", {
+-      method: "POST",
+-      headers: { "Content-Type": "application/json" },
+-      body: JSON.stringify({ username, password }),
+-    });
+-    if (res.ok) {
+-      const data = await res.json();
+-      // Use a full navigation after authentication. This guarantees the new
+-      // httpOnly session cookie is applied before the protected admin request
+-      // and avoids a stuck client transition after production redeploys.
+-      window.location.assign(data.mustChangePassword ? "/admin/change-password" : "/admin");
+-    } else {
+-      const data = await res.json();
+-      setError(data.error ?? "Erro ao entrar");
+-      setLoading(false);
+-    }
+-  }
+-
+-  return (
+-    <div className="min-h-screen bg-[#0e0b0a] flex items-center justify-center px-4">
+-      <div className="w-full max-w-sm bg-[#1a1512] rounded-2xl shadow-xl p-8">
+-        <div className="text-center mb-8">
+-          <Image
+-            src="/brand/barbacue-logo.png"
+-            alt="Barbacue & Co"
+-            width={160}
+-            height={160}
+-            preload
+-            className="mx-auto h-40 w-40 rounded-xl object-contain"
+-          />
+-          <h1 className="text-xl font-bold text-white mt-3">Acesso da equipe</h1>
+-          <p className="text-[#a89a8c] text-sm mt-1">Barbacue</p>
+-        </div>
+-
+-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+-          <div className="flex flex-col gap-1.5">
+-            <label className="text-sm text-[#a89a8c]" htmlFor="user">
+-              Usuário ou e-mail
+-            </label>
+-            <input
+-              id="user"
+-              type="text"
+-              required
+-              autoComplete="username"
+-              value={username}
+-              onChange={(e) => setUsername(e.target.value)}
+-              placeholder="Seu usuário ou e-mail"
+-              className="bg-[#241d18] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#ed1b24] placeholder-[#7c6f61]"
+-            />
+-          </div>
+-
+-          <div className="flex flex-col gap-1.5">
+-            <label className="text-sm text-[#a89a8c]" htmlFor="pw">
+-              Senha
+-            </label>
+-            <input
+-              id="pw"
+-              type="password"
+-              autoComplete="current-password"
+-              required
+-              value={password}
+-              onChange={(e) => setPassword(e.target.value)}
+-              placeholder="••••••••"
+-              className="bg-[#241d18] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#ed1b24] placeholder-[#7c6f61]"
+-            />
+-          </div>
+-
+-          {error && (
+-            <p className="text-red-400 text-sm bg-red-900/30 rounded-xl px-4 py-2.5">
+-              {error}
+-            </p>
+-          )}
+-
+-          <button
+-            type="submit"
+-            disabled={loading}
+-            className="bg-[#ed1b24] hover:bg-[#c8141c] disabled:bg-[#5c1014] text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
+-          >
+-            {loading ? "Entrando..." : "Entrar"}
+-          </button>
+-        </form>
+-      </div>
+-    </div>
+-  );
++import LoginForm from './LoginForm';
++import { getStaffSession } from '@/lib/admin-auth';
++import { landingPath } from '@/lib/permissions';
++import { redirect } from 'next/navigation';
++export const dynamic='force-dynamic';
++export default async function LoginPage(){
++  const session=await getStaffSession();
++  if(session)redirect(session.mustChangePassword?'/admin/change-password':landingPath(session));
++  return <LoginForm/>;
+ }
+diff --git a/apps/web/src/app/api/account/route.ts b/apps/web/src/app/api/account/route.ts
+index bacd3c9..63de603 100644
+--- a/apps/web/src/app/api/account/route.ts
++++ b/apps/web/src/app/api/account/route.ts
+@@ -6,6 +6,7 @@ import { customerAccounts } from "@/db/schema";
+ import { hashPassword, verifyPassword } from "@/lib/staff-auth";
+ import { clearMemberCookie, getMember, setMemberCookie } from "@/lib/member-auth";
+ import { rateLimit, clientIp } from "@/lib/rate-limit";
++import { endCogSession } from '@/lib/cog-sso';
+ const schema = z.object({ mode: z.enum(["login", "register"]), name: z.string().trim().min(2).max(100).optional(), email: z.string().trim().email().max(254).transform(s => s.toLowerCase()), password: z.string().min(8).max(128) });
+ export async function GET() { return NextResponse.json({ member: await getMember() }, { headers: { "Cache-Control": "no-store" } }); }
+ export async function POST(req: NextRequest) {
+@@ -28,4 +29,10 @@ export async function POST(req: NextRequest) {
+   }
+   const response = NextResponse.json({ ok: true }); setMemberCookie(response, user.id); return response;
+ }
+-export async function DELETE() { const response = NextResponse.json({ ok: true }); clearMemberCookie(response); return response; }
++export async function DELETE(req:NextRequest) {
++  const central=req.cookies.get('cogia_sessao')?.value;
++  try{await endCogSession(central);}catch{return NextResponse.json({error:'Não foi possível encerrar a sessão Cog. Tente novamente.'},{status:503});}
++  const response = NextResponse.json({ ok: true });
++  if(central && process.env.COGIA_SSO_IDENTITY_KEY)response.cookies.set('cogia_sessao','',{domain:'cog.ia.br',path:'/',maxAge:0,httpOnly:true,secure:true,sameSite:'lax'});
++  clearMemberCookie(response);return response;
++}
+diff --git a/apps/web/src/app/api/admin/auth/route.ts b/apps/web/src/app/api/admin/auth/route.ts
+index 8117146..370cb21 100644
+--- a/apps/web/src/app/api/admin/auth/route.ts
++++ b/apps/web/src/app/api/admin/auth/route.ts
+@@ -6,9 +6,11 @@ import {
+   assertSecretsConfigured,
+   parseSession,
+   resolveStaffSession,
++  resolveRequestStaff,
+ } from "@/lib/admin-auth";
+ import { authenticateStaff } from "@/lib/staff-auth";
+ import { rateLimit, clientIp } from "@/lib/rate-limit";
++import { endCogSession } from '@/lib/cog-sso';
+ 
+ const LoginSchema = z.object({
+   username: z.string().trim().min(1).max(254),
+@@ -18,8 +20,7 @@ const LoginSchema = z.object({
+ // The desktop renders its own local UI and resolves the current account through
+ // the same HttpOnly online session. No password, hash or signing key is exposed.
+ export async function GET(req: NextRequest) {
+-  const token = await parseSession(req.cookies.get("barbacue_admin")?.value ?? "");
+-  const session = token ? await resolveStaffSession(token) : null;
++  const session = await resolveRequestStaff(req.cookies.get('barbacue_admin')?.value,req.cookies.get('cogia_sessao')?.value);
+   const headers = { "Cache-Control": "private, no-store", Vary: "Cookie" };
+   if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401, headers });
+   const { userId, role, name, jobTitle, permissions, mustChangePassword } = session;
+@@ -67,8 +68,11 @@ export async function POST(req: NextRequest) {
+   return res;
+ }
+ 
+-export async function DELETE() {
++export async function DELETE(req:NextRequest) {
++  const central=req.cookies.get('cogia_sessao')?.value;
++  try{await endCogSession(central);}catch{return NextResponse.json({error:'Não foi possível encerrar a sessão Cog. Tente novamente.'},{status:503});}
+   const res = NextResponse.json({ ok: true });
++  if(central && process.env.COGIA_SSO_IDENTITY_KEY)res.cookies.set('cogia_sessao','',{domain:'cog.ia.br',path:'/',maxAge:0,httpOnly:true,secure:true,sameSite:'lax'});
+   clearAdminCookie(res);
+   return res;
+ }
+diff --git a/apps/web/src/app/conta/page.tsx b/apps/web/src/app/conta/page.tsx
+index c669378..70bdcb8 100644
+--- a/apps/web/src/app/conta/page.tsx
++++ b/apps/web/src/app/conta/page.tsx
+@@ -1,5 +1,7 @@
+ import AccountForm from "./AccountForm";
+ import { configuredProviders, safeReturnTo } from "@/lib/social-auth";
++import { getMember } from '@/lib/member-auth';
++import { redirect } from 'next/navigation';
+ 
+ export const dynamic = "force-dynamic";
+ 
+@@ -16,5 +18,6 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
+   const query = await searchParams;
+   const erro = typeof query.erro === "string" ? query.erro : "";
+   const returnTo = safeReturnTo(typeof query.returnTo === "string" ? query.returnTo : "/");
++  if(await getMember())redirect(returnTo==='/conta'?'/':returnTo);
+   return <AccountForm providers={configuredProviders()} initialError={ERRORS[erro] ?? ""} returnTo={returnTo} />;
+ }
+diff --git a/apps/web/src/lib/admin-auth.ts b/apps/web/src/lib/admin-auth.ts
+index 5ca60b6..fa88060 100644
+--- a/apps/web/src/lib/admin-auth.ts
++++ b/apps/web/src/lib/admin-auth.ts
+@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
+ import { NextRequest, NextResponse } from "next/server";
+ import type { StaffRole } from "@/db/schema";
+ import { STAFF_ROLES, canAccessPath, type Permission } from "@/lib/permissions";
++import { resolveCogEmail, uniqueEligibleAccount } from "./cog-sso";
+ 
+ const COOKIE_NAME = "barbacue_admin";
+ const MAX_AGE = 60 * 60 * 8; // 8 hours
+@@ -99,14 +100,28 @@ export async function parseSession(token: string): Promise<AdminSession | null>
+ /** Called from server components / server actions / Node route handlers to gate
+  * admin actions. Throws "unauthorized" when there is no valid session. */
+ export async function requireStaff(): Promise<AdminSession> {
+-  const store = await cookies();
+-  const session = await parseSession(store.get(COOKIE_NAME)?.value ?? "");
+-  if (!session) throw new Error("unauthorized");
+-  const current = await resolveStaffSession(session);
++  const current = await getStaffSession();
+   if (!current || current.mustChangePassword) throw new Error("unauthorized");
+   return current;
+ }
+ 
++export async function getStaffSession(): Promise<AdminSession | null> {
++  const store=await cookies();
++  return resolveRequestStaff(store.get(COOKIE_NAME)?.value,store.get('cogia_sessao')?.value);
++}
++
++export async function resolveRequestStaff(nativeToken:string|undefined,cogToken:string|undefined):Promise<AdminSession|null> {
++  const email=await resolveCogEmail(cogToken);
++  if(email){
++    const {db}=await import('@/db');const {staffUsers}=await import('@/db/schema');const {sql}=await import('drizzle-orm');
++    const users=await db.select().from(staffUsers).where(sql`lower(${staffUsers.username}) = ${email}`).limit(2);
++    const user=uniqueEligibleAccount(users,true);
++    if(user)return {userId:user.id,role:user.role,name:user.name,jobTitle:user.jobTitle,permissions:user.permissions,mustChangePassword:false};
++  }
++  const session=await parseSession(nativeToken ?? '');
++  return session ? resolveStaffSession(session) : null;
++}
++
+ /** Resolve current permissions so revocations apply to existing sessions. */
+ export async function resolveStaffSession(session: AdminSession): Promise<AdminSession | null> {
+   if (!Number.isSafeInteger(session.userId) || session.userId <= 0) return null;
+@@ -149,9 +164,7 @@ export function clearAdminCookie(response: NextResponse): void {
+ 
+ /** Middleware (proxy.ts, Edge) helper — any valid staff session passes. */
+ export async function isAdminRequest(req: NextRequest): Promise<boolean> {
+-  const token = req.cookies.get(COOKIE_NAME)?.value ?? "";
+-  const session = await parseSession(token);
+-  const current = session ? await resolveStaffSession(session) : null;
++  const current = await resolveRequestStaff(req.cookies.get(COOKIE_NAME)?.value,req.cookies.get('cogia_sessao')?.value);
+   return current !== null && !current.mustChangePassword;
+ }
+ 
+diff --git a/apps/web/src/lib/cog-sso.ts b/apps/web/src/lib/cog-sso.ts
+new file mode 100644
+index 0000000..ca67ec6
+--- /dev/null
++++ b/apps/web/src/lib/cog-sso.ts
+@@ -0,0 +1,25 @@
++/** Verified identity only; no password, signup or role assignment. */
++export async function resolveCogEmail(token: string | undefined): Promise<string | null> {
++  const key=process.env.COGIA_SSO_IDENTITY_KEY;
++  if(!key || !token || token.length>128)return null;
++  try {
++    const response=await fetch((process.env.COGIA_SSO_API_URL || 'https://cog.ia.br/api/sso').replace(/\/$/,'')+'/identidade',{
++      method:'POST',redirect:'error',cache:'no-store',signal:AbortSignal.timeout(5000),
++      headers:{Authorization:'Bearer '+key,'X-Cog-Service':process.env.COGIA_SSO_SERVICE || 'barbacue','Content-Type':'application/json'},body:JSON.stringify({token})});
++    if(!response.ok)return null;
++    const data=await response.json();
++    return data.email_verified===true && typeof data.email==='string' && data.email.includes('@')?data.email.trim().toLowerCase():null;
++  }catch{return null;}
++}
++export function uniqueEligibleAccount<T extends {id:number;active?:boolean|null;mustChangePassword?:boolean}>(users:T[],staff=false):T|null {
++  if(users.length!==1)return null;
++  const user=users[0];
++  return staff && (user.active!==true || user.mustChangePassword===true)?null:user;
++}
++export async function endCogSession(token:string|undefined):Promise<void> {
++  if(!token || !process.env.COGIA_SSO_IDENTITY_KEY)return;
++  const response=await fetch((process.env.COGIA_SSO_API_URL || 'https://cog.ia.br/api/sso').replace(/\/$/,'')+'/encerrar',{
++    method:'POST',redirect:'error',cache:'no-store',signal:AbortSignal.timeout(5000),headers:{Authorization:'Bearer '+process.env.COGIA_SSO_IDENTITY_KEY,
++      'X-Cog-Service':process.env.COGIA_SSO_SERVICE || 'barbacue','Content-Type':'application/json'},body:JSON.stringify({token})});
++  if(!response.ok)throw new Error('Não foi possível encerrar a sessão Cog. Tente novamente.');
++}
+diff --git a/apps/web/src/lib/member-auth.ts b/apps/web/src/lib/member-auth.ts
+index ec9f645..264b834 100644
+--- a/apps/web/src/lib/member-auth.ts
++++ b/apps/web/src/lib/member-auth.ts
+@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
+ import { eq } from "drizzle-orm";
+ import { db } from "@/db";
+ import { customerAccounts } from "@/db/schema";
++import { sql } from 'drizzle-orm';
++import { resolveCogEmail, uniqueEligibleAccount } from './cog-sso';
+ const COOKIE = "barbacue_member";
+ const MAX_AGE = 60 * 60 * 24 * 7;
+ function signature(payload: string) {
+@@ -17,7 +19,13 @@ export function setMemberCookie(response: NextResponse, id: number) {
+ }
+ export function clearMemberCookie(response: NextResponse) { response.cookies.set(COOKIE, "", { path: "/", maxAge: 0 }); }
+ export async function getMember() {
+-  const token = (await cookies()).get(COOKIE)?.value;
++  const store=await cookies();
++  const email=await resolveCogEmail(store.get('cogia_sessao')?.value);
++  if(email){
++    const users=await db.select({id:customerAccounts.id,name:customerAccounts.name,email:customerAccounts.email}).from(customerAccounts).where(sql`lower(${customerAccounts.email}) = ${email}`).limit(2);
++    const user=uniqueEligibleAccount(users);if(user)return user;
++  }
++  const token = store.get(COOKIE)?.value;
+   if (!token) return null;
+   const [payload, mac] = token.split(".");
+   if (!payload || !mac) return null;
+diff --git a/apps/web/src/proxy.ts b/apps/web/src/proxy.ts
+index ece04c7..b672b75 100644
+--- a/apps/web/src/proxy.ts
++++ b/apps/web/src/proxy.ts
+@@ -1,11 +1,18 @@
+ import { NextRequest, NextResponse } from "next/server";
+-import { parseSession, resolveStaffSession } from "@/lib/admin-auth";
++import { resolveRequestStaff } from "@/lib/admin-auth";
+ 
+ import { canAccessPath, landingPath } from "@/lib/permissions";
+ 
+ export async function proxy(req: NextRequest) {
+   const { pathname } = req.nextUrl;
+   const isApi = pathname.startsWith("/api/admin");
++  const host=(req.headers.get('x-forwarded-host') || req.headers.get('host') || '').toLowerCase();
++  if(req.method==='GET' && !pathname.startsWith('/api/') && req.headers.get('accept')?.includes('text/html') && host==='barbacue.cog.ia.br' &&
++     process.env.COGIA_SSO_IDENTITY_KEY && !req.cookies.get('cogia_sessao') && !req.cookies.get('cog_barbacue_checked')){
++    const response=NextResponse.redirect('https://cog.ia.br/api/sso/continuar?'+new URLSearchParams({destino:'https://barbacue.cog.ia.br'+pathname+req.nextUrl.search}),303);
++    response.cookies.set('cog_barbacue_checked','1',{maxAge:300,path:'/',httpOnly:true,secure:true,sameSite:'lax'});
++    response.headers.set('Cache-Control','no-store');return response;
++  }
+ 
+   // Allow the login page and the auth endpoint (login/logout) through
+   if (pathname === "/admin/login" || pathname === "/api/admin/auth") {
+@@ -21,8 +28,7 @@ export async function proxy(req: NextRequest) {
+     pathname.startsWith("/teste_pedido") ||
+     isApi
+   ) {
+-    const token = await parseSession(req.cookies.get("barbacue_admin")?.value ?? "");
+-    const session = token ? await resolveStaffSession(token) : null;
++    const session = await resolveRequestStaff(req.cookies.get('barbacue_admin')?.value,req.cookies.get('cogia_sessao')?.value);
+     if (!session) {
+       if (isApi) {
+         return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+@@ -47,5 +53,5 @@ export async function proxy(req: NextRequest) {
+ }
+ 
+ export const config = {
+-  matcher: ["/admin/:path*", "/api/admin/:path*", "/whatsapp/:path*", "/teste_pedido/:path*"],
++  matcher: ["/", "/pedir", "/conta", "/admin/:path*", "/api/admin/:path*", "/whatsapp/:path*", "/teste_pedido/:path*"],
+ };
