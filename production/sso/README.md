@@ -67,3 +67,9 @@ positivo Cog foi comprovado no QA; não provisionar conta nem afirmar acesso
 real sem vínculo. Cookie compartilhado cobre barbacue.cog.ia.br. Chelas e
 Barbadog em domínios externos continuam pendentes de federação por código/OIDC.
 Aplicativos instalados não recebem automaticamente a sessão do Chrome.
+
+Publicada saudável em 25/10, revisão 9f59eb3, build cWNCruZ-v5_CSiKN7zmIO.
+Os três catálogos permaneceram idênticos, public/downloads/dados e ambiente
+PM2 foram conferidos intactos. Chave privada validada e build anterior retido.
+Chrome real abriu o login nativo, sem vínculo local para Marlon; captura privada
+inspecionada PASS. Nenhuma conta criada, senha alterada ou sessão real encerrada.
