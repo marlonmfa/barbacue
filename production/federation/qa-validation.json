@@ -1,0 +1,16 @@
+{
+  "linux_unit_tests": 10,
+  "e2e": "passed",
+  "browser": "Google Chrome",
+  "native_standalone_entrypoint": true,
+  "both_external_origins": true,
+  "staff_customer_separate": true,
+  "native_cookies_preserved": true,
+  "first_password_required": true,
+  "stale_view_rejected": true,
+  "cross_origin_rejected": true,
+  "production_data_used": false,
+  "schema_only_tables": 34,
+  "screenshots": 6,
+  "external_jose_requires": 0
+}

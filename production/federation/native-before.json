@@ -1,0 +1,18 @@
+{
+  "verified_runtime_files": 681,
+  "differences": [
+    "server/app/api/instagram.meta"
+  ],
+  "runtime_metadata_keys": [
+    "headers",
+    "status"
+  ],
+  "runtime_metadata_header_names": [
+    "content-type",
+    "x-next-cache-tags"
+  ],
+  "build_id": "cWNCruZ-v5_CSiKN7zmIO",
+  "source_revision": "9f59eb3",
+  "immutable_runtime_files_identical": 680,
+  "operational_source": "standalone; reconstruct published source via production/sso factory"
+}
