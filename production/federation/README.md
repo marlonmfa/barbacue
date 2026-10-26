@@ -49,3 +49,10 @@ foram exercitados; seis capturas devem ser commitadas e inspecionadas.
 Estado: candidata testada; publicação e registro do cliente externo ainda
 pendentes. O serviço ativo continua na publicação anterior até evidência
 explícita em published.json. Aplicativos instalados continuam no escopo futuro.
+
+Build final F1ePobsynvuHYfaNFf-56: 112 rotas mantidas, três rotas novas,
+14 CSS idênticos e chave de ações preservada. A fábrica exclui saídas
+geradas do escaneamento Tailwind e registra explicitamente cinco utilitários
+nativos cujo contexto original não era operacional. A checagem da conta
+exibida também ocorre no guard do handler, além do Proxy. Chrome E2E foi
+repetido com o build final e cache de imagens isolado em tmpfs, sem alertas.
