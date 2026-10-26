@@ -56,3 +56,18 @@ geradas do escaneamento Tailwind e registra explicitamente cinco utilitários
 nativos cujo contexto original não era operacional. A checagem da conta
 exibida também ocorre no guard do handler, além do Proxy. Chrome E2E foi
 repetido com o build final e cache de imagens isolado em tmpfs, sem alertas.
+
+Publicada saudável em 26/10, revisão ddc06e2, build F1ePobsynvuHYfaNFf-56.
+Seis capturas fa3613f/8635a7a foram inspecionadas PASS. Foram mantidos
+736 arquivos operacionais, servidor e dependências nativos, ambiente PM2,
+três catálogos e o processo WhatsApp. 732 chunks históricos foram retidos.
+Snapshot das 34 tabelas foi restaurado em clone RAM sem rede e todos os
+fingerprints de linhas coincidiram. Contas, senhas, primeiro acesso e
+permissões da equipe/clientes são iguais na verificação posterior.
+
+Chrome real nos dois domínios chegou ao login nativo; há duas autorizações
+barbacue-external vinculadas à sessão central no provedor. Marlon não tem
+conta elegível local, portanto o fallback foi conservado, sem provisionar
+contas. O acesso positivo com papel local foi provado somente no QA.
+Cliente Control e CRM GOW, chave RSA e banco do provedor conservados;
+Control não reiniciado. QA, clone e túneis próprios removidos.

@@ -1,0 +1,13 @@
+{
+  "real_chrome_origins": [
+    "https://chelas.hirableaiagents.com",
+    "https://barbadog.hirableaiagents.com"
+  ],
+  "production_grants_verified": 2,
+  "grant_source": "central",
+  "owner_has_no_eligible_local_account": true,
+  "native_login_preserved": true,
+  "positive_mapped_roles_verified_in_isolated_qa": true,
+  "production_credentials_typed": false,
+  "production_logout_or_business_mutations": false
+}

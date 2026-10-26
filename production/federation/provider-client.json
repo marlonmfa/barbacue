@@ -1,0 +1,24 @@
+{
+  "client": "barbacue-external",
+  "redirect_uris": [
+    "https://chelas.hirableaiagents.com/api/auth/cog/callback",
+    "https://barbadog.hirableaiagents.com/api/auth/cog/callback"
+  ],
+  "published": true,
+  "healthy": true,
+  "control_restarted": false,
+  "existing_client_preserved": true,
+  "signing_key_preserved": true,
+  "database_preserved": true,
+  "checkpoint": {
+    "restored_in_ram": true,
+    "tables": {
+      "sessions": 4,
+      "codes": 1,
+      "tokens": 1,
+      "audit": 21,
+      "oidc_session_binding": 1
+    },
+    "signing_key_sha256": "50a50ffa7626537a9b04496d3c897b614f724238776af49048bfa636dc0ee560"
+  }
+}
