@@ -73,3 +73,7 @@ Os três catálogos permaneceram idênticos, public/downloads/dados e ambiente
 PM2 foram conferidos intactos. Chave privada validada e build anterior retido.
 Chrome real abriu o login nativo, sem vínculo local para Marlon; captura privada
 inspecionada PASS. Nenhuma conta criada, senha alterada ou sessão real encerrada.
+
+A federação web de Chelas/Barbadog foi publicada em 26/10 e está documentada
+no perfil production/federation. A pendência web externa acima é histórica;
+aplicativos instalados continuam no escopo separado.

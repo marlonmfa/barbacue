@@ -46,9 +46,9 @@ sem linhas de produção. Contas fictícias usam TEST_USER_* com fallback local.
 Os dois domínios, equipe/cliente, fallback, senha inicial, saída e celular
 foram exercitados; seis capturas devem ser commitadas e inspecionadas.
 
-Estado: candidata testada; publicação e registro do cliente externo ainda
-pendentes. O serviço ativo continua na publicação anterior até evidência
-explícita em published.json. Aplicativos instalados continuam no escopo futuro.
+Estado: publicada saudável conforme published.json, com cliente externo
+registrado e conferência real das duas marcas. Aplicativos instalados
+continuam no escopo futuro.
 
 Build final F1ePobsynvuHYfaNFf-56: 112 rotas mantidas, três rotas novas,
 14 CSS idênticos e chave de ações preservada. A fábrica exclui saídas
