@@ -1,0 +1,386 @@
+--- a/apps/mobile/lib/management/management_api.dart
++++ b/apps/mobile/lib/management/management_api.dart
+@@ -3,6 +3,7 @@
+ import 'dart:io';
+ 
+ import 'package:http/http.dart' as http;
++import 'cog_login.dart';
+ 
+ typedef Json = Map<String, dynamic>;
+ 
+@@ -17,6 +18,7 @@
+ class StaffSession {
+   StaffSession(Json data)
+     : name = data['name']?.toString() ?? 'Equipe',
++      authSource = data['authSource'] == 'cog' ? 'cog' : 'native',
+       role = data['role']?.toString() ?? 'employee',
+       mustChangePassword = data['mustChangePassword'] == true,
+       permissions =
+@@ -46,6 +48,7 @@
+     'driver': ['deliveries'],
+   };
+   final String name;
++  final String authSource;
+   final String role;
+   final bool mustChangePassword;
+   final List<String> permissions;
+@@ -56,8 +59,11 @@
+ /// An isolated staff session. Credentials and cookies stay in memory and are
+ /// never shared with the customer apps, preferences, URLs or logs.
+ class ManagementApi {
+-  ManagementApi({http.Client? client, Uri? origin})
++  ManagementApi({http.Client? client, Uri? origin, CogLogin? cogLogin})
+     : _client = client ?? http.Client(),
++      _cogLogin =
++          cogLogin ??
++          ((Platform.isAndroid || Platform.isIOS) ? CogLogin() : null),
+       origin =
+           origin ??
+           Uri.parse(
+@@ -79,7 +85,36 @@
+   final http.Client _client;
+   final Uri origin;
+   String? _cookie;
++  final CogLogin? _cogLogin;
++  CogGrant? _cogGrant;
++  String? _view;
+   int _generation = 0;
++  bool get supportsCog =>
++      _cogLogin != null &&
++      const {
++        'https://barbacue.cog.ia.br',
++        'https://chelas.hirableaiagents.com',
++        'https://barbadog.hirableaiagents.com',
++      }.contains(origin.origin);
++  bool get usingCog => _cogGrant != null;
++
++  /// Native cookies stay private and unchanged while an existing Cog account is selected.
++  Future<StaffSession?> restoreCogOrNative() async {
++    if (!supportsCog) return null;
++    final generation = _generation;
++    final grant = await _cogLogin!.signIn();
++    if (generation != _generation) return null;
++    _cogGrant = grant;
++    try {
++      final current = await session();
++      if (generation != _generation) return null;
++      return current;
++    } on ManagementException catch (error) {
++      if (generation == _generation) _cogGrant = null;
++      if (error.status == 401) return null;
++      rethrow;
++    }
++  }
+ 
+   Future<dynamic> request(String method, String path, [Json? body]) async {
+     if (!path.startsWith('/api/admin/') ||
+@@ -88,10 +123,20 @@
+       throw ArgumentError('Rota administrativa inválida.');
+     }
+     final generation = _generation;
++    final cog =
++        supportsCog &&
++            _cogGrant != null &&
++            _cogGrant!.expires.isAfter(DateTime.now())
++        ? _cogGrant
++        : null;
+     final request = http.Request(method, origin.resolve(path))
+       ..followRedirects = false
+       ..headers['Accept'] = 'application/json';
+     if (_cookie != null) request.headers['Cookie'] = _cookie!;
++    if (cog != null) request.headers['X-Barbacue-Cog'] = cog.token;
++    if (!['GET', 'HEAD'].contains(method) && _view != null) {
++      request.headers['X-Cog-View'] = _view!;
++    }
+     if (body != null) {
+       request.headers['Content-Type'] = 'application/json';
+       request.body = jsonEncode(body);
+@@ -124,7 +169,13 @@
+         );
+       }
+       final dynamic data = jsonDecode(response.body);
+-      if (response.statusCode == 401) _cookie = null;
++      if (response.statusCode == 401) {
++        if (cog != null) {
++          _cogGrant = null;
++        } else {
++          _cookie = null;
++        }
++      }
+       if (response.statusCode < 200 || response.statusCode >= 300) {
+         final message = data is Map ? (data['error'] ?? data['message']) : null;
+         throw ManagementException(
+@@ -167,9 +218,21 @@
+     }
+   }
+ 
+-  Future<StaffSession> session() async => StaffSession(
+-    (await request('GET', '/api/admin/auth'))['session'] as Json,
+-  );
++  Future<StaffSession> session() async {
++    final data = await request('GET', '/api/admin/auth');
++    final current = StaffSession(data['session'] as Json);
++    final view = data['view'];
++    _view = view is String && RegExp(r'^[A-Za-z0-9_-]{43}$').hasMatch(view)
++        ? view
++        : null;
++    if (current.authSource != 'cog') _cogGrant = null;
++    if (current.authSource == 'cog' && _view == null) {
++      throw const ManagementException(
++        'Atualize o servidor antes de usar a sessão Cog.',
++      );
++    }
++    return current;
++  }
+ 
+   Future<StaffSession> login(String username, String password) async {
+     clear();
+@@ -186,6 +249,22 @@
+   }
+ 
+   Future<void> logout() async {
++    if (_cogGrant != null) {
++      final grant = _cogGrant!, generation = ++_generation;
++      _cogLogin!.cancel();
++      try {
++        await _cogLogin.revoke(grant);
++      } catch (_) {
++        throw const ManagementException(
++          'Não foi possível sair da Cog. Sua sessão foi mantida. Tente novamente.',
++        );
++      }
++      if (generation == _generation) {
++        _cogGrant = null;
++        _view = null;
++      }
++      return;
++    }
+     try {
+       await request('DELETE', '/api/admin/auth');
+     } finally {
+@@ -193,8 +272,15 @@
+     }
+   }
+ 
++  void cancelCog() {
++    _generation++;
++    _cogLogin?.cancel();
++    _cogGrant = null;
++    _view = null;
++  }
++
+   void clear() {
+-    _generation++;
++    cancelCog();
+     _cookie = null;
+   }
+ 
+--- a/apps/mobile/lib/management/management_app.dart
++++ b/apps/mobile/lib/management/management_app.dart
+@@ -133,6 +133,7 @@
+   String? error;
+   String brand = 'all', search = '', status = 'active';
+   bool loading = false, saving = false, signingOut = false;
++  bool logoutFailed = false;
+   int revision = 0;
+   Timer? timer;
+   List<ManagementModule> get modules =>
+@@ -142,6 +143,7 @@
+   void initState() {
+     super.initState();
+     WidgetsBinding.instance.addObserver(this);
++    if (api.supportsCog) unawaited(restoreCog());
+     timer = Timer.periodic(const Duration(seconds: 30), (_) {
+       if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed &&
+           [
+@@ -155,6 +157,16 @@
+     });
+   }
+ 
++  Future<void> restoreCog() async {
++    final version = revision;
++    try {
++      final current = await api.restoreCogOrNative();
++      if (mounted && version == revision && current != null) signedIn(current);
++    } catch (_) {
++      // Existing local login remains available when Cog cannot be confirmed.
++    }
++  }
++
+   @override
+   void didChangeAppLifecycleState(AppLifecycleState state) {
+     if (state == AppLifecycleState.resumed &&
+@@ -178,6 +190,7 @@
+       module = modules.firstOrNull;
+       data = null;
+       error = null;
++      logoutFailed = false;
+     });
+     if (!value.mustChangePassword) unawaited(load());
+   }
+@@ -190,6 +203,7 @@
+       module = null;
+       data = null;
+       error = null;
++      logoutFailed = false;
+       loading = false;
+     });
+   }
+@@ -206,6 +220,7 @@
+     setState(() {
+       loading = true;
+       error = null;
++      logoutFailed = false;
+     });
+     try {
+       final current = await api.session();
+@@ -267,12 +282,44 @@
+ 
+   Future<void> logout() async {
+     if (signingOut || saving) return;
+-    setState(() => signingOut = true);
++    setState(() {
++      signingOut = true;
++      logoutFailed = false;
++      error = null;
++    });
+     // Invalidate in-flight reads before the logout response arrives.
+     revision++;
++    final cog = api.usingCog;
+     try {
+       await api.logout();
+-    } catch (_) {
++      if (cog) {
++        StaffSession? local;
++        try {
++          local = await api.session();
++        } catch (_) {
++          /* no native account */
++        }
++        if (mounted) {
++          setState(() => signingOut = false);
++          if (local != null) {
++            signedIn(local);
++          } else {
++            expired();
++          }
++        }
++        return;
++      }
++    } catch (failure) {
++      if (cog) {
++        if (mounted) {
++          setState(() {
++            error = failure.toString();
++            logoutFailed = true;
++            signingOut = false;
++          });
++        }
++        return;
++      }
+       api.clear();
+     }
+     if (mounted) {
+@@ -287,6 +334,8 @@
+   }
+ 
+   Future<void> openDemo() async {
++    revision++;
++    api.cancelCog();
+     if (widget.api == null) api.dispose();
+     api = ManagementDemoApi();
+     demo = true;
+@@ -375,8 +424,13 @@
+               ),
+               ListTile(
+                 leading: const Icon(Icons.logout),
+-                title: const Text('Sair da conta'),
+-                onTap: saving || signingOut ? null : logout,
++                title: Text(api.usingCog ? 'Sair da Cog' : 'Sair da conta'),
++                onTap: saving || signingOut
++                    ? null
++                    : () {
++                        Navigator.pop(context);
++                        unawaited(logout());
++                      },
+               ),
+             ],
+           ),
+@@ -490,7 +544,7 @@
+       return _Message(
+         icon: Icons.cloud_off_outlined,
+         text: error!,
+-        action: load,
++        action: logoutFailed ? logout : load,
+       );
+     }
+     if (module == null) {
+--- a/apps/mobile/scripts/build_brand.sh
++++ b/apps/mobile/scripts/build_brand.sh
+@@ -12,7 +12,7 @@
+     app_icon="AppIcon-gestao"
+     launch_storyboard="LaunchScreen"
+     build_name="1.0.0"
+-    build_number="2026102401"
++    build_number="2026102402"
+     signing_args=(CODE_SIGN_STYLE=Manual "CODE_SIGN_IDENTITY=Apple Distribution" "PROVISIONING_PROFILE_SPECIFIER=Gestao AppStore")
+     ;;
+   barbacue)
+@@ -66,7 +66,8 @@
+ target="lib/main_${brand}.dart"
+ define="RELEASE_BRAND_ENDPOINT=true"
+ entitlements="Runner/Runner.entitlements"
+-if [[ "$brand" == "gestao" ]]; then entitlements="Runner/Management.entitlements"; fi
++info_plist="Runner/Info.plist"
++if [[ "$brand" == "gestao" ]]; then entitlements="Runner/Management.entitlements"; info_plist="Runner/Info-Gestao.plist"; fi
+ 
+ case "$platform" in
+   android|android-apk)
+@@ -93,6 +94,7 @@
+       APP_DISPLAY_NAME="$display_name" APP_HOST="$host" APP_ICON="$app_icon" \
+       APP_BUNDLE_ID="$bundle_id" APP_LAUNCH_STORYBOARD="$launch_storyboard" \
+       CODE_SIGN_ENTITLEMENTS="$entitlements" \
++      INFOPLIST_FILE="$info_plist" \
+       FLUTTER_TARGET="$target" \
+       CODE_SIGNING_ALLOWED=NO build
+     mkdir -p "build/ios-${brand}-simulator/Build/Products/Debug-iphonesimulator"
+@@ -112,6 +114,7 @@
+       APP_DISPLAY_NAME="$display_name" APP_HOST="$host" APP_ICON="$app_icon" \
+       APP_BUNDLE_ID="$bundle_id" APP_LAUNCH_STORYBOARD="$launch_storyboard" \
+       CODE_SIGN_ENTITLEMENTS="$entitlements" \
++      INFOPLIST_FILE="$info_plist" \
+       FLUTTER_TARGET="$target" CODE_SIGNING_ALLOWED=NO build
+     mkdir -p "build/ios-${brand}-device/Build/Products/Release-iphoneos"
+     ditto "build/ios-device-work/Build/Products/Release-iphoneos/Runner.app" \
+@@ -131,6 +134,7 @@
+       APP_DISPLAY_NAME="$display_name" APP_HOST="$host" APP_ICON="$app_icon" \
+       APP_BUNDLE_ID="$bundle_id" APP_LAUNCH_STORYBOARD="$launch_storyboard" \
+       CODE_SIGN_ENTITLEMENTS="$entitlements" \
++      INFOPLIST_FILE="$info_plist" \
+       FLUTTER_TARGET="$target" \
+       "${signing_args[@]}" \
+       -allowProvisioningUpdates archive
+--- a/apps/mobile/android/app/src/gestao/AndroidManifest.xml
++++ b/apps/mobile/android/app/src/gestao/AndroidManifest.xml
+@@ -1,13 +1,21 @@
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools">
+     <application>
++        <meta-data android:name="flutter_deeplinking_enabled" android:value="false" tools:replace="android:value" />
+         <activity android:name=".MainActivity">
++            <meta-data android:name="flutter_deeplinking_enabled" android:value="false" />
+             <!-- Table links belong to customer apps, never the staff app. -->
+             <intent-filter tools:node="removeAll" />
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
++            <intent-filter>
++                <action android:name="android.intent.action.VIEW" />
++                <category android:name="android.intent.category.DEFAULT" />
++                <category android:name="android.intent.category.BROWSABLE" />
++                <data android:scheme="com.lanchesdobarba.gestao" android:host="oauth" android:path="/cog/callback" />
++            </intent-filter>
+         </activity>
+     </application>
+ </manifest>

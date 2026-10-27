@@ -199,6 +199,7 @@ else {
     } finally { await startAgent(); changing = false; }
   });
   await startAgent();
+  await ensureCogSession();
   if (!process.argv.includes('--background') || !settings.serverUrl) {
     if (settings.serverUrl) await openDashboard(); else showSetup();
   }
@@ -212,3 +213,23 @@ process.on('uncaughtException', () => {
   record(status);
   if (app.isReady()) dialog.showErrorBox('Barbacue Pedidos', status);
 });
+
+// Cog is isolated from native staff cookies and the print-agent credential.
+import { createBarbacueCogSession } from './cog-session.mjs';
+let nativeCogSession;
+async function ensureCogSession() {
+  if (!nativeCogSession) {
+    const qa = !app.isPackaged && process.env.BARBACUE_COG_DISPOSABLE_QA === '1';
+    nativeCogSession = createBarbacueCogSession({ app, session,
+      openExternal: url => shell.openExternal(url), getOrigin: () => settings.serverUrl,
+      onChange: () => { if (dashboard && !dashboard.isDestroyed()) dashboard.webContents.reload(); },
+      ...(qa ? { qa: true, issuer: process.env.BARBACUE_COG_QA_ISSUER } : {}),
+    });
+  }
+  // Keep the existing panel available when the identity provider is offline.
+  let timer;
+  await Promise.race([nativeCogSession.ready().catch(() => {}), new Promise(resolve => {
+    timer = setTimeout(resolve, 2500); timer.unref?.();
+  })]);
+  clearTimeout(timer);
+}

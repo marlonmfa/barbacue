@@ -1,0 +1,7 @@
+{
+  "apps/web/src/lib/cog-sso.ts": "2d9905952826fe88290e09cdd1ac41652c606c06db0d84964844c428c639f3f6",
+  "apps/web/src/proxy.ts": "72916a45f2a058b2d4dc9343b6d779245a864ce020be5bb02a44c16c6acfb1f8",
+  "apps/web/src/app/api/auth/cog/session/route.ts": "0e93c4cf3cb861cac49fb53b233e3c6b12c7952854788a915cdae33c7748c291",
+  "apps/web/src/app/api/admin/auth/route.ts": "ae2260ad79cc108bb81f65c08cd04bc3497d8fd4ac7e6b45272a9a923e16e5e0",
+  "apps/web/src/lib/cog-native.ts": "87ef35f173353f35e6a026868142cfacfa2c5395d0cde30e848200c504bdf761"
+}

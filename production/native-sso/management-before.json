@@ -1,0 +1,19 @@
+{
+  "source_revision": "60d599060578faa1ee81e1ca7a15ab388adf6e23",
+  "store_build": 2026102401,
+  "files": [
+    {
+      "path": "apps/mobile/lib/management/management_api.dart",
+      "sha256": "91eb8f9745c9f5c168f8bfa13aa366014eef6042cf0e986cf27d7bc86bd1882c"
+    },
+    {
+      "path": "apps/mobile/lib/management/management_app.dart",
+      "sha256": "3ee9fd5f9d7b1738ba3464935770749d243b889a23ab74813fd68025b9976dc9"
+    },
+    {
+      "path": "apps/mobile/lib/management/management_demo.dart",
+      "sha256": "2b8f112a5bb74f8de5d0bed9dd5d26740f95aac8a179dc96f127e626c5e2255c"
+    }
+  ],
+  "unchanged_from_submitted_release": true
+}

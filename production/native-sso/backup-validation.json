@@ -1,0 +1,8 @@
+{
+  "restored_in_ram": true,
+  "network_isolated": true,
+  "tables_verified": 34,
+  "all_row_fingerprints_equal": true,
+  "plaintext_dump_written": false,
+  "live_database_untouched": true
+}

@@ -1,0 +1,21 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application>
+        <meta-data android:name="flutter_deeplinking_enabled" android:value="false" tools:replace="android:value" />
+        <activity android:name=".MainActivity">
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="false" />
+            <!-- Table links belong to customer apps, never the staff app. -->
+            <intent-filter tools:node="removeAll" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.lanchesdobarba.gestao" android:host="oauth" android:path="/cog/callback" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

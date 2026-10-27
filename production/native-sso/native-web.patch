@@ -1,0 +1,105 @@
+--- a/apps/web/src/lib/cog-sso.ts
++++ b/apps/web/src/lib/cog-sso.ts
+@@ -1,7 +1,10 @@
++import { resolveNativeCogEmail, NATIVE_COG_HEADER } from "./cog-native";
+ import { cache } from "react";
+ import { oidcConfig, requestOrigin, resolveOidcEmail } from "./cog-oidc";
+ /** Verified identity only; no password, signup or role assignment. */
+ export const resolveCogEmail = cache(async (token: string | undefined, requestHeaders?: Pick<Headers,"get">, grant?: string): Promise<string | null> => {
++  const native = await resolveNativeCogEmail(requestHeaders?.get(NATIVE_COG_HEADER));
++  if (native) return native;
+   const federated = requestHeaders ? await resolveOidcEmail(oidcConfig(requestOrigin(requestHeaders)), grant) : null;
+   if (federated) return federated;
+   const key=process.env.COGIA_SSO_IDENTITY_KEY;
+--- a/apps/web/src/proxy.ts
++++ b/apps/web/src/proxy.ts
+@@ -1,3 +1,4 @@
++import { resolveNativeCogEmail, NATIVE_COG_HEADER } from "@/lib/cog-native";
+ import { actorView } from "@/lib/session-view";
+ import { resolveRequestMember } from "@/lib/member-auth";
+ import { oidcConfig, requestOrigin, GRANT_COOKIE, CHECK_COOKIE } from "@/lib/cog-oidc";
+@@ -9,14 +10,16 @@
+ export async function proxy(req: NextRequest) {
+   const { pathname } = req.nextUrl;
+   const origin=requestOrigin(req.headers), federation=oidcConfig(origin);
+-  if(federation && req.method==='GET' && (pathname.startsWith('/admin') || pathname==='/conta') && pathname!=='/admin/change-password' &&
++  const nativeCogEmail=await resolveNativeCogEmail(req.headers.get(NATIVE_COG_HEADER));
++  const nativeApp=req.headers.get('X-Barbacue-Native')==='1';
++  if(!nativeApp && !nativeCogEmail && federation && req.method==='GET' && (pathname.startsWith('/admin') || pathname==='/conta') && pathname!=='/admin/change-password' &&
+      req.headers.get('accept')?.includes('text/html') && !req.headers.get('rsc') && !req.cookies.get(CHECK_COOKIE)) {
+     const response=NextResponse.redirect(new URL('/api/auth/cog/start?'+new URLSearchParams({next:pathname+req.nextUrl.search}),origin),303);
+     response.headers.set('Cache-Control','no-store');return response;
+   }
+   const isApi = pathname.startsWith("/api/admin");
+   const host=(req.headers.get('x-forwarded-host') || req.headers.get('host') || '').toLowerCase();
+-  if(req.method==='GET' && !pathname.startsWith('/api/') && req.headers.get('accept')?.includes('text/html') && host==='barbacue.cog.ia.br' &&
++  if(!nativeApp && !nativeCogEmail && req.method==='GET' && !pathname.startsWith('/api/') && req.headers.get('accept')?.includes('text/html') && host==='barbacue.cog.ia.br' &&
+      process.env.COGIA_SSO_IDENTITY_KEY && !req.cookies.get('cogia_sessao') && !req.cookies.get('cog_barbacue_checked')){
+     const response=NextResponse.redirect('https://cog.ia.br/api/sso/continuar?'+new URLSearchParams({destino:'https://barbacue.cog.ia.br'+pathname+req.nextUrl.search}),303);
+     response.cookies.set('cog_barbacue_checked','1',{maxAge:300,path:'/',httpOnly:true,secure:true,sameSite:'lax'});
+--- a/apps/web/src/app/api/auth/cog/session/route.ts
++++ b/apps/web/src/app/api/auth/cog/session/route.ts
+@@ -1,3 +1,4 @@
++import { resolveNativeCogEmail, NATIVE_COG_HEADER } from "@/lib/cog-native";
+ import { cookies, headers } from "next/headers";
+ import { NextResponse } from "next/server";
+ import { getStaffSession } from "@/lib/admin-auth";
+@@ -6,10 +7,11 @@
+ import { oidcConfig, requestOrigin, CHECK_COOKIE } from "@/lib/cog-oidc";
+ export const dynamic="force-dynamic";
+ export async function GET() {
+-  const origin=requestOrigin(await headers());
++  const h=await headers(), origin=requestOrigin(h);
++  const nativeCogEmail=await resolveNativeCogEmail(h.get(NATIVE_COG_HEADER));
+   const [staff,member]=await Promise.all([getStaffSession(),getMember()]);
+   const view=await actorView(origin,staff,member);
+   const store=await cookies();
+-  return NextResponse.json({view,refresh:!!oidcConfig(origin) && !store.get(CHECK_COOKIE) && !!(staff || member || store.get("barbacue_cog_grant"))},
++  return NextResponse.json({view,refresh:h.get('X-Barbacue-Native')!=='1' && !nativeCogEmail && !!oidcConfig(origin) && !store.get(CHECK_COOKIE) && !!(staff || member || store.get("barbacue_cog_grant"))},
+     {headers:{"Cache-Control":"no-store"}});
+ }
+--- a/apps/web/src/app/api/admin/auth/route.ts
++++ b/apps/web/src/app/api/admin/auth/route.ts
+@@ -1,3 +1,7 @@
++import { actorView } from "@/lib/session-view";
++import { resolveRequestMember } from "@/lib/member-auth";
++import { nativeCog, resolveNativeCogEmail, NATIVE_COG_HEADER } from "@/lib/cog-native";
++import { findCogStaff } from "@/lib/admin-auth";
+ import { oidcConfig, requestOrigin, revokeOidc, GRANT_COOKIE, FLOW_COOKIE, CHECK_COOKIE } from "@/lib/cog-oidc";
+ import { NextRequest, NextResponse } from "next/server";
+ import { z } from "zod";
+@@ -22,10 +26,15 @@
+ // the same HttpOnly online session. No password, hash or signing key is exposed.
+ export async function GET(req: NextRequest) {
+   const session = await resolveRequestStaff(req.cookies.get('barbacue_admin')?.value,req.cookies.get('cogia_sessao')?.value,req.headers,req.cookies.get(GRANT_COOKIE)?.value);
+-  const headers = { "Cache-Control": "private, no-store", Vary: "Cookie" };
++  const headers = { "Cache-Control": "private, no-store", Vary: "Cookie, X-Barbacue-Cog" };
+   if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401, headers });
+   const { userId, role, name, jobTitle, permissions, mustChangePassword } = session;
+-  return NextResponse.json({ session: { userId, role, name, jobTitle, permissions, mustChangePassword }, desktopApiVersion: 1 }, { headers });
++  const email=await resolveNativeCogEmail(req.headers.get(NATIVE_COG_HEADER));
++  const mapped=email ? await findCogStaff(email) : null;
++  const authSource=mapped?.userId===session.userId ? "cog" : "native";
++  const member=await resolveRequestMember(req.cookies.get("barbacue_member")?.value,req.cookies.get("cogia_sessao")?.value,req.headers,req.cookies.get(GRANT_COOKIE)?.value);
++  const view=await actorView(requestOrigin(req.headers),session,member);
++  return NextResponse.json({ session: { userId, role, name, jobTitle, permissions, mustChangePassword, authSource }, view, desktopApiVersion: 1 }, { headers });
+ }
+ 
+ export async function POST(req: NextRequest) {
+@@ -70,6 +79,16 @@
+ }
+ 
+ export async function DELETE(req:NextRequest) {
++  const nativeToken=req.headers.get(NATIVE_COG_HEADER);
++  if(nativeToken){
++    const email=await resolveNativeCogEmail(nativeToken);
++    if(!email)return NextResponse.json({error:'Não foi possível confirmar a sessão Cog. Sua sessão local foi mantida.'},{status:503});
++    if(await findCogStaff(email)){
++      try{await nativeCog.end(nativeToken);}catch{return NextResponse.json({error:'Não foi possível sair da Cog. Sua sessão local foi mantida.'},{status:503});}
++      return NextResponse.json({ok:true,localSessionPreserved:true},{headers:{'Cache-Control':'no-store','X-Barbacue-Cog-Ended':'1'}});
++    }
++  }
++
+   const central=req.cookies.get('cogia_sessao')?.value;
+   try{await revokeOidc(oidcConfig(requestOrigin(req.headers)),req.cookies.get(GRANT_COOKIE)?.value);await endCogSession(central);}catch{return NextResponse.json({error:'Não foi possível encerrar a sessão Cog. Tente novamente.'},{status:503});}
+   const res = NextResponse.json({ ok: true });

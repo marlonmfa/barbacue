@@ -1,0 +1,29 @@
+{
+  "published_version": "1.0.0",
+  "installer_sha256": "fb220b910cee33847a7c1c9cdde027cda3310de7df5c1be9b1a0cb3abc24ea6e",
+  "installer_bytes": 111246686,
+  "source_files": {
+    "package.json": "4a032635da7c3789925672a7ed8e5003a15a07d5b63a73b2136aff52f01ca4f4",
+    "ui/index.html": "a7fcbba9fe7077b52dcce1f3db3c4773db5a7ee1adf9dc91ac94c1d154160a24",
+    "ui/style.css": "475526edb856d8f8e0f03da6fb3dba4ca735e0d21025288b79deddedabeace77",
+    "ui/app.js": "1dd9b6f06a5ec6ce0e429032c3aff43bde72d2d5730a869baa87e1c39f3f50af",
+    "assets/icon.png": "b637766c26ef5c46f2af6d9496a1b5573738fc787c4d9b9080bf24b3549d0a4b",
+    "assets/icon.ico": "4eec2271912f1641d20542ed920d78a1b628e69663b41fcbc5ae31318a819e0c",
+    "vendor/print-agent/transports.mjs": "05bb7ac6b8524407b82b99975e80bc8251459ce45afe6592f742a2e7c60fe621",
+    "vendor/print-agent/journal.mjs": "685c6fe2ffc9114cff0ed4a25a1f0123aa69872cd7131932e550b291c75b2c0e",
+    "vendor/print-agent/index.mjs": "b1179e8a95923adcb45a15fa968e880c1ee021a81a900ebf270d32a85e093b8a",
+    "vendor/print-agent/agent.mjs": "038790c275a3e143358587305e8f413731c81078bed7c3486c6c66227780fc92",
+    "vendor/print-agent/ticket.mjs": "4b09da5ea2721e5ff0c73cdab961b5178360a8518db299f7d21219a700dd19da",
+    "vendor/print-agent/config.mjs": "3dba69cefce7c89b6e54e7357bb115e26e58009d4aafca2780fd2f168769c92a",
+    "src/preload.cjs": "4e1eaf0beef2a9227244170d9bb751a28cc05863f5962f7f22a3381bb709c732",
+    "src/main.mjs": "52b174ac4b5e26864974fe30a3239bb7f133cd7307ffca8183b8647bc8599908",
+    "src/settings.mjs": "670424986bc2ffc48cb63fb92f7ffce0fa77aceeca8d9fb7d4e70bfe636dd2a0",
+    "src/printing.mjs": "d982abab9ba7b4b26d54ba72faefc576bcf9547c3745b09407d3e8519e63fd81"
+  },
+  "native_settings_preload_printing_match_committed_source": true,
+  "published_main_differs_from_committed_ifood_menu": true,
+  "dirty_1_1_and_1_2_are_not_the_published_installer": true,
+  "known_secret_scan": "PASS",
+  "published_runtime": "Electron 44.3.0",
+  "cog_published": false
+}
