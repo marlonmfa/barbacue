@@ -46,7 +46,10 @@ assert all(probe('/pedir',h)[0]==200 for h in hosts)
 assert probe('/api/admin/auth')[0]==401
 snapshot=json.loads(Fernet((ROOT/'before-key.private').read_bytes()).decrypt((ROOT/'before.encrypted').read_bytes()))
 assert snapshot['purpose']=='barbacue-native-before-v1'
-private(ROOT/'pm2.at-publication.private.json',json.dumps(before).encode())
+checkpoint=ROOT/'pm2.at-publication.private.json'
+if checkpoint.exists():
+ saved=json.loads(checkpoint.read_text());assert saved['pm2_env']['pm_uptime']==before['pm2_env']['pm_uptime'] and saved['pm2_env'].get('env')==before['pm2_env'].get('env')
+else:private(checkpoint,json.dumps(before).encode())
 old_env={k:v for k,v in before['pm2_env'].items() if isinstance(v,str)}
 assert old_env['COG_OIDC_CLIENT_ID']=='barbacue-external' and old_env['COG_OIDC_ISSUER']=='https://id.cog.ia.br'
 others={x['name']:(x['pid'],x['pm2_env'].get('pm_uptime')) for x in processes() if x['name']!='barbacue'}

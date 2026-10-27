@@ -52,3 +52,7 @@ two Garten native guichês, final aliases/TLS/infra audit. CopyPaste14 AppleVALI
 Play internal draft; Alerta API and private build16 packages ready. Physical
 phone disconnected. Apple Individual membership/store skill gate already
 explained to user; do not submit iOS review/public release as COG.IA. No subagents.
+
+## Publication confirmed
+Provider registered eighthclientbarbacue-native (Control3ea25d2/a270e85), sameb32bimage/RSA, previous7clients/database preserved. PM2 backend b56a317/HX7FMLvv55-3axoaV1mfm publishedhealthy; 736operational files/threecatalogs/environment/dependencies/otherPM2processes unchanged. Staff/customer rows byte-fingerprints unchanged,0accounts provisioned. Windows1.0.1 metadata published;1.0.0installer retained byte-identical. All3origins public HTTPS catalogs200/admin401/download401 verified withoutproductionlogin.
+Gestão signedAAB+IPA2026102402 validated privately: exactlegacybundle/callback, existingAndroiduploadcertificate and byte-identicaliOSprofile, codesignstrictPASS,8native64-bitlibraries16KB, knownprivatevaluesscanPASS, icon/encryptionmetadata preserved. Privateartifacts /tmp/barbacue-management-signed-20261027 (do notdelete). iOSbuild discovered globalINFOPLIST_FILE would affectPods; fixed Runner-only APP_INFO_PLIST setting/default in3configs, existingretaildefault preserved; repeatedarchive/exportPASS withoutprovisioningupdates. No storeupload/review/publicrelease/physicalphonetest.

@@ -1,0 +1,9 @@
+{
+  "staff_and_customer_rows_unchanged": true,
+  "roles_passwords_first_access_permissions_preserved": true,
+  "accounts_provisioned": 0,
+  "eligible_owner_accounts": {
+    "staff": 0,
+    "customers": 0
+  }
+}

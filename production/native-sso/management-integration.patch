@@ -340,7 +340,7 @@
        APP_DISPLAY_NAME="$display_name" APP_HOST="$host" APP_ICON="$app_icon" \
        APP_BUNDLE_ID="$bundle_id" APP_LAUNCH_STORYBOARD="$launch_storyboard" \
        CODE_SIGN_ENTITLEMENTS="$entitlements" \
-+      INFOPLIST_FILE="$info_plist" \
++      APP_INFO_PLIST="$info_plist" \
        FLUTTER_TARGET="$target" \
        CODE_SIGNING_ALLOWED=NO build
      mkdir -p "build/ios-${brand}-simulator/Build/Products/Debug-iphonesimulator"
@@ -348,7 +348,7 @@
        APP_DISPLAY_NAME="$display_name" APP_HOST="$host" APP_ICON="$app_icon" \
        APP_BUNDLE_ID="$bundle_id" APP_LAUNCH_STORYBOARD="$launch_storyboard" \
        CODE_SIGN_ENTITLEMENTS="$entitlements" \
-+      INFOPLIST_FILE="$info_plist" \
++      APP_INFO_PLIST="$info_plist" \
        FLUTTER_TARGET="$target" CODE_SIGNING_ALLOWED=NO build
      mkdir -p "build/ios-${brand}-device/Build/Products/Release-iphoneos"
      ditto "build/ios-device-work/Build/Products/Release-iphoneos/Runner.app" \
@@ -356,7 +356,7 @@
        APP_DISPLAY_NAME="$display_name" APP_HOST="$host" APP_ICON="$app_icon" \
        APP_BUNDLE_ID="$bundle_id" APP_LAUNCH_STORYBOARD="$launch_storyboard" \
        CODE_SIGN_ENTITLEMENTS="$entitlements" \
-+      INFOPLIST_FILE="$info_plist" \
++      APP_INFO_PLIST="$info_plist" \
        FLUTTER_TARGET="$target" \
        "${signing_args[@]}" \
        -allowProvisioningUpdates archive
@@ -384,3 +384,35 @@
          </activity>
      </application>
  </manifest>
+--- a/apps/mobile/ios/Runner.xcodeproj/project.pbxproj
++++ b/apps/mobile/ios/Runner.xcodeproj/project.pbxproj
+@@ -490,7 +490,8 @@
+ 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
+ 				DEVELOPMENT_TEAM = 3A3X2G4UPK;
+ 				ENABLE_BITCODE = NO;
+-				INFOPLIST_FILE = Runner/Info.plist;
++				APP_INFO_PLIST = Runner/Info.plist;
++				INFOPLIST_FILE = "$(APP_INFO_PLIST)";
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+@@ -674,7 +675,8 @@
+ 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
+ 				DEVELOPMENT_TEAM = 3A3X2G4UPK;
+ 				ENABLE_BITCODE = NO;
+-				INFOPLIST_FILE = Runner/Info.plist;
++				APP_INFO_PLIST = Runner/Info.plist;
++				INFOPLIST_FILE = "$(APP_INFO_PLIST)";
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+@@ -700,7 +702,8 @@
+ 				CODE_SIGN_STYLE = Manual;
+ 				DEVELOPMENT_TEAM = 3A3X2G4UPK;
+ 				ENABLE_BITCODE = NO;
+-				INFOPLIST_FILE = Runner/Info.plist;
++				APP_INFO_PLIST = Runner/Info.plist;
++				INFOPLIST_FILE = "$(APP_INFO_PLIST)";
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",

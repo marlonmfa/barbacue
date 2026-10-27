@@ -1,0 +1,17 @@
+{
+  "published": true,
+  "healthy": true,
+  "revision": "b56a317",
+  "build_id": "HX7FMLvv55-3axoaV1mfm",
+  "native_routes_preserved": 112,
+  "three_catalogs_identical": true,
+  "native_operational_files_preserved": 736,
+  "native_server_and_dependencies_unchanged": true,
+  "native_environment_preserved": true,
+  "database_untouched": true,
+  "database_all_34_tables_restored": true,
+  "other_pm2_processes_unchanged": true,
+  "old_static_chunks_retained": 734,
+  "rollback_build_retained": true,
+  "accounts_provisioned": 0
+}

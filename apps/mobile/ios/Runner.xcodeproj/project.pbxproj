@@ -490,7 +490,8 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				DEVELOPMENT_TEAM = 3A3X2G4UPK;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = Runner/Info.plist;
+				APP_INFO_PLIST = Runner/Info.plist;
+				INFOPLIST_FILE = "$(APP_INFO_PLIST)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -674,7 +675,8 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				DEVELOPMENT_TEAM = 3A3X2G4UPK;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = Runner/Info.plist;
+				APP_INFO_PLIST = Runner/Info.plist;
+				INFOPLIST_FILE = "$(APP_INFO_PLIST)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -700,7 +702,8 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 3A3X2G4UPK;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = Runner/Info.plist;
+				APP_INFO_PLIST = Runner/Info.plist;
+				INFOPLIST_FILE = "$(APP_INFO_PLIST)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

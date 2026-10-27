@@ -65,3 +65,12 @@ Physical-phone validation and public store distribution remain pending. The
 Apple Individual membership restriction is documented in the overall task;
 no current review or public mobile release is changed by these build scripts.
 See published.json/windows-published.json when publication is completed.
+
+## Published
+Backend b56a317/HX7FMLvv55-3axoaV1mfm and Windows1.0.1 are published and healthy.
+Provider clientbarbacue-native is registered as the eighth client with the same
+provider image/key/data. All three HTTPS catalogs and administrative/download
+guards passed. Existing staff/customer credential/role/permission rows match
+the prepublication backup. Private Gestão2026102402 AAB/IPA validate with the
+existing upload certificate/profile and exact native callback; no store review
+or public mobile release was changed. See management-build-validation.json.
