@@ -46,7 +46,7 @@ message/button is covered by a widget regression and actual Android E2E.
 
 Five native unit tests passed locally and in Linux. Five Gestão unit/widget
 regressions and four existing management widget tests passed after the final
-changes; the earlier full Flutter suite passed142 tests. Actual published
+changes; the final full Flutter suite passed143 tests. Actual published
 Electron main + Chrome + reviewed Linux IDP/Next passed mapped/role/failed and
 confirmed logout/unmapped/absent/inactive/first-password cases. Actual Android
 Gestão + Chrome + custom callback/PKCE + real Linux services passed five cases,
@@ -74,3 +74,12 @@ guards passed. Existing staff/customer credential/role/permission rows match
 the prepublication backup. Private Gestão2026102402 AAB/IPA validate with the
 existing upload certificate/profile and exact native callback; no store review
 or public mobile release was changed. See management-build-validation.json.
+
+The mobile toolchain is pinned to the published Flutter3.41.9. Android engine
+binaries are byte-identical to the original release; all20 iOS Flutter text
+sections match the original, independent of signing metadata. Two local Flutter
+SDKs were detected; the first private iOS candidate used the other SDK and was
+superseded before publication. Final packages are in the private final directory,
+not the superseded first candidate. The signed SDK also pins matcher0.12.18 and
+test_api0.7.9; these development-only resolutions are frozen in pubspec.lock.
+Owned QA resources were removed after verification; qa-cleanup.json records scope.

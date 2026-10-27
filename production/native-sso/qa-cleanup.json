@@ -1,0 +1,12 @@
+{
+  "owned_qa_containers_removed": 4,
+  "owned_network_removed": true,
+  "ram_restore_removed": true,
+  "owned_tunnel_and_screenshot_receiver_stopped": true,
+  "android_qa_app_stopped": true,
+  "emulator_retained_for_garten": true,
+  "private_signed_artifacts_retained": true,
+  "signed_archives_and_source_retained": true,
+  "only_own_ios_compiler_intermediates_removed": true,
+  "operational_data_or_backups_deleted": false
+}

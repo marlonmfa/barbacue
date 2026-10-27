@@ -1,4 +1,7 @@
 {
+  "flutter_version": "3.41.9",
+  "android_flutter_engine_byte_identical": true,
+  "ios_flutter_engine_text_sections_identical": 20,
   "version": "1.0.0",
   "build": 2026102402,
   "package": "com.lanchesdobarba.gestao",
@@ -23,8 +26,8 @@
     },
     {
       "file": "gestao-1.0.0-2026102402.ipa",
-      "bytes": 22462751,
-      "sha256": "2975f2660dfa31ccba7bdf9a5cb5577d2fea737eb74e488fa1b8da4b92e3206e"
+      "bytes": 22468866,
+      "sha256": "78ba0e465237c045d4fa16b5fff3362403efedd819c7a2f0ad71d1d8766ebfc8"
     }
   ]
 }
