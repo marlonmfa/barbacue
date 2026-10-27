@@ -80,6 +80,6 @@ binaries are byte-identical to the original release; all20 iOS Flutter text
 sections match the original, independent of signing metadata. Two local Flutter
 SDKs were detected; the first private iOS candidate used the other SDK and was
 superseded before publication. Final packages are in the private final directory,
-not the superseded first candidate. The signed SDK also pins matcher0.12.18 and
-test_api0.7.9; these development-only resolutions are frozen in pubspec.lock.
+not the superseded first candidate. The signed SDK also pins matcher0.12.19 and
+test_api0.7.10; these development-only resolutions are frozen in pubspec.lock.
 Owned QA resources were removed after verification; qa-cleanup.json records scope.
