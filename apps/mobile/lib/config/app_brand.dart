@@ -40,6 +40,9 @@ class BrandConfig {
   final String? minimumOrder;
 
   bool get hasNativeCheckout => true;
+  String get logoAsset => brand == AppBrand.barbacue
+      ? 'assets/icon/icon.png'
+      : 'assets/brands/$slug-icon.png';
   bool get hasAiChat => brand == AppBrand.barbacue;
   Uri get siteUri => Uri.https(domain);
   Uri legalUri(String page) => Uri.https(domain, '/legal/$slug/$page.html');

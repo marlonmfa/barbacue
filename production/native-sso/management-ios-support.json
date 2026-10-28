@@ -1,0 +1,28 @@
+{
+  "provenance": "Existing native release workspace; preserve original Gest\u00e3o icon set and empty staff entitlement. Published IPA 2026102401 confirms AppIcon-gestao and same bundle identifier.",
+  "inputs": {
+    "apps/mobile/ios/Runner/Management.entitlements": "55a9c3dbd2e3925788619684eace456de8fcbdd4e0afb681237cdcff36d6bda9",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-57x57@1x.png": "45aa8ea7a3033417fb8ccacc547a4174c18261c8a8c73ceccf6c574d7c6369b4",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-76x76@2x.png": "f0101157d6fedc9f3468cb7fa99c60ddf64073f30febd5f1c9544f0e5a55ede4",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-29x29@1x.png": "b478aef139b5212ae88fd5b654322d06d088ccb7a9d36a87a9b95e26a1f0cf3d",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-40x40@1x.png": "2bc2b7229c200e833fbb54acc644db9ce08002ca3916995a7775303ef6079e4c",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-72x72@1x.png": "5dae7610629d915d447ecc01b22ddb81a6e845f8daa51076cf25516700abc172",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-20x20@1x.png": "042474e67093311ca5bdf8986c8a98e55a9150a40ba18949091f6ebb8df7474b",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-50x50@2x.png": "39550c7badcb607f66f66ea7da6b7dc3f67990c7b03c44a3c207435f062ab76d",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-1024x1024@1x.png": "24742f7ab78bcdcb1f3b5dc1195b838a8c15e8a705efea92330c52e1a8cd5533",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-83.5x83.5@2x.png": "b429c500f840102a1a29f3d7a48216389355f2aa31897ea48927d8bd7c612197",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-20x20@3x.png": "c330bf8048523c9b30298475d4e7cf8ae6a5dcc7e975dc65a26d7525de0a7b85",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-50x50@1x.png": "952055292f5138ed85720f9bc37b6b77395dad2c66b6fca92f83012249a53781",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Contents.json": "404d463fd3c0f5f3c7d37ee59e2589b326136ff9e4a250989af1adc705a506c8",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-20x20@2x.png": "2bc2b7229c200e833fbb54acc644db9ce08002ca3916995a7775303ef6079e4c",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-29x29@3x.png": "e32e11ee2bf5d5bbeed9381a46763fec9824cf8b9f8f8098086cbc578bca960c",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-40x40@2x.png": "7bbc524d5203ff075e6a3b7c360ff8b5f14dd09976ced8f3f608dba21fbf9c65",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-72x72@2x.png": "9dee413ca8d52fb813476abc98d8d4eb8169b217a658faae474a11a4084e1d84",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-60x60@3x.png": "e2cadd6e9ab8a61f930cbbee91ec81cc031fe104a478712160bd197263d3c0e9",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-60x60@2x.png": "2f20bedafcdf240634acc61c69103afa2e177cec4045f665815adab4715747ba",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-57x57@2x.png": "a79dcf2709d913afc1553962070a84d4ad16de3ea008a0a1161d8c7ffeceb5a8",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-76x76@1x.png": "5c413c4560342e3efedfbcb9d6af6ffc06956a96b5d263db3679a496455524b7",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-40x40@3x.png": "2f20bedafcdf240634acc61c69103afa2e177cec4045f665815adab4715747ba",
+    "apps/mobile/ios/Runner/Assets.xcassets/AppIcon-gestao.appiconset/Icon-App-29x29@2x.png": "62ebdd3a1eb6c13d58aa3c1a1e32b5892930f44550eee03ae73507ca787f020e"
+  }
+}

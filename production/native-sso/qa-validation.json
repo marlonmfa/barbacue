@@ -1,0 +1,23 @@
+{
+  "result": "PASS",
+  "actual_linux_idp": true,
+  "actual_linux_next": true,
+  "actual_published_electron_main": true,
+  "electron": "44.3.0",
+  "chrome": true,
+  "cases": [
+    "mapped priority",
+    "cashier permissions",
+    "failed revoke",
+    "confirmed revoke native restore",
+    "unmapped fallback",
+    "absent fallback",
+    "inactive fallback",
+    "first-password fallback"
+  ],
+  "native_cookie_and_settings_identical": true,
+  "production_data_used": false,
+  "production_login_used": false,
+  "qa_provider_rootfs_matches_production": true,
+  "qa_provider_config_digest_differs": true
+}

@@ -16,7 +16,7 @@ export default function ImpersonatePage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Customer | null>(null);
-  const [masterPassword, setMasterPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,14 +37,14 @@ export default function ImpersonatePage() {
   });
 
   async function handleImpersonate() {
-    if (!selected || !masterPassword) return;
+    if (!selected || !currentPassword) return;
     setError(null);
     setLoading(true);
 
     const res = await fetch("/api/admin/impersonate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ customerId: selected.id, masterPassword }),
+      body: JSON.stringify({ customerId: selected.id, currentPassword }),
     });
 
     if (!res.ok) {
@@ -64,7 +64,7 @@ export default function ImpersonatePage() {
         <h1 className="text-2xl font-bold text-white">Impersonar Cliente</h1>
         <p className="text-[#a89a8c] text-sm mt-1">
           Abre o site pré-preenchido com os dados do cliente selecionado.
-          Requer a senha mestra.
+          Confirme com a senha da sua conta.
         </p>
       </div>
 
@@ -121,11 +121,12 @@ export default function ImpersonatePage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm text-[#a89a8c]">Senha mestra</label>
+            <label className="text-sm text-[#a89a8c]">Senha da sua conta</label>
             <input
               type="password"
-              value={masterPassword}
-              onChange={(e) => { setMasterPassword(e.target.value); setError(null); }}
+              autoComplete="current-password"
+              value={currentPassword}
+              onChange={(e) => { setCurrentPassword(e.target.value); setError(null); }}
               onKeyDown={(e) => e.key === "Enter" && handleImpersonate()}
               placeholder="••••••••••••"
               className="bg-[#1a1512] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#ed1b24] placeholder-[#7c6f61]"
@@ -138,7 +139,7 @@ export default function ImpersonatePage() {
 
           <button
             onClick={handleImpersonate}
-            disabled={loading || !masterPassword}
+            disabled={loading || !currentPassword}
             className="bg-[#ed1b24] hover:bg-[#c8141c] disabled:bg-[#5a1014] disabled:text-[#a8585c] text-white font-semibold py-2.5 rounded-xl transition-colors text-sm flex items-center justify-center gap-2"
           >
             <span>👤</span>

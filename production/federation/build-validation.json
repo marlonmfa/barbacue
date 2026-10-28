@@ -1,0 +1,13 @@
+{
+  "build": "passed",
+  "build_id": "F1ePobsynvuHYfaNFf-56",
+  "native_routes": 112,
+  "candidate_routes": 115,
+  "missing_routes": {},
+  "native_css": 14,
+  "candidate_css": 14,
+  "css_identical": true,
+  "action_key_preserved": true,
+  "external_jose_requires": 0,
+  "source_delta_inputs": 19
+}

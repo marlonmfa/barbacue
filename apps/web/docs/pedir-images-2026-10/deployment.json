@@ -1,0 +1,22 @@
+{
+  "success": true,
+  "checks": 182,
+  "buildId": "EtxAmEp8KHHiFMka_Wec8",
+  "baseBuildId": "vFPgH7G29sn-SJgE1G1AT",
+  "dist": ".next-dark-images-20261024",
+  "preservedRoutes": 111,
+  "catalogUnchanged": true,
+  "counts": {
+    "staff": "5",
+    "customers": "0",
+    "orders": "135",
+    "products": "197",
+    "brand_products": "137"
+  },
+  "realChargesCreated": 0,
+  "backup": "/root/deploy-backups/barbacue-dark-images-20261024",
+  "published": true,
+  "previous": "/root/barbacue-before-dark-images-20261024",
+  "verifiedAfterSwitch": true,
+  "port": 3007
+}

@@ -23,6 +23,13 @@ export const config = {
   sessionsDir: process.env.SESSIONS_DIR || resolve(here, "../sessions"),
   // Drop a conversation's in-memory state after this much inactivity.
   sessionTtlMs: Number(process.env.BOT_SESSION_TTL_MS || 1000 * 60 * 30),
+  // Optional remote WhatsApp provider. When configured, pairing and messages
+  // are delegated to zap.cog.ia.br and Baileys is not started locally.
+  zapApiBaseUrl: (process.env.ZAP_API_BASE_URL || "https://zap.cog.ia.br/api/v1").replace(/\/$/, ""),
+  zapApiToken: process.env.ZAP_API_TOKEN || "",
+  zapSessionId: process.env.ZAP_SESSION_ID || "",
+  zapWebhookSecret: process.env.ZAP_WEBHOOK_SECRET || "",
+  zapWebhookUrl: process.env.ZAP_WEBHOOK_URL || "",
 };
 
 if (!config.botApiToken) {

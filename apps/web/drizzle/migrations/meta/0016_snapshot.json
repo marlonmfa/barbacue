@@ -1,5 +1,5 @@
 {
-  "id": "c3d5b67f-b6fc-4a32-9fb7-a7e1281d50b8",
+  "id": "3fe61c43-8a81-4b7b-a3fe-0d62e52326aa",
   "prevId": "aa655a22-aef6-45fe-8cd4-efa667adf0e4",
   "version": "7",
   "dialect": "postgresql",
@@ -424,18 +424,6 @@
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
-        },
-        "google_id": {
-          "name": "google_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "apple_id": {
-          "name": "apple_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
@@ -461,20 +449,6 @@
           "nullsNotDistinct": false,
           "columns": [
             "facebook_id"
-          ]
-        },
-        "customer_accounts_google_id_unique": {
-          "name": "customer_accounts_google_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "google_id"
-          ]
-        },
-        "customer_accounts_apple_id_unique": {
-          "name": "customer_accounts_apple_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "apple_id"
           ]
         }
       },
@@ -2367,6 +2341,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "must_change_password": {
+          "name": "must_change_password",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "role": {
           "name": "role",
           "type": "staff_role",
@@ -2440,7 +2421,7 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'Pe\u00e7a agora \u2014 entregamos com amor!'"
+          "default": "'Peça agora — entregamos com amor!'"
         },
         "phone": {
           "name": "phone",

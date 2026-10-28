@@ -1,0 +1,20 @@
+{
+  "published": true,
+  "healthy": true,
+  "revision": "9f59eb3",
+  "native_build": "ZnqXTYJAItJLMco5e6go6",
+  "candidate_build": "cWNCruZ-v5_CSiKN7zmIO",
+  "runtime": "existing Node 22.23.1 / PM2 barbacue / port 3007",
+  "native_sources_verified": 222,
+  "native_routes_preserved": 112,
+  "operational_files_preserved": 736,
+  "historical_static_files_linked": 645,
+  "three_catalogs_identical": true,
+  "native_server_and_dependencies_unchanged": true,
+  "native_environment_preserved": true,
+  "database_untouched": true,
+  "database_snapshot_restored": true,
+  "accounts_provisioned": 0,
+  "cookie_sso_host": "barbacue.cog.ia.br",
+  "external_brand_domains": "federation pending"
+}

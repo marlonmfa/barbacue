@@ -1,0 +1,23 @@
+{
+  "buildId": "EtxAmEp8KHHiFMka_Wec8",
+  "baseBuildId": "vFPgH7G29sn-SJgE1G1AT",
+  "edited": 139,
+  "generated": 9,
+  "associations": 269,
+  "coverage": {
+    "generatedFiles": 148,
+    "associations": 269,
+    "foodWithoutImage": []
+  },
+  "unitTests": 3,
+  "lint": "passed",
+  "build": "passed",
+  "publicChecks": 465,
+  "candidateChecks": 182,
+  "mobileViewport": {
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390
+  },
+  "fullCatalogUnchanged": true
+}

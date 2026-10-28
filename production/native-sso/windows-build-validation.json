@@ -1,0 +1,10 @@
+{
+  "version": "1.0.1",
+  "sha256": "94f713695bb342701a0e7f47dddbb58f8701514bd95fd6032e4e3ee3b3e164ab",
+  "bytes": 111250754,
+  "electron": "44.3.0",
+  "public_source_files": 18,
+  "original_native_files_identical": 14,
+  "printing_preload_settings_unchanged": true,
+  "signature": "same unsigned Windows policy as published 1.0.0"
+}

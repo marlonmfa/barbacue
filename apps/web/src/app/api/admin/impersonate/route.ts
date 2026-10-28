@@ -1,18 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { customers } from "@/db/schema";
+import { customers, staffUsers } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { isMasterPassword, withRole } from "@/lib/admin-auth";
+import { withRole } from "@/lib/admin-auth";
+import { verifyPassword } from "@/lib/staff-auth";
+import { rateLimit } from "@/lib/rate-limit";
 import { setCustomerSession } from "@/lib/customer-session";
 
 // Impersonation grants access to a customer's saved data — admin-only, AND still
-// gated by the master password as a second factor.
-export const POST = withRole("admin", async (req: NextRequest) => {
+// gated by confirmation of the administrator's own password.
+export const POST = withRole("admin", async (req: NextRequest, _ctx, session) => {
+  const limit = rateLimit(`staff-impersonate:${session.userId}`, 8, 60_000, 5 * 60_000);
+  if (!limit.ok) return NextResponse.json({ error: "Muitas tentativas. Tente novamente em alguns minutos." }, { status: 429 });
   const body = await req.json().catch(() => ({}));
-  const { customerId, masterPassword } = body as { customerId?: number; masterPassword?: string };
+  const { customerId, currentPassword } = (body ?? {}) as { customerId?: number; currentPassword?: string };
+  const [user] = await db.select({ passwordHash: staffUsers.passwordHash, active: staffUsers.active }).from(staffUsers).where(eq(staffUsers.id, session.userId));
 
-  if (!isMasterPassword(masterPassword ?? "")) {
-    return NextResponse.json({ error: "Senha mestra incorreta" }, { status: 401 });
+  if (!user?.active || typeof currentPassword !== "string" || currentPassword.length > 256 || !(await verifyPassword(currentPassword, user.passwordHash))) {
+    return NextResponse.json({ error: "Senha da sua conta incorreta" }, { status: 401 });
   }
 
   if (!customerId) {

@@ -1,0 +1,7 @@
+{
+  "own_app_and_pg_removed": true,
+  "own_restore_clone_removed": true,
+  "own_internal_network_removed": true,
+  "loopback_tunnel_closed": true,
+  "private_checkpoints_and_builds_retained": true
+}

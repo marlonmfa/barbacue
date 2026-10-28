@@ -1,5 +1,24 @@
 # Produção — barbacue.cog.ia.br
 
+> **Tema e fotos de /pedir publicados em 24/10/2026:** build ativo
+> `EtxAmEp8KHHiFMka_Wec8`, `distDir` `.next-dark-images-20261024`.
+> Tema escuro em todo o checkout, 139 fotos editadas e 9 imagens criadas.
+> Os cardápios, contas e pedidos foram preservados. Acesso atual por SSH:
+> `ssh -p 2212 root@91.108.125.60`.
+> [Imagens, validação, publicação e backup](pedir-images-2026-10/README.md).
+
+> **Pedidos online publicados em 24/10/2026:** build `vFPgH7G29sn-SJgE1G1AT`,
+> `distDir` `.next-online-20261024`, no mesmo PM2/container. `/pedir` atende as
+> três marcas com os cardápios importados, Pix Asaas e liberação automática para
+> produção após confirmação. Conserva o login individual da publicação abaixo.
+> [Fluxo, configuração, testes e rollback](ONLINE-CHECKOUT.md).
+
+> **Login atualizado em 24/10/2026:** build ativo `tj6YNAphSh5BmbsaEUV5L`,
+> `distDir` `.next-individual-login-20261024`, no mesmo PM2/container.
+> Usuário ou e-mail obrigatório, acesso e sessões de senha mestre desativados.
+> As duas contas individuais exigem troca de senha no primeiro acesso.
+> [Registro da mudança, testes e backup](LOGIN-EQUIPE.md).
+
 > **Atualização verificada em 20/09/2026:** o DNS de `barbacue.cog.ia.br` aponta para `91.108.125.60`. O ambiente atual está no container LXD `otherpagesandig` desse host. Os caminhos e a porta 3007 abaixo são internos ao container. Não publicar no antigo host `72.60.31.220`. Acesso: `ssh root@91.108.125.60`, depois `lxc exec otherpagesandig -- bash`. Veja [a publicação de imagens e ícones](image-audit/../brand-images-2026-09/README.md).
 
 Setup atualmente NO AR. Difere do `DEPLOY.md` (docker-compose): em produção
@@ -151,3 +170,27 @@ ORDER/EVENTS. Nenhuma migração ou alteração em contas/volumes foi necessári
   SQL aplicado). App anterior: `/root/barbacue-before-ifood-gestor-20261022/`.
 - Rollback: restaurar esse diretório para `/root/barbacue` e `pm2 restart barbacue`; a 0015 é
   aditiva e pode permanecer.
+
+
+## API de sessão para Gestão — 24/10/2026
+
+- Publicada no host existente `otherpagesandig`, SSH `91.108.125.60:2212`,
+  aplicação `/root/barbacue`, PM2 `barbacue`, porta 3007.
+- Antes: `.next-dark-images-20261024`, build `EtxAmEp8KHHiFMka_Wec8`.
+  Comparados 377 arquivos compilados do servidor e `server.js` com a base local: sem diferenças.
+- Depois: `.next-mobile-session-20261024`, build `ZnqXTYJAItJLMco5e6go6`.
+  Sobreposição isolada de GET sessão, resumo administrativo, biblioteca de resumo
+  e mapeamento de permissões; sem publicar as demais mudanças do checkout.
+- Backup de aplicação e pg_dump verificado em
+  `/root/deploy-backups/barbacue-mobile-session-20261024`. Aplicação anterior
+  preservada em `/root/barbacue-before-mobile-session-20261024`.
+- 50 verificações antes e depois da troca: sessão anônima/inválida/expirada,
+  sessões de equipe e primeiro acesso, permissões do dashboard, três catálogos
+  e páginas de pedidos. Hash dos registros da equipe preservado e pedidos não decresceram.
+- GET público `/api/admin/auth` responde 401 JSON sem credencial, em lugar do antigo 405.
+  Políticas estáticas do Gestão em `/legal/gestao/` respondem 200 por HTTPS.
+- Nenhuma migração de banco, troca de imagem Docker, recriação de conta ou
+  substituição de .env. Conteúdo público, downloads privados e configuração PM2 preservados.
+- Evidência local: `tmp/app-store-release-20261024/api-deployment-verification.json`,
+  manifests e quatro arquivos do patch na mesma pasta. O snapshot intermediário
+  de build foi removido depois da publicação para liberar espaço; a base e o patch foram preservados.

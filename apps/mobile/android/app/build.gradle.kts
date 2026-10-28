@@ -37,6 +37,12 @@ android {
 
     flavorDimensions += "restaurant"
     productFlavors {
+        create("gestao") {
+            dimension = "restaurant"
+            applicationId = "com.lanchesdobarba.gestao"
+            resValue("string", "app_name", "Barbacue Gestão")
+            manifestPlaceholders["appHost"] = "barbacue.cog.ia.br"
+        }
         create("barbacue") {
             dimension = "restaurant"
             applicationId = "com.lanchesdobarba.barbacue"

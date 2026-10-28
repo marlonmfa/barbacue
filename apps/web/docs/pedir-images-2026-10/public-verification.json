@@ -1,0 +1,13 @@
+{
+  "published": true,
+  "buildId": "EtxAmEp8KHHiFMka_Wec8",
+  "checks": 465,
+  "hosts": [
+    "https://barbacue.cog.ia.br",
+    "https://chelas.hirableaiagents.com",
+    "https://barbadog.hirableaiagents.com"
+  ],
+  "assetsPerHost": 148,
+  "darkCss": true,
+  "noLivePayments": true
+}

@@ -1,23 +1,30 @@
 {
   "name": "@barbacue/desktop",
-  "version": "1.0.0",
+  "version": "1.2.1",
   "private": true,
-  "description": "Gest\u00e3o de pedidos e impress\u00e3o para Windows",
+  "description": "Administra\u00e7\u00e3o Barbacue para Windows: produtos, atendimento, pedidos, gest\u00e3o e impress\u00e3o",
   "author": "Grupo Barbacue",
   "type": "module",
   "main": "src/main.mjs",
   "scripts": {
-    "start": "electron .",
+    "start": "npm run build:renderer && electron .",
+    "build:renderer": "node scripts/build-renderer.mjs",
     "test": "node --test tests/*.test.mjs",
     "prepare:agent": "node scripts/prepare-agent.mjs",
-    "dist:win": "npm run prepare:agent && electron-builder --win nsis --x64 --publish never && npm run stage:web",
-    "pack": "npm run prepare:agent && electron-builder --dir --publish never",
-    "smoke": "node scripts/smoke.mjs",
+    "dist:win": "npm run build:renderer && npm run prepare:agent && electron-builder --win nsis --x64 --publish never && npm run stage:web",
+    "pack": "npm run build:renderer && npm run prepare:agent && electron-builder --dir --publish never",
+    "smoke": "npm run build:renderer && node scripts/smoke.mjs",
     "stage:web": "node scripts/stage-web-download.mjs"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "4.3.0",
     "electron": "44.3.0",
-    "electron-builder": "26.15.3"
+    "electron-builder": "26.15.3",
+    "esbuild": "0.25.12",
+    "postcss": "8.4.31",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "tailwindcss": "4.3.0"
   },
   "build": {
     "appId": "br.com.barbacue.pedidos",

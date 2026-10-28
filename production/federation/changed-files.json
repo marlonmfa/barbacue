@@ -1,0 +1,21 @@
+{
+  ".gitignore": "b947cbc1fdf53476522b3df796ac10de6bf32c06ca60c63cb3ee454baa00aa4d",
+  "apps/web/native-tailwind-utilities.html": "f363f137e31d3b03db474bc0b06ad01347dd93bbff54f88bca6a7f05faf50c04",
+  "apps/web/next.config.ts": "af2ebe5ff3aa80ac84ee04051bfa7bab021a13ba8a86be3edafa519d6055a07a",
+  "apps/web/package.json": "c43c4725e6cafb72bd9c0209b78aa3ea3fcdf233f9ee712361dada4bf773deaa",
+  "apps/web/src/app/api/account/route.ts": "450a99e11f326f3bfa6741f4aab3ba0ef80d42bf8304c9b00f4a8067b1fdf230",
+  "apps/web/src/app/api/admin/auth/route.ts": "211479d626069ac8fe0d491fb22009702ff07b934d74d11e89c28ec19d1da640",
+  "apps/web/src/app/api/auth/cog/callback/route.ts": "a59246b39118c226b8e4cd283d0bf780c3db93d50783dbd90d18581a5c9ec637",
+  "apps/web/src/app/api/auth/cog/session/route.ts": "7a77be18c6e0c22d0ab1785e81710ea64c0101879a1777ec794ea73bee0bc2c5",
+  "apps/web/src/app/api/auth/cog/start/route.ts": "d8a4baa1c66958d5dd0cbdc1379f3fbf1a70dcf13785a4a91c4b664549c98825",
+  "apps/web/src/app/globals.css": "82517cb8f04a66795b04b1aef03600a31c29b9e869b8f837e67216da75ca7ba0",
+  "apps/web/src/app/layout.tsx": "c0de79215db07ba21f6097592ee89f2db4f0f9dd46dec40e252672b7ea0a8036",
+  "apps/web/src/components/SessionWatch.tsx": "5d9740683df5a3e4c68b9b0c0b9a9ff751ae40d3f543efcc6decc61f87481754",
+  "apps/web/src/lib/admin-auth.ts": "75c6a174fa4220786e2e729e80d8f973281a715870d710f63a73299353d05c9c",
+  "apps/web/src/lib/cog-oidc.ts": "0687fbaf2640c0154e23a3e4fb502bc9e7ded4db5a966ada644f2ca6fa0c5f0b",
+  "apps/web/src/lib/cog-sso.ts": "a7ec575db0269da1687f727dcb799e85c2e3f745c14be4a4c5c3cb9e93923c39",
+  "apps/web/src/lib/member-auth.ts": "eb6ff0c0afb6ccec105a8c203ba3017c3f0d32eb5dae9479ee285c91da31451a",
+  "apps/web/src/lib/session-view.ts": "fc7276c211c0653dc03b19ad087035a105c7069eb15835cbd387541c559eaf48",
+  "apps/web/src/proxy.ts": "625a65f9d16ae7e7858d7f6322542cdebf859cd985cc3dadaf1ce746089a0abc",
+  "package-lock.json": "fcf0edf1f3c4bcab3527cab2b8581a72db38ccb9750ea214c3f32ca318c8052e"
+}

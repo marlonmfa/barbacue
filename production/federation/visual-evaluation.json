@@ -1,0 +1,13 @@
+{
+  "result": "PASS",
+  "screenshots": 6,
+  "source_revision": "ddc06e2",
+  "screenshot_commits": [
+    "fa3613f",
+    "8635a7a"
+  ],
+  "desktop": "staff identity, local permissions, native fallback and retry visible",
+  "customer": "correct customer and original branded storefront",
+  "first_password": "native restriction preserved",
+  "mobile": "account and dashboard readable"
+}

@@ -71,6 +71,35 @@ test('journal intent existe antes do envio e submitted antes do ACK', async t =>
   assert.equal((await x.journal.read('job-1')).state, 'complete');
 });
 
+test('mapped paper controls ticket width and destination reaches the spool unchanged', async t => {
+  const x = await setup(t);
+  const destination = { deviceId: 'desktop-a', printerName: 'CHELAS USB', paper: 58 };
+  x.queue[0].destination = destination;
+  x.queue[0].ticket.items[0].notes = 'Observacao suficientemente longa para quebrar em uma bobina estreita';
+  let received;
+  x.agent.print = async (text, _ticket, target) => {
+    received = target;
+    assert.ok(text.split('\n').every(line => line.length <= 32));
+    return { transport: 'fake' };
+  };
+  await x.agent.runOnce();
+  assert.equal(received, destination);
+  assert.equal(x.completed.length, 1);
+});
+
+test('API registers inventory and identifies the mapped-only computer on claims', async () => {
+  const requests = [];
+  const api = createApi({ apiUrl: 'https://example.test', token: 'test', deviceId: 'desktop-a', acceptDefault: false }, async (url, options) => {
+    requests.push({ url, body: JSON.parse(options.body) });
+    return Response.json({});
+  });
+  const device = { id: 'desktop-a', name: 'Cozinha', printers: [{ name: 'USB', displayName: 'USB' }] };
+  await api.status(device);
+  await api.claim();
+  assert.deepEqual(requests[0].body, { device });
+  assert.deepEqual(requests[1].body, { deviceId: 'desktop-a', acceptDefault: false });
+});
+
 test('resposta de ACK perdida repete apenas confirmacao, nunca papel', async t => {
   const x = await setup(t);
   let calls = 0;

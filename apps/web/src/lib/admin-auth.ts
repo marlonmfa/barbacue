@@ -6,11 +6,10 @@ import { STAFF_ROLES, canAccessPath, type Permission } from "@/lib/permissions";
 const COOKIE_NAME = "barbacue_admin";
 const MAX_AGE = 60 * 60 * 8; // 8 hours
 
-// A signed session. userId 0 is reserved for the env-based master login
-// (ADMIN_PASSWORD / ADMIN_MASTER_PASSWORD), which always has the admin role so
-// a fresh database is never locked out before any staff_users row exists.
+// Every signed session belongs to an active individual staff account.
 export interface AdminSession {
   userId: number;
+  mustChangePassword?: boolean;
   role: StaffRole;
   name?: string;
   jobTitle?: string | null;
@@ -69,26 +68,16 @@ async function verify(token: string, secret: string): Promise<boolean> {
   return crypto.subtle.verify("HMAC", key, sig, enc.encode(value));
 }
 
-export function isMasterPassword(pw: string): boolean {
-  const master = process.env.ADMIN_MASTER_PASSWORD;
-  return Boolean(master && safeEqual(pw, master));
-}
-
-export function isValidAdminPassword(pw: string): boolean {
-  const main = process.env.ADMIN_PASSWORD;
-  if (main && safeEqual(pw, main)) return true;
-  return isMasterPassword(pw);
-}
-
 const ROLES: readonly StaffRole[] = STAFF_ROLES;
 
 /** Build a signed session token. Expiry is embedded INSIDE the signed payload
  * so a copied cookie can't outlive it by changing MaxAge client-side. */
 export async function makeStaffToken(session: AdminSession): Promise<string> {
+  if (!Number.isSafeInteger(session.userId) || session.userId <= 0) throw new Error("Individual staff account required");
   const secret = process.env.ADMIN_COOKIE_SECRET;
   if (!secret) throw new Error("ADMIN_COOKIE_SECRET is not configured");
   const expiresAt = Date.now() + MAX_AGE * 1000;
-  return sign(`${session.userId}|${session.role}|${expiresAt}`, secret);
+  return sign(`${session.userId}|${session.role}|${expiresAt}|${session.mustChangePassword ? "change-password" : "full"}`, secret);
 }
 
 /** Verify a token's signature + expiry and return the session, or null. */
@@ -97,13 +86,14 @@ export async function parseSession(token: string): Promise<AdminSession | null> 
   if (!secret || !token) return null;
   if (!(await verify(token, secret))) return null;
   const dot = token.lastIndexOf(".");
-  const [userIdStr, role, expiresAtStr] = token.slice(0, dot).split("|");
+  const [userIdStr, role, expiresAtStr, scope] = token.slice(0, dot).split("|");
+  if (scope !== undefined && scope !== "full" && scope !== "change-password") return null;
   const expiresAt = Number(expiresAtStr);
   if (!Number.isFinite(expiresAt) || Date.now() >= expiresAt) return null;
   if (!ROLES.includes(role as StaffRole)) return null;
   const userId = Number(userIdStr);
-  if (!Number.isSafeInteger(userId) || userId < 0) return null;
-  return { userId, role: role as StaffRole };
+  if (!Number.isSafeInteger(userId) || userId <= 0) return null;
+  return { userId, role: role as StaffRole, mustChangePassword: scope === "change-password" };
 }
 
 /** Called from server components / server actions / Node route handlers to gate
@@ -113,17 +103,19 @@ export async function requireStaff(): Promise<AdminSession> {
   const session = await parseSession(store.get(COOKIE_NAME)?.value ?? "");
   if (!session) throw new Error("unauthorized");
   const current = await resolveStaffSession(session);
-  if (!current) throw new Error("unauthorized");
+  if (!current || current.mustChangePassword) throw new Error("unauthorized");
   return current;
 }
 
 /** Resolve current permissions so revocations apply to existing sessions. */
 export async function resolveStaffSession(session: AdminSession): Promise<AdminSession | null> {
-  if (session.userId === 0) return { userId: 0, role: "admin", name: "Administrador" };
+  if (!Number.isSafeInteger(session.userId) || session.userId <= 0) return null;
   const { db } = await import("@/db");
   const { staffUsers } = await import("@/db/schema");
   const { eq } = await import("drizzle-orm");
-  const [user] = await db.select({ userId: staffUsers.id, role: staffUsers.role, name: staffUsers.name, jobTitle: staffUsers.jobTitle, permissions: staffUsers.permissions, active: staffUsers.active }).from(staffUsers).where(eq(staffUsers.id, session.userId));
+  const [user] = await db.select({ userId: staffUsers.id, role: staffUsers.role, name: staffUsers.name, jobTitle: staffUsers.jobTitle, permissions: staffUsers.permissions, active: staffUsers.active, mustChangePassword: staffUsers.mustChangePassword }).from(staffUsers).where(eq(staffUsers.id, session.userId));
+  // A first-access cookie cannot become a full session after the password changes.
+  if (session.mustChangePassword && !user?.mustChangePassword) return null;
   return user?.active ? user : null;
 }
 
@@ -159,7 +151,8 @@ export function clearAdminCookie(response: NextResponse): void {
 export async function isAdminRequest(req: NextRequest): Promise<boolean> {
   const token = req.cookies.get(COOKIE_NAME)?.value ?? "";
   const session = await parseSession(token);
-  return session !== null && (await resolveStaffSession(session)) !== null;
+  const current = session ? await resolveStaffSession(session) : null;
+  return current !== null && !current.mustChangePassword;
 }
 
 // ─── In-handler guards ─────────────────────────────────────────────────────────
@@ -197,34 +190,8 @@ export function withRole<Ctx>(role: StaffRole, handler: AdminHandler<Ctx>) {
   };
 }
 
-// Placeholder values shipped in .env.example — refusing these stops a deploy from
-// silently running with a guessable admin password / forgeable cookie secret.
-const PLACEHOLDERS = new Set([
-  "",
-  "troque-isto",
-  "troque-isso",
-  "changeme",
-  "change-me",
-  "barba@admin2025", // the value committed in docs/memory — must be rotated in prod
-]);
-
-/** Throws ONLY on a genuinely broken/forgeable config (missing or short cookie
- * secret → sessions can't be signed; no password at all → nobody can log in).
- * A weak/placeholder password is loudly WARNED but not blocked, so a live deploy
- * that hasn't rotated yet isn't bricked. Called by the login route. */
+/** The only environment credential required by staff login is the signing key. */
 export function assertSecretsConfigured(): void {
   const secret = process.env.ADMIN_COOKIE_SECRET ?? "";
-  const pw = process.env.ADMIN_PASSWORD ?? "";
-  const master = process.env.ADMIN_MASTER_PASSWORD ?? "";
-
-  const fatal: string[] = [];
-  if (secret.length < 16) fatal.push("ADMIN_COOKIE_SECRET ausente ou curto (<16 chars)");
-  if (!pw && !master) fatal.push("ADMIN_PASSWORD/ADMIN_MASTER_PASSWORD ausentes");
-  if (fatal.length) throw new Error("Configuração insegura: " + fatal.join("; "));
-
-  if (pw && PLACEHOLDERS.has(pw) && process.env.NODE_ENV === "production") {
-    console.warn(
-      "[segurança] ADMIN_PASSWORD ainda é um valor padrão/placeholder — troque em produção.",
-    );
-  }
+  if (secret.length < 16) throw new Error("Configuração insegura: ADMIN_COOKIE_SECRET ausente ou curto (<16 chars)");
 }

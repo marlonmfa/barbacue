@@ -1,0 +1,580 @@
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,3 @@
++**/.next*/
++**/node_modules/
++qa-server.mjs
+--- /dev/null
++++ b/apps/web/native-tailwind-utilities.html
+@@ -0,0 +1 @@
++<div class="container contents size-1 lowercase grayscale"></div>
+--- a/apps/web/next.config.ts
++++ b/apps/web/next.config.ts
+@@ -11,6 +11,7 @@
+ const nextConfig: NextConfig = {
+   // Emit a self-contained server bundle for a small production Docker image.
+   output: "standalone",
++  transpilePackages: ["jose"],
+   outputFileTracingRoot: '/Users/marlonalcantara/Repos/barbacue.cog.ia.br',
+   // Two dev servers sharing one .next corrupt each other's client chunks — the
+   // page then serves but never hydrates. Set NEXT_DIST_DIR to run a second
+--- a/apps/web/package.json
++++ b/apps/web/package.json
+@@ -20,7 +20,8 @@
+     "react": "19.2.4",
+     "react-dom": "19.2.4",
+     "zod": "^4.4.3",
+-    "zustand": "^5.0.13"
++    "zustand": "^5.0.13",
++    "jose": "6.2.8"
+   },
+   "devDependencies": {
+     "@tailwindcss/postcss": "^4",
+--- a/apps/web/src/app/api/account/route.ts
++++ b/apps/web/src/app/api/account/route.ts
+@@ -1,3 +1,4 @@
++import { oidcConfig, requestOrigin, revokeOidc, GRANT_COOKIE, FLOW_COOKIE, CHECK_COOKIE } from "@/lib/cog-oidc";
+ import { NextRequest, NextResponse } from "next/server";
+ import { z } from "zod";
+ import { eq } from "drizzle-orm";
+@@ -31,8 +32,11 @@
+ }
+ export async function DELETE(req:NextRequest) {
+   const central=req.cookies.get('cogia_sessao')?.value;
+-  try{await endCogSession(central);}catch{return NextResponse.json({error:'Não foi possível encerrar a sessão Cog. Tente novamente.'},{status:503});}
++  try{await revokeOidc(oidcConfig(requestOrigin(req.headers)),req.cookies.get(GRANT_COOKIE)?.value);await endCogSession(central);}catch{return NextResponse.json({error:'Não foi possível encerrar a sessão Cog. Tente novamente.'},{status:503});}
+   const response = NextResponse.json({ ok: true });
+   if(central && process.env.COGIA_SSO_IDENTITY_KEY)response.cookies.set('cogia_sessao','',{domain:'cog.ia.br',path:'/',maxAge:0,httpOnly:true,secure:true,sameSite:'lax'});
++  response.cookies.set(GRANT_COOKIE,'',{path:'/',maxAge:0});
++  response.cookies.set(FLOW_COOKIE,'',{path:'/',maxAge:0});
++  response.cookies.set(CHECK_COOKIE,'1',{path:'/',maxAge:300,httpOnly:true,secure:requestOrigin(req.headers).startsWith('https:'),sameSite:'lax'});
+   clearMemberCookie(response);return response;
+ }
+--- a/apps/web/src/app/api/admin/auth/route.ts
++++ b/apps/web/src/app/api/admin/auth/route.ts
+@@ -1,3 +1,4 @@
++import { oidcConfig, requestOrigin, revokeOidc, GRANT_COOKIE, FLOW_COOKIE, CHECK_COOKIE } from "@/lib/cog-oidc";
+ import { NextRequest, NextResponse } from "next/server";
+ import { z } from "zod";
+ import {
+@@ -20,7 +21,7 @@
+ // The desktop renders its own local UI and resolves the current account through
+ // the same HttpOnly online session. No password, hash or signing key is exposed.
+ export async function GET(req: NextRequest) {
+-  const session = await resolveRequestStaff(req.cookies.get('barbacue_admin')?.value,req.cookies.get('cogia_sessao')?.value);
++  const session = await resolveRequestStaff(req.cookies.get('barbacue_admin')?.value,req.cookies.get('cogia_sessao')?.value,req.headers,req.cookies.get(GRANT_COOKIE)?.value);
+   const headers = { "Cache-Control": "private, no-store", Vary: "Cookie" };
+   if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401, headers });
+   const { userId, role, name, jobTitle, permissions, mustChangePassword } = session;
+@@ -70,9 +71,12 @@
+ 
+ export async function DELETE(req:NextRequest) {
+   const central=req.cookies.get('cogia_sessao')?.value;
+-  try{await endCogSession(central);}catch{return NextResponse.json({error:'Não foi possível encerrar a sessão Cog. Tente novamente.'},{status:503});}
++  try{await revokeOidc(oidcConfig(requestOrigin(req.headers)),req.cookies.get(GRANT_COOKIE)?.value);await endCogSession(central);}catch{return NextResponse.json({error:'Não foi possível encerrar a sessão Cog. Tente novamente.'},{status:503});}
+   const res = NextResponse.json({ ok: true });
+   if(central && process.env.COGIA_SSO_IDENTITY_KEY)res.cookies.set('cogia_sessao','',{domain:'cog.ia.br',path:'/',maxAge:0,httpOnly:true,secure:true,sameSite:'lax'});
++  res.cookies.set(GRANT_COOKIE,'',{path:'/',maxAge:0});
++  res.cookies.set(FLOW_COOKIE,'',{path:'/',maxAge:0});
++  res.cookies.set(CHECK_COOKIE,'1',{path:'/',maxAge:300,httpOnly:true,secure:requestOrigin(req.headers).startsWith('https:'),sameSite:'lax'});
+   clearAdminCookie(res);
+   return res;
+ }
+--- /dev/null
++++ b/apps/web/src/app/api/auth/cog/callback/route.ts
+@@ -0,0 +1,27 @@
++import { NextRequest, NextResponse } from "next/server";
++import { oidcConfig, requestOrigin, completeFlow, FLOW_COOKIE, GRANT_COOKIE, CHECK_COOKIE } from "@/lib/cog-oidc";
++import { findCogStaff } from "@/lib/admin-auth";
++import { findCogMember } from "@/lib/member-auth";
++export const dynamic = "force-dynamic";
++export async function GET(req: NextRequest) {
++  const origin = requestOrigin(req.headers);
++  const config = oidcConfig(origin);
++  if (!config) return new NextResponse("Não encontrado", { status: 404 });
++  let next = "/admin/login", grant = null;
++  try {
++    const result = await completeFlow(config, req.cookies.get(FLOW_COOKIE)?.value, req.nextUrl.searchParams);
++    next = result.next;
++    if (result.grant) {
++      const [staff, member] = await Promise.all([findCogStaff(result.grant.email), findCogMember(result.grant.email)]);
++      if (staff || member) grant = result.grant;
++    }
++  } catch { /* Preserve native session on invalid, unavailable or unmapped Cog. */ }
++  const response = NextResponse.redirect(new URL(next, origin), 303);
++  const options = { httpOnly: true, secure: origin.startsWith("https:"), sameSite: "lax" as const, path: "/" };
++  response.cookies.set(FLOW_COOKIE, "", { ...options, maxAge: 0 });
++  response.cookies.set(CHECK_COOKIE, "1", { ...options, maxAge: 300 });
++  response.cookies.set(GRANT_COOKIE, grant?.cookie || "", { ...options, maxAge: grant?.ttl || 0 });
++  response.headers.set("Cache-Control", "no-store");
++  response.headers.set("Referrer-Policy", "no-referrer");
++  return response;
++}
+--- /dev/null
++++ b/apps/web/src/app/api/auth/cog/session/route.ts
+@@ -0,0 +1,15 @@
++import { cookies, headers } from "next/headers";
++import { NextResponse } from "next/server";
++import { getStaffSession } from "@/lib/admin-auth";
++import { getMember } from "@/lib/member-auth";
++import { actorView } from "@/lib/session-view";
++import { oidcConfig, requestOrigin, CHECK_COOKIE } from "@/lib/cog-oidc";
++export const dynamic="force-dynamic";
++export async function GET() {
++  const origin=requestOrigin(await headers());
++  const [staff,member]=await Promise.all([getStaffSession(),getMember()]);
++  const view=await actorView(origin,staff,member);
++  const store=await cookies();
++  return NextResponse.json({view,refresh:!!oidcConfig(origin) && !store.get(CHECK_COOKIE) && !!(staff || member || store.get("barbacue_cog_grant"))},
++    {headers:{"Cache-Control":"no-store"}});
++}
+--- /dev/null
++++ b/apps/web/src/app/api/auth/cog/start/route.ts
+@@ -0,0 +1,16 @@
++import { NextRequest, NextResponse } from "next/server";
++import { oidcConfig, requestOrigin, startFlow, FLOW_COOKIE, CHECK_COOKIE } from "@/lib/cog-oidc";
++export const dynamic = "force-dynamic";
++export async function GET(req: NextRequest) {
++  const origin = requestOrigin(req.headers);
++  const config = oidcConfig(origin);
++  if (!config) return new NextResponse("Não encontrado", { status: 404 });
++  const flow = await startFlow(config, req.nextUrl.searchParams.get("next"));
++  const response = NextResponse.redirect(flow.url, 303);
++  const options = { httpOnly: true, secure: origin.startsWith("https:"), sameSite: "lax" as const, path: "/", maxAge: 300 };
++  response.cookies.set(FLOW_COOKIE, flow.cookie, options);
++  response.cookies.set(CHECK_COOKIE, "1", options);
++  response.headers.set("Cache-Control", "no-store");
++  response.headers.set("Referrer-Policy", "no-referrer");
++  return response;
++}
+--- a/apps/web/src/app/globals.css
++++ b/apps/web/src/app/globals.css
+@@ -1,4 +1,5 @@
+ @import "tailwindcss";
++@source "../../native-tailwind-utilities.html";
+ 
+ :root {
+   /* ── BARBACUE & Co brand — red on warm white (butcher-paper identity) ── */
+--- a/apps/web/src/app/layout.tsx
++++ b/apps/web/src/app/layout.tsx
+@@ -1,3 +1,8 @@
++import { SessionWatch } from "@/components/SessionWatch";
++import { actorView } from "@/lib/session-view";
++import { requestOrigin } from "@/lib/cog-oidc";
++import { getStaffSession } from "@/lib/admin-auth";
++import { getMember } from "@/lib/member-auth";
+ import { brandIcons } from "@/lib/brand-icons";
+ import type { Metadata } from "next";
+ import { headers } from "next/headers";
+@@ -47,13 +52,15 @@
+   themeColor: "#fbf7f2",
+ };
+ 
+-export default function RootLayout({
++export default async function RootLayout({
+   children,
+ }: Readonly<{ children: React.ReactNode }>) {
++  const [staff, member] = await Promise.all([getStaffSession(), getMember()]);
++  const view = await actorView(requestOrigin(await headers()), staff, member);
+   return (
+     <html lang="pt-BR" className={`${geist.variable} ${anton.variable} h-full antialiased`}>
+       <body className="min-h-full flex flex-col bg-[var(--bg)] text-[var(--text)]">
+-        <CartProvider>{children}</CartProvider>
++        <CartProvider><SessionWatch view={view} />{children}</CartProvider>
+       </body>
+     </html>
+   );
+--- /dev/null
++++ b/apps/web/src/components/SessionWatch.tsx
+@@ -0,0 +1,44 @@
++"use client";
++import { useEffect } from "react";
++
++/** Keep already-open tabs on the active account; bind mutations to the rendered view. */
++export function SessionWatch({ view }: { view: string }) {
++  useEffect(() => {
++    const original = window.fetch;
++    let checking = false, stopped = false;
++    const check = async (refresh = false) => {
++      if (checking || document.hidden) return;
++      checking = true;
++      try {
++        const response = await original("/api/auth/cog/session", { cache: "no-store" });
++        if (response.ok) {
++          const state = await response.json();
++          if (!stopped && state.view !== view) location.reload();
++          else if (!stopped && refresh && state.refresh) location.assign("/api/auth/cog/start?"+new URLSearchParams({next:location.pathname+location.search}));
++        }
++      } catch { /* A network failure never clears local state. */ }
++      finally { checking = false; }
++    };
++    const wrapped: typeof window.fetch = (input, init) => {
++      const url = new URL(input instanceof Request ? input.url : String(input), location.href);
++      const method = (init?.method || (input instanceof Request ? input.method : "GET")).toUpperCase();
++      const authLogin = method === "POST" && ["/api/admin/auth", "/api/account"].includes(url.pathname);
++      if (url.origin === location.origin && !authLogin && !["GET", "HEAD", "OPTIONS"].includes(method) && url.pathname.startsWith("/api/")) {
++        const headers = new Headers(init?.headers || (input instanceof Request ? input.headers : undefined));
++        headers.set("X-Cog-View", view);
++        return original(input, { ...init, headers });
++      }
++      return original(input, init);
++    };
++    window.fetch = wrapped;
++    const focus = () => { void check(true); };
++    const interval = window.setInterval(() => { void check(); }, 30000);
++    window.addEventListener("focus", focus); document.addEventListener("visibilitychange", focus);
++    return () => {
++      stopped = true; clearInterval(interval);
++      if (window.fetch === wrapped) window.fetch = original;
++      window.removeEventListener("focus", focus); document.removeEventListener("visibilitychange", focus);
++    };
++  }, [view]);
++  return null;
++}
+--- a/apps/web/src/lib/admin-auth.ts
++++ b/apps/web/src/lib/admin-auth.ts
+@@ -1,4 +1,9 @@
+-import { cookies } from "next/headers";
++import { cache } from "react";
++import { actorView } from "./session-view";
++import { requestOrigin } from "./cog-oidc";
++import { getMember } from "./member-auth";
++import { GRANT_COOKIE } from "./cog-oidc";
++import { cookies, headers } from "next/headers";
+ import { NextRequest, NextResponse } from "next/server";
+ import type { StaffRole } from "@/db/schema";
+ import { STAFF_ROLES, canAccessPath, type Permission } from "@/lib/permissions";
+@@ -105,21 +110,30 @@
+   return current;
+ }
+ 
++const staffForRequest = cache(async (): Promise<AdminSession | null> => {
++  const store=await cookies();
++  return resolveRequestStaff(store.get(COOKIE_NAME)?.value,store.get('cogia_sessao')?.value,await headers(),store.get(GRANT_COOKIE)?.value);
++});
+ export async function getStaffSession(): Promise<AdminSession | null> {
+-  const store=await cookies();
+-  return resolveRequestStaff(store.get(COOKIE_NAME)?.value,store.get('cogia_sessao')?.value);
+-}
+-
+-export async function resolveRequestStaff(nativeToken:string|undefined,cogToken:string|undefined):Promise<AdminSession|null> {
+-  const email=await resolveCogEmail(cogToken);
+-  if(email){
++  const staff=await staffForRequest(), h=await headers(), expected=h.get('X-Cog-View');
++  if(expected && expected!==await actorView(requestOrigin(h),staff,await getMember()))throw new Error('unauthorized');
++  return staff;
++}
++
++export async function resolveRequestStaff(nativeToken:string|undefined,cogToken:string|undefined,requestHeaders?:Pick<Headers,"get">,grant?:string):Promise<AdminSession|null> {
++  const email=await resolveCogEmail(cogToken,requestHeaders,grant);
++  if(email){ const user = await findCogStaff(email); if(user) return user; }
++  const session=await parseSession(nativeToken ?? '');
++  return session ? resolveStaffSession(session) : null;
++}
++
++/** Existing, unique, active staff with first access completed; no provisioning. */
++export async function findCogStaff(email:string):Promise<AdminSession|null> {
+     const {db}=await import('@/db');const {staffUsers}=await import('@/db/schema');const {sql}=await import('drizzle-orm');
+     const users=await db.select().from(staffUsers).where(sql`lower(${staffUsers.username}) = ${email}`).limit(2);
+     const user=uniqueEligibleAccount(users,true);
+     if(user)return {userId:user.id,role:user.role,name:user.name,jobTitle:user.jobTitle,permissions:user.permissions,mustChangePassword:false};
+-  }
+-  const session=await parseSession(nativeToken ?? '');
+-  return session ? resolveStaffSession(session) : null;
++  return null;
+ }
+ 
+ /** Resolve current permissions so revocations apply to existing sessions. */
+@@ -164,7 +178,7 @@
+ 
+ /** Middleware (proxy.ts, Edge) helper — any valid staff session passes. */
+ export async function isAdminRequest(req: NextRequest): Promise<boolean> {
+-  const current = await resolveRequestStaff(req.cookies.get(COOKIE_NAME)?.value,req.cookies.get('cogia_sessao')?.value);
++  const current = await resolveRequestStaff(req.cookies.get(COOKIE_NAME)?.value,req.cookies.get('cogia_sessao')?.value,req.headers,req.cookies.get(GRANT_COOKIE)?.value);
+   return current !== null && !current.mustChangePassword;
+ }
+ 
+--- /dev/null
++++ b/apps/web/src/lib/cog-oidc.ts
+@@ -0,0 +1,122 @@
++/** Confidential, host/tenant-bound RP. Tokens never enter client JavaScript. */
++import { EncryptJWT, jwtDecrypt, jwtVerify, createRemoteJWKSet } from "jose";
++
++export const FLOW_COOKIE = "barbacue_cog_flow";
++export const GRANT_COOKIE = "barbacue_cog_grant";
++export const CHECK_COOKIE = "barbacue_cog_checked";
++const callbackPath = "/api/auth/cog/callback";
++type Config = { origin: string; tenant: string; issuer: string; client: string; secret: string };
++type Flow = { state: string; nonce: string; verifier: string; next: string };
++type Grant = { token: string; email: string; sub: string };
++const encoder = new TextEncoder();
++const jwks = new Map<string, ReturnType<typeof createRemoteJWKSet>>();
++
++export function oidcConfig(origin: string): Config | null {
++  const client = process.env.COG_OIDC_CLIENT_ID, secret = process.env.COG_OIDC_CLIENT_SECRET;
++  if (!client || !secret) return null;
++  try {
++    const origins = JSON.parse(process.env.COG_OIDC_ORIGINS || "{}");
++    const tenant = origins[origin];
++    if (typeof tenant !== "string" || !["chelas", "barbadog"].includes(tenant)) return null;
++    const rp = new URL(origin), issuer = new URL(process.env.COG_OIDC_ISSUER || "https://id.cog.ia.br");
++    const qa = process.env.COGIA_SSO_DISPOSABLE_QA === "1";
++    if (rp.origin !== origin || issuer.origin !== issuer.href.replace(/\/$/, "")) return null;
++    if (!qa && (rp.protocol !== "https:" || issuer.origin !== "https://id.cog.ia.br")) return null;
++    return { origin, tenant, issuer: issuer.origin, client, secret };
++  } catch { return null; }
++}
++export function requestOrigin(h: Pick<Headers,"get">) {
++  const host=(h.get("x-forwarded-host") || h.get("host") || "").split(",")[0].trim().toLowerCase();
++  const protocol=(h.get("x-forwarded-proto") || "https").split(",")[0].trim();
++  return `${protocol}://${host}`;
++}
++
++function random() {
++  const bytes = crypto.getRandomValues(new Uint8Array(32));
++  return btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
++}
++async function key(purpose: string) {
++  const secret = process.env.ADMIN_COOKIE_SECRET;
++  if (!secret || secret.length < 16) throw new Error("ADMIN_COOKIE_SECRET indisponível.");
++  return new Uint8Array(await crypto.subtle.digest("SHA-256", encoder.encode(`barbacue/cog-oidc/v1/${purpose}\0${secret}`)));
++}
++export async function seal(config: Config, purpose: "flow" | "grant", value: Flow | Grant, ttl: number) {
++  return new EncryptJWT({ ...value, purpose, origin: config.origin, tenant: config.tenant })
++    .setProtectedHeader({ alg: "dir", enc: "A256GCM" }).setIssuer(config.issuer).setAudience(config.client)
++    .setIssuedAt().setExpirationTime(`${ttl}s`).encrypt(await key(purpose));
++}
++export async function unseal(config: Config, purpose: "flow" | "grant", token: string | undefined) {
++  if (!token || token.length > 3500) return null;
++  try {
++    const { payload } = await jwtDecrypt(token, await key(purpose), {
++      issuer: config.issuer, audience: config.client, keyManagementAlgorithms: ["dir"], contentEncryptionAlgorithms: ["A256GCM"],
++    });
++    return payload.purpose === purpose && payload.origin === config.origin && payload.tenant === config.tenant ? payload : null;
++  } catch { return null; }
++}
++export function safeNext(value: string | null) {
++  return value && /^\/(?!\/|api(?:\/|$)|_next(?:\/|$))/.test(value) && !/[\\\r\n]/.test(value) && value.length < 1500 ? value : "/admin";
++}
++export async function startFlow(config: Config, next: string | null) {
++  const flow: Flow = { state: random(), nonce: random(), verifier: random(), next: safeNext(next) };
++  const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", encoder.encode(flow.verifier)));
++  const challenge = btoa(String.fromCharCode(...digest)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
++  const url = new URL("/authorize", config.issuer);
++  url.search = new URLSearchParams({ client_id: config.client, redirect_uri: config.origin + callbackPath,
++    response_type: "code", scope: "openid email profile", prompt: "none", state: flow.state, nonce: flow.nonce,
++    code_challenge: challenge, code_challenge_method: "S256" }).toString();
++  return { url: url.href, cookie: await seal(config, "flow", flow, 300) };
++}
++async function backend(config: Config, path: string, options: RequestInit) {
++  return fetch(config.issuer + path, { ...options, cache: "no-store", redirect: "error", signal: AbortSignal.timeout(5000) });
++}
++function verifiedEmail(data: Record<string, unknown>) {
++  return data.email_verified === true && typeof data.email === "string" && /^[^\s@]+@[^\s@]+$/.test(data.email)
++    ? data.email.trim().toLowerCase() : null;
++}
++export async function completeFlow(config: Config, cookie: string | undefined, params: URLSearchParams) {
++  const flow = await unseal(config, "flow", cookie);
++  if (!flow || params.getAll("state").length !== 1 || params.get("state") !== flow.state) throw new Error("Fluxo inválido.");
++  const next = safeNext(typeof flow.next === "string" ? flow.next : null);
++  if (params.has("error")) return { next, grant: null };
++  const code = params.get("code");
++  if (!code || params.getAll("code").length !== 1 || code.length > 2048 || typeof flow.verifier !== "string") throw new Error("Código inválido.");
++  const response = await backend(config, "/token", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
++    body: new URLSearchParams({ grant_type: "authorization_code", code, client_id: config.client, client_secret: config.secret,
++      redirect_uri: config.origin + callbackPath, code_verifier: flow.verifier }).toString() });
++  if (!response.ok) throw new Error("Provedor indisponível.");
++  const data = await response.json();
++  if (data.token_type?.toLowerCase() !== "bearer" || typeof data.access_token !== "string" || data.access_token.length > 1024 ||
++      typeof data.id_token !== "string" || !Number.isFinite(data.expires_in) || data.expires_in <= 0) throw new Error("Resposta inválida.");
++  let keys = jwks.get(config.issuer);
++  if (!keys) { keys = createRemoteJWKSet(new URL("/jwks.json", config.issuer), { timeoutDuration: 5000 }); jwks.set(config.issuer, keys); }
++  const { payload } = await jwtVerify(data.id_token, keys, { issuer: config.issuer, audience: config.client, algorithms: ["RS256"], requiredClaims: ["exp", "iat", "sub", "nonce"] });
++  const email = verifiedEmail(payload);
++  if (!email || payload.nonce !== flow.nonce || typeof payload.sub !== "string" || (payload.azp && payload.azp !== config.client)) throw new Error("Identidade inválida.");
++  const identity = await backend(config, "/userinfo", { headers: { Authorization: `Bearer ${data.access_token}` } });
++  if (!identity.ok) throw new Error("Sessão indisponível.");
++  const user = await identity.json();
++  if (user.sub !== payload.sub || verifiedEmail(user) !== email) throw new Error("Identidade divergente.");
++  const ttl = Math.min(3600, Math.floor(data.expires_in), Number(payload.exp) - Math.floor(Date.now() / 1000));
++  if (ttl <= 0) throw new Error("Sessão expirada.");
++  return { next, grant: { cookie: await seal(config, "grant", { token: data.access_token, email, sub: payload.sub }, ttl), email, ttl } };
++}
++export async function resolveOidcEmail(config: Config | null, cookie: string | undefined) {
++  if (!config) return null;
++  const grant = await unseal(config, "grant", cookie);
++  if (!grant || typeof grant.token !== "string") return null;
++  try {
++    const response = await backend(config, "/userinfo", { headers: { Authorization: `Bearer ${grant.token}` } });
++    if (!response.ok) return null;
++    const user = await response.json(), email = verifiedEmail(user);
++    return email && email === grant.email && user.sub === grant.sub ? email : null;
++  } catch { return null; }
++}
++export async function revokeOidc(config: Config | null, cookie: string | undefined) {
++  if (!config) return;
++  const grant = await unseal(config, "grant", cookie);
++  if (!grant || typeof grant.token !== "string") return;
++  const response = await backend(config, "/revoke", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
++    body: new URLSearchParams({ token: grant.token, client_id: config.client, client_secret: config.secret }).toString() });
++  if (!response.ok) throw new Error("Não foi possível encerrar a sessão Cog. Tente novamente.");
++}
+--- a/apps/web/src/lib/cog-sso.ts
++++ b/apps/web/src/lib/cog-sso.ts
+@@ -1,5 +1,9 @@
++import { cache } from "react";
++import { oidcConfig, requestOrigin, resolveOidcEmail } from "./cog-oidc";
+ /** Verified identity only; no password, signup or role assignment. */
+-export async function resolveCogEmail(token: string | undefined): Promise<string | null> {
++export const resolveCogEmail = cache(async (token: string | undefined, requestHeaders?: Pick<Headers,"get">, grant?: string): Promise<string | null> => {
++  const federated = requestHeaders ? await resolveOidcEmail(oidcConfig(requestOrigin(requestHeaders)), grant) : null;
++  if (federated) return federated;
+   const key=process.env.COGIA_SSO_IDENTITY_KEY;
+   if(!key || !token || token.length>128)return null;
+   try {
+@@ -10,7 +14,7 @@
+     const data=await response.json();
+     return data.email_verified===true && typeof data.email==='string' && data.email.includes('@')?data.email.trim().toLowerCase():null;
+   }catch{return null;}
+-}
++});
+ export function uniqueEligibleAccount<T extends {id:number;active?:boolean|null;mustChangePassword?:boolean}>(users:T[],staff=false):T|null {
+   if(users.length!==1)return null;
+   const user=users[0];
+--- a/apps/web/src/lib/member-auth.ts
++++ b/apps/web/src/lib/member-auth.ts
+@@ -1,5 +1,6 @@
++import { GRANT_COOKIE } from "./cog-oidc";
+ import { createHmac, timingSafeEqual } from "node:crypto";
+-import { cookies } from "next/headers";
++import { cookies, headers } from "next/headers";
+ import { NextResponse } from "next/server";
+ import { eq } from "drizzle-orm";
+ import { db } from "@/db";
+@@ -20,12 +21,12 @@
+ export function clearMemberCookie(response: NextResponse) { response.cookies.set(COOKIE, "", { path: "/", maxAge: 0 }); }
+ export async function getMember() {
+   const store=await cookies();
+-  const email=await resolveCogEmail(store.get('cogia_sessao')?.value);
+-  if(email){
+-    const users=await db.select({id:customerAccounts.id,name:customerAccounts.name,email:customerAccounts.email}).from(customerAccounts).where(sql`lower(${customerAccounts.email}) = ${email}`).limit(2);
+-    const user=uniqueEligibleAccount(users);if(user)return user;
+-  }
+-  const token = store.get(COOKIE)?.value;
++  return resolveRequestMember(store.get(COOKIE)?.value,store.get("cogia_sessao")?.value,await headers(),store.get(GRANT_COOKIE)?.value);
++}
++export async function resolveRequestMember(nativeToken:string|undefined,cogToken:string|undefined,requestHeaders?:Pick<Headers,"get">,grant?:string) {
++  const email=await resolveCogEmail(cogToken,requestHeaders,grant);
++  if(email){ const user=await findCogMember(email);if(user)return user; }
++  const token = nativeToken;
+   if (!token) return null;
+   const [payload, mac] = token.split(".");
+   if (!payload || !mac) return null;
+@@ -36,3 +37,9 @@
+   const [member] = await db.select({ id: customerAccounts.id, name: customerAccounts.name, email: customerAccounts.email }).from(customerAccounts).where(eq(customerAccounts.id, id));
+   return member ?? null;
+ }
++
++/** A verified identity only selects an existing, unique local customer. */
++export async function findCogMember(email:string) {
++    const users=await db.select({id:customerAccounts.id,name:customerAccounts.name,email:customerAccounts.email}).from(customerAccounts).where(sql`lower(${customerAccounts.email}) = ${email}`).limit(2);
++    return uniqueEligibleAccount(users);
++}
+--- /dev/null
++++ b/apps/web/src/lib/session-view.ts
+@@ -0,0 +1,11 @@
++/** Binds browser mutations to the two local principals rendered in that tab. */
++export async function actorView(origin: string, staff: { userId: number; role: string; permissions?: unknown; mustChangePassword?: boolean } | null,
++  member: { id: number } | null) {
++  const secret=process.env.ADMIN_COOKIE_SECRET;
++  if(!secret || secret.length<16)throw new Error("Sessão indisponível.");
++  const enc=new TextEncoder();
++  const key=await crypto.subtle.importKey("raw",enc.encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
++  const data=JSON.stringify(["barbacue/view/v1",origin,staff?.userId,staff?.role,staff?.permissions,staff?.mustChangePassword,member?.id]);
++  const mac=new Uint8Array(await crypto.subtle.sign("HMAC",key,enc.encode(data)));
++  return btoa(String.fromCharCode(...mac)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
++}
+--- a/apps/web/src/proxy.ts
++++ b/apps/web/src/proxy.ts
+@@ -1,3 +1,6 @@
++import { actorView } from "@/lib/session-view";
++import { resolveRequestMember } from "@/lib/member-auth";
++import { oidcConfig, requestOrigin, GRANT_COOKIE, CHECK_COOKIE } from "@/lib/cog-oidc";
+ import { NextRequest, NextResponse } from "next/server";
+ import { resolveRequestStaff } from "@/lib/admin-auth";
+ 
+@@ -5,6 +8,12 @@
+ 
+ export async function proxy(req: NextRequest) {
+   const { pathname } = req.nextUrl;
++  const origin=requestOrigin(req.headers), federation=oidcConfig(origin);
++  if(federation && req.method==='GET' && (pathname.startsWith('/admin') || pathname==='/conta') && pathname!=='/admin/change-password' &&
++     req.headers.get('accept')?.includes('text/html') && !req.headers.get('rsc') && !req.cookies.get(CHECK_COOKIE)) {
++    const response=NextResponse.redirect(new URL('/api/auth/cog/start?'+new URLSearchParams({next:pathname+req.nextUrl.search}),origin),303);
++    response.headers.set('Cache-Control','no-store');return response;
++  }
+   const isApi = pathname.startsWith("/api/admin");
+   const host=(req.headers.get('x-forwarded-host') || req.headers.get('host') || '').toLowerCase();
+   if(req.method==='GET' && !pathname.startsWith('/api/') && req.headers.get('accept')?.includes('text/html') && host==='barbacue.cog.ia.br' &&
+@@ -12,6 +21,17 @@
+     const response=NextResponse.redirect('https://cog.ia.br/api/sso/continuar?'+new URLSearchParams({destino:'https://barbacue.cog.ia.br'+pathname+req.nextUrl.search}),303);
+     response.cookies.set('cog_barbacue_checked','1',{maxAge:300,path:'/',httpOnly:true,secure:true,sameSite:'lax'});
+     response.headers.set('Cache-Control','no-store');return response;
++  }
++
++  if(federation && req.cookies.get(GRANT_COOKIE) && ['POST','PUT','PATCH','DELETE'].includes(req.method) &&
++     req.headers.get('origin') && req.headers.get('origin')!==origin)
++    return NextResponse.json({error:'Origem recusada.'},{status:403,headers:{'Cache-Control':'no-store'}});
++  const expectedView=req.headers.get('X-Cog-View');
++  if(expectedView && ['POST','PUT','PATCH','DELETE'].includes(req.method) &&
++     !(req.method==='POST' && ['/api/admin/auth','/api/account'].includes(pathname))) {
++    const args=[req.cookies.get('cogia_sessao')?.value,req.headers,req.cookies.get(GRANT_COOKIE)?.value] as const;
++    const [staff,member]=await Promise.all([resolveRequestStaff(req.cookies.get('barbacue_admin')?.value,...args),resolveRequestMember(req.cookies.get('barbacue_member')?.value,...args)]);
++    if(expectedView!==await actorView(origin,staff,member))return NextResponse.json({error:'A sessão mudou. Atualize a página antes de continuar.'},{status:409,headers:{'Cache-Control':'no-store'}});
+   }
+ 
+   // Allow the login page and the auth endpoint (login/logout) through
+@@ -28,7 +48,7 @@
+     pathname.startsWith("/teste_pedido") ||
+     isApi
+   ) {
+-    const session = await resolveRequestStaff(req.cookies.get('barbacue_admin')?.value,req.cookies.get('cogia_sessao')?.value);
++    const session = await resolveRequestStaff(req.cookies.get('barbacue_admin')?.value,req.cookies.get('cogia_sessao')?.value,req.headers,req.cookies.get(GRANT_COOKIE)?.value);
+     if (!session) {
+       if (isApi) {
+         return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+@@ -53,5 +73,5 @@
+ }
+ 
+ export const config = {
+-  matcher: ["/", "/pedir", "/conta", "/admin/:path*", "/api/admin/:path*", "/whatsapp/:path*", "/teste_pedido/:path*"],
++  matcher: ["/", "/pedir", "/conta", "/admin/:path*", "/api/admin/:path*", "/api/account", "/api/auth/cog/:path*", "/whatsapp/:path*", "/teste_pedido/:path*"],
+ };
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -41,7 +41,8 @@
+         "react": "19.2.4",
+         "react-dom": "19.2.4",
+         "zod": "^4.4.3",
+-        "zustand": "^5.0.13"
++        "zustand": "^5.0.13",
++        "jose": "6.2.8"
+       },
+       "devDependencies": {
+         "@tailwindcss/postcss": "^4",
+@@ -12963,6 +12964,15 @@
+       "dependencies": {
+         "undici-types": "~6.21.0"
+       }
++    },
++    "node_modules/jose": {
++      "version": "6.2.8",
++      "resolved": "https://registry.npmjs.org/jose/-/jose-6.2.8.tgz",
++      "integrity": "sha512-Bsdjwm3Qsd/P0jR+BHDe3LytDfY7WBq2HmCCLIwuVRHMuEC9ae7/R474GIUdF1NgCyZjzVo/A9DOiOBtXq8ZoQ==",
++      "license": "MIT",
++      "funding": {
++        "url": "https://github.com/sponsors/panva"
++      }
+     }
+   }
+ }

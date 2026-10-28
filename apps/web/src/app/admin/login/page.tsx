@@ -19,10 +19,11 @@ export default function AdminLoginPage() {
       body: JSON.stringify({ username, password }),
     });
     if (res.ok) {
+      const data = await res.json();
       // Use a full navigation after authentication. This guarantees the new
       // httpOnly session cookie is applied before the protected admin request
       // and avoids a stuck client transition after production redeploys.
-      window.location.assign("/admin");
+      window.location.assign(data.mustChangePassword ? "/admin/change-password" : "/admin");
     } else {
       const data = await res.json();
       setError(data.error ?? "Erro ao entrar");
@@ -49,15 +50,16 @@ export default function AdminLoginPage() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
             <label className="text-sm text-[#a89a8c]" htmlFor="user">
-              Usuário <span className="text-[#a89a8c]">(deixe vazio p/ senha mestre)</span>
+              Usuário ou e-mail
             </label>
             <input
               id="user"
               type="text"
+              required
               autoComplete="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="gerente"
+              placeholder="Seu usuário ou e-mail"
               className="bg-[#241d18] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#ed1b24] placeholder-[#7c6f61]"
             />
           </div>
@@ -69,6 +71,7 @@ export default function AdminLoginPage() {
             <input
               id="pw"
               type="password"
+              autoComplete="current-password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}

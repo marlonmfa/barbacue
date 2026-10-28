@@ -1,6 +1,27 @@
 # Serviço independente no host atual do Barbacue; banco nativo preservado.
 name: barbacue-ifood
 services:
+  webhook:
+    image: barbacue-ifood:webhook-audit-20261023
+    command: [node, packages/ifood/dist/webhook.js]
+    restart: unless-stopped
+    init: true
+    network_mode: host
+    env_file: .env
+    environment:
+      IFOOD_WEBHOOK_PORT: '3467'
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD, node, -e, "const h=JSON.parse(require('fs').readFileSync('/tmp/ifood-webhook-health.json','utf8'));process.exit(Date.now()-h.lastSuccess<180000?0:1)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+        max-file: '3'
   monitor:
     image: barbacue-ifood:20261018
     restart: unless-stopped

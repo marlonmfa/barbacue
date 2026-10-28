@@ -91,7 +91,7 @@ marca o e-mail como confirmado.
    *Live*. `public_profile`, `email` e `instagram_business_basic` podem exigir
    *App Review* e verificação da empresa.
 6. Faça o deploy: `docker compose up -d --build` (o serviço `migrate` aplica a
-   migrações `0015_social_login` e `0016_google_apple_login`).
+   migrações `0015_social_login` e `0021_google_apple_login`).
 
 ## Testes
 

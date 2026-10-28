@@ -1,3 +1,7 @@
+# Native PM2 release compiler; no operational environment or data in this stage.
+FROM node:22.23.2-bookworm-slim@sha256:48e4b67d85f87bd551df43704e24d252f56cc5f8e9718841aace50f19948f0f9 AS sso-build-env
+ENV NEXT_TELEMETRY_DISABLED=1 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 PUPPETEER_SKIP_DOWNLOAD=1
+
 # ── Multi-stage build for the Next.js web app (monorepo workspace) ──
 # Build context MUST be the monorepo root:
 #   docker build -f apps/web/Dockerfile -t barbacue-web .

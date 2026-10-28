@@ -1,10 +1,10 @@
 import { config } from "./config.js";
-import { onInboundMessage, startHub } from "./wa/hub.js";
+import { onInboundMessage, startHub, usingZap } from "./wa/provider.js";
 import { startServer } from "./server.js";
 import { handleMessage, sweepIdleSessions } from "./conversation.js";
 
 async function main(): Promise<void> {
-  console.log(`[bot] iniciando — web API em ${config.webBaseUrl}`);
+  console.log(`[bot] iniciando — web API em ${config.webBaseUrl} — provedor ${usingZap ? "zap.cog.ia.br" : "Baileys local"}`);
 
   // 1) Status/QR HTTP server for the admin pairing page.
   startServer();

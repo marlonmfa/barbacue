@@ -11,7 +11,7 @@ export class ApiError extends Error {
   }
 }
 
-export function createApi({ apiUrl, token, timeoutMs = 10000 }, fetchImpl = fetch) {
+export function createApi({ apiUrl, token, deviceId, acceptDefault = true, timeoutMs = 10000 }, fetchImpl = fetch) {
   const post = async (path, body) => {
     const response = await fetchImpl(`${apiUrl}${path}`, {
       method: 'POST',
@@ -25,8 +25,8 @@ export function createApi({ apiUrl, token, timeoutMs = 10000 }, fetchImpl = fetc
     return response.json();
   };
   return {
-    status: () => post('/api/print-agent/status', {}),
-    claim: () => post('/api/print-agent/jobs/claim', {}),
+    status: device => post('/api/print-agent/status', device ? { device } : {}),
+    claim: () => post('/api/print-agent/jobs/claim', { ...(deviceId ? { deviceId } : {}), acceptDefault }),
     complete: entry => post(`/api/print-agent/jobs/${encodeURIComponent(entry.id)}/complete`, { leaseToken: entry.leaseToken }),
     fail: entry => post(`/api/print-agent/jobs/${encodeURIComponent(entry.id)}/fail`, {
       leaseToken: entry.leaseToken, error: entry.error, uncertain: entry.uncertain,
@@ -81,7 +81,11 @@ export class PrintAgent {
       state: 'intent',
     };
     let text;
-    try { text = formatTicket(job.ticket, { columns: this.columns, timeZone: this.timeZone }); }
+    try {
+      const paper = job.destination?.paper;
+      if (paper !== undefined && ![58, 80, 210].includes(paper)) throw new Error('Papel invalido');
+      text = formatTicket(job.ticket, { columns: paper === 58 ? 32 : paper ? 48 : this.columns, timeZone: this.timeZone });
+    }
     catch {
       await this.journal.put({ ...entry, state: 'fail_pending', error: 'Ticket invalido para impressao', uncertain: false });
       await this.settle(await this.journal.read(job.id));
@@ -96,7 +100,7 @@ export class PrintAgent {
     }
     await this.journal.put(entry);
     let receipt;
-    try { receipt = await this.print(text, job.ticket); }
+    try { receipt = await this.print(text, job.ticket, job.destination ?? null); }
     catch (error) {
       await this.journal.put({
         ...entry, state: 'fail_pending',

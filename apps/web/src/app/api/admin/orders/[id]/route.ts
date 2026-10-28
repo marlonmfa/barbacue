@@ -40,6 +40,7 @@ export const PATCH = withStaff(async (req: NextRequest, { params }: Params) => {
         return saved;
       }
       const status = parsed.data.status!;
+      if (order.channel === "online" && order.paymentStatus !== "paid" && status !== "pending" && status !== "cancelled") throw new OrderUpdateError("Aguarde a confirmação do pagamento online antes de liberar a produção.", 409);
       if ((order.status === "delivered" || order.status === "cancelled") && status !== order.status) throw new OrderUpdateError("Este pedido já foi encerrado.", 409);
       if (order.deliveryStatus === "out_for_delivery" && status !== "delivered" && status !== "cancelled" && status !== "ready") {
         throw new OrderUpdateError("Este pedido já está em entrega. Conclua ou cancele a saída antes de mudar o preparo.", 409);

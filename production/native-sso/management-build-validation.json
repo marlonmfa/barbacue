@@ -1,0 +1,33 @@
+{
+  "flutter_version": "3.41.9",
+  "android_flutter_engine_byte_identical": true,
+  "ios_flutter_engine_text_sections_identical": 20,
+  "version": "1.0.0",
+  "build": 2026102402,
+  "package": "com.lanchesdobarba.gestao",
+  "android_bundletool_validate": true,
+  "android_upload_certificate_preserved": true,
+  "android_target_sdk_36": true,
+  "android_64bit_libraries_16kb": 8,
+  "android_callback_exact": true,
+  "ios_existing_profile_byte_identical": true,
+  "ios_signature_valid": true,
+  "ios_legacy_identity_icon_encryption_metadata_preserved": true,
+  "ios_callback_exact": true,
+  "known_secret_scan": "PASS",
+  "store_uploaded": false,
+  "store_review_changed": false,
+  "physical_phone_tested": false,
+  "artifacts": [
+    {
+      "file": "gestao-1.0.0-2026102402.aab",
+      "bytes": 47065244,
+      "sha256": "e22f4cd231ab956a0039dcfcb571d32dd774c03dad962fef481a7c9a327858bb"
+    },
+    {
+      "file": "gestao-1.0.0-2026102402.ipa",
+      "bytes": 22468866,
+      "sha256": "78ba0e465237c045d4fa16b5fff3362403efedd819c7a2f0ad71d1d8766ebfc8"
+    }
+  ]
+}

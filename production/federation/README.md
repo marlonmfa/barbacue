@@ -1,0 +1,73 @@
+# Federação dos domínios externos do Barbacue
+
+Base nativa: PM2 barbacue em /root/barbacue no host SSH :2212, Node 22.23.1,
+porta local 3007, build cWNCruZ-v5_CSiKN7zmIO, fonte publicada 9f59eb3.
+680 arquivos de código/artefatos correspondem à publicação anterior; somente
+os metadados de cache da rota Instagram mudaram. Catálogos, downloads, dados,
+ambiente PM2, banco e node_modules devem continuar preservados.
+
+O checkout local contém trabalho concorrente em aplicativos, impressão, loja,
+equipe e pagamento. A fábrica production/sso reconstrói os inputs publicados,
+aplica sua camada Cog e só então este perfil aplica cog.patch. Nenhuma edição
+concorrente do checkout é publicada por esse processo.
+
+Somente as origens exatas configuradas de Chelas e Barbadog habilitam o cliente
+confidencial externo. O provedor é id.cog.ia.br; os callbacks são
+/api/auth/cog/callback em cada domínio. A navegação de login/equipe verifica
+prompt=none, código, PKCE S256, state, nonce, RS256 e userinfo. Fluxo e grant
+ficam cifrados em cookies HttpOnly, com separação de finalidade e vínculo a
+origem, marca, cliente e emissor. Nenhum access token ou segredo vai ao JS.
+
+Equipe exige conta única, ativa, username igual ao e-mail completo e primeiro
+acesso concluído. Cliente exige cadastro local único; não recebe permissões
+administrativas. Não há provisionamento ou promoção. Sem identidade válida ou
+vínculo, os cookies de equipe e cliente nativos continuam intactos. A troca de
+senha inicial mantém seu fluxo; somente logout explícito revoga no provedor,
+com confirmação anterior à limpeza. Falha conserva cookies e mostra a opção
+de tentar novamente. Login nativo e provedores sociais permanecem existentes.
+
+Uma ilha sem UI compara a identidade no foco/intervalo e identifica a conta
+exibida nas mutações por HMAC. A checagem silenciosa de cinco minutos ocorre
+ao entrar ou recuperar foco, preservando a edição contínua. Proxy recusa uma
+origem diferente com grant externo e uma vista de outra conta. Clientes nativos
+sem o cabeçalho continuam no contrato anterior; login intencional é preservado.
+
+JOSE 6.2.8 é a mesma versão já validada no CRM GOW; todas as entradas anteriores
+do lockfile foram conservadas e somente esse pacote/dependência foi acrescentado.
+transpilePackages garante inclusão no bundle: há zero requires externos de jose.
+A publicação nativa não precisa substituir dependências. O SDK oficial Node
+22.23.2 por digest permanece no Dockerfile canônico apps/web/Dockerfile.
+
+Build privado no builder em /mnt/dados/barbacue-federation-20261026, usando
+o caminho original e a chave de ações anterior por ambiente/arquivo privado.
+Dez unidades no Linux e Chrome E2E passaram com o inicializador standalone
+real. PostgreSQL próprio em tmpfs recebeu somente o esquema das 34 tabelas,
+sem linhas de produção. Contas fictícias usam TEST_USER_* com fallback local.
+Os dois domínios, equipe/cliente, fallback, senha inicial, saída e celular
+foram exercitados; seis capturas devem ser commitadas e inspecionadas.
+
+Estado: publicada saudável conforme published.json, com cliente externo
+registrado e conferência real das duas marcas. Aplicativos instalados
+continuam no escopo futuro.
+
+Build final F1ePobsynvuHYfaNFf-56: 112 rotas mantidas, três rotas novas,
+14 CSS idênticos e chave de ações preservada. A fábrica exclui saídas
+geradas do escaneamento Tailwind e registra explicitamente cinco utilitários
+nativos cujo contexto original não era operacional. A checagem da conta
+exibida também ocorre no guard do handler, além do Proxy. Chrome E2E foi
+repetido com o build final e cache de imagens isolado em tmpfs, sem alertas.
+
+Publicada saudável em 26/10, revisão ddc06e2, build F1ePobsynvuHYfaNFf-56.
+Seis capturas fa3613f/8635a7a foram inspecionadas PASS. Foram mantidos
+736 arquivos operacionais, servidor e dependências nativos, ambiente PM2,
+três catálogos e o processo WhatsApp. 732 chunks históricos foram retidos.
+Snapshot das 34 tabelas foi restaurado em clone RAM sem rede e todos os
+fingerprints de linhas coincidiram. Contas, senhas, primeiro acesso e
+permissões da equipe/clientes são iguais na verificação posterior.
+
+Chrome real nos dois domínios chegou ao login nativo; há duas autorizações
+barbacue-external vinculadas à sessão central no provedor. Marlon não tem
+conta elegível local, portanto o fallback foi conservado, sem provisionar
+contas. O acesso positivo com papel local foi provado somente no QA.
+Cliente Control e CRM GOW, chave RSA e banco do provedor conservados;
+Control não reiniciado. QA, clone e túneis próprios removidos.

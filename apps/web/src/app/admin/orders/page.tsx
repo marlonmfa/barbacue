@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { OrderImport } from "@/components/admin/OrderImport";
 import { AdminIcon } from "@/components/admin/AdminIcons";
+import "./order-manager.css";
 
 interface OrderItem { name: string; priceCents: number; qty: number; notes?: string | null; }
 interface Order {
@@ -35,7 +36,7 @@ const STATUSES = [
   { key: "cancelled", label: "Cancelado",  color: "bg-red-500/20 text-red-400" },
 ];
 
-const CHANNELS: Record<string, string> = { click: "Site / aplicativo", chat: "WhatsApp / chat", kiosk: "Totem", table_qr: "QR da mesa", ifood: "iFood", test: "Teste", other: "Outra origem" };
+const CHANNELS: Record<string, string> = { online: "Pedido online / Asaas", click: "Site / aplicativo", chat: "WhatsApp / chat", kiosk: "Totem", table_qr: "QR da mesa", ifood: "iFood", test: "Teste", other: "Outra origem" };
 const channelLabel = (channel: string | null) => CHANNELS[channel ?? "other"] ?? channel ?? "Outra origem";
 
 const STATUS_MAP = Object.fromEntries(STATUSES.map((s) => [s.key, s]));
@@ -52,6 +53,8 @@ export default function AdminOrders() {
   const [selected, setSelected] = useState<Order | null>(null);
   const [filterStatus, setFilterStatus] = useState("");
   const [filterChannel, setFilterChannel] = useState("");
+  const [view, setView] = useState("board");
+  const [search, setSearch] = useState("");
   const [drivers, setDrivers] = useState<{ id: number; name: string }[]>([]);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
@@ -74,6 +77,25 @@ export default function AdminOrders() {
     return () => { controller.abort(); window.clearTimeout(initial); window.clearInterval(timer); };
   }, [load]);
 
+  const selectedId = selected?.id;
+  useEffect(() => {
+    if (!selectedId) return;
+    const previous = document.activeElement as HTMLElement | null;
+    const dialog = document.querySelector<HTMLElement>('[data-order-detail="true"]');
+    const close = dialog?.querySelector<HTMLButtonElement>('button[aria-label="Fechar"]');
+    close?.focus();
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelected(null);
+      if (event.key !== "Tab" || !dialog) return;
+      const controls = Array.from(dialog.querySelectorAll<HTMLElement>('button:not(:disabled), a[href], select:not(:disabled), input:not(:disabled)')).filter(node => node.getClientRects().length > 0);
+      const first = controls[0], last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    document.addEventListener("keydown", keydown);
+    return () => { document.removeEventListener("keydown", keydown); if (previous?.isConnected) previous.focus(); };
+  }, [selectedId]);
+
   async function updateOrder(orderId: string, patch: { status?: string; deliveryDriverId?: number | null }) {
     if (busy) return;
     setBusy(orderId); setError("");
@@ -89,17 +111,34 @@ export default function AdminOrders() {
   const filtered = orders.filter(o => (!filterStatus || o.status === filterStatus) && (!filterChannel || (o.channel || "other") === filterChannel));
   const channels = [...new Set(orders.map(o => o.channel || "other"))].sort();
 
+  const stages = [
+    { title: "Novos", statuses: ["pending"] },
+    { title: "Em preparo", statuses: ["confirmed", "preparing"] },
+    { title: "Prontos", statuses: ["ready"] },
+    { title: "Concluídos", statuses: ["delivered", "cancelled"] },
+  ];
+  const boardOrders = filtered.filter(o => `${o.id} ${o.customerName} ${o.customerPhone}`.toLocaleLowerCase("pt-BR").includes(search.toLocaleLowerCase("pt-BR")))
+    .sort((a, b) => (Date.parse(a.createdAt || "") || 0) - (Date.parse(b.createdAt || "") || 0) || a.id.localeCompare(b.id));
+  const next = selected?.status === "pending" ? { status: "confirmed", label: "Aceitar pedido" }
+    : selected?.status === "confirmed" ? { status: "preparing", label: "Iniciar preparo" }
+    : selected?.status === "preparing" ? { status: "ready", label: "Pedido pronto" }
+    : selected?.status === "ready" && selected.orderType !== "delivery" ? { status: "delivered", label: "Concluir retirada / atendimento" } : null;
+
   return (
-    <div>
+    <div className="order-manager">
       <div className="flex items-center justify-between mb-6">
-        <div><h1 className="text-2xl font-bold text-white">Caixa e pedidos</h1><p className="text-[#a89a8c] text-sm mt-2">Confirme os pedidos e organize quem leva cada entrega.</p></div>
+        <div><h1 className="text-2xl font-bold text-white">Pedidos</h1><p className="text-[#a89a8c] text-sm mt-2">Acompanhe seus pedidos por etapa de atendimento.</p></div>
         <button onClick={() => void load()} className="min-h-12 text-[#a89a8c] hover:text-white text-sm px-4 py-2 rounded-xl bg-[#1a1512] border border-[#352b24]">
           ↻ Atualizar
         </button>
       </div>
       {error && <p role="alert" className="mb-5 border border-red-900/60 bg-red-950/40 text-red-200 p-4 rounded-xl text-sm">{error}</p>}
 
-      <OrderImport onImported={() => void load()} />
+      <details className="order-import"><summary>Importar pedido</summary><OrderImport onImported={() => void load()} /></details>
+      <div className="order-controls">
+        <div role="group" aria-label="Visualização dos pedidos"><button aria-pressed={view === "board"} onClick={() => setView("board")}>Quadros</button><button aria-pressed={view === "list"} onClick={() => setView("list")}>Lista</button></div>
+        <label>Buscar pedido<input type="search" placeholder="Número, cliente ou telefone" value={search} onChange={e => setSearch(e.target.value)} /></label>
+      </div>
       <label className="block mb-5 text-sm text-[#c8b89a]">Origem do pedido
         <select className="ml-3 min-h-12 rounded-lg bg-[#241d18] px-3 text-white" value={filterChannel} onChange={e => setFilterChannel(e.target.value)}><option value="">Todas as origens</option>{channels.map(channel => <option key={channel} value={channel}>{channelLabel(channel)}</option>)}</select>
       </label>
@@ -121,6 +160,22 @@ export default function AdminOrders() {
 
       {loading ? (
         <p className="text-[#a89a8c] text-sm">Carregando...</p>
+      ) : view === "board" ? (
+        <div className="order-board">{stages.map(stage => {
+          const entries = boardOrders.filter(order => stage.statuses.includes(order.status));
+          return <section key={stage.title} aria-label={stage.title} className="order-stage">
+            <h2>{stage.title}<span>{entries.length}</span></h2>
+            {entries.length === 0 && <p className="order-stage-empty">Nenhum pedido nesta etapa.</p>}
+            {entries.map(order => <button className="order-card" key={order.id} onClick={() => setSelected(order)} aria-label={`Ver pedido ${order.id.slice(0, 8)}`}>
+              <div><strong>#{order.id.slice(0, 8).toUpperCase()}</strong><time>{order.createdAt ? new Date(order.createdAt).toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" }) : "—"}</time></div>
+              <h3>{order.customerName}</h3><p>{destination(order)} · {channelLabel(order.channel)}</p>
+              <p>{BRAND_LABEL[order.brand] ?? "Barbacue"}</p>
+              <div><span>{(Array.isArray(order.items) ? order.items : []).reduce((sum, item) => sum + item.qty, 0)} itens</span><strong>{fmtR(order.totalCents)}</strong></div>
+              <p className="order-card-status">{STATUS_MAP[order.status]?.label ?? order.status}{order.deliveryStatus === "out_for_delivery" ? " · Em entrega" : ""}</p>
+              {order.channel === "online" && order.paymentStatus !== "paid" && <p>Aguardando pagamento</p>}
+            </button>)}
+          </section>;
+        })}</div>
       ) : (
         <div className="bg-[#1a1512] rounded-2xl border border-[#352b24] overflow-x-auto">
           <table className="w-full text-sm">
@@ -135,7 +190,7 @@ export default function AdminOrders() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((o) => {
+              {boardOrders.map((o) => {
                 const st = STATUS_MAP[o.status] ?? STATUSES[0];
                 const items = Array.isArray(o.items) ? o.items : [];
                 return (
@@ -149,6 +204,7 @@ export default function AdminOrders() {
                         )}
                       </p>
                       <p className="text-[#a89a8c] text-xs">{BRAND_LABEL[o.brand] ?? "Barbacue"} · {destination(o)}{o.customerPhone ? ` · ${o.customerPhone}` : ""}</p>
+                      {o.channel === "online" && <p className="text-[#c8b89a] text-xs mt-1">Pix · {o.paymentStatus === "paid" ? "Pago pelo Asaas" : o.paymentStatus === "failed" ? "Pagamento estornado ou falhou — conferir" : "Aguardando confirmação do pagamento"}</p>}
                       {(o.channel === "kiosk" || o.channel === "table_qr") && <p className="text-[#c8b89a] text-xs mt-1">{o.channel === "kiosk" ? "Totem" : "QR na mesa"} · {o.paymentStatus === "paid" ? "Pago" : "Pagamento no local pendente"}</p>}
                       {o.orderType === "delivery" && <p className="text-[#c8b89a] text-xs mt-1">{o.deliveryDriverName ?? "Sem entregador"}{o.deliveryStatus === "out_for_delivery" ? " · Em entrega" : o.deliveryStatus === "delivered" ? " · Entrega concluída" : ""}</p>}
                     </td>
@@ -188,7 +244,7 @@ export default function AdminOrders() {
               })}
             </tbody>
           </table>
-          {filtered.length === 0 && (
+          {boardOrders.length === 0 && (
             <p className="text-[#a89a8c] text-sm px-5 py-8 text-center">Nenhum pedido.</p>
           )}
         </div>
@@ -196,7 +252,7 @@ export default function AdminOrders() {
 
       {/* Order detail modal */}
       {selected && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-label="Detalhes do pedido">
+        <div data-order-detail="true" className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-label="Detalhes do pedido">
           <div className="print-area order-ticket bg-[#1a1512] rounded-2xl border border-[#352b24] w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
               <div>
@@ -213,6 +269,7 @@ export default function AdminOrders() {
                 <p className="text-white font-semibold">{selected.customerName}</p>
                 <p className="text-white">{destination(selected)}</p>
                 <p className="text-[#a89a8c]">{selected.customerPhone}</p>
+                {selected.channel === "online" && <p className="text-[#c8b89a]">Pix / Asaas · {selected.paymentStatus === "paid" ? "Pago" : selected.paymentStatus === "failed" ? "Estornado ou falhou — conferir no Asaas" : "Aguardando pagamento. A produção será liberada automaticamente."}</p>}
                 {(selected.channel === "kiosk" || selected.channel === "table_qr") && <p className="text-[#c8b89a]">{selected.paymentMethod === "cash" ? "Dinheiro" : "Cartão"} no local · {selected.paymentStatus === "paid" ? "Pago" : "Pagamento pendente"}</p>}
                 {selected.deliveryAddress && <p className="text-[#a89a8c]">{selected.deliveryAddress}</p>}
               </div>
@@ -265,14 +322,19 @@ export default function AdminOrders() {
                   disabled={busy !== null}
                   className="min-h-12 bg-[#241d18] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none">
                   {STATUSES.map((s) => (
-                    <option key={s.key} value={s.key}>{s.label}</option>
+                    <option key={s.key} value={s.key} disabled={selected.channel === "online" && selected.paymentStatus !== "paid" && !["pending", "cancelled"].includes(s.key)}>{s.label}</option>
                   ))}
                 </select>
               </div>
 
+              <footer className="order-actions">
+                {selected.channel === "ifood" ? <a href="/admin/ifood">Abrir no Gestor iFood</a> : next && <button disabled={busy !== null || (selected.channel === "online" && selected.paymentStatus !== "paid")} onClick={() => void updateOrder(selected.id, { status: next.status })}>{busy === selected.id ? "Atualizando…" : next.label}</button>}
+                {selected.status === "ready" && selected.orderType === "delivery" && <p>O entregador atribuído registra a saída em Minhas entregas.</p>}
+              </footer>
               <button
                 type="button"
                 onClick={() => window.print()}
+                disabled={selected.channel === "online" && selected.paymentStatus !== "paid"}
                 className="no-print mt-1 flex items-center justify-center gap-2 rounded-xl bg-[#ed1b24] hover:bg-[#c8141c] px-4 py-3 text-sm font-semibold text-white transition-colors"
               >
                 <AdminIcon name="printer" size={17} />

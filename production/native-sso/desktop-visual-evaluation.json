@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "screenshots_commits": [
+    "8d6faba",
+    "66a2961"
+  ],
+  "checked": [
+    "Cog mapped account name and cashier role",
+    "failed revoke retains same account and retry button",
+    "successful revoke restores native administrator",
+    "unmapped and absent retain native order screen fully loaded"
+  ],
+  "first_capture": "FAIL: absent screenshot taken during loading; test wait corrected and screenshots recommitted before evaluation"
+}

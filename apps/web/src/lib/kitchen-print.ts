@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
 
 export type KitchenPrintStatus = "queued" | "printing" | "printed" | "failed" | "uncertain";
+export type PrintDestination = { deviceId: string; printerName: string; paper: 58 | 80 | 210 };
 export type KitchenTicket = {
   version: 1 | 2;
   orderId: string;

@@ -6,8 +6,10 @@ em um só painel, no lugar de três abas do gestor do iFood.
 
 ## Como funciona
 
-- **Pedidos:** vêm do banco, importados pelo monitor (`packages/ifood`), que
-  continua sendo o **único** leitor de eventos (polling + ACK). A tela atualiza a
+- **Pedidos:** vêm do banco, importados pelo receptor de webhook com fila persistente
+  e pelo monitor de contingência (`packages/ifood`). Somente o monitor envia ACK
+  dos eventos de polling; ambos usam IDs determinísticos e transições monotônicas.
+  A tela atualiza a
   cada 10 s, toca um alerta quando chega pedido novo e destaca em vermelho os
   pendentes há 5 min ou mais.
 - **Ações:** confirmar, iniciar preparo, pronto para retirada, saiu para entrega e
@@ -39,7 +41,8 @@ aparecem com erro.
 
 ## Limites
 
-- Não há polling na tela: se o monitor parar, pedidos novos não aparecem.
-  Confira `/tmp/ifood-health.json` do monitor.
+- A tela consulta o banco, sem consumir eventos do iFood. Confira o monitor
+  (`/tmp/ifood-health.json`) e o worker de webhook
+  (`/tmp/ifood-webhook-health.json`), incluindo a quantidade/idade de eventos pendentes.
 - Plataforma de negociação (disputas), avaliações e cardápio continuam no
   gestor do iFood.

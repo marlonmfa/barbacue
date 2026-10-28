@@ -1,0 +1,28 @@
+{
+  "result": "PASS",
+  "platform": "Android arm64 read-only emulator-5566",
+  "chrome": true,
+  "actual_linux_idp": true,
+  "actual_linux_next": true,
+  "actual_custom_scheme_and_pkce": true,
+  "native_staff_cookie_preserved": true,
+  "cases": [
+    "mapped priority/permissions",
+    "failed revoke retains grant and native cookie",
+    "retry action repeats revocation",
+    "confirmed revoke restores native session",
+    "unmapped retains native",
+    "absent retains native"
+  ],
+  "screenshots_commits": [
+    "fcfc877",
+    "a94aeef"
+  ],
+  "initial_visual_evaluation": "FAIL: technical exception prefix and menu obscured failure; fixed, added widget regression test, repeated Android E2E and recommitted screenshot before evaluation",
+  "visual_evaluation": "PASS: clear message, real retry, correct account name/menu/permissions, no overflow",
+  "unit_tests": 5,
+  "all_flutter_tests_before_visual_fixes": 142,
+  "targeted_management_tests_after_fixes": 9,
+  "production_data_used": false,
+  "store_reviews_changed": false
+}

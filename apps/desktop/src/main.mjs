@@ -1,10 +1,16 @@
-import { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain, safeStorage, session, dialog, shell } from 'electron';
+import { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain, safeStorage, session, dialog, shell, protocol } from 'electron';
 import { readFile, writeFile, rename, mkdir } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { createHash } from 'node:crypto';
-import { normalizeOrigin, validateSettings, allowedNavigation, publicSettings } from './settings.mjs';
-import { printTicket } from './printing.mjs';
+import { createHash, randomUUID } from 'node:crypto';
+import { hostname } from 'node:os';
+import { normalizeOrigin, validateSettings, publicSettings } from './settings.mjs';
+import { printTicket, destinationSettings } from './printing.mjs';
+import { createWorkspace } from './workspace.mjs';
+import { moduleGroups, modulePath } from './modules.mjs';
+import { isLocalUrl, canRequestLocalAudio } from './api-client.mjs';
+
+protocol.registerSchemesAsPrivileged([{ scheme: 'barbacue-app', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true } }]);
 
 app.setName('Barbacue Pedidos');
 app.setPath('userData', join(app.getPath('appData'), 'Barbacue Pedidos'));
@@ -15,8 +21,8 @@ const { PrintAgent, createApi, ApiError } = await import(pathToFileURL(join(agen
 const { Journal, acquireSingleton } = await import(pathToFileURL(join(agentRoot, 'journal.mjs')));
 const { TransportError } = await import(pathToFileURL(join(agentRoot, 'transports.mjs')));
 const setupUrl = pathToFileURL(join(root, 'ui/index.html')).href;
-let settings = { serverUrl: '', token: '', printer: '', paper: 80, autoPrint: false, startAtLogin: false };
-let setupWindow, dashboard, tray, loopTimer, activeRun, releaseLock, agent, quitting = false, changing = false;
+let settings = { serverUrl: '', token: '', printer: '', paper: 80, autoPrint: false, startAtLogin: false, deviceId: randomUUID() };
+let setupWindow, dashboard, workspace, tray, loopTimer, activeRun, releaseLock, agent, quitting = false, changing = false;
 let status = 'Configure a loja para começar.';
 let connectedAt = null;
 const events = [];
@@ -41,21 +47,14 @@ function showSetup() {
   restrict(setupWindow.webContents, url => url === setupUrl);
   void setupWindow.loadURL(setupUrl);
 }
-async function openDashboard(path = '/admin/orders') {
+async function openDashboard(path) {
   if (!settings.serverUrl) return showSetup();
   if (dashboard && !dashboard.isDestroyed()) {
-    dashboard.show(); dashboard.focus();
-    if (new URL(dashboard.webContents.getURL() || settings.serverUrl).pathname !== path) await dashboard.loadURL(`${settings.serverUrl}${path}`).catch(() => {});
-    return;
+    return workspace.open(path);
   }
-  // Autoplay sem gesto: o gestor iFood toca o alerta de pedido novo com a janela em segundo plano.
-  dashboard = new BrowserWindow({ width: 1440, height: 950, minWidth: 900, minHeight: 650, title: 'Barbacue Pedidos', icon: join(root, 'assets/icon.png'), backgroundColor: '#17120f', webPreferences: { ...prefs, partition: 'persist:barbacue-store', autoplayPolicy: 'no-user-gesture-required', backgroundThrottling: false } });
-  restrict(dashboard.webContents, url => allowedNavigation(url, settings.serverUrl));
-  dashboard.on('close', event => { if (!quitting) { event.preventDefault(); dashboard.hide(); } });
-  dashboard.webContents.on('did-fail-load', (_event, code, _description, _url, main) => {
-    if (main && code !== -3) { status = 'Painel sem conexão. Confira a internet e use Reabrir pedidos.'; showSetup(); }
-  });
-  await dashboard.loadURL(`${settings.serverUrl}${path}`).catch(() => {});
+  workspace = createWorkspace({ root, serverUrl: settings.serverUrl, prefs, showSetup, isQuitting: () => quitting });
+  dashboard = workspace.window;
+  await workspace.open(path);
 }
 async function persist(next) {
   if (next.token && !safeStorage.isEncryptionAvailable()) throw new Error('A proteção de credenciais do sistema está indisponível. Entre novamente no Windows.');
@@ -74,6 +73,20 @@ async function stopAgent() {
   if (releaseLock) { await releaseLock(); releaseLock = null; }
   return previous;
 }
+async function printerInventory() {
+  // A dedicated hidden window also works when the setup window is closed.
+  const win = new BrowserWindow({ show: false, webPreferences: prefs });
+  try {
+    const printers = await win.webContents.getPrintersAsync();
+    return { id: settings.deviceId, name: hostname(), printers: printers.slice(0, 100).map(p => ({ name: p.name, displayName: p.displayName || p.name })) };
+  } finally { if (!win.isDestroyed()) win.destroy(); }
+}
+async function syncPrinters() {
+  if (!settings.serverUrl || !settings.token) throw new Error('Salve o endereço da loja e a chave de impressão primeiro.');
+  const capability = await createApi({ apiUrl: settings.serverUrl, token: settings.token }).status(await printerInventory());
+  if (!capability?.printerRouting) throw new Error('Atualize o servidor para habilitar impressoras por restaurante.');
+  return 'Impressoras conectadas. Abra Cozinha no painel e escolha a impressora de cada restaurante.';
+}
 async function startAgent() {
   if (!settings.autoPrint) { status = 'Impressão automática pausada. Você pode gerenciar e imprimir pelo painel.'; return; }
   const config = { ...settings };
@@ -81,19 +94,24 @@ async function startAgent() {
     releaseLock = await acquireSingleton();
     const journal = new Journal(join(app.getPath('userData'), 'journal', createHash('sha256').update(config.serverUrl).digest('hex').slice(0, 24)));
     await journal.init();
-    const current = new PrintAgent({ journal, api: createApi({ apiUrl: config.serverUrl, token: config.token }), columns: config.paper === 58 ? 32 : 48,
-      print: text => printTicket({ BrowserWindow, TransportError, text, settings: config }), log: record });
+    const current = new PrintAgent({ journal, api: createApi({ apiUrl: config.serverUrl, token: config.token, deviceId: config.deviceId, acceptDefault: Boolean(config.printer) }), columns: config.paper === 58 ? 32 : 48,
+      print: (text, _ticket, destination) => {
+        let target;
+        try { target = destinationSettings(config, destination); }
+        catch { throw new TransportError('Destino pertence a outro computador ou está inválido. Confira o vínculo no painel.', false); }
+        return printTicket({ BrowserWindow, TransportError, text, settings: target });
+      }, log: record });
     agent = current;
     status = 'Conectando à fila de impressão…';
-    let serverVerified = false;
+    let lastInventoryAt = 0;
     const tick = async () => {
       if (agent !== current) return;
       let hadJob = false;
       activeRun = (async () => {
-        if (!serverVerified) {
-          const capability = await current.api.status();
-          if (!capability?.allChannels || !capability.ticketVersions?.includes(2)) throw new ApiError(426);
-          serverVerified = true;
+        if (Date.now() - lastInventoryAt > 20_000) {
+          const capability = await current.api.status(await printerInventory());
+          if (!capability?.allChannels || !capability.ticketVersions?.includes(2) || !capability.printerRouting) throw new ApiError(426);
+          lastInventoryAt = Date.now();
         }
         return current.runOnce();
       })().then(result => {
@@ -103,7 +121,7 @@ async function startAgent() {
         status = error instanceof ApiError && [401, 403].includes(error.status)
           ? 'Chave de impressão recusada. Confira a chave nas configurações.'
           : error instanceof ApiError && [404, 426].includes(error.status)
-          ? 'Atualize o servidor e aplique a migration de impressão de todas as origens. Os pedidos continuam guardados.'
+          ? 'Atualize o servidor e aplique as migrations de impressão por restaurante. Os pedidos continuam guardados.'
           : 'Não foi possível consultar ou concluir a impressão. Confira a conexão, a impressora e a fila na cozinha.';
         if (events[0]?.message !== status) record(status);
       });
@@ -158,33 +176,84 @@ else {
     current.setPermissionRequestHandler((_contents, _permission, callback) => callback(false));
     current.setPermissionCheckHandler(() => false);
   }
+  const storeSession = session.fromPartition('persist:barbacue-desktop-ui');
+  const audioGrants = new Set();
+  storeSession.setPermissionCheckHandler((contents, permission, origin, details) =>
+    permission === 'media' && details.mediaType === 'audio' && details.isMainFrame === true
+    && audioGrants.has(settings.serverUrl) && isLocalUrl(origin)
+    && Boolean(contents && isLocalUrl(contents.getURL())));
+  storeSession.setPermissionRequestHandler((contents, permission, callback, details) => {
+    if (!canRequestLocalAudio(permission, details, contents.getURL())) return callback(false);
+    const requestedServer = settings.serverUrl;
+    void dialog.showMessageBox(dashboard, { type: 'question', title: 'Microfone no atendimento',
+      message: 'Permitir o uso do microfone para gravar áudio no atendimento?',
+      detail: `O acesso vale para ${requestedServer} durante esta sessão do programa.`,
+      buttons: ['Permitir microfone', 'Agora não'], defaultId: 1, cancelId: 1,
+    }).then(({ response }) => {
+      const allowed = response === 0 && settings.serverUrl === requestedServer && !contents.isDestroyed()
+        && isLocalUrl(contents.getURL());
+      if (allowed) audioGrants.add(requestedServer);
+      callback(allowed);
+    }).catch(() => callback(false));
+  });
   try {
     const saved = JSON.parse(await readFile(join(app.getPath('userData'), 'settings.json'), 'utf8'));
     const token = saved.encryptedToken ? safeStorage.decryptString(Buffer.from(saved.encryptedToken, 'base64')) : '';
-    settings = validateSettings({ ...saved, token });
+    const deviceId = typeof saved.deviceId === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(saved.deviceId) ? saved.deviceId : settings.deviceId;
+    settings = validateSettings({ ...saved, token }, { ...settings, deviceId });
+    if (saved.deviceId !== deviceId) await persist(settings);
     normalizeOrigin(settings.serverUrl);
   } catch (error) {
     if (error.code !== 'ENOENT') { status = 'Não foi possível abrir a configuração salva. Informe novamente os dados da loja.'; record(status); }
   }
   const menu = [
-    { label: 'Pedidos', click: () => void openDashboard() },
+    { label: 'Abrir administração', click: () => void openDashboard() },
+    { label: 'Caixa e pedidos', click: () => void openDashboard('/admin/orders') },
+    { label: 'Produtos e cardápios', click: () => void openDashboard('/admin/catalogs') },
+    { label: 'Atendimento / WhatsApp', click: () => void openDashboard('/whatsapp') },
     { label: 'Gestor iFood (3 lojas)', click: () => void openDashboard('/admin/ifood') },
-    { label: 'Reabrir pedidos', click: () => { if (dashboard && !dashboard.isDestroyed()) dashboard.destroy(); dashboard = null; void openDashboard(); } },
+    { label: 'Reconectar painel', click: () => { if (workspace && dashboard && !dashboard.isDestroyed()) void workspace.command('reload'); else void openDashboard(); } },
     { label: 'Configurações e impressão', click: showSetup },
     { type: 'separator' },
     { label: 'Sair e parar impressão', click: () => app.quit() },
   ];
   Menu.setApplicationMenu(Menu.buildFromTemplate([
     { label: 'Barbacue', submenu: menu },
+    ...moduleGroups.map(group => ({ label: group.label, submenu: group.items.map(item => ({
+      label: item.label, ...(item.accelerator ? { accelerator: item.accelerator } : {}), click: () => void openDashboard(item.path),
+    })) })),
     { label: 'Editar', submenu: [{ role: 'undo' }, { role: 'redo' }, { type: 'separator' }, { role: 'cut' }, { role: 'copy' }, { role: 'paste' }, { role: 'selectAll' }] },
-    { label: 'Exibir', submenu: [{ role: 'reload' }, { role: 'resetZoom' }, { role: 'zoomIn' }, { role: 'zoomOut' }, { role: 'togglefullscreen' }] },
+    { label: 'Exibir', submenu: [
+      { label: 'Atualizar painel', accelerator: 'F5', click: () => { if (dashboard && !dashboard.isDestroyed()) void workspace.command('reload'); } },
+      { label: 'Voltar', accelerator: 'Alt+Left', click: () => { if (dashboard && !dashboard.isDestroyed()) void workspace.command('back'); } },
+      { label: 'Avançar', accelerator: 'Alt+Right', click: () => { if (dashboard && !dashboard.isDestroyed()) void workspace.command('forward'); } },
+      { label: 'Imprimir tela', accelerator: 'CmdOrCtrl+P', click: () => { if (dashboard && !dashboard.isDestroyed()) void workspace.command('print'); } },
+      { type: 'separator' }, { role: 'resetZoom' }, { role: 'zoomIn' }, { role: 'zoomOut' }, { role: 'togglefullscreen' },
+    ] },
   ]));
   tray = new Tray(nativeImage.createFromPath(join(root, 'assets/icon.png')).resize({ width: 24, height: 24 }));
   tray.setToolTip('Barbacue Pedidos'); tray.setContextMenu(Menu.buildFromTemplate(menu));
   tray.on('double-click', () => void openDashboard());
+  function workspaceIPC(name, handler) {
+    ipcMain.handle(`workspace:${name}`, async (event, ...args) => {
+      if (!dashboard || dashboard.isDestroyed() || event.sender !== dashboard.webContents || event.senderFrame !== event.sender.mainFrame || !workspace.isTrustedUrl(event.senderFrame.url)) throw new Error('Acesso não permitido.');
+      try { return { ok: true, value: await handler(...args) }; }
+      catch (error) { return { ok: false, error: error instanceof Error ? error.message : 'Não foi possível concluir.' }; }
+    });
+  }
+  workspaceIPC('state', () => ({ ...workspace.state(), version: app.getVersion() }));
+  workspaceIPC('navigate', id => openDashboard(modulePath(id)));
+  workspaceIPC('command', name => workspace.command(name));
   registerIPC('state', state);
   registerIPC('printers', async () => (await setupWindow.webContents.getPrintersAsync()).map(p => ({ name: p.name, displayName: p.displayName, isDefault: p.isDefault })));
   registerIPC('save', changeSettings);
+  registerIPC('syncPrinters', syncPrinters);
+  registerIPC('mapping', () => openDashboard('/admin/kitchen'));
+  registerIPC('addPrinter', async () => {
+    if (process.platform !== 'win32') throw new Error('Adicione a impressora nas configurações do sistema e depois atualize a lista.');
+    await shell.openExternal('ms-settings:printers');
+    return 'Adicione ou pareie a impressora no Windows e depois clique em Atualizar lista.';
+  });
   registerIPC('open', () => openDashboard());
   registerIPC('toggle', () => changeSettings({ ...settings, autoPrint: !settings.autoPrint }));
   registerIPC('test', async () => {
@@ -199,6 +268,7 @@ else {
     } finally { await startAgent(); changing = false; }
   });
   await startAgent();
+  await ensureCogSession();
   if (!process.argv.includes('--background') || !settings.serverUrl) {
     if (settings.serverUrl) await openDashboard(); else showSetup();
   }
@@ -212,3 +282,23 @@ process.on('uncaughtException', () => {
   record(status);
   if (app.isReady()) dialog.showErrorBox('Barbacue Pedidos', status);
 });
+
+// Cog is isolated from native staff cookies and the print-agent credential.
+import { createBarbacueCogSession } from './cog-session.mjs';
+let nativeCogSession;
+async function ensureCogSession() {
+  if (!nativeCogSession) {
+    const qa = !app.isPackaged && process.env.BARBACUE_COG_DISPOSABLE_QA === '1';
+    nativeCogSession = createBarbacueCogSession({ app, session,
+      openExternal: url => shell.openExternal(url), getOrigin: () => settings.serverUrl,
+      onChange: () => { if (dashboard && !dashboard.isDestroyed()) dashboard.webContents.reload(); },
+      ...(qa ? { qa: true, issuer: process.env.BARBACUE_COG_QA_ISSUER } : {}),
+    });
+  }
+  // Keep the existing panel available when the identity provider is offline.
+  let timer;
+  await Promise.race([nativeCogSession.ready().catch(() => {}), new Promise(resolve => {
+    timer = setTimeout(resolve, 2500); timer.unref?.();
+  })]);
+  clearTimeout(timer);
+}

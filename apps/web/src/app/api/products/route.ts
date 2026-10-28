@@ -14,7 +14,7 @@ function slugify(value: string) {
 export async function GET(request: NextRequest) {
   const requestHeaders = await headers();
   const requestedBrand = request.nextUrl.searchParams.get("brand");
-  const brandSlug = requestedBrand === "chelas" || requestedBrand === "barbadog"
+  const brandSlug = requestedBrand === "barbacue" ? null : requestedBrand === "chelas" || requestedBrand === "barbadog"
     ? requestedBrand
     : brandFromHost(requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host"));
 

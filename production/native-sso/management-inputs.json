@@ -1,0 +1,837 @@
+{
+  "base_revision": "60d599060578faa1ee81e1ca7a15ab388adf6e23",
+  "inputs": {
+    "apps/mobile/lib/app.dart": {
+      "sha256": "59b78ae20785ea9e5405e15610eff3292e5f91acd518b9d21e153105b82702b2",
+      "git": true
+    },
+    "apps/mobile/lib/config/app_brand.dart": {
+      "sha256": "995893f2f4a87aa1225a553d3538b7798618f4439e130ca886265cd87f4ee017",
+      "git": false
+    },
+    "apps/mobile/lib/lib/category_art.dart": {
+      "sha256": "8226fe667682dba7275d565ec1bcf1eeb178356c4d1d03333fdbab842e7408e0",
+      "git": true
+    },
+    "apps/mobile/lib/main.dart": {
+      "sha256": "bb012f2602c721477c6bcb9a11680e84cd8aab573c4ad46d5eee054669a15586",
+      "git": true
+    },
+    "apps/mobile/lib/main_barbacue.dart": {
+      "sha256": "9ba447cfc64b88878654d9b01812469bf6920f728f03df48e86854063cc3e036",
+      "git": true
+    },
+    "apps/mobile/lib/main_barbadog.dart": {
+      "sha256": "f7c931fb41e3a2f7bec0f3707fd4ce2df63ded03911f08a1d5e9137ecdbf9026",
+      "git": true
+    },
+    "apps/mobile/lib/main_chelas.dart": {
+      "sha256": "642e2efa774df181a1d161bbc900705a5f15330001bf5e900684a0e3e6b8ed94",
+      "git": true
+    },
+    "apps/mobile/lib/main_gestao.dart": {
+      "sha256": "7e7e4bacdddc0df71e9e454515765e365ea2cf6f46acd6169d03fd128dee93e3",
+      "git": false
+    },
+    "apps/mobile/lib/main_screenshot.dart": {
+      "sha256": "d9fbb13e58551b9ec6a29ca34584d61d6fd442b7ea904da208075dc7833ce6d3",
+      "git": true
+    },
+    "apps/mobile/lib/management/management_api.dart": {
+      "sha256": "91eb8f9745c9f5c168f8bfa13aa366014eef6042cf0e986cf27d7bc86bd1882c",
+      "git": false
+    },
+    "apps/mobile/lib/management/management_app.dart": {
+      "sha256": "3ee9fd5f9d7b1738ba3464935770749d243b889a23ab74813fd68025b9976dc9",
+      "git": false
+    },
+    "apps/mobile/lib/management/management_demo.dart": {
+      "sha256": "2b8f112a5bb74f8de5d0bed9dd5d26740f95aac8a179dc96f127e626c5e2255c",
+      "git": false
+    },
+    "apps/mobile/lib/models/cart_item.dart": {
+      "sha256": "f46e0df39c8da4d9262451683adef596e1c37a1bd7366dc470cdcd5e502e4de7",
+      "git": true
+    },
+    "apps/mobile/lib/models/chat.dart": {
+      "sha256": "0021f40e2ada3519497ae95e152f666b9ecfbe66862e9690550483b41fafc6fc",
+      "git": true
+    },
+    "apps/mobile/lib/models/coupon.dart": {
+      "sha256": "a6f549d8fb6d0cbb5f943d4576059e2b6611af192707f81bda42e3a76841267e",
+      "git": true
+    },
+    "apps/mobile/lib/models/delivery_quote.dart": {
+      "sha256": "dbc15d29410a25b54ca601c331ed344863c8f6a686eeb7dc23e4cd9638abdcde",
+      "git": true
+    },
+    "apps/mobile/lib/models/instagram_post.dart": {
+      "sha256": "cef9efc7f34863e922b88746d89ec28a2253bb857dfe9d849434abde95b03dc2",
+      "git": true
+    },
+    "apps/mobile/lib/models/order.dart": {
+      "sha256": "61c9fcd9c247a90506225b7fd9c426811f7bea0ed16e3db2489d0711b17dd984",
+      "git": true
+    },
+    "apps/mobile/lib/models/order.g.dart": {
+      "sha256": "316f8d420fee289c8cc933f1266d43613fcf78a06b32191751bb25be6473428a",
+      "git": false
+    },
+    "apps/mobile/lib/models/product.dart": {
+      "sha256": "fbfa97b291fe6bab1cf9897dd30eadc85b30bcaa657c628316be7eb2590f20d3",
+      "git": true
+    },
+    "apps/mobile/lib/models/product.g.dart": {
+      "sha256": "071aa86c86ec3930da4042ded60525cdb693919739d13d312e8bba10ef7a5c15",
+      "git": false
+    },
+    "apps/mobile/lib/models/store_settings.dart": {
+      "sha256": "d34de5f94da065de12a67837edb0d07a8c6a06632777336933ef9fd7d062ff71",
+      "git": true
+    },
+    "apps/mobile/lib/models/table_session.dart": {
+      "sha256": "872124ecfe215327b2460117932bb57c1214a24d20c4db8adee12cb1787e64b5",
+      "git": true
+    },
+    "apps/mobile/lib/providers/cart_provider.dart": {
+      "sha256": "bf047d3847781e9391627182388ede0d69e07b5c243d02f4c7de031de56006b0",
+      "git": true
+    },
+    "apps/mobile/lib/providers/chat_provider.dart": {
+      "sha256": "63ef02456bffdb3b8549ac3de42b16cc07eed849823d8ee573360e17b1fe8511",
+      "git": true
+    },
+    "apps/mobile/lib/providers/checkout_provider.dart": {
+      "sha256": "6e9f413eb415cc7137d00a8dd4f8babfc76a66244533e1f6e0f050416e9c5d7e",
+      "git": true
+    },
+    "apps/mobile/lib/providers/menu_provider.dart": {
+      "sha256": "2f5cafb07377f997f06e4e6d2b530acab3f98b0ea46bcedbe254c19a61c4a9d9",
+      "git": true
+    },
+    "apps/mobile/lib/providers/table_session_provider.dart": {
+      "sha256": "c26650d5648eb9c7e4c5ce7edda78263b463beae190b1c27de0a55f8d8a937c8",
+      "git": true
+    },
+    "apps/mobile/lib/router.dart": {
+      "sha256": "f28de8f04b3a558df76606ed91fc75aded1e7ef5da066949c1b01a1836b92045",
+      "git": true
+    },
+    "apps/mobile/lib/screens/brand_menu_screen.dart": {
+      "sha256": "b466f5687367b6ce3109db4392a38322c750b29f650a8241e9d0a67cc015d302",
+      "git": false
+    },
+    "apps/mobile/lib/screens/cart_screen.dart": {
+      "sha256": "ac535642e8db4282dd617f19d12e252ee654d0fe4a2e8e9fe95624d468d63a0b",
+      "git": true
+    },
+    "apps/mobile/lib/screens/chat_screen.dart": {
+      "sha256": "4712432765ee0865da7a8a858615ce0ed0cf7e71530d16c5e22968a2006d2379",
+      "git": true
+    },
+    "apps/mobile/lib/screens/confirmation_screen.dart": {
+      "sha256": "efa46878a17d89f9b1f6bf4f0a8e570677a10fff9dee764c895ab6277c4d7f6e",
+      "git": true
+    },
+    "apps/mobile/lib/screens/menu_screen.dart": {
+      "sha256": "820c1e9c54b425b000c373bb420306b0b712152bb38c52185d062fa99af6ef0b",
+      "git": true
+    },
+    "apps/mobile/lib/screens/mesa_screen.dart": {
+      "sha256": "692232f890b04149b91d425acad6440b0200ad56e6d95b848281d5270b1f6d06",
+      "git": true
+    },
+    "apps/mobile/lib/screens/payment_screen.dart": {
+      "sha256": "3e5b156befb73fd1025aca55396488a24cb87560281b4215874f1c7b58f9cd5a",
+      "git": true
+    },
+    "apps/mobile/lib/screens/privacy_screen.dart": {
+      "sha256": "d35f560357033a56bed0c59795323461c8db0e5abd122524587c96061738bb36",
+      "git": true
+    },
+    "apps/mobile/lib/services/api_service.dart": {
+      "sha256": "48f279bf1f145505938a46f4cb6b3315e78a65daa9cb1ccedaa3a1c41334c200",
+      "git": true
+    },
+    "apps/mobile/lib/services/privacy_consent.dart": {
+      "sha256": "ee6aa082f59ffb01c8fb998007e5467b0ed6cfd6d41ddcfac4143fae7b83ca2d",
+      "git": true
+    },
+    "apps/mobile/lib/theme/app_theme.dart": {
+      "sha256": "bcb41ae26ffd7a959c1d0db3006d924a344b83994e94b0473c398768f2c42aff",
+      "git": true
+    },
+    "apps/mobile/lib/widgets/cart_bar.dart": {
+      "sha256": "3a92c886070ce36ae56424c02a8f780227ad75870c180700637e9aa3d8eee15b",
+      "git": true
+    },
+    "apps/mobile/lib/widgets/header_chip.dart": {
+      "sha256": "d1e583f119f15cd68515d14ec310a4b0ca4f17649ddd39c7ccba1d89f82d1c84",
+      "git": true
+    },
+    "apps/mobile/lib/widgets/hero_header.dart": {
+      "sha256": "1045da4468d0e614fae030a67004d60f79d602e04ac3c6b5af5fe1e84806b28d",
+      "git": true
+    },
+    "apps/mobile/lib/widgets/instagram_feed.dart": {
+      "sha256": "b5768532ee19e08a248f5ee3c696efcefbdefd5167c5de262ffea15f71662d7a",
+      "git": true
+    },
+    "apps/mobile/lib/widgets/privacy_button.dart": {
+      "sha256": "bf7da776fede295a2e24e9a4311936e750e5e9505597a372d0e51c901eb42307",
+      "git": true
+    },
+    "apps/mobile/lib/widgets/product_card.dart": {
+      "sha256": "4ecaf61504f39af2421394a5cf1d079f7a8c83954d852fa3f188314542f565a1",
+      "git": true
+    },
+    "apps/mobile/lib/widgets/product_thumb.dart": {
+      "sha256": "0850b4435b7946262e2e3a64a6bca7ac7e4798c8833daf2045e2b9c0f8ec2349",
+      "git": true
+    },
+    "apps/mobile/lib/widgets/store_footer.dart": {
+      "sha256": "0264649f08619fd0d819db9d7004a7314cc91a12f76bc11cf27362d5fd2cbecb",
+      "git": true
+    },
+    "apps/mobile/lib/widgets/table_banner.dart": {
+      "sha256": "6788bdd7ff854cbcaf16e12314b02793fbc6bb1f99d471ab64b32bb539eadbd4",
+      "git": true
+    },
+    "apps/mobile/assets/brand/logo.png": {
+      "sha256": "6c4f2c9a507c800c6431683d69f9fd197b024f81b3e339a78f1aa6615a68be6a",
+      "git": true
+    },
+    "apps/mobile/assets/brands/barbadog-icon.png": {
+      "sha256": "1ef34715ab60028c66c371e0a21c81961bf086530b12b1a6bf8d5963b819fa5f",
+      "git": true
+    },
+    "apps/mobile/assets/brands/barbadog-icon.svg": {
+      "sha256": "86f452be5603b0e2c356b8e0e932b1da450b668b584d8dbb1799dc58649c6a7e",
+      "git": true
+    },
+    "apps/mobile/assets/brands/barbadog-menu.json": {
+      "sha256": "5e08b043e177cf976ffbd206ad012a4d2d9a67317af72fff3076231068500d3f",
+      "git": true
+    },
+    "apps/mobile/assets/brands/chelas-icon.png": {
+      "sha256": "878186a5377885280b55e1cc4547936039328996829bb63b8615a6463478a3db",
+      "git": true
+    },
+    "apps/mobile/assets/brands/chelas-icon.svg": {
+      "sha256": "256a6652517b122d8a610b7fbd99711fc5e0bb71a4ddd80402db02f257efa2a0",
+      "git": true
+    },
+    "apps/mobile/assets/brands/chelas-menu.json": {
+      "sha256": "5e5fd6cc9160f86e8f454d287d40c5d5fce077c883e54fc3a39265b7860cef5d",
+      "git": true
+    },
+    "apps/mobile/assets/brands/gestao-icon.png": {
+      "sha256": "2861cfae110fd408d5295df42dc72dc18fab9a3752bd43b1b5a6e592e1bfd6e0",
+      "git": false
+    },
+    "apps/mobile/assets/brands/gestao-icon.svg": {
+      "sha256": "0a745b403b43ddccb00f7f5602510bb3e1200bec404d2d138dbb7106efce7668",
+      "git": false
+    },
+    "apps/mobile/assets/fonts/Anton-Regular.ttf": {
+      "sha256": "fd9301f2837c99df2be07cc7f0be66e9470f5354d8fcf1606027c67fcd637a53",
+      "git": true
+    },
+    "apps/mobile/assets/icon/icon.png": {
+      "sha256": "9c2c1bc8f60f3b6f06e3c15eb13224e7ae1bab38e53b7e2cfbb274387d31e1a8",
+      "git": true
+    },
+    "apps/mobile/assets/icon/icon_foreground.png": {
+      "sha256": "9c2c1bc8f60f3b6f06e3c15eb13224e7ae1bab38e53b7e2cfbb274387d31e1a8",
+      "git": true
+    },
+    "apps/mobile/assets/splash/logo.png": {
+      "sha256": "108b7775c5657744f281bd9c430896445cd2a323dc25a2e9015181b9d8872740",
+      "git": true
+    },
+    "apps/mobile/scripts/asc.py": {
+      "sha256": "44c0cb9c763fafec1850e11fd9511aa6eb7ff227c96f4f79214487aff4c23de3",
+      "git": true
+    },
+    "apps/mobile/scripts/brand-menu-safe-area.patch": {
+      "sha256": "52a9747a90fd850b371bfeaf5bd0d5da2b8d85b41d9120575247c311f77c3d1d",
+      "git": true
+    },
+    "apps/mobile/scripts/build_all_brands.sh": {
+      "sha256": "f9f513a6e0fed5d52cdd3e1ae19e8afd713853d58781bd9c76dc28f77a62a0e4",
+      "git": false
+    },
+    "apps/mobile/scripts/build_brand.sh": {
+      "sha256": "d5a6f3d92b837d436dc9da9ef2a039491a18e8b97ded7d10840f4eafab83ffca",
+      "git": false
+    },
+    "apps/mobile/scripts/build_native_qa.sh": {
+      "sha256": "410fd9a4ce722febafdfaae62a13a86047d62937e680171a01cc8108161efcae",
+      "git": true
+    },
+    "apps/mobile/scripts/capture_ipad_screenshots.sh": {
+      "sha256": "2ab199acbef99be74050ef6557f2ce9131542bd1a9f6ae83250d1dce07edd4ef",
+      "git": true
+    },
+    "apps/mobile/scripts/generate_legal_pages.py": {
+      "sha256": "9130d681f90c909e49e97dc7b39b56b8937abbfb27945c8e4075cb017c0954fc",
+      "git": true
+    },
+    "apps/mobile/scripts/play.py": {
+      "sha256": "5c754e0223a1735f6653323ff8c2882a23505e05bc5954d0799a51c2a5f36296",
+      "git": true
+    },
+    "apps/mobile/scripts/prepare_release.sh": {
+      "sha256": "29b36c7ecd4d212db60755ab87ff670e557f93958c0a7880a7959c2c91f51322",
+      "git": true
+    },
+    "apps/mobile/scripts/stage_four_apps.py": {
+      "sha256": "3486d404c51e5c232bdec0c67b741b68ccb18fbf9a2d3e6828e1421e2a7c18fd",
+      "git": false
+    },
+    "apps/mobile/scripts/verify_public_api.dart": {
+      "sha256": "42a15dc145b0fe93df3c6fd4bff516aa5842e461fa02b179136069b4bd6f8fca",
+      "git": false
+    },
+    "apps/mobile/scripts/verify_simulator_frameworks.py": {
+      "sha256": "2f0c76e988b4a3686d3e0fdd1d6705126c2bd6912a91536b65742d9bfe9409e1",
+      "git": true
+    },
+    "apps/mobile/test/brand_apps_test.dart": {
+      "sha256": "003225f516aeb1e344cdc3274fe2612789da8faef5b5031cc6c19ea581813e65",
+      "git": true
+    },
+    "apps/mobile/test/brand_menu_safe_area_test.dart": {
+      "sha256": "ec281b2ad069d146bd73da640f1326e932d3189c3182443c8264c1ecfe5408f8",
+      "git": true
+    },
+    "apps/mobile/test/brand_native_checkout_test.dart": {
+      "sha256": "9f105f62be7c72c9a6c820c8031728345910c9bf6a6ad370da4e28573f70de55",
+      "git": false
+    },
+    "apps/mobile/test/cart_screen_test.dart": {
+      "sha256": "13f85734bf51d40ca186070044d519df8060399162dc931f226d2813a65285a3",
+      "git": true
+    },
+    "apps/mobile/test/cart_screenshot_test.dart": {
+      "sha256": "b573ce53eef5b237e69c23056bfc7a665221d26c467a4d0f0a9e8f2667a598c8",
+      "git": true
+    },
+    "apps/mobile/test/category_art_test.dart": {
+      "sha256": "e87a28a7f6126a5e087c5af3caeb4914d3ed8ffc9833b33f00eb655a9ce06ccf",
+      "git": true
+    },
+    "apps/mobile/test/category_scroll_spy_test.dart": {
+      "sha256": "066b10ccb7175f0f44569f4348496ae310d685d8f214c5acfbb5f2330cefdce4",
+      "git": true
+    },
+    "apps/mobile/test/chat_screenshot_test.dart": {
+      "sha256": "4fa2c1019dd5de39c699ecf6691e0589b0e89b2fcc734cc349b71d6525372b85",
+      "git": true
+    },
+    "apps/mobile/test/chat_test.dart": {
+      "sha256": "382ac17dd78b9526dba94ffa171d6e28e0cef1e674da47d5cbcb7f7a97979e1e",
+      "git": true
+    },
+    "apps/mobile/test/closed_store_gating_test.dart": {
+      "sha256": "3efd203119ab39722af6b5963c6f82293c00b79dcbff6fbe12853cf3d521161c",
+      "git": true
+    },
+    "apps/mobile/test/coupon_api_test.dart": {
+      "sha256": "184a72fd3cfde726939e1192ba959f0425301cf74e3d4c6043970b6b8588a216",
+      "git": true
+    },
+    "apps/mobile/test/delivery_checkout_test.dart": {
+      "sha256": "58e77448f1f23384d6613766897b6225727c150f051eceee76e11c222b3866be",
+      "git": true
+    },
+    "apps/mobile/test/dine_in_screenshot_test.dart": {
+      "sha256": "3aeafff1a9a1aae19968193390444aa630cb745536434231cc0f82bdc29cb40d",
+      "git": true
+    },
+    "apps/mobile/test/failures/barbadog-ipad-native-product-2026-09-21_isolatedDiff.png": {
+      "sha256": "2afa56ef742b072199d50f257e32e902d28e5c86556712718a7a56aa3749ab3a",
+      "git": false
+    },
+    "apps/mobile/test/failures/barbadog-ipad-native-product-2026-09-21_maskedDiff.png": {
+      "sha256": "f4f7640eace46ffe79966970aa8bdc83ba6b9bd2749972c3022fffd84db01263",
+      "git": false
+    },
+    "apps/mobile/test/failures/barbadog-ipad-native-product-2026-09-21_masterImage.png": {
+      "sha256": "7107b4140c264389863f039edc1c33e398930ba24d219fa79116bc1d26fe100f",
+      "git": false
+    },
+    "apps/mobile/test/failures/barbadog-ipad-native-product-2026-09-21_testImage.png": {
+      "sha256": "1b283c0b5d65f14f3fc5de4d7965403c56d708cb802f0bbfc6d53841f79b9baf",
+      "git": false
+    },
+    "apps/mobile/test/failures/barbadog-native-product-2026-09-21_isolatedDiff.png": {
+      "sha256": "aa8215dfd2b92ed5a963c6f1aa425f48ff39a3adbd5ad64fc634670e3d5b64f0",
+      "git": false
+    },
+    "apps/mobile/test/failures/barbadog-native-product-2026-09-21_maskedDiff.png": {
+      "sha256": "30df6c5b0f0205fce16a97de6a252dd2239ee08e821d6897bab4c0d3d2b45078",
+      "git": false
+    },
+    "apps/mobile/test/failures/barbadog-native-product-2026-09-21_masterImage.png": {
+      "sha256": "dd5c3d7d89d5666dad4e610219de8fc643535880a6b337dfaded6e194da23ef7",
+      "git": false
+    },
+    "apps/mobile/test/failures/barbadog-native-product-2026-09-21_testImage.png": {
+      "sha256": "e403857560bd66487e4e4bc0ce44df71695a09d7885fe4a7d77ce85031591216",
+      "git": false
+    },
+    "apps/mobile/test/failures/chelas-ipad-native-product-2026-09-21_isolatedDiff.png": {
+      "sha256": "f75568b0ef2fc60f1d7ea7f39b02976da50189f7b10c0ae12ac9c797633bfa36",
+      "git": false
+    },
+    "apps/mobile/test/failures/chelas-ipad-native-product-2026-09-21_maskedDiff.png": {
+      "sha256": "d5b99f44e1fa3ec67da7a4dbf11e057837649815c329a860d21d92a327a61712",
+      "git": false
+    },
+    "apps/mobile/test/failures/chelas-ipad-native-product-2026-09-21_masterImage.png": {
+      "sha256": "db6cd68a48e8597214e0eb341ab13e044acc8ea075cc7ef3252864c2f86e52ff",
+      "git": false
+    },
+    "apps/mobile/test/failures/chelas-ipad-native-product-2026-09-21_testImage.png": {
+      "sha256": "f88d4d30888b764098b4c8196cb99fce70ad7c42a729d18c8e2ddb93a7c538af",
+      "git": false
+    },
+    "apps/mobile/test/failures/chelas-native-product-2026-09-21_isolatedDiff.png": {
+      "sha256": "e238732d842c7241cd7fba96c233f47de24cb3c2646e55fdfb40d24b97abd680",
+      "git": false
+    },
+    "apps/mobile/test/failures/chelas-native-product-2026-09-21_maskedDiff.png": {
+      "sha256": "d31173ca444601e830bf037f4a5f7be5297a2d1adcdae7464726262b14444863",
+      "git": false
+    },
+    "apps/mobile/test/failures/chelas-native-product-2026-09-21_masterImage.png": {
+      "sha256": "69f2c155479576d1f38a8ebabd3e48df4d55ef808fd8c053dc6044aef727d6d7",
+      "git": false
+    },
+    "apps/mobile/test/failures/chelas-native-product-2026-09-21_testImage.png": {
+      "sha256": "954885da1fe319a15a790bf967762a98166df998667e87d34ca7b9064307b097",
+      "git": false
+    },
+    "apps/mobile/test/failures/mobile-store-footer-2026-07-17_masterImage.png": {
+      "sha256": "f53d3d8e7e4587bd1de2bd46a70cda7802064bf4111512fbbabd72464accbabf",
+      "git": true
+    },
+    "apps/mobile/test/failures/mobile-store-footer-2026-07-17_testImage.png": {
+      "sha256": "e66a8b9da84a3a837d87c3148ead9509bcbc47879ed6484af442a98c544cc065",
+      "git": true
+    },
+    "apps/mobile/test/failures/payment-success-cash-2026-07-17_isolatedDiff.png": {
+      "sha256": "c5104fcdea4e452b5451ce29c0cfd20754caa12aa7361794cc77135b92c9ac34",
+      "git": true
+    },
+    "apps/mobile/test/failures/payment-success-cash-2026-07-17_maskedDiff.png": {
+      "sha256": "80dbb33a1be76a514f79cfdd19cb5d4bbb2fe17d3d35ea4edd70f13edd7e043b",
+      "git": true
+    },
+    "apps/mobile/test/failures/payment-success-cash-2026-07-17_masterImage.png": {
+      "sha256": "f39a3f32491ba6d135a537406f544a1f3cd666ce01ca1a2bcf8786e8c721fe2d",
+      "git": true
+    },
+    "apps/mobile/test/failures/payment-success-cash-2026-07-17_testImage.png": {
+      "sha256": "447eef4a0870a426b2859f5c5088b9217bc558b2be467880e59ac9a4021d3a1c",
+      "git": true
+    },
+    "apps/mobile/test/failures/payment-success-pix-2026-07-17_isolatedDiff.png": {
+      "sha256": "b6e5ae9f19ab06cac2d646395f8901a5782e5f2e71272f7b3c436f1460aa1a1e",
+      "git": true
+    },
+    "apps/mobile/test/failures/payment-success-pix-2026-07-17_maskedDiff.png": {
+      "sha256": "1b821dfd96c2ddb5577ac336a0fc428781f63cd16dd91680c6da97c70e6302a8",
+      "git": true
+    },
+    "apps/mobile/test/failures/payment-success-pix-2026-07-17_masterImage.png": {
+      "sha256": "bac2160be2d5bb91078724f59b529e2845241eb1a1ae1964c70757d0a2c39a8b",
+      "git": true
+    },
+    "apps/mobile/test/failures/payment-success-pix-2026-07-17_testImage.png": {
+      "sha256": "191bc81b95b6a8f7d7f7a1f08224a3851179653258d0473d02bd132e667807b6",
+      "git": true
+    },
+    "apps/mobile/test/format_price_test.dart": {
+      "sha256": "7db8cada8a5b369a1c7e51b01547078aabc4736716f135c6f5f3404d9999a869",
+      "git": true
+    },
+    "apps/mobile/test/image_url_resolution_test.dart": {
+      "sha256": "0d7bd38ca7b8d87421a75c2d29757fb00d4bf9413e7416c0d841477d51b413c7",
+      "git": true
+    },
+    "apps/mobile/test/instagram_api_test.dart": {
+      "sha256": "31e03cf952016a8540f51d368598f5f5b8ed786dbc0009e537c69671f6714747",
+      "git": true
+    },
+    "apps/mobile/test/management_api_test.dart": {
+      "sha256": "155284bfdf49578a53c18e8c4552b5bd31f25560cf15962fda02ee13996e8126",
+      "git": false
+    },
+    "apps/mobile/test/management_app_test.dart": {
+      "sha256": "c195cf58258fc9f13f7db6c8968c5fc495b656d490b2565d36840757dfacc8c2",
+      "git": false
+    },
+    "apps/mobile/test/management_demo_test.dart": {
+      "sha256": "0ed2e1af04cdf3093f2f9a31993d384f06a115f5a185435ceb3cc13f68376c85",
+      "git": false
+    },
+    "apps/mobile/test/menu_screen_screenshot_test.dart": {
+      "sha256": "284607fd2f31b5dd1adc364ccd2b2c841209a56cdd6c90666f183c07910004c0",
+      "git": true
+    },
+    "apps/mobile/test/order_coupon_payload_test.dart": {
+      "sha256": "e0f0e061c2e9d0fd562d5101c55107ef5c1b8e81d2ce927fd39b7f1eb792f674",
+      "git": true
+    },
+    "apps/mobile/test/payment_screen_test.dart": {
+      "sha256": "3bad5127ab35aa485bbc3d8ca29a1450fc2f80c831a3eb5fa4d50ba4bb49a90e",
+      "git": true
+    },
+    "apps/mobile/test/payment_screenshot_test.dart": {
+      "sha256": "327a1ca1e79ef6f6f7c46b9768aaa0f262b6cd141d67db392e81a4a8cd4bf959",
+      "git": true
+    },
+    "apps/mobile/test/privacy_consent_test.dart": {
+      "sha256": "6d7b1d261a57b1528d69f64021261f20f451df76dec4ec725ef3ab38052a6109",
+      "git": true
+    },
+    "apps/mobile/test/product_card_screenshot_test.dart": {
+      "sha256": "f09962904e792a39209f9f3343eeab6509536209475e133fba31ef9359af7e31",
+      "git": true
+    },
+    "apps/mobile/test/product_card_test.dart": {
+      "sha256": "302eaa045bc70e4a9bbb8c9e1872d9190aae5a7e976d610f6ead41ecab9f1e84",
+      "git": true
+    },
+    "apps/mobile/test/simulator_frameworks_test.py": {
+      "sha256": "a3ef3442f8f0530952fc9a8ba77cc5e4d582481effdb3583c4389af2b667135b",
+      "git": true
+    },
+    "apps/mobile/test/store_footer_screenshot_test.dart": {
+      "sha256": "60dfe5d9c5a08a288b687bb93addeaf6c5c352e4c646a5177474e52a395ec23e",
+      "git": true
+    },
+    "apps/mobile/test/store_footer_test.dart": {
+      "sha256": "3d13ec863d3db961169f78c63aa366d70d064f18bd54f4c8b18cd8004d1e3ebe",
+      "git": true
+    },
+    "apps/mobile/test/table_session_test.dart": {
+      "sha256": "f6c393ee01e6040332a3727cc530c20f200a2da32e2501631df0eef2ff147e86",
+      "git": true
+    },
+    "apps/mobile/test/widget_test.dart": {
+      "sha256": "f4201c34f28444945e67ea49dda0e8aad1d3b9143d59bf09e0258103ba91d856",
+      "git": true
+    },
+    "apps/mobile/tools/store-capture/management_capture_test.dart": {
+      "sha256": "d883cd3c6d6ff54f4a8f0181bb92bb9b6ac5dcd9bd9cceccc812a8a0b086daa4",
+      "git": false
+    },
+    "apps/mobile/tools/store-capture/privacy_capture_test.dart": {
+      "sha256": "438c449f87e15d3c918646c427ff7b83894f3536929099c93cc97ff0cd31d1b3",
+      "git": true
+    },
+    "apps/mobile/android/app/src/barbacue/res/mipmap-hdpi/ic_launcher.png": {
+      "sha256": "ca4c406e6fbfbf86bbe180131bc9f8a146a4e4d1005138a72d8d0e09ec6fd146",
+      "git": true
+    },
+    "apps/mobile/android/app/src/barbacue/res/mipmap-mdpi/ic_launcher.png": {
+      "sha256": "d84a0e74a01878832ea735aad19c6ab1f678b1a480bcc4d70b2b1d0fae57e9e9",
+      "git": true
+    },
+    "apps/mobile/android/app/src/barbacue/res/mipmap-xhdpi/ic_launcher.png": {
+      "sha256": "83c2dadce6bf155a2d874c51b89338cace77c68d04047b99074c0691c7f29835",
+      "git": true
+    },
+    "apps/mobile/android/app/src/barbacue/res/mipmap-xxhdpi/ic_launcher.png": {
+      "sha256": "629c79d80fc8666e79a817ddaea02509e65870409fe5db1fe3c7faa1c77ddd82",
+      "git": true
+    },
+    "apps/mobile/android/app/src/barbacue/res/mipmap-xxxhdpi/ic_launcher.png": {
+      "sha256": "096d788e2cf0f99352431fd0388fc7d4a3d8f0373e8dfcf827bb44185d05bf4c",
+      "git": true
+    },
+    "apps/mobile/android/app/src/barbadog/res/drawable-nodpi/brand_launcher.png": {
+      "sha256": "1ef34715ab60028c66c371e0a21c81961bf086530b12b1a6bf8d5963b819fa5f",
+      "git": false
+    },
+    "apps/mobile/android/app/src/barbadog/res/mipmap-anydpi-v26/ic_launcher.xml": {
+      "sha256": "ed485bf95bbf202c038713f0d7984e5262628a5a22cb98a4be41e1f0568e820b",
+      "git": false
+    },
+    "apps/mobile/android/app/src/barbadog/res/mipmap-hdpi/ic_launcher.png": {
+      "sha256": "5c14a399f75f08f606a0a416965cc29dcc94f3082760ec05abc5984cd5be4f58",
+      "git": true
+    },
+    "apps/mobile/android/app/src/barbadog/res/mipmap-mdpi/ic_launcher.png": {
+      "sha256": "63eb0e8ec30daf84cba29005501353d4567f7e087c46dd5ba6e49331672ba0d0",
+      "git": true
+    },
+    "apps/mobile/android/app/src/barbadog/res/mipmap-xhdpi/ic_launcher.png": {
+      "sha256": "26f3551ec2d86534009c567c7d03538e57877def9ff2bcd30367f04825f51699",
+      "git": true
+    },
+    "apps/mobile/android/app/src/barbadog/res/mipmap-xxhdpi/ic_launcher.png": {
+      "sha256": "c7ebd41eca60715806de32daab04cded59f33a5311f8ee4c18371e020cb2fc6f",
+      "git": true
+    },
+    "apps/mobile/android/app/src/barbadog/res/mipmap-xxxhdpi/ic_launcher.png": {
+      "sha256": "b07034feb879fcb9c71caa00f0dc5f02e6dc22c7362a4d7cfeabad8d5ff09b03",
+      "git": true
+    },
+    "apps/mobile/android/app/src/barbadog/res/values/brand_colors.xml": {
+      "sha256": "77cbadc1737a5fd70a7f44c239bf477d5b93b7a5006f2502d3bd73c383047a47",
+      "git": false
+    },
+    "apps/mobile/android/app/src/chelas/res/drawable-nodpi/brand_launcher.png": {
+      "sha256": "878186a5377885280b55e1cc4547936039328996829bb63b8615a6463478a3db",
+      "git": false
+    },
+    "apps/mobile/android/app/src/chelas/res/mipmap-anydpi-v26/ic_launcher.xml": {
+      "sha256": "ed485bf95bbf202c038713f0d7984e5262628a5a22cb98a4be41e1f0568e820b",
+      "git": false
+    },
+    "apps/mobile/android/app/src/chelas/res/mipmap-hdpi/ic_launcher.png": {
+      "sha256": "bf165aeb7957e07809b480c76c5a5b6ddb16f1ec3f2aa68360994970154094fe",
+      "git": true
+    },
+    "apps/mobile/android/app/src/chelas/res/mipmap-mdpi/ic_launcher.png": {
+      "sha256": "62bb65b430f481467c3da6f85724bc2996fe4911ed77862ce74bf7552b9bd5fe",
+      "git": true
+    },
+    "apps/mobile/android/app/src/chelas/res/mipmap-xhdpi/ic_launcher.png": {
+      "sha256": "49226068b89c0442fa0f9f2741532e47069002463ac278c335528b6b39df7134",
+      "git": true
+    },
+    "apps/mobile/android/app/src/chelas/res/mipmap-xxhdpi/ic_launcher.png": {
+      "sha256": "abde304e62f7ff7fcb0896d509e1bdd49021e1da726db3d36068379790b1a6ff",
+      "git": true
+    },
+    "apps/mobile/android/app/src/chelas/res/mipmap-xxxhdpi/ic_launcher.png": {
+      "sha256": "88787aae97f325b1d2a97f062c8cee687b526b53764f99f9961862fbaa0c0dad",
+      "git": true
+    },
+    "apps/mobile/android/app/src/chelas/res/values/brand_colors.xml": {
+      "sha256": "eaaa3eaf194b8c98306c2099e8f53d71a0d81778cc4d19c5d8bfa5829a09ec6b",
+      "git": false
+    },
+    "apps/mobile/android/app/src/debug/AndroidManifest.xml": {
+      "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b",
+      "git": true
+    },
+    "apps/mobile/android/app/src/gestao/AndroidManifest.xml": {
+      "sha256": "7bd68275eae60e0e39e8c16d1ed06899d99fb9a9c872b45b983eee085bd2fa13",
+      "git": false
+    },
+    "apps/mobile/android/app/src/gestao/res/drawable/gestao_mark.xml": {
+      "sha256": "2c54519bad5a0d390b2c4b80bc45c858b2b107735d75653dfbabe111e97f837f",
+      "git": false
+    },
+    "apps/mobile/android/app/src/gestao/res/mipmap-anydpi-v26/ic_launcher.xml": {
+      "sha256": "8a75d7057ebfc606e2c9be1ad9b0fccfbc2ee1b53e51d5824470a046efce4244",
+      "git": false
+    },
+    "apps/mobile/android/app/src/gestao/res/mipmap-hdpi/ic_launcher.png": {
+      "sha256": "389b47641674993440219c2516c9ad51420de5a31ed25ea674e5a1381cc7dce9",
+      "git": false
+    },
+    "apps/mobile/android/app/src/gestao/res/mipmap-mdpi/ic_launcher.png": {
+      "sha256": "39b138a66a0c009021d26149f0f382780c0c962315b8ca9c2ff41e8f0f2f6ece",
+      "git": false
+    },
+    "apps/mobile/android/app/src/gestao/res/mipmap-xhdpi/ic_launcher.png": {
+      "sha256": "97ba7dfa7a59827c53767dd2f8cca05817903e43c49cad6df91cf4a45b38baf4",
+      "git": false
+    },
+    "apps/mobile/android/app/src/gestao/res/mipmap-xxhdpi/ic_launcher.png": {
+      "sha256": "092ff8e68e46a77c08fa1a401ba130ed6dce6561c529a019bac90a2f5036c774",
+      "git": false
+    },
+    "apps/mobile/android/app/src/gestao/res/mipmap-xxxhdpi/ic_launcher.png": {
+      "sha256": "2461e9a005d2c4d07e97087b8cdb98016669f4b57d6665ec83193080672fd8f8",
+      "git": false
+    },
+    "apps/mobile/android/app/src/gestao/res/values/colors.xml": {
+      "sha256": "272df32f2f2edcb2ab6368f96f31d06e5d06ce27e4cb006df92270b0b971840f",
+      "git": false
+    },
+    "apps/mobile/android/app/src/main/AndroidManifest.xml": {
+      "sha256": "c88228b0bd78e2b483a76804b7a02ccf4ceed31242f4668a9e67478bc20d5a0b",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java": {
+      "sha256": "3e674335dba6f6229844f469d15b6df142b1864780203ceca282d94aa0a08a20",
+      "git": false
+    },
+    "apps/mobile/android/app/src/main/kotlin/com/lanchesdobarba/barbacue/MainActivity.kt": {
+      "sha256": "eca4545d92c2bc58cbce485961d86c0dfe46bd9878545e83eb3eaa79cdae1c59",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable/background.png": {
+      "sha256": "af4be5f33351cb871d3216cd43340cc3913fb8f4bd181853df1ff3cddc15bfb3",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable/launch_background.xml": {
+      "sha256": "42b8d099f0a6d79e90a67949d7a655c09458c734aa1bd8c4d7c73a79b28397ea",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-hdpi/android12splash.png": {
+      "sha256": "f3113abdf8001f0a903f9c07ad692e4063704f49754297159d4504c458021c65",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png": {
+      "sha256": "fc6db3a22d1baa7e3e9d03a50c5376f24fe9cf5786f4e4a13139f9f32d8ddce9",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-hdpi/splash.png": {
+      "sha256": "f3113abdf8001f0a903f9c07ad692e4063704f49754297159d4504c458021c65",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-mdpi/android12splash.png": {
+      "sha256": "92df1bfe9dec3e733d000ca060fa01010501a1ecb87e7ff08e4d629cd24f3d64",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-mdpi/ic_launcher_foreground.png": {
+      "sha256": "a564b5f2381b7fbf6a2be33bb12d007945eb3787331b4632fe1e3cff8eae7c53",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-mdpi/splash.png": {
+      "sha256": "92df1bfe9dec3e733d000ca060fa01010501a1ecb87e7ff08e4d629cd24f3d64",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-night-hdpi/android12splash.png": {
+      "sha256": "f3113abdf8001f0a903f9c07ad692e4063704f49754297159d4504c458021c65",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-night-mdpi/android12splash.png": {
+      "sha256": "92df1bfe9dec3e733d000ca060fa01010501a1ecb87e7ff08e4d629cd24f3d64",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-night-xhdpi/android12splash.png": {
+      "sha256": "6ebfb99f4e95dbecb8ec0c180eea4fd46869addc90cc7431a8055fefbb3a3976",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-night-xxhdpi/android12splash.png": {
+      "sha256": "ff70ebf6b5dbf19e5507b82e960f9b8244f7f048874f87baa779f3f80ab6fade",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-night-xxxhdpi/android12splash.png": {
+      "sha256": "c140dba93d561ca890ee5aae1b20445a47e443995534f4408e01c8344c4f1de8",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-v21/background.png": {
+      "sha256": "af4be5f33351cb871d3216cd43340cc3913fb8f4bd181853df1ff3cddc15bfb3",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-v21/launch_background.xml": {
+      "sha256": "42b8d099f0a6d79e90a67949d7a655c09458c734aa1bd8c4d7c73a79b28397ea",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-xhdpi/android12splash.png": {
+      "sha256": "6ebfb99f4e95dbecb8ec0c180eea4fd46869addc90cc7431a8055fefbb3a3976",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-xhdpi/ic_launcher_foreground.png": {
+      "sha256": "bd322bbe4435173be6cf757fbe7192e674ad489e1841b7de9e4810ba084e98c6",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-xhdpi/splash.png": {
+      "sha256": "6ebfb99f4e95dbecb8ec0c180eea4fd46869addc90cc7431a8055fefbb3a3976",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-xxhdpi/android12splash.png": {
+      "sha256": "ff70ebf6b5dbf19e5507b82e960f9b8244f7f048874f87baa779f3f80ab6fade",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-xxhdpi/ic_launcher_foreground.png": {
+      "sha256": "0b62d896a20eb2edd32cc0632dfe60fd0cfa85711bc3dd39d4c6f0514fa86cdc",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-xxhdpi/splash.png": {
+      "sha256": "ff70ebf6b5dbf19e5507b82e960f9b8244f7f048874f87baa779f3f80ab6fade",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-xxxhdpi/android12splash.png": {
+      "sha256": "c140dba93d561ca890ee5aae1b20445a47e443995534f4408e01c8344c4f1de8",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-xxxhdpi/ic_launcher_foreground.png": {
+      "sha256": "856180f9239255c7fdcbc93689760b5e3bb874a0bf13b5679580af8d2f66f41c",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/drawable-xxxhdpi/splash.png": {
+      "sha256": "c140dba93d561ca890ee5aae1b20445a47e443995534f4408e01c8344c4f1de8",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml": {
+      "sha256": "fe16ab84762f42e1166a008c9c77227fa3ba8399088bf9667e83d04bc4322af1",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/mipmap-hdpi/ic_launcher.png": {
+      "sha256": "ca4c406e6fbfbf86bbe180131bc9f8a146a4e4d1005138a72d8d0e09ec6fd146",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/mipmap-mdpi/ic_launcher.png": {
+      "sha256": "d84a0e74a01878832ea735aad19c6ab1f678b1a480bcc4d70b2b1d0fae57e9e9",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png": {
+      "sha256": "83c2dadce6bf155a2d874c51b89338cace77c68d04047b99074c0691c7f29835",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png": {
+      "sha256": "629c79d80fc8666e79a817ddaea02509e65870409fe5db1fe3c7faa1c77ddd82",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png": {
+      "sha256": "096d788e2cf0f99352431fd0388fc7d4a3d8f0373e8dfcf827bb44185d05bf4c",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/values/colors.xml": {
+      "sha256": "10f938a429d987a66e4c0b9d9a87c580fe87ea0bf28d6ca41f1d368eefa102cf",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/values/styles.xml": {
+      "sha256": "445e293aee32abfc4d93ca8f7c1979492b26d2de7b38314a9f08776c5813d98d",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/values-night/styles.xml": {
+      "sha256": "11ed372ab62bc04bb47e678f9ec10a55849a9e1378ba4443b4d65baed96ad0af",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/values-night-v31/styles.xml": {
+      "sha256": "c0d985e508940c308ff2182c24a13ffa2617759c592d5b65896f98d359471b95",
+      "git": true
+    },
+    "apps/mobile/android/app/src/main/res/values-v31/styles.xml": {
+      "sha256": "8544da21d01e828e7b57f2912209d0055e8ae89f20feba205cc9e1525548c873",
+      "git": true
+    },
+    "apps/mobile/android/app/src/profile/AndroidManifest.xml": {
+      "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b",
+      "git": true
+    },
+    "apps/mobile/pubspec.yaml": {
+      "sha256": "2477c64379c9be4ba4ba4e30fdee0a9aefcd2a38069060d4cda22949ac3a6b9b",
+      "git": true
+    },
+    "apps/mobile/pubspec.lock": {
+      "sha256": "e20cce4337051273eabc6ea369dddb8e2925eb783f3f5eed567deecfb576c475",
+      "git": true
+    },
+    "apps/mobile/android/app/build.gradle.kts": {
+      "sha256": "508c6d328f5e74e837a286bd72f2039f819d53694583486bed224614f794fd3b",
+      "git": false
+    },
+    "apps/mobile/ios/Runner.xcodeproj/project.pbxproj": {
+      "sha256": "4df9f348cf937ab76ade9a3111228d897d058c5697ed632280f74d2886d56a16",
+      "git": true
+    },
+    "apps/mobile/ios/ExportOptions-Gestao.plist": {
+      "sha256": "8f4bb42fdefa89ee767f200d3bfc2732b2517ea032d8920f3c605acfdc6a0a59",
+      "git": false
+    }
+  }
+}

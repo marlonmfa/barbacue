@@ -11,9 +11,11 @@ const directory = fileURLToPath(new URL('../../web/private-downloads/', import.m
 const hash = createHash('sha256');
 for await (const chunk of createReadStream(source)) hash.update(chunk);
 const { size } = await stat(source);
+const sha256 = hash.digest('hex');
 await mkdir(directory, { recursive: true });
 await copyFile(source, join(directory, `${filename}.tmp`));
 await rename(join(directory, `${filename}.tmp`), join(directory, filename));
-await writeFile(join(directory, 'windows.json.tmp'), JSON.stringify({ version, filename, size, sha256: hash.digest('hex') }, null, 2) + '\n');
+await writeFile(join(directory, 'windows.json.tmp'), JSON.stringify({ version, filename, size, sha256 }, null, 2) + '\n');
 await rename(join(directory, 'windows.json.tmp'), join(directory, 'windows.json'));
+await writeFile(new URL('../release/SHA256SUMS.txt', import.meta.url), `${sha256}  ${filename}\n`);
 console.log(`Instalador ${version} preparado no armazenamento privado do site (${(size / 1024 / 1024).toFixed(1)} MB).`);

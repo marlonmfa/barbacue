@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { resolveAI } from "@/lib/ai-settings";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -8,7 +9,7 @@ const LIMIT = 20 * 1024 * 1024;
 export async function POST(request: Request) {
   const limit = rateLimit(`transcribe:${clientIp(request)}`, 10, 60_000);
   if (!limit.ok) return Response.json({ error: "Aguarde um pouco antes de enviar outro áudio." }, { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } });
-  const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_KEY;
+  const { apiKey } = await resolveAI("openai");
   if (!apiKey) return Response.json({ error: "Transcrição indisponível no momento. Envie seu pedido por texto." }, { status: 503 });
   if (Number(request.headers.get("content-length")) > LIMIT + 65536) return Response.json({ error: "Envie um áudio de até 20 MB." }, { status: 413 });
   let form: FormData;

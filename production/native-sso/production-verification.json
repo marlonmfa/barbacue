@@ -1,0 +1,17 @@
+{
+  "public_https_guards": {
+    "barbacue.cog.ia.br/pedir": 200,
+    "barbacue.cog.ia.br/api/products": 200,
+    "barbacue.cog.ia.br/api/admin/auth": 401,
+    "barbacue.cog.ia.br/api/admin/downloads/windows": 401,
+    "chelas.hirableaiagents.com/pedir": 200,
+    "chelas.hirableaiagents.com/api/products": 200,
+    "chelas.hirableaiagents.com/api/admin/auth": 401,
+    "chelas.hirableaiagents.com/api/admin/downloads/windows": 401,
+    "barbadog.hirableaiagents.com/pedir": 200,
+    "barbadog.hirableaiagents.com/api/products": 200,
+    "barbadog.hirableaiagents.com/api/admin/auth": 401,
+    "barbadog.hirableaiagents.com/api/admin/downloads/windows": 401
+  },
+  "production_test_login": false
+}

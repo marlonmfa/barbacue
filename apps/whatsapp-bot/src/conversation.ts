@@ -27,11 +27,12 @@ interface ConvState {
 const sessions = new Map<string, ConvState>();
 const inFlight = new Map<string, Promise<RoutedReply>>();
 
-function getSession(phone: string): ConvState {
-  let s = sessions.get(phone);
+function getSession(phone: string, connection: string): ConvState {
+  const key = `${connection}:${phone}`;
+  let s = sessions.get(key);
   if (!s) {
     s = { messages: [], cart: [], customer: { phone }, paymentMethod: "pix", lastActivity: Date.now(), brand: null };
-    sessions.set(phone, s);
+    sessions.set(key, s);
   }
   s.lastActivity = Date.now();
   return s;
@@ -72,19 +73,21 @@ function brandChoice(text: string): RestaurantBrand | null {
 const ROUTING_MENU = "Olá! 👋 Qual restaurante você quer pedir?\n\n1️⃣ Barbacue\n2️⃣ Barbadog\n3️⃣ Chelas\n\nResponda com o número ou o nome da marca.";
 const UNCERTAIN_ORDER = "A conexão caiu antes de eu receber a confirmação. O pedido pode já ter entrado na loja, por isso não vou reenviar este carrinho. Confira com a equipe antes de pedir outra vez. Para iniciar outra compra depois de conferir, escreva NOVO PEDIDO.";
 
-export async function handleMessage(phone: string, text: string): Promise<RoutedReply> {
+export async function handleMessage(phone: string, text: string, connection: RestaurantBrand | "central" = "central"): Promise<RoutedReply> {
+  const key = `${connection}:${phone}`;
   // Serialize messages from the same contact, including repeated confirmations.
   // Otherwise two inbound events can place the same in-memory cart concurrently.
-  const previous = inFlight.get(phone);
+  const previous = inFlight.get(key);
   const next = (previous ? previous.catch(() => undefined) : Promise.resolve())
-    .then(() => processMessage(phone, text));
-  inFlight.set(phone, next);
+    .then(() => processMessage(phone, text, connection));
+  inFlight.set(key, next);
   try { return await next; }
-  finally { if (inFlight.get(phone) === next) inFlight.delete(phone); }
+  finally { if (inFlight.get(key) === next) inFlight.delete(key); }
 }
 
-async function processMessage(phone: string, text: string): Promise<RoutedReply> {
-  const s = getSession(phone);
+async function processMessage(phone: string, text: string, connection: RestaurantBrand | "central"): Promise<RoutedReply> {
+  const s = getSession(phone, connection);
+  if (connection !== "central") s.brand = connection;
   if (s.orderOutcomeUnknown) {
     if (!/^novo pedido[.!\s]*$/i.test(text.trim())) return { messages: [UNCERTAIN_ORDER], brand: s.brand };
     s.orderOutcomeUnknown = false;
@@ -93,7 +96,7 @@ async function processMessage(phone: string, text: string): Promise<RoutedReply>
     s.messages = [];
     return { messages: ["Vamos começar outra compra. O que gostaria de pedir?"], brand: s.brand };
   }
-  const chosen = brandChoice(text.trim());
+  const chosen = connection === "central" ? brandChoice(text.trim()) : null;
   if (!s.brand && !chosen) return { messages: [ROUTING_MENU], brand: null };
   if (chosen && chosen !== s.brand) {
     s.brand = chosen;

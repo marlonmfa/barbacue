@@ -1,0 +1,20 @@
+{
+  "e2e": "passed",
+  "local_unit_tests": 2,
+  "linux_unit_tests": 2,
+  "linux_build_typecheck": "passed",
+  "visual_evaluation": "PASS",
+  "screenshots_commits": [
+    "f84e1a4",
+    "528aef6"
+  ],
+  "native_sources_verified": 222,
+  "native_build_inputs_verified": 704,
+  "native_routes": 112,
+  "no_accounts_provisioned": true,
+  "production_credentials_used": false,
+  "staff_and_member_roles_separate": true,
+  "initial_password_flow_preserved": true,
+  "native_cookies_preserved_on_cog_fallback": true,
+  "native_skeleton_capture_replaced": true
+}
