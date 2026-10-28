@@ -11,7 +11,7 @@ process.env.AI_ENCRYPTION_KEY = 'barbacue-e2e-only-encryption-key-32-characters'
 let encrypted: string | undefined;
 (db as any).execute = async (query: any) => {
   const params = new PgDialect().sqlToQuery(query).params;
-  if (params.length) encrypted = params[0];
+  if (params.length) encrypted = params[0] as string;
   return { rows: encrypted ? [{ encrypted_value: encrypted }] : [] };
 };
 let defaults: Record<string,string> = {};
