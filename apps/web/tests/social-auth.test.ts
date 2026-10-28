@@ -1,13 +1,19 @@
-// Login social (Instagram/Facebook): estado anti-CSRF, domínios aceitos e troca de token.
+// Login social (Google/Apple/Instagram/Facebook): estado anti-CSRF, domínios aceitos e troca de token.
 //
 //   ../../node_modules/.bin/tsx --test tests/social-auth.test.ts
 //
 import { test, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { authorizeUrl, configuredProviders, createState, fetchProfile, publicOrigin, safeReturnTo, verifyState } from "../src/lib/social-auth";
+import { generateKeyPairSync, createVerify } from "node:crypto";
+import { appleClientSecret, appleUserName, authorizeUrl, configuredProviders, createState, fetchProfile, publicOrigin, safeReturnTo, verifyState } from "../src/lib/social-auth";
+
+const appleKey = generateKeyPairSync("ec", { namedCurve: "P-256" });
 
 beforeEach(() => {
   Object.assign(process.env, {
+    GOOGLE_CLIENT_ID: "g-id.apps.googleusercontent.com", GOOGLE_CLIENT_SECRET: "g-secret",
+    APPLE_CLIENT_ID: "br.ia.cog.barbacue.web", APPLE_TEAM_ID: "TEAM123456", APPLE_KEY_ID: "KEY1234567",
+    APPLE_PRIVATE_KEY: appleKey.privateKey.export({ type: "pkcs8", format: "pem" }).toString().replace(/\n/g, "\\n"),
     ADMIN_COOKIE_SECRET: "x".repeat(32),
     APP_URL: "https://barbacue.cog.ia.br",
     DOMAIN_CHELAS: "chelas.hirableaiagents.com",
@@ -43,7 +49,8 @@ test("returnTo não vira open redirect", () => {
 
 test("provedores sem credenciais não aparecem", () => {
   delete process.env.FACEBOOK_APP_SECRET;
-  assert.deepEqual(configuredProviders(), ["instagram"]);
+  delete process.env.APPLE_KEY_ID;
+  assert.deepEqual(configuredProviders(), ["google", "instagram"]);
 });
 
 test("URL de autorização do Instagram pede só instagram_business_basic", () => {
@@ -81,5 +88,38 @@ test("Facebook: usa appsecret_proof e normaliza o e-mail", async () => {
 
 test("erro da Meta vira exceção", async () => {
   const fake = (async () => new Response(JSON.stringify({ error: { message: "Invalid platform app" } }), { status: 400 })) as typeof fetch;
-  await assert.rejects(fetchProfile("instagram", "c", "https://x/cb", fake), /Meta respondeu 400/);
+  await assert.rejects(fetchProfile("instagram", "c", "https://x/cb", fake), /Provedor respondeu 400/);
+});
+
+const jwt = (claims: object) => `e30.${Buffer.from(JSON.stringify(claims)).toString("base64url")}.sig`;
+
+test("Google: pede openid/email/profile e só aceita e-mail confirmado", async () => {
+  const url = new URL(authorizeUrl("google", "https://barbacue.cog.ia.br/api/auth/google/callback", "n1"));
+  assert.equal(url.host, "accounts.google.com");
+  assert.equal(url.searchParams.get("scope"), "openid email profile");
+  const base = { iss: "https://accounts.google.com", aud: "g-id.apps.googleusercontent.com", sub: "g-1", name: "Ana Souza", email: "Ana@Gmail.com", exp: Date.now() / 1000 + 60 };
+  for (const [verified, email] of [[true, "ana@gmail.com"], [false, undefined]] as const) {
+    const fake = (async (u: string, init?: RequestInit) => {
+      assert.equal(String(u), "https://oauth2.googleapis.com/token");
+      assert.equal(new URLSearchParams(String(init?.body)).get("client_secret"), "g-secret");
+      return new Response(JSON.stringify({ id_token: jwt({ ...base, email_verified: verified }) }));
+    }) as typeof fetch;
+    assert.deepEqual(await fetchProfile("google", "c", "https://x/cb", fake), { provider: "google", id: "g-1", name: "Ana Souza", email });
+  }
+  const wrongAud = (async () => new Response(JSON.stringify({ id_token: jwt({ ...base, aud: "outro" }) }))) as typeof fetch;
+  await assert.rejects(fetchProfile("google", "c", "https://x/cb", wrongAud), /outro emissor/);
+});
+
+test("Apple: form_post, client_secret ES256 válido e nome do primeiro login", async () => {
+  const url = new URL(authorizeUrl("apple", "https://barbacue.cog.ia.br/api/auth/apple/callback", "n1"));
+  assert.equal(url.searchParams.get("response_mode"), "form_post");
+  const secret = appleClientSecret();
+  const [h, p, sig] = secret.split(".");
+  assert.deepEqual(JSON.parse(Buffer.from(h, "base64url").toString()), { alg: "ES256", kid: "KEY1234567" });
+  assert.equal(JSON.parse(Buffer.from(p, "base64url").toString()).sub, "br.ia.cog.barbacue.web");
+  assert.ok(createVerify("SHA256").update(`${h}.${p}`).verify({ key: appleKey.publicKey, dsaEncoding: "ieee-p1363" }, Buffer.from(sig, "base64url")));
+  assert.equal(appleUserName(JSON.stringify({ name: { firstName: "João", lastName: "Silva" } })), "João Silva");
+  assert.equal(appleUserName("{"), undefined);
+  const fake = (async () => new Response(JSON.stringify({ id_token: jwt({ iss: "https://appleid.apple.com", aud: "br.ia.cog.barbacue.web", sub: "a-1", email: "x@privaterelay.appleid.com", email_verified: "true" }) }))) as typeof fetch;
+  assert.deepEqual(await fetchProfile("apple", "c", "https://x/cb", fake, { appleName: "João Silva" }), { provider: "apple", id: "a-1", name: "João Silva", email: "x@privaterelay.appleid.com" });
 });

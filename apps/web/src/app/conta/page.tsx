@@ -8,7 +8,7 @@ const ERRORS: Record<string, string> = {
   sessao: "A sessão de login expirou. Tente novamente.",
   indisponivel: "Este tipo de login ainda não está disponível.",
   tentativas: "Muitas tentativas. Aguarde alguns minutos.",
-  instagram: "Não foi possível entrar com o Instagram. Esse login aceita apenas contas profissionais (comercial ou criador). Tente pelo Facebook ou pelo e-mail.",
+  instagram: "Não foi possível entrar com o Instagram. Esse login aceita apenas contas profissionais (comercial ou criador). Use Google, Apple ou e-mail.",
   falha: "Não foi possível concluir o login. Tente novamente.",
 };
 
