@@ -1,7 +1,8 @@
-# Login com Instagram e Facebook (clientes)
+# Login social dos clientes (Google, Apple, Instagram e Facebook)
 
-A página `/conta` das três marcas mostra **Entrar com Instagram** e **Entrar com
-Facebook** ao lado do login por e-mail. Cada botão só aparece depois que as
+A página `/conta` das três marcas mostra **Entrar com Google**, **Entrar com
+Apple**, **Entrar com Instagram** e **Entrar com Facebook** ao lado do login por
+e-mail. Cada botão só aparece depois que as
 credenciais dele estiverem no `.env` (e `ADMIN_COOKIE_SECRET` definido).
 
 ## Limitação do Instagram
@@ -25,6 +26,39 @@ nova. O Instagram não fornece e-mail; essas contas ficam com e-mail vazio.
 
 Só os domínios `APP_URL`/`DOMAIN_BARBA`, `DOMAIN_CHELAS` e `DOMAIN_HOTDOG`
 podem iniciar o login (proteção contra Host forjado).
+
+## Configurar o Google
+
+1. <https://console.cloud.google.com/apis/credentials> → *Criar credenciais* →
+   **ID do cliente OAuth** → tipo **Aplicativo da Web**.
+2. *URIs de redirecionamento autorizados*:
+   ```
+   https://barbacue.cog.ia.br/api/auth/google/callback
+   https://chelas.hirableaiagents.com/api/auth/google/callback
+   https://barbadog.hirableaiagents.com/api/auth/google/callback
+   ```
+3. Na *Tela de consentimento OAuth* use os escopos `openid`, `email` e `profile`
+   (não exigem verificação) e publique o app (*Em produção*).
+4. `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET` no ambiente do servidor.
+
+## Configurar a Apple
+
+1. <https://developer.apple.com/account/resources/identifiers> → o App ID do app
+   iOS precisa ter **Sign in with Apple** ligado.
+2. Crie um **Services ID** (ex.: `br.ia.cog.barbacue.web`), ligue *Sign in with
+   Apple* → *Configure*: App ID principal = o do app iOS; *Domains*
+   `barbacue.cog.ia.br`, `chelas.hirableaiagents.com`, `barbadog.hirableaiagents.com`;
+   *Return URLs* = `https://<domínio>/api/auth/apple/callback` para cada um.
+3. *Keys* → nova chave com **Sign in with Apple** → baixe o `.p8` (só uma vez).
+4. No ambiente: `APPLE_CLIENT_ID` (Services ID), `APPLE_TEAM_ID`, `APPLE_KEY_ID` e
+   `APPLE_PRIVATE_KEY` (conteúdo do `.p8`, com quebras de linha como `\n`).
+
+A Apple volta por **POST** (`response_mode=form_post`), por isso o cookie de
+estado desse provedor usa `SameSite=None; Secure`. O nome só vem no primeiro
+login; o e-mail pode ser um endereço `privaterelay.appleid.com`.
+
+Google e Apple só vinculam a uma conta existente pelo e-mail quando o provedor
+marca o e-mail como confirmado.
 
 ## Configurar no Meta for Developers
 
@@ -57,7 +91,7 @@ podem iniciar o login (proteção contra Host forjado).
    *Live*. `public_profile`, `email` e `instagram_business_basic` podem exigir
    *App Review* e verificação da empresa.
 6. Faça o deploy: `docker compose up -d --build` (o serviço `migrate` aplica a
-   migração `0015_social_login`).
+   migrações `0015_social_login` e `0016_google_apple_login`).
 
 ## Testes
 

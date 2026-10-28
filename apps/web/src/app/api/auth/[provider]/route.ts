@@ -15,6 +15,8 @@ export async function GET(req: NextRequest, { params }: Params) {
 
   const { nonce, cookie } = createState(provider, req.nextUrl.searchParams.get("returnTo") ?? "/");
   const response = NextResponse.redirect(authorizeUrl(provider, callbackUrl(origin, provider), nonce));
-  response.cookies.set(STATE_COOKIE, cookie, { httpOnly: true, secure: origin.startsWith("https://"), sameSite: "lax", path: "/api/auth", maxAge: STATE_MAX_AGE });
+  // A Apple volta com um POST vindo de appleid.apple.com: cookie Lax não seria enviado.
+  const crossSitePost = provider === "apple" && origin.startsWith("https://");
+  response.cookies.set(STATE_COOKIE, cookie, { httpOnly: true, secure: origin.startsWith("https://"), sameSite: crossSitePost ? "none" : "lax", path: "/api/auth", maxAge: STATE_MAX_AGE });
   return response;
 }
