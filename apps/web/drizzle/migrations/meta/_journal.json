@@ -148,6 +148,13 @@
       "when": 1793110000000,
       "tag": "0020_staff_alternate_email",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1793145600000,
+      "tag": "0021_google_apple_login",
+      "breakpoints": true
     }
   ]
 }

@@ -224,6 +224,8 @@ export const customerAccounts = pgTable("customer_accounts", {
   instagramId: text("instagram_id").unique(),
   instagramUsername: text("instagram_username"),
   facebookId: text("facebook_id").unique(),
+  googleId: text("google_id").unique(),
+  appleId: text("apple_id").unique(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
