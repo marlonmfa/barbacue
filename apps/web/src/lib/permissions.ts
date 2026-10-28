@@ -45,6 +45,7 @@ export function permissionForPath(path: string): Permission | "admin" | null {
   if (path === "/whatsapp" || path.startsWith("/whatsapp/")) return "admin";
   if (path === "/teste_pedido") return "service";
   const map: Record<string, Permission | "admin"> = {
+    dashboard: "dashboard",
     orders: "orders", ifood: "ifood", kitchen: "kitchen", waiter: "floor", delivery: "deliveries", catalogs: "catalog", products: "catalog", categories: "catalog", upload: "catalog",
     coupons: "offers", tables: "tables", customers: "customers", settings: "settings", "delivery-settings": "settings", "closed-days": "settings",
     whatsapp: "admin", beta: "beta", erp: "admin", team: "admin", employees: "admin", staff: "admin", system: "admin", downloads: "admin", impersonate: "admin",

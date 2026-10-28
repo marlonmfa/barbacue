@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from "react";
 import styles from "./Access.module.css";
+import { RestaurantPrinters } from "./RestaurantPrinters";
+import { BRANDS, type Brand } from "@/lib/brands";
 
 type Job = {
   id: string; orderId: string; orderNumber: string; tableNumber: number | null;
   status: "queued" | "printing" | "printed" | "failed" | "uncertain";
   attempts: number; lastError: string | null;
+  brand: Brand; destination: { printerName: string } | null;
 };
 type Queue = { configured: boolean; online: boolean; lastSeenAt: string | null; totalPending: number; jobs: Job[] };
 const labels: Record<Job["status"], string> = {
@@ -63,7 +66,7 @@ export function KitchenPrinting() {
   }
 
   const pending = queue?.jobs.filter(j => j.status !== "printed") ?? [];
-  return <section className={styles.form} aria-label="Impressão da cozinha">
+  return <><RestaurantPrinters /><section className={styles.form} aria-label="Impressão da cozinha">
     <div className={styles.head}>
       <div>
         <h2>Impressão da cozinha</h2>
@@ -79,8 +82,9 @@ export function KitchenPrinting() {
       <div className={styles.work}>{pending.map(job => <article className={styles.ticket} key={job.id}>
       <span className={styles.tag}>{labels[job.status]}</span>
       <h3 className="mt-3 font-semibold">Pedido {job.orderNumber}{job.tableNumber ? ` · Mesa ${job.tableNumber}` : ""}</h3>
+      <p>{BRANDS[job.brand] ?? job.brand}{job.destination ? ` · ${job.destination.printerName}` : ""}</p>
       {job.lastError && <p>{job.lastError}</p>}
       {(job.status === "failed" || job.status === "uncertain") && <button disabled={busy !== null} className={`${styles.secondary} mt-3`} onClick={() => void retry(job)}>{busy === job.id ? "Reenviando…" : "Conferir e reenviar"}</button>}
     </article>)}</div></details>}
-  </section>;
+  </section></>;
 }

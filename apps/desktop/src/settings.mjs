@@ -14,8 +14,9 @@ export function validateSettings(input, previous = {}) {
   const paper = Number(input.paper);
   if (![58, 80, 210].includes(paper)) throw new Error('Selecione papel de 58 mm, 80 mm ou A4.');
   const autoPrint = input.autoPrint === true;
-  if (autoPrint && (!token || !input.printer)) throw new Error('Selecione a impressora e informe a chave antes de ativar a impressão automática.');
-  return { serverUrl, token, printer: input.printer, paper, autoPrint, startAtLogin: input.startAtLogin === true };
+  if (autoPrint && !token) throw new Error('Informe a chave antes de ativar a impressão automática.');
+  // Identity belongs to this installation, never to untrusted renderer input.
+  return { serverUrl, token, printer: input.printer, paper, autoPrint, startAtLogin: input.startAtLogin === true, ...(previous.deviceId ? { deviceId: previous.deviceId } : {}) };
 }
 
 export function allowedNavigation(value, origin) {

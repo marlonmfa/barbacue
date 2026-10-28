@@ -1,3 +1,82 @@
+# Gestão 1.1.0 — envio às lojas em 27/10/2026
+
+O Gestão ganhou o painel completo com 24 módulos dentro do app e manteve as
+dez telas operacionais Flutter. Versão `1.1.0`, build `2026102403`.
+
+- Apple: build VALID, descrição, subtítulo e notas de revisão atualizados;
+  reenvio da submissão `09d0fad1-3e90-4585-acb0-5d72a6f7752e` confirmado como
+  **WAITING_FOR_REVIEW**, com liberação automática após aprovação.
+- Google Play: AAB recebido no canal production, rollout de 100% no Brasil;
+  descrição curta/completa, novidades e Segurança dos dados atualizadas.
+  **CHANGES_IN_REVIEW** confirmado após retomar o envio. Verificações rápidas
+  ainda em andamento; encaminhamento automático após conclusão bem-sucedida.
+  Publicação gerenciada desligada, liberação após aprovação.
+- Política de privacidade publicada no host de produção existente, HTTP 200,
+  sem reiniciar serviço ou alterar banco, contas, volumes ou ambiente.
+
+As notas da Apple respondem às nove perguntas da rejeição 4.3/4.2.6 e registram
+que Marlon é sócio do Barbacue, desenvolvendo para sua empresa com anuência do
+outro sócio. Não se alega beta externo nem aplicativo inteiramente nativo.
+A demonstração local cobre a operação; o painel privado exige conta autorizada.
+
+Evidências: `output/mobile/store-submit-2026-10-27/`.
+Artefatos e validação: [PAINEL-COMPLETO-2026-10-27.md](../PAINEL-COMPLETO-2026-10-27.md).
+Envio à revisão não significa aprovação ou disponibilidade pública.
+
+---
+
+# Distribuição dos quatro apps — 24/10/2026
+
+Verificação concluída em 2026-10-25T02:34:52.883991+00:00.
+
+| Aplicativo | Versão | App Store | Google Play |
+| --- | --- | --- | --- |
+| Barbacue Gestão | 1.0.0 | [WAITING_FOR_REVIEW](https://appstoreconnect.apple.com/apps/6826725851/distribution/reviewsubmissions) | [CHANGES_IN_REVIEW](https://play.google.com/console/u/0/developers/5229217853410599529/app/4972986029734444042/publishing) |
+| Barbacue | 1.2.5 | [WAITING_FOR_REVIEW](https://appstoreconnect.apple.com/apps/6782376058/distribution/reviewsubmissions) | [CHANGES_IN_REVIEW](https://play.google.com/console/u/0/developers/5229217853410599529/app/4974372920074838543/publishing) |
+| Chelas | 1.0.1 | [WAITING_FOR_REVIEW](https://appstoreconnect.apple.com/apps/6807118144/distribution/reviewsubmissions) | [CHANGES_IN_REVIEW](https://play.google.com/console/u/0/developers/5229217853410599529/app/4973223313204667125/publishing) |
+| Barbadog | 1.0.1 | [WAITING_FOR_REVIEW](https://appstoreconnect.apple.com/apps/6807118285/distribution/reviewsubmissions) | [CHANGES_IN_REVIEW](https://play.google.com/console/u/0/developers/5229217853410599529/app/4975194471537268191/publishing) |
+
+Os oito envios foram confirmados. Na Apple os quatro builds `2026102401`
+processaram como VALID e as versões estão WAITING_FOR_REVIEW.
+Liberação automática AFTER_APPROVAL. No Google Play as quatro versões foram
+enviadas ao canal **production**, com rollout completo no Brasil e publicação
+gerenciada desligada. A tela confirma Changes in review; as verificações
+automáticas iniciais do Google ainda podem estar em andamento.
+**Envio à revisão não significa aprovação nem disponibilidade pública.**
+
+API do Gestão publicada no host atual: build `ZnqXTYJAItJLMco5e6go6`.
+Backup de aplicação e banco preservado; 50 verificações antes/depois aprovadas.
+Acesso anônimo à sessão: HTTP 401 JSON; política pública: HTTP 200.
+
+Gestão: novo registro Apple `6826725851`, pacote `com.lanchesdobarba.gestao`,
+perfil manual `Gestao AppStore`, equipe `3A3X2G4UPK`. Registros e perfis dos
+três clientes preservados. Revisores acessam a demonstração local identificada,
+sem senhas de produção nem operações reais.
+
+Ícones e identidade visual por marca nos apps. Declarações de privacidade,
+classificação, acesso, publicidade e conteúdo concluídas para o Gestão.
+Contato de suporte e política publicados em `/legal/gestao/`.
+
+Validação: 138 testes Flutter aprovados (7 capturas opcionais ignoradas),
+análise estática sem problemas; 9 testes de permissões da API; capturas
+reais da demonstração em iPhone, iPad e Android com 3 execuções aprovadas.
+Assinaturas dos quatro IPAs e AABs e identificadores iOS verificados.
+
+Pacotes: `output/mobile/store-release-2026-10-24/`. A pasta contém os oito
+artefatos finais, `manifest.json`, `SHA256SUMS`, `source-manifest.json`,
+estados das duas lojas e relatório da implantação. Nenhuma chave privada
+foi incluída. Evidências visuais em `output/mobile/*-review.png`.
+Os APKs e `.app.zip` da primeira entrega local são históricos; use os
+AABs/IPAs desta pasta para identificar os envios atuais.
+
+O Play exibiu aviso pelo salto no versionCode. O código atual é válido e
+foi reconhecido para estes releases. Nas próximas atualizações, incrementar
+sequencialmente a partir de `2026102401`, sem novos saltos de escala.
+
+---
+
+## Histórico anterior
+
 # Atualização de 21 de setembro de 2026
 
 Chelas e Barbadog: rejeição 4.2 tratada com checkout nativo. Build iOS 1.0.0 (4) enviado, VALID e anexado à versão 1.0. Descrições, notas, páginas públicas e declarações de privacidade atualizadas. Nova revisão ainda não submetida; aprovação pendente da Apple. [Entrega e validação](NATIVE_CHECKOUT_2026-09-21.md).

@@ -44,6 +44,10 @@ dependencies:
   # inlined as strings, so the two clients draw the same marks without pulling in
   # a whole icon font for two icons.
   flutter_svg: ^2.3.0
+  flutter_inappwebview: ^6.1.5
+  share_plus: 12.0.1
+  path_provider: ^2.1.6
+  permission_handler: 12.0.1
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +63,8 @@ dev_dependencies:
   # moment a card has a fallback image; without this the widget test dies on
   # "databaseFactory not initialized" instead of rendering.
   sqflite_common_ffi: ^2.4.0+3
+  integration_test:
+    sdk: flutter
 
   # flutter_native_splash: only needed to (re)generate the native splash assets,
   # which are already committed (res/drawable*/launch_background.xml, iOS

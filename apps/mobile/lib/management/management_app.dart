@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'management_api.dart';
 import 'management_demo.dart';
+import 'management_panel.dart';
 
 Future<void> _privacy() async {
   await launchUrl(
@@ -398,6 +399,23 @@ class _WorkspaceState extends State<_Workspace> with WidgetsBindingObserver {
                 ),
               ),
               const Divider(height: 1),
+              if (!demo)
+                ListTile(
+                  leading: const Icon(Icons.dashboard_customize_outlined),
+                  title: const Text('Painel de controle completo'),
+                  subtitle: const Text('Todas as funções da sua conta'),
+                  onTap: saving || signingOut
+                      ? null
+                      : () {
+                          Navigator.pop(context);
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) =>
+                                  ManagementPanel(origin: api.origin),
+                            ),
+                          );
+                        },
+                ),
               Expanded(
                 child: ListView(
                   children: [
@@ -1208,6 +1226,19 @@ class _AccessFormState extends State<_AccessForm> {
                     TextButton(
                       onPressed: busy ? null : widget.onLogout,
                       child: const Text('Sair da conta'),
+                    ),
+                  if (widget.onDemo != null)
+                    OutlinedButton.icon(
+                      onPressed: busy
+                          ? null
+                          : () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) =>
+                                    ManagementPanel(origin: widget.api.origin),
+                              ),
+                            ),
+                      icon: const Icon(Icons.dashboard_customize_outlined),
+                      label: const Text('Painel de controle completo'),
                     ),
                   if (widget.onDemo != null)
                     OutlinedButton(

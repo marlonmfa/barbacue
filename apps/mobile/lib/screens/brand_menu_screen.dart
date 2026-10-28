@@ -51,7 +51,10 @@ class _BrandMenuScreenState extends ConsumerState<BrandMenuScreen> {
     final menu = ref.watch(menuProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(brand.shortName), actions: const [PrivacyButton()]),
+      appBar: AppBar(
+        title: Text(brand.shortName),
+        actions: const [PrivacyButton()],
+      ),
       body: SafeArea(
         bottom: false,
         child: menu.when(
@@ -226,7 +229,14 @@ class _MobileHero extends StatelessWidget {
                   shape: chelas ? BoxShape.circle : BoxShape.rectangle,
                   borderRadius: chelas ? null : BorderRadius.circular(24),
                 ),
-                child: Icon(brand.menuIcon, color: brand.ink, size: 84),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Image.asset(
+                    brand.logoAsset,
+                    fit: BoxFit.contain,
+                    semanticLabel: brand.name,
+                  ),
+                ),
               ),
             ),
           ),
@@ -322,14 +332,9 @@ class _Monogram extends StatelessWidget {
             ? null
             : BorderRadius.circular(12),
       ),
-      child: Text(
-        brand.brand == AppBrand.chelas ? 'CH' : 'BD',
-        style: TextStyle(
-          color: brand.ink,
-          fontWeight: FontWeight.w900,
-          fontSize: 16,
-          letterSpacing: -.8,
-        ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Image.asset(brand.logoAsset, semanticLabel: brand.name),
       ),
     ),
   );

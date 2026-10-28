@@ -131,11 +131,23 @@ export const staffUsers = pgTable("staff_users", {
   name: text("name").notNull(),
   username: text("username").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
+  mustChangePassword: boolean("must_change_password").notNull().default(false),
   role: staffRoleEnum("role").notNull().default("manager"),
   jobTitle: text("job_title"),
   permissions: jsonb("permissions").$type<import("@/lib/permissions").Permission[]>(),
   active: boolean("active").default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+});
+
+// Verified recovery address; codes are stored only as keyed hashes.
+export const staffAlternateEmails = pgTable("staff_alternate_emails", {
+  userId: integer("user_id").primaryKey().references(() => staffUsers.id, { onDelete: "cascade" }),
+  email: text("email").notNull(),
+  codeHash: text("code_hash"),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(),
+  attempts: integer("attempts").notNull().default(0),
+  verifiedAt: timestamp("verified_at", { withTimezone: true }),
 });
 
 // ─── Employees (HR records, separate from system logins) ─────────────────────
@@ -357,11 +369,30 @@ export const kitchenPrintJobs = pgTable("kitchen_print_jobs", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   printedAt: timestamp("printed_at", { withTimezone: true }),
+  destination: jsonb("destination").$type<import("@/lib/kitchen-print").PrintDestination>(),
 }, table => [index("kitchen_print_jobs_ready_idx").on(table.status, table.nextAttemptAt)]);
 
 export const kitchenPrintAgentState = pgTable("kitchen_print_agent_state", {
   id: integer("id").primaryKey().default(1),
   lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// Inventory is reported by an authenticated local desktop, never discovered
+// from the web server. Printer names are OS device names, not network URLs.
+export const kitchenPrintDevices = pgTable("kitchen_print_devices", {
+  id: uuid("id").primaryKey(),
+  name: text("name").notNull(),
+  printers: jsonb("printers").$type<{ name: string; displayName: string }[]>().notNull(),
+  lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// No row preserves the existing default-printer behavior. A row with no
+// device deliberately holds that restaurant's orders in the queue.
+export const kitchenPrinterRoutes = pgTable("kitchen_printer_routes", {
+  brand: text("brand").$type<import("@/lib/brands").Brand>().primaryKey(),
+  deviceId: uuid("device_id").references(() => kitchenPrintDevices.id),
+  printerName: text("printer_name"),
+  paper: integer("paper").notNull().default(80),
 });
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -460,4 +491,29 @@ export const erpAudit = pgTable("erp_audit", {
   actorId: integer("actor_id").notNull(), action: text("action").notNull(),
   result: jsonb("result").$type<Record<string, unknown>>().notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// Online orders remain pending until the provider has been queried and verified.
+// Separate table keeps provider secrets and capabilities out of public order lists.
+export const onlineCheckouts = pgTable("online_checkouts", {
+  id: uuid("id").primaryKey(),
+  requestHash: text("request_hash").notNull(),
+  accessTokenHash: text("access_token_hash").notNull(),
+  orderId: uuid("order_id").notNull().references(() => orders.id).unique(),
+  environment: text("environment").notNull(),
+  customerId: text("customer_id"),
+  paymentId: text("payment_id").unique(),
+  paymentAttemptedAt: timestamp("payment_attempted_at", { withTimezone: true }),
+  providerStatus: text("provider_status"),
+  pix: jsonb("pix").$type<import("@/lib/asaas").PixCode>(),
+  lastCheckedAt: timestamp("last_checked_at", { withTimezone: true }),
+  paidAt: timestamp("paid_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// Private server-only AI settings; never part of store settings responses.
+export const aiProviderSettings = pgTable("ai_provider_settings", {
+  id: integer("id").primaryKey(),
+  encryptedValue: text("encrypted_value").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

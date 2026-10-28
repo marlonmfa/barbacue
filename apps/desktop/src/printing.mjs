@@ -1,6 +1,14 @@
 export function escapeHtml(text) {
   return String(text).replace(/[&<>"']/g, value => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[value]);
 }
+
+export function destinationSettings(settings, destination) {
+  if (!destination) return settings;
+  if (destination.deviceId !== settings.deviceId || typeof destination.printerName !== 'string' || !destination.printerName || ![58, 80, 210].includes(destination.paper)) {
+    throw new Error('Destino de impressão inválido para este computador.');
+  }
+  return { ...settings, printer: destination.printerName, paper: destination.paper };
+}
 export function ticketHtml(text, paper = 80) {
   if (![58, 80, 210].includes(paper)) throw new Error('Papel inválido');
   return `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'"><title>Comanda Barbacue</title><style>@page{size:${paper === 210 ? 'A4' : `${paper}mm auto`};margin:0}html,body{margin:0;padding:0;color:#000;background:#fff}body{padding:3mm}pre{font: ${paper === 210 ? '10' : paper === 58 ? '7.5' : '7.2'}pt 'Courier New',monospace;line-height:1.3;white-space:pre-wrap;overflow-wrap:anywhere;width:${paper - 6}mm;margin:0}</style><pre>${escapeHtml(text)}</pre></html>`;

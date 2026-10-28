@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500"><rect width="1024" height="500" fill="#f3f5f7"/><rect x="0" width="14" height="500" fill="#c51e2b"/><text x="64" y="110" font-family="Arial" font-size="24" font-weight="bold" fill="#c51e2b">BARBACUE · CHELAS · BARBADOG</text><text x="60" y="207" font-family="Arial" font-size="64" font-weight="bold" fill="#24292e">Barbacue Gestão</text><text x="64" y="268" font-family="Arial" font-size="30" fill="#24292e">A operação da casa na sua mão.</text><text x="64" y="352" font-family="Arial" font-size="22" fill="#59616b">Pedidos · Cozinha · Salão · Entregas</text><text x="64" y="390" font-family="Arial" font-size="22" fill="#59616b">Cardápios das três marcas</text><svg x="720" y="130" width="220" height="220" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#c51e2b"/>
+  <path d="M232 408h560v380H232z" fill="#fff"/>
+  <path d="M216 408l72-176h448l72 176z" fill="#fff"/>
+  <path d="M328 244l-40 164m160-164l-8 164m128-164l8 164m120-164l40 164" stroke="#c51e2b" stroke-width="28"/>
+  <path d="M312 504h160v164H312zM544 504h160v284H544z" fill="#c51e2b"/>
+  <circle cx="655" cy="644" r="14" fill="#fff"/>
+  <path d="M192 788h640" stroke="#fff" stroke-width="32"/>
+</svg>
+</svg>

@@ -151,6 +151,16 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      // Branding assets decode asynchronously. Wait for the real mark before
+      // comparing the sheet over the menu, so both isolated and full-suite
+      // runs capture the same branded background.
+      await tester.runAsync(
+        () => precacheImage(
+          AssetImage(currentBrand.logoAsset),
+          tester.element(find.byType(MaterialApp)),
+        ),
+      );
+      await tester.pumpAndSettle();
       await tester.scrollUntilVisible(
         find.text(name),
         300,

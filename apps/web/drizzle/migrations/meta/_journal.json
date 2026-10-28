@@ -113,6 +113,41 @@
       "when": 1790989371202,
       "tag": "0015_social_login",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1792810281608,
+      "tag": "0016_staff_first_login",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1792810402178,
+      "tag": "0017_restaurant_printers",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1792810402179,
+      "tag": "0018_online_checkouts",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1793100000000,
+      "tag": "0019_ai_provider_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1793110000000,
+      "tag": "0020_staff_alternate_email",
+      "breakpoints": true
     }
   ]
 }

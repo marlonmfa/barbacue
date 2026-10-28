@@ -14,6 +14,7 @@ function updateState(data, fill = false) {
   $('version').textContent = `Versão ${data.version}`;
   if (fill) {
     for (const key of ['serverUrl', 'paper']) $(key).value = data.settings[key];
+    if (!data.settings.serverUrl) $('serverUrl').value = 'https://barbacue.cog.ia.br';
     for (const key of ['autoPrint', 'startAtLogin']) $(key).checked = data.settings[key];
     $('token').value = '';
     $('token').placeholder = data.settings.hasToken ? 'Chave salva — deixe vazio para manter' : 'Chave configurada no servidor';
@@ -26,7 +27,7 @@ function updateState(data, fill = false) {
 }
 async function printers(selected = $('printer').value) {
   const list = await api('printers');
-  $('printer').replaceChildren(new Option(list.length ? 'Selecione uma impressora' : 'Nenhuma impressora instalada', ''));
+  $('printer').replaceChildren(new Option(list.length ? 'Sem impressora padrão' : 'Nenhuma impressora instalada', ''));
   list.forEach(p => $('printer').add(new Option(`${p.displayName || p.name}${p.isDefault ? ' (padrão)' : ''}`, p.name)));
   if (selected && !list.some(p => p.name === selected)) $('printer').add(new Option(`${selected} (indisponível)`, selected));
   $('printer').value = selected;
@@ -45,9 +46,12 @@ $('settings').addEventListener('submit', event => {
     for (const key of ['serverUrl', 'token', 'printer', 'paper']) input[key] = $(key).value;
     for (const key of ['autoPrint', 'startAtLogin']) input[key] = $(key).checked;
     updateState(await api('save', input), true);
-    feedback('Configuração salva. Use Abrir pedidos para entrar no sistema.');
+    feedback('Configuração salva. Use Abrir administração para entrar no sistema.');
   });
 });
+$('sync-printers').onclick = () => action(async () => feedback(await api('syncPrinters')));
+$('mapping').onclick = () => action(() => api('mapping'));
+$('add-printer').onclick = () => action(async () => feedback(await api('addPrinter')));
 $('refresh').onclick = () => action(() => printers());
 $('open').onclick = () => action(() => api('open'));
 $('test').onclick = () => action(async () => feedback(await api('test')));

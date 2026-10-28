@@ -47,9 +47,16 @@ services:
       DOMAIN_CHELAS: ${DOMAIN_CHELAS:-chelas.hirableaiagents.com}
       DOMAIN_HOTDOG: ${DOMAIN_HOTDOG:-barbadog.hirableaiagents.com}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-haiku-5-5}
+      AI_PROVIDER: ${AI_PROVIDER:-anthropic}
+      AI_ENCRYPTION_KEY: ${AI_ENCRYPTION_KEY:-}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       ADMIN_COOKIE_SECRET: ${ADMIN_COOKIE_SECRET}
       ADMIN_MASTER_PASSWORD: ${ADMIN_MASTER_PASSWORD}
+      ASAAS_ENVIRONMENT: ${ASAAS_ENVIRONMENT:-sandbox}
+      ASAAS_API_KEY: ${ASAAS_API_KEY:-}
+      ASAAS_WEBHOOK_TOKEN: ${ASAAS_WEBHOOK_TOKEN:-}
       # Login social dos clientes (docs/LOGIN-SOCIAL.md)
       APP_URL: ${APP_URL:-https://barbacue.cog.ia.br}
       INSTAGRAM_APP_ID: ${INSTAGRAM_APP_ID:-}
@@ -102,7 +109,7 @@ services:
       migrate:
         condition: service_completed_successfully
 
-  # Long-running WhatsApp ordering bot (Baileys). Bridges WhatsApp ↔ web API.
+  # Long-running WhatsApp ordering bot. WhatsApp transport is owned by zap.cog.ia.br.
   whatsapp-bot:
     build:
       context: ./apps/whatsapp-bot
@@ -116,8 +123,13 @@ services:
       BOT_PORT: "3001"
       SESSIONS_DIR: /app/sessions
       APP_DEEPLINK_BASE: ${APP_DEEPLINK_BASE:-}
+      ZAP_API_BASE_URL: ${ZAP_API_BASE_URL:-https://zap.cog.ia.br/api/v1}
+      ZAP_API_TOKEN: ${ZAP_API_TOKEN:-}
+      ZAP_SESSION_ID: ${ZAP_SESSION_ID:-}
+      ZAP_WEBHOOK_SECRET: ${ZAP_WEBHOOK_SECRET:-}
+      ZAP_WEBHOOK_URL: ${ZAP_WEBHOOK_URL:-https://barbacue.cog.ia.br/api/webhooks/zap}
     volumes:
-      # Persist the WhatsApp pairing so it survives restarts (scan QR once).
+      # Retained for compatibility; pairing state is maintained by Zap.
       - whatsapp_sessions:/app/sessions
     depends_on:
       web:

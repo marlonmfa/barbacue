@@ -1,7 +1,7 @@
 import http from "node:http";
 import type { AnyMessageContent } from "@whiskeysockets/baileys";
 import { config } from "./config.js";
-import { accountList, chatList, closePairingWindow, disconnect, media, messageList, pair, readChat, sendMessage } from "./wa/hub.js";
+import { accountList, chatList, closePairingWindow, disconnect, handleWebhook, media, messageList, pair, readChat, sendMessage, verifyWebhookSignature } from "./wa/provider.js";
 
 // Minimal HTTP surface for the admin panel to read pairing status + QR.
 // Protected by the shared bot token (header x-bot-token or ?token=).
@@ -33,6 +33,16 @@ export function startServer(): void {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ ok: true }));
       return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/webhooks/zap") {
+      const raw = await new Promise<string>(async (resolve, reject) => {
+        const chunks: Buffer[] = [];
+        try { for await (const chunk of req) chunks.push(Buffer.from(chunk)); resolve(Buffer.concat(chunks).toString("utf8")); } catch (error) { reject(error); }
+      });
+      if (!verifyWebhookSignature(raw, req.headers["x-zapauto-signature"] as string | undefined ?? req.headers["x-zap-signature"] as string | undefined ?? req.headers["x-webhook-signature"] as string | undefined ?? null)) return json(res, { error: "invalid signature" }, 401);
+      await handleWebhook(JSON.parse(raw));
+      return json(res, { ok: true });
     }
 
     if (!authorized(req, url)) {

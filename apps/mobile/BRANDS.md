@@ -1,10 +1,11 @@
 # Aplicativos Barbacue, Chelas e Barbadog
 
-O projeto Flutter gera três aplicativos independentes a partir da mesma base.
+O projeto Flutter gera quatro aplicativos independentes a partir da mesma base.
 Eles podem coexistir no mesmo aparelho e são publicados separadamente.
 
 | App | Android/iOS bundle ID | Backend | Fluxo de pedido |
 | --- | --- | --- | --- |
+| Barbacue Gestão | `com.lanchesdobarba.gestao` | `barbacue.cog.ia.br` | Gestão nativa com login individual e permissões; ver [GESTAO.md](GESTAO.md) |
 | Barbacue | `com.lanchesdobarba.barbacue` | `barbacue.cog.ia.br` | Carrinho, cupom, checkout, Pix, mesa e chat nativos |
 | Chelas | `com.lanchesdobarba.chelas` | `chelas.hirableaiagents.com` | Cardápio atualizado, detalhes, carrinho, entrega e pagamento nativos |
 | Barbadog | `com.lanchesdobarba.barbadog` | `barbadog.hirableaiagents.com` | Cardápio atualizado, detalhes, carrinho, entrega e pagamento nativos |
@@ -44,11 +45,17 @@ Archive para App Store Connect:
 ./scripts/build_brand.sh chelas ios
 ```
 
-Os três bundle IDs e os perfis de distribuição já estão registrados no time
+Os três bundle IDs de clientes e os perfis de distribuição já estão registrados no time
 `3A3X2G4UPK`. O script usa assinatura manual com o perfil AppStore AssocDomains
 de cada marca e aplica nome, bundle ID, domínio e ícone ao archive. A preparação
 iOS recompila os artefatos de dispositivo para evitar incluir bibliotecas do
 simulador no IPA. Os IPAs ficam em `build/ios/ipa/<marca>/barbacue.ipa`.
+
+O novo Gestão exige seu próprio registro/perfil Apple antes da distribuição.
+Para validar os quatro apps sem assinatura, use `build_all_brands.sh ios-device`
+ou `ios-simulator`. Para APKs instaláveis Android, use `build_all_brands.sh android-apk`.
+O comando `build_all_brands.sh ios` só pode ser usado depois de configurar a
+distribuição do Gestão; para os três clientes, execute `build_brand.sh <marca> ios`.
 
 ## Privacidade e estado da publicação
 

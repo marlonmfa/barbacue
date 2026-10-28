@@ -73,6 +73,12 @@
 	<string>Main</string>
 	<key>UIStatusBarHidden</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Use a câmera para anexar fotos no atendimento e nos cadastros da loja, quando você solicitar.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Use o microfone para gravar mensagens de atendimento, quando você solicitar.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Selecione fotos para o cardápio e para os anexos de atendimento da loja.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

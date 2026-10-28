@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { and, asc, desc, eq, inArray, lte, ne, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { kitchenPrintAgentState, kitchenPrintJobs, orders } from "@/db/schema";
-import { printAgentConfigured, printFailureStatus, printRetryDelaySeconds, PRINT_LEASE_SECONDS, type KitchenTicket } from "@/lib/kitchen-print";
+import { printAgentConfigured, printFailureStatus, printRetryDelaySeconds, PRINT_LEASE_SECONDS, type KitchenTicket, type PrintDestination } from "@/lib/kitchen-print";
 
 type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
@@ -11,7 +11,7 @@ async function expireLeases(tx: Transaction) {
     .where(and(eq(kitchenPrintJobs.status, "printing"), lte(kitchenPrintJobs.leaseExpiresAt, new Date())));
 }
 
-export async function claimKitchenPrintJob() {
+export async function claimKitchenPrintJob(deviceId?: string, acceptDefault = true) {
   return db.transaction(async tx => {
     const now = new Date();
     await tx.insert(kitchenPrintAgentState).values({ id: 1, lastSeenAt: now })
@@ -20,17 +20,24 @@ export async function claimKitchenPrintJob() {
     // Cancellation can happen before the local agent picks up a queued ticket.
     await tx.execute(sql`UPDATE kitchen_print_jobs j SET status = 'failed', last_error = 'Pedido cancelado; não imprimir.', updated_at = now()
       FROM orders o WHERE j.order_id = o.id AND j.status = 'queued' AND o.status = 'cancelled'`);
-    const result = await tx.execute<{ id: string }>(sql`
-      SELECT j.id FROM kitchen_print_jobs j JOIN orders o ON o.id = j.order_id
-      WHERE j.status = 'queued' AND j.next_attempt_at <= now() AND o.status <> 'cancelled'
+    const result = await tx.execute<{ id: string; device_id: string | null; printer_name: string | null; paper: 58 | 80 | 210 | null }>(sql`
+      SELECT j.id, r.device_id, r.printer_name, r.paper FROM kitchen_print_jobs j JOIN orders o ON o.id = j.order_id
+      LEFT JOIN kitchen_printer_routes r ON r.brand = j.ticket->>'brand'
+      WHERE j.status = 'queued' AND j.next_attempt_at <= now() AND o.status <> 'cancelled' AND (o.channel IS DISTINCT FROM 'online' OR o.payment_status = 'paid')
+      AND ((r.brand IS NULL AND ${acceptDefault}) OR (r.device_id = ${deviceId ?? null}::uuid AND EXISTS (
+        SELECT 1 FROM kitchen_print_devices d, jsonb_array_elements(d.printers) p
+        WHERE d.id = r.device_id AND d.last_seen_at > now() - interval '60 seconds' AND p->>'name' = r.printer_name
+      )))
       ORDER BY j.created_at ASC LIMIT 1 FOR UPDATE OF j SKIP LOCKED`);
     const selected = result.rows[0];
     if (!selected) return null;
     const leaseToken = randomUUID();
     const leaseExpiresAt = new Date(now.getTime() + PRINT_LEASE_SECONDS * 1000);
-    const [job] = await tx.update(kitchenPrintJobs).set({ status: "printing", leaseToken, leaseExpiresAt, updatedAt: now, attempts: sql`${kitchenPrintJobs.attempts} + 1` })
+    const destination: PrintDestination | null = selected.device_id && selected.printer_name && selected.paper
+      ? { deviceId: selected.device_id, printerName: selected.printer_name, paper: selected.paper } : null;
+    const [job] = await tx.update(kitchenPrintJobs).set({ status: "printing", destination, leaseToken, leaseExpiresAt, updatedAt: now, attempts: sql`${kitchenPrintJobs.attempts} + 1` })
       .where(eq(kitchenPrintJobs.id, selected.id)).returning();
-    return { id: job.id, leaseToken, leaseExpiresAt: leaseExpiresAt.toISOString(), ticket: job.ticket };
+    return { id: job.id, leaseToken, leaseExpiresAt: leaseExpiresAt.toISOString(), ticket: job.ticket, destination };
   });
 }
 
@@ -81,6 +88,7 @@ export async function kitchenPrintingOverview() {
         id: job.id, orderId: job.orderId, status: job.status, attempts: job.attempts,
         lastError: job.lastError, createdAt: job.createdAt, printedAt: job.printedAt,
         tableNumber: job.ticket.tableNumber, channel: job.ticket.channel, orderNumber: job.ticket.orderNumber,
+        brand: job.ticket.brand, destination: job.destination,
       })),
     };
   });

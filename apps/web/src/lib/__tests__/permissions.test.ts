@@ -1,6 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { canAccessPath, effectivePermissions, landingPath, offerApplies, PERMISSIONS } from "../permissions.ts";
+test("dashboard JSON uses the same permission as the administrative overview", () => {
+  for (const path of ["/admin", "/api/admin/dashboard"]) {
+    assert.equal(canAccessPath({ role: "employee", permissions: ["dashboard"] }, path), true);
+    assert.equal(canAccessPath({ role: "kitchen" }, path), false);
+    assert.equal(canAccessPath({ role: "manager", permissions: [] }, path), false);
+  }
+});
 test("kitchen has only preparation access and lands in its queue", () => {
   const user = { role: "kitchen" as const };
   assert.deepEqual(effectivePermissions(user), ["kitchen"]);

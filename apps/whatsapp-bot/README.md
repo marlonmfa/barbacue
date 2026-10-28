@@ -1,11 +1,11 @@
-# WhatsApp Ordering Bot (Baileys)
+# WhatsApp Ordering Bot
 
 Long-running Node service that lets customers order over WhatsApp. It is a **thin
-bridge**: it owns the WhatsApp socket + per-contact conversation state, and
+bridge**: it maintains per-connection, per-contact conversation state and
 delegates every business decision to the web API (`apps/web`).
 
 ```
-WhatsApp ──Baileys──> this service ──HTTP──> apps/web
+WhatsApp ──zap.cog.ia.br──> this service ──HTTP──> apps/web
   POST /api/chat         → AI agent (menu, cart, customer, repeat last order)
   GET  /api/store-status → open now? within hours?
   POST /api/orders       → create order + Pix (re-sources prices, validates hours)
@@ -38,7 +38,7 @@ a friendly reason that the bot relays.
 | `BOT_API_TOKEN` | Shared secret. Required for `/api/orders/history` and the status server. |
 | `BOT_PORT` | Status/QR HTTP port (default 3001). |
 | `APP_DEEPLINK_BASE` | Optional deep link to finish in the app; order id is appended. |
-| `SESSIONS_DIR` | Baileys auth-state dir (mounted as a Docker volume). |
+| `SESSIONS_DIR` | Legacy local auth-state dir; retained for compatibility, not used by the Zap provider. |
 
 ## Run
 
@@ -48,11 +48,21 @@ npm install
 npm run dev
 ```
 
-On first run a QR code is printed to the terminal **and** exposed to the admin
-panel at `/admin/whatsapp` (Administrador only). Scan it once from
-WhatsApp → Aparelhos conectados. The pairing persists in `SESSIONS_DIR`, so
-restarts reconnect automatically; only a logout from the phone forces re-pairing
-(delete the sessions dir and scan again).
+Pair at `/whatsapp` (administrator only) using a code entered on the phone.
+The brand domains select their own connection; the “Todos” tab or
+`/whatsapp?brand=all` selects the integrated connection. The configured targets are:
+
+| Connection | Phone |
+| --- | --- |
+| Chelas | +55 47 98824-9667 |
+| Barbadog | +55 47 93389-2175 |
+| Barbacue | +55 47 99705-6624 |
+| Integrated | +55 47 99971-8315 |
+
+Click the pairing option, generate the code, and enter it in WhatsApp →
+Linked devices → Link a device → Link with phone number. No QR scan is required.
+Connections are created only on explicit pairing; existing remote sessions
+and credentials are preserved.
 
 ## Pairing status server
 
@@ -65,3 +75,24 @@ restarts reconnect automatically; only a logout from the phone forces re-pairing
 
 `docker-compose.yml` defines a `whatsapp-bot` service with a `whatsapp_sessions`
 volume. It talks to `web` over the compose network and reads `BOT_API_TOKEN`.
+
+## Provider zap.cog.ia.br
+
+The WhatsApp connection is delegated exclusively to the Zap API. Set
+`ZAP_API_TOKEN` and use `ZAP_API_BASE_URL=https://zap.cog.ia.br/api/v1`.
+Optionally pin the integrated remote session with `ZAP_SESSION_ID`. Other
+connections are discovered by their configured phone or stable name
+`barbacue:central`, `barbacue:barbacue`, `barbacue:barbadog`, `barbacue:chelas`.
+Unrelated sessions are never adopted. A missing connection is created only
+when its pairing button is used.
+
+Set a random `ZAP_WEBHOOK_SECRET` and expose
+`https://barbacue.cog.ia.br/api/webhooks/zap` as `ZAP_WEBHOOK_URL`. The bot
+registers the `message.incoming` and `message.outgoing` webhooks on startup,
+validates the HMAC signature, and sends incoming text to the ordering agent.
+
+The portal requests phone pairing for the selected connection and displays its
+code. Webhooks include the remote session ID; replies use that same connection,
+and equal customer phone numbers in different connections have separate carts
+and histories. If `ZAP_API_TOKEN` is empty, the service reports a configuration
+error; it never starts a second local Baileys connection.

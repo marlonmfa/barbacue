@@ -4,4 +4,6 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Loopback fixtures for native WebView integration tests; debug only. -->
+    <application android:usesCleartextTraffic="true" />
 </manifest>

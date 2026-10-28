@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { normalizeOrigin, validateSettings, allowedNavigation, publicSettings } from '../src/settings.mjs';
-import { ticketHtml, printTicket } from '../src/printing.mjs';
+import { ticketHtml, printTicket, destinationSettings } from '../src/printing.mjs';
 import { TransportError } from '../../print-agent/src/transports.mjs';
 const config = { serverUrl: 'https://loja.example', token: 'a'.repeat(64), printer: 'EPSON TM-T20 USB', paper: 80, autoPrint: true, startAtLogin: true };
 test('origin validation prevents credentials, insecure remote and paths', () => {
@@ -14,8 +14,25 @@ test('secret retained only for unchanged server; never exposed to renderer', () 
   assert.throws(() => validateSettings({ ...config, token: '', serverUrl: 'https://other.example' }, config));
   assert.equal(publicSettings(config).token, undefined);
   assert.equal(publicSettings(config).hasToken, true);
-  assert.throws(() => validateSettings({ ...config, printer: '' }));
+  assert.equal(validateSettings({ ...config, printer: '' }).printer, ''); // Mapped-only desktop.
   assert.throws(() => validateSettings({ ...config, paper: 33 }));
+});
+test('restaurant destination selects printer and paper without fallback to default', () => {
+  const settings = { ...config, deviceId: 'computer-a' };
+  const target = destinationSettings(settings, { deviceId: 'computer-a', printerName: 'CHELAS USB', paper: 58 });
+  assert.equal(target.printer, 'CHELAS USB');
+  assert.equal(target.paper, 58);
+  assert.equal(settings.printer, config.printer);
+  assert.equal(destinationSettings(settings, null), settings);
+  for (const destination of [
+    { deviceId: 'computer-b', printerName: config.printer, paper: 80 },
+    { deviceId: 'computer-a', printerName: '', paper: 80 },
+    { deviceId: 'computer-a', printerName: config.printer, paper: 1 },
+  ]) assert.throws(() => destinationSettings(settings, destination));
+});
+test('installation identity survives edits and cannot be chosen by the renderer', () => {
+  const previous = { ...config, deviceId: 'installation-a' };
+  assert.equal(validateSettings({ ...config, deviceId: 'spoofed-b' }, previous).deviceId, 'installation-a');
 });
 test('remote navigation is confined to configured origin', () => {
   assert.ok(allowedNavigation('https://loja.example/admin/orders', config.serverUrl));

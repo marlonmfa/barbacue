@@ -1,0 +1,25 @@
+.shell { --online-accent: #ed1b24; }
+.brands { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 27px; }
+.brands button { min-height: 46px; padding: 10px 17px; border: 1px solid #534236; border-radius: 8px; font-size: 13px; font-weight: 700; }
+.brands button[aria-pressed="true"] { color: #fff; background: #ed1b24; border-color: #ed1b24; }
+.itemNote { display: block; font-size: 11px; color: #b9aa9b; margin-top: 10px; }
+.itemNote input { display: block; width: 100%; min-height: 42px; border: 1px solid #534236; border-radius: 6px; padding: 8px; margin-top: 5px; font-size: 12px; }
+.pixMethod { background: #30251e; border-radius: 8px; padding: 15px; font-size: 13px; margin-top: 18px; }
+.pixMethod p { font-size: 12px; color: #b9aa9b; line-height: 1.6; margin-top: 5px; }
+.freight { font-size: 13px; margin: 12px 0; }
+.receipt { max-width: 580px; }
+.receipt > button { margin-top: 15px; }
+.receipt h1 { outline: none; }
+.lineNote { display: block; font-size: 11px; margin-top: 3px; }
+.pix { padding: 24px; background: #241d18; border: 1px solid #3b3028; border-radius: 12px; margin: 24px 0; }
+.pix h2 { font-size: 19px; font-weight: 750; }
+.pix img { margin: 16px auto; max-width: 100%; height: auto; }
+.pix label { display: block; text-align: left; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+.pix textarea { width: 100%; resize: vertical; border: 1px solid #534236; border-radius: 6px; padding: 10px; font-size: 12px; overflow-wrap: anywhere; }
+.pix button { margin-top: 12px; justify-content: center; }
+.pix p, .help { font-size: 12px !important; line-height: 1.6; }
+@media (max-width: 599px) { .brands { gap: 6px; } .brands button { padding: 10px; font-size: 12px; } }
+
+.photoCaption { position: absolute; right: 8px; bottom: 8px; background: #17120fe6; color: #d3c2b1; font-size: 9px; line-height: 1.5; padding: 3px 7px; border-radius: 4px; }
+
+.pix img { background: #fff; padding: 8px; border-radius: 8px; }

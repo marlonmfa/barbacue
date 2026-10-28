@@ -1,0 +1,2423 @@
+[
+  {
+    "brand": "barbacue",
+    "productId": 1,
+    "name": "Barba crunch",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1763679590179blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-1.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 2,
+    "name": "Barba Supreme",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1770339170594blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-2.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 3,
+    "name": "Barba Burguer",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b0454-1694221069869blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-3.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 4,
+    "name": "Barba Onion Bbq",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b0460-1694220979251blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-4.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 5,
+    "name": "Barba salada",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b0455-1694220678290blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-5.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 6,
+    "name": "Barba Chicken Pickles",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b0456-1694220655597blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-6.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 7,
+    "name": "El Cocinero",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b0457-1694220781377blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-7.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 8,
+    "name": "Barba Tex Mex",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b045c-1694221136221blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-8.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 9,
+    "name": "Do Barba",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b045a-1694220808818blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-9.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 10,
+    "name": "Campeiro",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b045b-1694221117957blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-10.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 11,
+    "name": "Pulled Pork",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b0459-1694221097099blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-11.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 12,
+    "name": "Barba Double Cheddar",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759007256509blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-12.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 13,
+    "name": "Barbíssimo",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b045f-1694221160206blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-13.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 14,
+    "name": "Barba Shrimp 🦐",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759007367234blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-14.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 15,
+    "name": "Barba Cordeiro",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1748467426553blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-15.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 16,
+    "name": "Wonderful life (vegetariano)",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b045e-1694221264161blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-16.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 17,
+    "name": "Combo da Semana - Hambúrguer + Fritas + Refrigerante + Sobremesa",
+    "originalImageUrl": "/menu/review-2026-09/combo-semana.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-17.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 18,
+    "name": "Barba Burguer + Adicional de Fritas Palito + Coca-Cola Lata 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759006717558blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-18.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 19,
+    "name": "Barba Onion Bbq + Adicional de Fritas Palito + Coca-Cola 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759006743470blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-19.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 20,
+    "name": "Barba salada + Adicional de Fritas Palito + Coca-Cola Lata 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759006767996blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-20.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 21,
+    "name": "Barba supreme + Adicional de Fritas Palito + Coca-Cola Lata 350ml",
+    "originalImageUrl": "/menu/review-2026-09/combo-supreme.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-21.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 22,
+    "name": "Barba crunch + Adicional de Fritas Palito + Coca-Cola Lata 350ml",
+    "originalImageUrl": "/menu/review-2026-09/combo-crunch.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-22.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 23,
+    "name": "Barba chicken pickles + Adicional fritas Palito + Coca-Cola 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759006929847blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-23.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 24,
+    "name": "El Cocinero + Adicional Batata Palito + Coca-Cola 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759006950266blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-24.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 25,
+    "name": "Do Barba + Adicional Batata Palito + Coca-Cola 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759006972520blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-25.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 26,
+    "name": "Barba Tex Mex + Adicional Batata Palito + Coca-Cola 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759007017304blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-26.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 27,
+    "name": "Campeiro + Adicional Batata Palito + Coca-Cola 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759007037180blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-27.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 28,
+    "name": "Pulled Pork + Adicional Batata Palito + Coca-Cola 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759176549146blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-28.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 29,
+    "name": "Barba Double Cheddar + Adicional Batata Palito + Coca-Cola 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759007180720blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-29.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 30,
+    "name": "Barbíssimo + Adicional Batata Palito + Coca-Cola 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759007498373blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-30.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 31,
+    "name": "Barba Shrimp 🦐 + Adicional Batata Palito + Coca-Cola 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759007479369blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-31.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 32,
+    "name": "Barba Cordeiro + Adicional Batata Palito + Coca-Cola 350ml",
+    "originalImageUrl": "/menu/review-2026-09/combo-cordeiro.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-32.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 33,
+    "name": "Wonderful life (vegetariano) + Adicional Batata Palito + Coca-Cola 350ml",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759007592409blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-33.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 34,
+    "name": "Combo 1",
+    "originalImageUrl": "/menu/review-2026-09/combo-1.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-34.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 35,
+    "name": "Combo 2",
+    "originalImageUrl": "/menu/review-2026-09/combo-2.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-35.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 36,
+    "name": "Combo 3",
+    "originalImageUrl": "/menu/review-2026-09/combo-3.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-36.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 37,
+    "name": "Combo TEX MEX",
+    "originalImageUrl": "/menu/review-2026-09/combo-tex-mex.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-37.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 38,
+    "name": "Beef Melt Fries",
+    "originalImageUrl": "/menu/review-2026-09/beef-melt-fries.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-38.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 39,
+    "name": "Batata frita palito",
+    "originalImageUrl": "https://legacy-assets.anota.ai/produtos/1678885865055da27fbf9-10ad-4c0d-87a8-de4c0a569db0",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-92.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 40,
+    "name": "Salada do Barba",
+    "originalImageUrl": "/menu/review-2026-09/salada.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-40.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 41,
+    "name": "Waffle's Fries",
+    "originalImageUrl": "https://legacy-assets.anota.ai/produtos/1678885867984f1877c91-ae3e-4367-93c0-e96bde258a4d",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-94.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 42,
+    "name": "Porção de Batata - Crinkle",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1757538132602blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-95.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 43,
+    "name": "Barba Chicken Popcorn",
+    "originalImageUrl": "https://legacy-assets.anota.ai/produtos/167888587289815efdceb-ce28-41e4-b8a8-d6805277327b",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-43.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 44,
+    "name": "Empanado de queijo Gouda",
+    "originalImageUrl": "https://legacy-assets.anota.ai/produtos/1678885869763e6831d78-487e-4216-9d38-444d48aaa7f5",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-44.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 45,
+    "name": "Dadinhos de Tapioca",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1759780559587blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-45.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 46,
+    "name": "Onions Rings",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411babb853e7d00129b044b/6411babb853e7d00129b046c-1691527939739blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-46.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 47,
+    "name": "Porção de Entrecot e fritas.",
+    "originalImageUrl": "/menu/review-2026-09/entrecot-fritas.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-47.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 48,
+    "name": "Entrecot Completo",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1770331892573blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-48.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 49,
+    "name": "Tortilhas de milho crocante",
+    "originalImageUrl": "/menu/review-2026-09/tortillas.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-49.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 50,
+    "name": "Brigadeiro de Colher",
+    "originalImageUrl": "https://legacy-assets.anota.ai/produtos/16788858757870bcb3e93-4524-4f92-8fc1-62c317410dec",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-50.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 51,
+    "name": "Sobremesas de Ninho",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1754858764737blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-51.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 52,
+    "name": "Sweet Barba",
+    "originalImageUrl": "https://legacy-assets.anota.ai/produtos/16788858784667c6a74a1-c9ca-40bb-be02-b0b0263b0671",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-52.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 53,
+    "name": "Barba Dream",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1746136184937blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-53.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 54,
+    "name": "Croissant Nutella",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1772057051034blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-54.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 55,
+    "name": "Croissant Creme de Ovomaltine",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1772057808184blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-55.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 56,
+    "name": "Croissant Doce de Leite",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1772057713321blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-56.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 57,
+    "name": "Mini Churros de doce de leite",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/-1711490209807blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-57.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 58,
+    "name": "Quesadilha doce",
+    "originalImageUrl": "/menu/review-2026-09/quesadilla-doce.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-58.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 92,
+    "name": "Adicional de Batata Frita",
+    "originalImageUrl": "https://legacy-assets.anota.ai/produtos/1678885865055da27fbf9-10ad-4c0d-87a8-de4c0a569db0",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-92.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 93,
+    "name": "Adicional de Queijo Gouda",
+    "originalImageUrl": "/menu/review-2026-09/gouda-empanado.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-93.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 94,
+    "name": "Adicional de Batata Waffle",
+    "originalImageUrl": "https://legacy-assets.anota.ai/produtos/1678885867984f1877c91-ae3e-4367-93c0-e96bde258a4d",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-94.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 95,
+    "name": "Adicional de Batata Crinkle Temperada",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1757538132602blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-95.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 96,
+    "name": "Adicional de maionese temperada",
+    "originalImageUrl": "/menu/review-2026-09/maionese.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-96.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 97,
+    "name": "Adicional de maionese verde temperada",
+    "originalImageUrl": "/menu/review-2026-09/maionese-verde.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-97.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 98,
+    "name": "Adicional de Sweet Chilli",
+    "originalImageUrl": "/menu/review-2026-09/sweet-chilli.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-98.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 99,
+    "name": "Adicional de Barbacue",
+    "originalImageUrl": "/menu/review-2026-09/barbecue.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-99.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 100,
+    "name": "Adicional de Chipotle",
+    "originalImageUrl": "/menu/review-2026-09/chipotle.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-100.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 101,
+    "name": "Adicional de creme de queijos",
+    "originalImageUrl": "/menu/review-2026-09/creme-queijos.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-101.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 102,
+    "name": "Adicional de hamburguer",
+    "originalImageUrl": "/menu/review-2026-09/hamburguer-extra.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-102.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 103,
+    "name": "Adicional pimenta jalapeño",
+    "originalImageUrl": "/generated/products/103.jpg",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-103.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 104,
+    "name": "Adicional de Entrecot",
+    "originalImageUrl": "/menu/review-2026-09/entrecot.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-104.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 110,
+    "name": "Couve flor com alho poró",
+    "originalImageUrl": "/menu/review-2026-09/vegetariano-couve.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-110.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 111,
+    "name": "Cevadinha com cogumelos",
+    "originalImageUrl": "/menu/review-2026-09/vegetariano-cevada.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-111.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 112,
+    "name": "Alface americana",
+    "originalImageUrl": "/menu/review-2026-09/alface.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-112.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 113,
+    "name": "Cebola roxa",
+    "originalImageUrl": "/generated/products/113.jpg",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-113.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 114,
+    "name": "Bacon",
+    "originalImageUrl": "/menu/review-2026-09/bacon.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-114.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 115,
+    "name": "Queijo gouda empanado",
+    "originalImageUrl": "/menu/review-2026-09/gouda-empanado.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-93.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 116,
+    "name": "Batata-frita Palito",
+    "originalImageUrl": "https://legacy-assets.anota.ai/produtos/1678885865055da27fbf9-10ad-4c0d-87a8-de4c0a569db0",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-92.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 117,
+    "name": "Queijo brie",
+    "originalImageUrl": "/menu/review-2026-09/brie.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-117.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 118,
+    "name": "Maionese temperada extra",
+    "originalImageUrl": "/menu/review-2026-09/maionese.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-96.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 119,
+    "name": "Hambúrguer extra",
+    "originalImageUrl": "/menu/review-2026-09/hamburguer-extra.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-102.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 120,
+    "name": "Batata waffle",
+    "originalImageUrl": "https://legacy-assets.anota.ai/produtos/1678885867984f1877c91-ae3e-4367-93c0-e96bde258a4d",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-94.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 121,
+    "name": "Molho barbecue",
+    "originalImageUrl": "/menu/review-2026-09/barbecue.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-99.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 122,
+    "name": "Costela na brasa desfiada",
+    "originalImageUrl": "/menu/review-2026-09/costela.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-122.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 123,
+    "name": "Geleia de Tomate",
+    "originalImageUrl": "/menu/review-2026-09/geleia-tomate.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-123.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 124,
+    "name": "Molho chipotle",
+    "originalImageUrl": "/menu/review-2026-09/chipotle.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-100.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 125,
+    "name": "Chutney de cebola Roxa",
+    "originalImageUrl": "/menu/review-2026-09/chutney-cebola.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-125.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 126,
+    "name": "Molho Chipotle",
+    "originalImageUrl": "/menu/review-2026-09/chipotle.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-100.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 127,
+    "name": "Maionese temperada extra",
+    "originalImageUrl": "/menu/review-2026-09/maionese.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-96.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 128,
+    "name": "Farofa",
+    "originalImageUrl": "/menu/review-2026-09/farofa.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-128.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 129,
+    "name": "Creme de Gorgonzola",
+    "originalImageUrl": "/menu/review-2026-09/gorgonzola.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-129.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 130,
+    "name": "Steak de Entrecot Extra",
+    "originalImageUrl": "/menu/review-2026-09/entrecot.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-104.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 131,
+    "name": "Chimichurri",
+    "originalImageUrl": "/menu/review-2026-09/chimichurri.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-131.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 132,
+    "name": "Creme de Ovomaltine",
+    "originalImageUrl": "/menu/review-2026-09/ovomaltine.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-132.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 133,
+    "name": "Doce de leite",
+    "originalImageUrl": "/menu/review-2026-09/doce-leite.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-133.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 134,
+    "name": "Nutella",
+    "originalImageUrl": "/menu/review-2026-09/creme-avela.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-134.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 137,
+    "name": "Alface Americana",
+    "originalImageUrl": "/menu/review-2026-09/alface.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-112.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 138,
+    "name": "Cebola Roxa",
+    "originalImageUrl": "/generated/products/138.jpg",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-138.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 139,
+    "name": "Rúcula",
+    "originalImageUrl": "/menu/review-2026-09/rucula.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-139.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 140,
+    "name": "Geleia de Tomate",
+    "originalImageUrl": "/menu/review-2026-09/geleia-tomate.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-123.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 141,
+    "name": "Chutney de Cebola Roxa",
+    "originalImageUrl": "/menu/review-2026-09/chutney-cebola.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-125.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 142,
+    "name": "Bacon",
+    "originalImageUrl": "/menu/review-2026-09/bacon.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-114.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 143,
+    "name": "Queijo Brie",
+    "originalImageUrl": "/menu/review-2026-09/brie.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-117.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 144,
+    "name": "Queijo Cheddar Pollenghi (2 fatias)",
+    "originalImageUrl": "/menu/review-2026-09/cheddar.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-144.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 145,
+    "name": "Hambúrguer Extra",
+    "originalImageUrl": "/menu/review-2026-09/hamburguer-extra.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-102.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 146,
+    "name": "Costela Bovina Desfiada (100g)",
+    "originalImageUrl": "/menu/review-2026-09/costela.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-122.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 147,
+    "name": "Picles",
+    "originalImageUrl": "/generated/products/147.jpg",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-147.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 148,
+    "name": "Pimenta Jalapenõ",
+    "originalImageUrl": "/generated/products/148.jpg",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-148.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 149,
+    "name": "Anel de Cebola (4 und dentro do burguer)",
+    "originalImageUrl": "/menu/review-2026-09/onion-rings.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-149.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 150,
+    "name": "Catupiry empanado",
+    "originalImageUrl": "/menu/review-2026-09/catupiry.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-150.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 151,
+    "name": "Adicional Batata Palito",
+    "originalImageUrl": "https://legacy-assets.anota.ai/produtos/1678885865055da27fbf9-10ad-4c0d-87a8-de4c0a569db0",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-92.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 152,
+    "name": "Adicional Batata Waffle",
+    "originalImageUrl": "https://legacy-assets.anota.ai/produtos/1678885867984f1877c91-ae3e-4367-93c0-e96bde258a4d",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-94.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 153,
+    "name": "Adicional Batata Crinkles temperada",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1757538132602blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-95.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 154,
+    "name": "Adicional queijo Gouda (4und)",
+    "originalImageUrl": "/menu/review-2026-09/gouda-empanado.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-93.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 155,
+    "name": "Adicional Anel de cebola (4und)",
+    "originalImageUrl": "/menu/review-2026-09/onion-rings.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-149.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 156,
+    "name": "Maionese Temperada",
+    "originalImageUrl": "/menu/review-2026-09/maionese.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-96.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 157,
+    "name": "Sweet Chilli",
+    "originalImageUrl": "/menu/review-2026-09/sweet-chilli.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-98.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 158,
+    "name": "Molho Barbecue",
+    "originalImageUrl": "/menu/review-2026-09/barbecue.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-99.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 159,
+    "name": "Molho Chipotle",
+    "originalImageUrl": "/menu/review-2026-09/chipotle.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-100.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 160,
+    "name": "Geleia de Tomate",
+    "originalImageUrl": "/menu/review-2026-09/geleia-tomate.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-123.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 161,
+    "name": "Creme de Queijos",
+    "originalImageUrl": "/menu/review-2026-09/creme-queijos.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-101.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 162,
+    "name": "Maionese verde temperada",
+    "originalImageUrl": "/menu/review-2026-09/maionese-verde.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-97.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 172,
+    "name": "Strogonoff de nozes",
+    "originalImageUrl": "/menu/review-2026-09/strogonoff-nozes.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-172.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 173,
+    "name": "Gelado de Uva",
+    "originalImageUrl": "/menu/review-2026-09/gelado-uva.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-173.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 174,
+    "name": "Gelado de Morango",
+    "originalImageUrl": "/menu/review-2026-09/gelado-morango.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-174.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 177,
+    "name": "Negresco",
+    "originalImageUrl": "/menu/review-2026-09/brigadeiro-negresco.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-177.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 178,
+    "name": "Ovomaltine",
+    "originalImageUrl": "/menu/review-2026-09/ovomaltine.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-132.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 179,
+    "name": "Bacon",
+    "originalImageUrl": "/menu/review-2026-09/bacon.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-114.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 180,
+    "name": "Creme de queijos",
+    "originalImageUrl": "/menu/review-2026-09/creme-queijos.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-101.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 181,
+    "name": "Milkshake de Ovomaltine",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1765145753786blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-181.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 182,
+    "name": "Milkshake de Frutas vermelhas",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1765145753639blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-182.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 183,
+    "name": "Milkshake de Baunilha",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1765145753783blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-183.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 184,
+    "name": "Adicional de Doce de Leite extra",
+    "originalImageUrl": "/menu/review-2026-09/doce-leite.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-133.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 185,
+    "name": "Adicional de Nutella",
+    "originalImageUrl": "/menu/review-2026-09/creme-avela.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-134.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 186,
+    "name": "Adicione + 6 mini churros",
+    "originalImageUrl": "/menu/review-2026-09/mini-churros.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-186.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 187,
+    "name": "Maça verde",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1765318064744blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-187.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 188,
+    "name": "Frutas Vermelhas",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1765318064485blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-188.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 189,
+    "name": "Barba Salada",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b0455-1694220678290blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-5.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 190,
+    "name": "Do Barba",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b045a-1694220808818blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-9.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 191,
+    "name": "El Cocinero",
+    "originalImageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411baba853e7d00129b0434/6411babb853e7d00129b0457-1694220781377blob",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-7.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 192,
+    "name": "Nutella",
+    "originalImageUrl": "/menu/review-2026-09/creme-avela.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-134.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 193,
+    "name": "Ovomaltine",
+    "originalImageUrl": "/menu/review-2026-09/ovomaltine.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-132.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 194,
+    "name": "Doce de leite",
+    "originalImageUrl": "/menu/review-2026-09/doce-leite.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-133.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbacue",
+    "productId": 195,
+    "name": "Brigadeiro",
+    "originalImageUrl": "/menu/review-2026-09/brigadeiro.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbacue-195.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 1,
+    "name": "Doguinho",
+    "originalImageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/6cb73c63-55cd-459b-a02b-aa936967bf20/202601171837_061T_i.jpg",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-1.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 2,
+    "name": "Barbadog Bacon",
+    "originalImageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/6cb73c63-55cd-459b-a02b-aa936967bf20/202601171838_V8XK_i.jpg",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-2.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 3,
+    "name": "Barbadog Clássico",
+    "originalImageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/6cb73c63-55cd-459b-a02b-aa936967bf20/202602052112_3M6F_i.jpg",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-3.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 4,
+    "name": "Barbadog Crispy",
+    "originalImageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/6cb73c63-55cd-459b-a02b-aa936967bf20/202602052113_JVJ7_i.jpg",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-4.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 5,
+    "name": "Barbadog Chilli Nachos",
+    "originalImageUrl": "/menu/brands-2026-09/barbadog-chilli-nachos.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-5.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 6,
+    "name": "Barbadog Corn Bacon Caramelizado",
+    "originalImageUrl": "/menu/brands-2026-09/barbadog-corn-bacon-caramelizado.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-6.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 7,
+    "name": "Barbadog Coração Catupiry",
+    "originalImageUrl": "/menu/brands-2026-09/barbadog-coracao-catupiry.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-7.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 8,
+    "name": "Barbadog Calabresa Biquinho",
+    "originalImageUrl": "/menu/brands-2026-09/barbadog-calabresa-biquinho.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-8.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 9,
+    "name": "Barbadog Frango com Catupiry",
+    "originalImageUrl": "/menu/brands-2026-09/barbadog-frango-com-catupiry.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-9.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 10,
+    "name": "Ciabatta Pulled Pork Chipotle",
+    "originalImageUrl": "/menu/brands-2026-09/ciabatta-pulled-pork-chipotle.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-10.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 11,
+    "name": "Ciabatta Parmegiana",
+    "originalImageUrl": "/menu/brands-2026-09/ciabatta-parmegiana.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-11.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 12,
+    "name": "Ciabatta Veggie Brie E Geleia De Tomate",
+    "originalImageUrl": "/menu/brands-2026-09/ciabatta-veggie-brie-e-geleia-de-tomate.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-12.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 13,
+    "name": "Croissant Double Smash",
+    "originalImageUrl": "/menu/brands-2026-09/croissant-double-smash.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-13.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 14,
+    "name": "Ciabatta Carne De Panela Catupiry",
+    "originalImageUrl": "/menu/brands-2026-09/ciabatta-carne-de-panela-catupiry.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-14.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 15,
+    "name": "Brasinha Salada",
+    "originalImageUrl": "/menu/brands-2026-09/brasinha-salada.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-15.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 16,
+    "name": "Brasinha Cheeseburguer",
+    "originalImageUrl": "/menu/brands-2026-09/brasinha-cheeseburguer.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-16.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 17,
+    "name": "Brasinha Bacon",
+    "originalImageUrl": "/menu/brands-2026-09/brasinha-bacon.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-17.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 18,
+    "name": "Brasinha Chicken Jr",
+    "originalImageUrl": "/menu/brands-2026-09/brasinha-chicken-jr.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-18.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 19,
+    "name": "Chicken Popcorn",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbadog-19.webp",
+    "illustrative": true,
+    "source": "generated"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 20,
+    "name": "Queijo Gouda Empanado",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-44.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 21,
+    "name": "Onion Rings",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-46.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 22,
+    "name": "Dadinho de Tapioca",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-45.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 23,
+    "name": "Tortilhas de Milho Crocante",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-49.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 24,
+    "name": "Salada do Barba",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-40.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 25,
+    "name": "Batata Waffles",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-94.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 26,
+    "name": "Beef Melt Fries",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-38.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 27,
+    "name": "Batata Frita",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-92.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 28,
+    "name": "Batata Crinkles",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-95.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 29,
+    "name": "Barba Dream",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-53.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 30,
+    "name": "Brigadeiro Com Ovomaltine",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-132.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 31,
+    "name": "Brigadeiro com Negresco",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-177.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 32,
+    "name": "Croissant Doce de Leite",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-56.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 33,
+    "name": "Croissant Creme de Ovomaltine",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-55.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 34,
+    "name": "Croissant Nutella",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-54.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 35,
+    "name": "Cerveja Stannis 355ml Pilsener",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1724284766303blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 37,
+    "name": "Cerveja Stannis 355ml Dear Paula",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1724445871127blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 38,
+    "name": "Cerveja Stannis 355ml Red Sonja",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727996103849blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 39,
+    "name": "Cerveja Stannis 355ml Gold Amélia",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727995928406blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 40,
+    "name": "Chope Em Growler Pilsener 1lt",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1725318874132blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 41,
+    "name": "Coca-Cola 600ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://legacy-assets.anota.ai/produtos/16788858842267915fea1-99dd-492b-b3c7-ae07b2c8c55e",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 42,
+    "name": "Coca Cola Zero 600ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411babb853e7d00129b0452/6500e5b238a3950027f7ad86-1694557692972blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 43,
+    "name": "Refrigerante Guarana Antartica Lata 350 Ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://legacy-assets.anota.ai/produtos/1678885882697006a59cb-8e4b-49f6-8388-4c38062ad24e",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 44,
+    "name": "Coca Cola Zero 350 Ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411babb853e7d00129b0452/6500e62ccc422b00278b888f-1694557766797blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 45,
+    "name": "Coca Cola 350 Ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://legacy-assets.anota.ai/produtos/1678885881367291d58f4-a852-4976-bb71-611590d840e5",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 46,
+    "name": "Fanta Laranja 350 Ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727996377695blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 47,
+    "name": "Fanta Uva 350ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727996465884blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 48,
+    "name": "Refrigerante Original Sprite 350ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727996618129blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 51,
+    "name": "Coca-Cola Zero Pet 200ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/-1707685473768blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 57,
+    "name": "Schweppes Citrus 350ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727997783462blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 58,
+    "name": "Tônica Schweppes 350ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1728167326868blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 59,
+    "name": "Guacamole",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbadog-59.webp",
+    "illustrative": true,
+    "source": "generated"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 60,
+    "name": "Sour Cream",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbadog-60.webp",
+    "illustrative": true,
+    "source": "generated"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 61,
+    "name": "Pico De Galo",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbadog-61.webp",
+    "illustrative": true,
+    "source": "generated"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 62,
+    "name": "Chipotle",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-100.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 63,
+    "name": "Adicional De Batata Palito",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-92.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 64,
+    "name": "Adicional De Batata Waffle",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-94.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 65,
+    "name": "Adicional De Batata Crinkle",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-95.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 66,
+    "name": "Bacon",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-114.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 67,
+    "name": "Maionese Verde Temperada",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-97.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 68,
+    "name": "Maionese Temperada",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-96.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 69,
+    "name": "Sweet Chili",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-98.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 70,
+    "name": "Barbecue",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-99.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "barbadog",
+    "productId": 71,
+    "name": "Geleia De Tomate",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-123.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 72,
+    "name": "Quesadilla de Frango",
+    "originalImageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/991532f5-0400-4efe-b38a-b2b37f8bd9b0/202409231958_721R_i.jpg",
+    "imageUrl": "/menu/pedir-2026-10/chelas-72.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 73,
+    "name": "Combo Chicano",
+    "originalImageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/991532f5-0400-4efe-b38a-b2b37f8bd9b0/202409232145_55PD_i.jpg",
+    "imageUrl": "/menu/pedir-2026-10/chelas-73.webp",
+    "illustrative": true,
+    "source": "generated"
+  },
+  {
+    "brand": "chelas",
+    "productId": 74,
+    "name": "Quesadilla Veggie Chilli",
+    "originalImageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/991532f5-0400-4efe-b38a-b2b37f8bd9b0/202409231959_J462_i.jpg",
+    "imageUrl": "/menu/pedir-2026-10/chelas-74.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 75,
+    "name": "Quesadilla Chillicious",
+    "originalImageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/991532f5-0400-4efe-b38a-b2b37f8bd9b0/202409232000_2P03_i.jpg",
+    "imageUrl": "/menu/pedir-2026-10/chelas-75.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 76,
+    "name": "Combo Caliente",
+    "originalImageUrl": "https://static.ifood-static.com.br/image/upload/t_high/pratos/991532f5-0400-4efe-b38a-b2b37f8bd9b0/202506112203_6355_i.jpg",
+    "imageUrl": "/menu/pedir-2026-10/chelas-76.webp",
+    "illustrative": true,
+    "source": "generated"
+  },
+  {
+    "brand": "chelas",
+    "productId": 77,
+    "name": "Tacos Do Chelas",
+    "originalImageUrl": "/menu/brands-2026-09/tacos-do-chelas.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-77.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 78,
+    "name": "Quesadilla de Mussarela",
+    "originalImageUrl": "/menu/brands-2026-09/quesadilla-de-mussarela.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-78.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 79,
+    "name": "Quesadilla de Pulled Pork",
+    "originalImageUrl": "/menu/brands-2026-09/quesadilla-de-pulled-pork.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-79.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 80,
+    "name": "Quesadilla Carne de Panela",
+    "originalImageUrl": "/menu/brands-2026-09/quesadilla-carne-de-panela.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-80.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 81,
+    "name": "Quesadilla de Frango com Catupiry",
+    "originalImageUrl": "/menu/brands-2026-09/quesadilla-de-frango-com-catupiry.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-81.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 82,
+    "name": "Burrito Chillicious",
+    "originalImageUrl": "/menu/brands-2026-09/burrito-chillicious.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-82.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 83,
+    "name": "Burrito de Frango",
+    "originalImageUrl": "/menu/brands-2026-09/burrito-de-frango.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-83.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 84,
+    "name": "Burrito Burguer",
+    "originalImageUrl": "/menu/brands-2026-09/burrito-burguer.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-84.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 85,
+    "name": "Burrito Chilli Veggie",
+    "originalImageUrl": "/menu/brands-2026-09/burrito-chilli-veggie.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-85.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 86,
+    "name": "Burrito Carne de Panela",
+    "originalImageUrl": "/menu/brands-2026-09/burrito-carne-de-panela.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-86.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 87,
+    "name": "Burrito Pulled Pork",
+    "originalImageUrl": "/menu/brands-2026-09/burrito-pulled-pork.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-87.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 88,
+    "name": "Chicken Sweet Crispy",
+    "originalImageUrl": "/menu/brands-2026-09/chicken-sweet-crispy.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-88.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 89,
+    "name": "Burrito de Camarão",
+    "originalImageUrl": "/menu/brands-2026-09/burrito-de-camarao.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-89.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 90,
+    "name": "Chilli Nachos",
+    "originalImageUrl": "/menu/brands-2026-09/chilli-nachos.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-90.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 91,
+    "name": "Nacho Pulled Pork",
+    "originalImageUrl": "/menu/brands-2026-09/nacho-pulled-pork.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-91.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 92,
+    "name": "Chilli Bowl",
+    "originalImageUrl": "/menu/brands-2026-09/chilli-bowl.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-92.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 93,
+    "name": "Nachos Chilli Vegetariano",
+    "originalImageUrl": "/menu/brands-2026-09/nachos-chilli-vegetariano.webp",
+    "imageUrl": "/menu/pedir-2026-10/chelas-93.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 94,
+    "name": "Croissant Double Smash",
+    "originalImageUrl": "/menu/brands-2026-09/croissant-double-smash.webp",
+    "imageUrl": "/menu/pedir-2026-10/barbadog-13.webp",
+    "illustrative": true,
+    "source": "edited"
+  },
+  {
+    "brand": "chelas",
+    "productId": 95,
+    "name": "Tortilhas de Milho crocante",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-49.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 96,
+    "name": "Batata frita",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-92.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 97,
+    "name": "Batata Waffles",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-94.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 98,
+    "name": "Queijo Gouda empanado",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-44.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 99,
+    "name": "Pollo loko",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-43.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 100,
+    "name": "Porção de batata Crinkle",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-95.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 101,
+    "name": "Dadinhos de Tapioca",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-45.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 102,
+    "name": "Beef Melt Fries",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-38.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 103,
+    "name": "Salada",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-40.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 104,
+    "name": "Mini Churros",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-57.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 105,
+    "name": "Quesadilla de Nutella",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/chelas-105.webp",
+    "illustrative": true,
+    "source": "generated"
+  },
+  {
+    "brand": "chelas",
+    "productId": 106,
+    "name": "Quesadilla de Ovomaltine",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/chelas-106.webp",
+    "illustrative": true,
+    "source": "generated"
+  },
+  {
+    "brand": "chelas",
+    "productId": 107,
+    "name": "Quesadilla doce de leite",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/chelas-107.webp",
+    "illustrative": true,
+    "source": "generated"
+  },
+  {
+    "brand": "chelas",
+    "productId": 108,
+    "name": "Brigadeiro de colher",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-50.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 109,
+    "name": "Sobremesas de Ninho",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-51.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 110,
+    "name": "Croissant Nutella",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-54.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 111,
+    "name": "Croissant Creme de Ovomaltine",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-55.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 112,
+    "name": "Croissant Doce de Leite",
+    "originalImageUrl": null,
+    "imageUrl": "/menu/pedir-2026-10/barbacue-56.webp",
+    "illustrative": true,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 113,
+    "name": "Coca Cola 200ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/-1707685292496blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 114,
+    "name": "Coca Cola 200ml Zero",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/-1707685473768blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 115,
+    "name": "Coca-Cola Original 350ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://legacy-assets.anota.ai/produtos/1678885881367291d58f4-a852-4976-bb71-611590d840e5",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 116,
+    "name": "Refrigerante Coca Cola Lata Zero",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411babb853e7d00129b0452/6500e62ccc422b00278b888f-1694557766797blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 117,
+    "name": "Coca-Cola Original 600ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://legacy-assets.anota.ai/produtos/16788858842267915fea1-99dd-492b-b3c7-ae07b2c8c55e",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 118,
+    "name": "Coca Cola Zero 600ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6411bab6b76860001994fffc/6411babb853e7d00129b0452/6500e5b238a3950027f7ad86-1694557692972blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 119,
+    "name": "Coca-Cola Original 2l",
+    "originalImageUrl": null,
+    "imageUrl": "https://legacy-assets.anota.ai/produtos/1678885886052208afade-99ca-428a-9d13-34ef47e0f9af",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 120,
+    "name": "Refrigerante Guaraná Itubaina Retrô Garrafa 355ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1753994959906blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 121,
+    "name": "Refrigerante Guaraná Antarctica Lata 350ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://legacy-assets.anota.ai/produtos/1678885882697006a59cb-8e4b-49f6-8388-4c38062ad24e",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 122,
+    "name": "Fanta Laranja 350ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727996377695blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 123,
+    "name": "Fanta Uva 350ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727996465884blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 124,
+    "name": "Sprite 350ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727996618129blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 125,
+    "name": "Schweppes Citrus 350ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727997783462blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 127,
+    "name": "Coca Cola Zero 2 L Pet",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1758230769446blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 129,
+    "name": "Suco de Laranja Natural 400ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1761087256702blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 131,
+    "name": "Cerveja Stannis Pilsner - 355 Ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1724284766303blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 132,
+    "name": "Chope em Growler - Pilsner - 1lt",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1725318874132blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 134,
+    "name": "Cerveja Stannis Gold Amelia 355ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727995928406blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 135,
+    "name": "Cerveja Stannis Red Sonja 355ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727996103849blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 136,
+    "name": "Cerveja Stannis Dear Paula 355ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1724445871127blob",
+    "illustrative": false,
+    "source": "reused"
+  },
+  {
+    "brand": "chelas",
+    "productId": 137,
+    "name": "Cerveja Stannis Brigit Ale 355ml",
+    "originalImageUrl": null,
+    "imageUrl": "https://client-assets.anota.ai/produtos/6695aa65af020700192a0885/-1727996077021blob",
+    "illustrative": false,
+    "source": "reused"
+  }
+]

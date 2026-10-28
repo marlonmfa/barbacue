@@ -42,5 +42,5 @@ export async function authenticateStaff(
     .where(eq(staffUsers.username, username.trim().toLowerCase()));
   if (!user || !user.active) return null;
   if (!(await verifyPassword(password, user.passwordHash))) return null;
-  return { userId: user.id, role: user.role };
+  return { userId: user.id, role: user.role, mustChangePassword: user.mustChangePassword };
 }

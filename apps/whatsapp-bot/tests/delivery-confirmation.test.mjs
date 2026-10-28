@@ -3,10 +3,11 @@ import assert from "node:assert/strict";
 
 let enabled, quote, chatResult, orders, chatCalls, quoteCalls, loseOrderResponse;
 let handleMessage;
+let chatPayloads=[];
 let phone = 0;
 before(async () => {
   mock.module("../dist/api-client.js", { namedExports: {
-    chat: async () => { chatCalls++; return structuredClone(chatResult); },
+    chat: async payload => { chatPayloads.push(structuredClone(payload)); chatCalls++; return structuredClone(chatResult); },
     getStoreStatus: async () => ({ open: true }),
     deliveryEnabled: async () => enabled,
     quoteDelivery: async () => { quoteCalls++; if (quote instanceof Error) throw quote; return { ...quote }; },
@@ -15,6 +16,7 @@ before(async () => {
   ({ handleMessage } = await import("../dist/conversation.js"));
 });
 beforeEach(() => {
+  chatPayloads=[];
   enabled = true; orders = []; chatCalls = 0; quoteCalls = 0;
   loseOrderResponse = false;
   quote = { quoteId: "test-quote", address: "Rua Teste, 123, Centro, São Paulo", distanceMeters: 3750, durationSeconds: 660, feeCents: 675, expiresAt: new Date(Date.now() + 900000).toISOString() };
@@ -96,4 +98,18 @@ test("a lost order response cannot resend the same cart through another confirma
   const next = await handleMessage(contact, "novo pedido");
   assert.match(next.messages.join("\n"), /começar outra compra/);
   assert.equal(orders.length, 1, "starting another purchase does not reuse or send the old cart");
+});
+
+
+test("brand connections isolate the same customer while central keeps the restaurant chooser", async () => {
+  const contact = `multi-brand-${++phone}`;
+  chatResult.navigate = false;
+  await handleMessage(contact, "Olá", "chelas");
+  await handleMessage(contact, "Olá", "barbadog");
+  assert.deepEqual(chatPayloads.map(p => p.brand), ["chelas", "barbadog"]);
+  assert.deepEqual(chatPayloads.map(p => p.messages.length), [1, 1]);
+  assert.deepEqual(chatPayloads.map(p => p.cart.length), [0, 0]);
+  const central = await handleMessage(contact, "Olá", "central");
+  assert.match(central.messages[0], /Qual restaurante/);
+  assert.equal(chatPayloads.length, 2);
 });

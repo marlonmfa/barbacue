@@ -31,6 +31,12 @@ export async function proxy(req: NextRequest) {
       loginUrl.pathname = "/admin/login";
       return NextResponse.redirect(loginUrl);
     }
+    const passwordChangePath = pathname === "/admin/change-password" || pathname === "/api/admin/change-password" || pathname === "/api/admin/change-password/email";
+    if (session.mustChangePassword && !passwordChangePath) {
+      if (isApi) return NextResponse.json({ error: "Altere sua senha para continuar.", mustChangePassword: true }, { status: 403 });
+      return NextResponse.redirect(new URL("/admin/change-password", req.url));
+    }
+    if (passwordChangePath) return NextResponse.next();
     if (!canAccessPath(session, pathname)) {
       if (isApi) return NextResponse.json({ error: "Você não tem permissão para esta função." }, { status: 403 });
       return NextResponse.redirect(new URL(landingPath(session), req.url));
