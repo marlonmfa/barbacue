@@ -6,17 +6,15 @@ import {
   orders,
   coupons,
   customers,
-  products,
   storeSettings,
   closedDays,
   restaurantTables,
-  brandCatalogProducts,
   deliverySettings,
   deliveryQuotes,
 } from "@/db/schema";
-import { and, eq, inArray, isNull, lt, or, sql, gte, asc } from "drizzle-orm";
+import { and, eq, isNull, lt, or, sql, gte, asc } from "drizzle-orm";
 import { buildPixPayload } from "@/lib/pix";
-import { effectivePrice } from "@/lib/pricing";
+import { mainBrand, OrderItemError, resolveOrderLines, type OrderLine } from "@/lib/order-items";
 import { computeStoreStatus } from "@/lib/store-hours";
 import { brandFromHost } from "@/lib/brand-storefront";
 import { requireStaff } from "@/lib/admin-auth";
@@ -32,6 +30,9 @@ const OrderItemSchema = z.object({
   // Tolerated for backwards compat with existing clients; ignored server-side.
   name: z.string().optional(),
   priceCents: z.number().int().nonnegative().optional(),
+  // Carrinho único: cada item pode ser de um dos três restaurantes.
+  brand: z.enum(["barbacue", "barbadog", "chelas"]).optional(),
+  notes: z.string().trim().max(160).optional(),
 });
 
 const OrderSchema = z.object({
@@ -136,43 +137,13 @@ export async function POST(request: NextRequest) {
   }
   if (orderType !== "delivery" && deliveryQuoteId) return fail("Pedidos na mesa não têm frete. Atualize o pedido.", 422);
 
-  // ─── Re-source every line item from the products table ──────────────
-  const requestedIds = Array.from(new Set(requestedItems.map((i) => i.productId)));
-  const canonicalProducts: { id: number; name: string; priceCents: number; available: boolean }[] = [];
-  if (brand === "barbacue") {
-    const nativeProducts = await db.select().from(products).where(inArray(products.id, requestedIds));
-    canonicalProducts.push(...nativeProducts.map((product) => ({
-      id: product.id,
-      name: product.name,
-      priceCents: effectivePrice(product),
-      available: Boolean(product.available),
-    })));
-  } else {
-    const managedProducts = await db
-      .select()
-      .from(brandCatalogProducts)
-      .where(and(eq(brandCatalogProducts.brand, brand), inArray(brandCatalogProducts.id, requestedIds)));
-    canonicalProducts.push(...managedProducts.map((product) => ({
-      id: product.id,
-      name: product.name,
-      priceCents: product.priceCents,
-      available: product.available,
-    })));
-  }
-  const byId = new Map(canonicalProducts.map((p) => [p.id, p]));
-
-  const canonicalItems: { productId: number; name: string; priceCents: number; qty: number }[] = [];
-  for (const i of requestedItems) {
-    const p = byId.get(i.productId);
-    if (!p || !p.available) {
-      return fail(`Produto indisponível: ${i.name ?? i.productId}`, 422);
-    }
-    canonicalItems.push({
-      productId: p.id,
-      name: p.name,
-      priceCents: p.priceCents,
-      qty: i.qty,
-    });
+  // ─── Re-source every line item from the catalog of its own restaurant ──
+  let canonicalItems: OrderLine[];
+  try {
+    canonicalItems = await resolveOrderLines(db, requestedItems, brand);
+  } catch (error) {
+    if (error instanceof OrderItemError) return fail(error.message, 422);
+    throw error;
   }
 
   // ─── Reject orders placed while the store is closed ─────────────────
@@ -290,7 +261,7 @@ export async function POST(request: NextRequest) {
         .insert(orders)
         .values({
           customerId,
-          brand,
+          brand: mainBrand(canonicalItems, brand),
           customerName,
           customerPhone,
           orderType,
@@ -353,7 +324,7 @@ export async function POST(request: NextRequest) {
   return Response.json(
     {
       orderId,
-      brand,
+      brand: mainBrand(canonicalItems, brand),
       paymentMethod,
       orderType,
       tableNumber,

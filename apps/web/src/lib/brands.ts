@@ -17,3 +17,20 @@ export const SWITCHER_ORDER: Brand[] = ["chelas", "barbacue", "barbadog"];
 export function brandSwitcherOrder(active: Brand): { slug: Brand; featured: boolean }[] {
   return SWITCHER_ORDER.map((slug) => ({ slug, featured: slug === active }));
 }
+
+/** Nome curto exibido ao lado de cada item no pedido. */
+export const RESTAURANT_LABEL: Record<Brand, string> = { barbacue: "Barbacue", chelas: "Chelas", barbadog: "Barbadog" };
+
+// Bebidas e cervejas são as mesmas nos três cardápios: não identificam um restaurante.
+const SHARED_CATEGORY = /\b(bebida|bebidas|cerveja|cervejas|refrigerante|refrigerantes|suco|sucos|drink|drinks|agua|aguas|chopp)\b/;
+
+/** Produtos comuns aos três restaurantes não recebem etiqueta de restaurante no pedido. */
+export function isSharedCategory(category: string | null | undefined) {
+  if (!category) return false;
+  return SHARED_CATEGORY.test(category.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase());
+}
+
+/** Nome do item com o restaurante na frente, para cozinha, painel e comanda. */
+export function orderLineLabel(item: { name: string; restaurant?: string | null }) {
+  return item.restaurant ? `${item.restaurant} · ${item.name}` : item.name;
+}

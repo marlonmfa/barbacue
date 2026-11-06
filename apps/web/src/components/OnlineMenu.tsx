@@ -13,13 +13,13 @@ import s from "./OnlineMenuBase.module.css";
 import o from "./OnlineMenu.module.css";
 
 type Brand = "barbacue" | "barbadog" | "chelas";
-interface Product extends PromoPricable { id: number; name: string; description: string | null; imageUrl: string | null; available: boolean }
+interface Product extends PromoPricable { id: number; name: string; description: string | null; imageUrl: string | null; available: boolean; brand: Brand; shared: boolean }
 interface Category { id: number; name: string; products: Product[] }
 interface Item { product: Product; qty: number; notes: string }
 interface Receipt {
   checkoutId: string; orderId: string; orderNumber: string; brand: Brand; orderType: string; tableNumber: number | null;
   status: string; paymentStatus: string; subtotalCents: number; deliveryFeeCents: number; totalCents: number;
-  items: { name: string; qty: number; priceCents: number; notes: string | null }[];
+  items: { name: string; restaurant?: string | null; qty: number; priceCents: number; notes: string | null }[];
   pix: { encodedImage: string; payload: string; expirationDate: string } | null;
   environment: string; message?: string;
 }
@@ -27,6 +27,9 @@ interface Recovery { id: string; accessToken: string; input?: OnlineOrderInput; 
 const KEY = "barbacue:online-checkout:v1";
 const NAMES: Record<Brand, string> = { barbacue: "Barbacue", barbadog: "Barbadog", chelas: "Chelas Cocina Mexicana" };
 const STAGES: Record<string, string> = { pending: "Aguardando pagamento", confirmed: "Pedido recebido pela cozinha", preparing: "Seu pedido está em preparo", ready: "Seu pedido está pronto", delivered: "Pedido concluído", cancelled: "Pedido cancelado" };
+const SHORT: Record<Brand, string> = { barbacue: "Barbacue", barbadog: "Barbadog", chelas: "Chelas" };
+// O carrinho é único para os três restaurantes: o ID do produto só é único dentro da marca.
+const keyOf = (product: Pick<Product, "brand" | "id">) => `${product.brand}:${product.id}`;
 const normalize = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const json = (response: Response) => response.json().catch(() => null);
 
@@ -64,6 +67,8 @@ export function OnlineMenu({ initialBrand, tableToken }: { initialBrand: Brand; 
   const subtotal = items.reduce((total, item) => total + effectivePrice(item.product) * item.qty, 0);
   const total = subtotal + (orderType === "delivery" && !table ? quote?.feeCents ?? 0 : 0);
   const qty = items.reduce((total, item) => total + item.qty, 0);
+  const countByBrand = (b: Brand) => items.filter(i => i.product.brand === b).reduce((n, i) => n + i.qty, 0);
+  const brandsInCart = [...new Set(items.filter(i => !i.product.shared).map(i => i.product.brand))];
   const canOrder = status?.open === true && !loadError && !tableError && !loading;
 
   useEffect(() => {
@@ -91,7 +96,7 @@ export function OnlineMenu({ initialBrand, tableToken }: { initialBrand: Brand; 
         ]);
         const [catalog, availability, deliveryData, tableData] = await Promise.all([json(m), json(st), json(delivery), resolved ? json(resolved) : null]);
         if (!m.ok || !Array.isArray(catalog) || !st.ok) throw new Error("Cardápio indisponível. Tente carregar novamente.");
-        setMenu(catalog.map((group: Category) => ({ ...group, products: group.products.filter(p => p.available !== false && Number.isSafeInteger(p.id)) })).filter((g: Category) => g.products.length));
+        setMenu(catalog.map((group: Category) => ({ ...group, products: group.products.filter(p => p.available !== false && Number.isSafeInteger(p.id)).map(p => ({ ...p, brand: p.brand ?? brand, shared: p.shared === true })) })).filter((g: Category) => g.products.length));
         setStatus(availability); setDeliveryEnabled(delivery.ok && deliveryData?.enabled === true);
         if (tableToken) {
           if (!resolved?.ok || tableData?.token !== tableToken) { setTable(null); setTableError("Não encontramos sua mesa. Escaneie o QR Code novamente ou chame a equipe."); }
@@ -164,9 +169,9 @@ export function OnlineMenu({ initialBrand, tableToken }: { initialBrand: Brand; 
   function change(product: Product, delta: number) {
     if (locked || !canOrder) return;
     setItems(current => {
-      const selected = current.find(i => i.product.id === product.id);
+      const selected = current.find(i => keyOf(i.product) === keyOf(product));
       if (!selected) return delta > 0 ? [...current, { product, qty: 1, notes: "" }] : current;
-      return current.map(i => i.product.id === product.id ? { ...i, qty: Math.min(20, i.qty + delta) } : i).filter(i => i.qty > 0);
+      return current.map(i => keyOf(i.product) === keyOf(product) ? { ...i, qty: Math.min(20, i.qty + delta) } : i).filter(i => i.qty > 0);
     });
     setError("");
   }
@@ -174,7 +179,7 @@ export function OnlineMenu({ initialBrand, tableToken }: { initialBrand: Brand; 
     if (locked || quoting) return;
     setQuoting(true); setError(""); setQuote(null);
     try {
-      const response = await fetch("/api/delivery/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ brand, address }), signal: AbortSignal.timeout(25_000) });
+      const response = await fetch("/api/delivery/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ brand: initialBrand, address }), signal: AbortSignal.timeout(25_000) });
       const data = await json(response);
       if (!response.ok) throw new Error(data?.message ?? "Não foi possível calcular o frete.");
       setQuote(data);
@@ -186,9 +191,9 @@ export function OnlineMenu({ initialBrand, tableToken }: { initialBrand: Brand; 
     if (recovery || sending.current || !canOrder || !items.length) return;
     if (!table && orderType === "delivery" && (!quote || new Date(quote.expiresAt).getTime() <= Date.now())) { setQuote(null); setError("Calcule o frete atualizado antes de pagar."); return; }
     const token = [...crypto.getRandomValues(new Uint8Array(32))].map(n => n.toString(16).padStart(2, "0")).join("");
-    const input: OnlineOrderInput = { requestId: crypto.randomUUID(), accessToken: token, brand, customerName, customerPhone, cpf, orderType: table ? "dine_in" : orderType,
+    const input: OnlineOrderInput = { requestId: crypto.randomUUID(), accessToken: token, brand: initialBrand, customerName, customerPhone, cpf, orderType: table ? "dine_in" : orderType,
       ...(table ? { tableToken: table.token } : {}), ...(!table && orderType === "delivery" ? { deliveryAddress: address, deliveryQuoteId: quote!.quoteId } : {}),
-      notes, items: items.map(i => ({ productId: i.product.id, qty: i.qty, notes: i.notes })) };
+      notes, items: items.map(i => ({ productId: i.product.id, brand: i.product.brand, qty: i.qty, notes: i.notes })) };
     const pending: Recovery = { id: input.requestId, accessToken: token, input, savedAt: Date.now() };
     try { sessionStorage.setItem(KEY, JSON.stringify(pending)); }
     catch { setError("Libere o armazenamento desta aba para guardar a confirmação do pedido e tente novamente."); return; }
@@ -212,9 +217,9 @@ export function OnlineMenu({ initialBrand, tableToken }: { initialBrand: Brand; 
     return <div className={s.quantity}><button type="button" aria-label={`Diminuir ${product.name}`} disabled={locked || !canOrder} onClick={() => change(product, -1)}>−</button><output aria-label={`Quantidade de ${product.name}`}>{value}</output><button type="button" aria-label={`Aumentar ${product.name}`} disabled={locked || !canOrder || value >= 20} onClick={() => change(product, 1)}>+</button></div>;
   }
   function panel(prefix: string) {
-    return <><div className={s.ticketHeading}><div><h2 id={`${prefix}-title`}>Seu pedido</h2><p>{table ? `Mesa ${table.number}` : NAMES[brand]}</p></div><span className={s.ticketCount}>{qty}</span></div>
+    return <><div className={s.ticketHeading}><div><h2 id={`${prefix}-title`}>Seu pedido</h2><p>{table ? `Mesa ${table.number}` : brandsInCart.length > 1 ? brandsInCart.map(b => SHORT[b]).join(" + ") : NAMES[brandsInCart[0] ?? brand]}</p></div><span className={s.ticketCount}>{qty}</span></div>
       {!items.length && !recovery ? <div className={s.emptyCart}><h3>O que vai ser hoje?</h3><p>Escolha seus favoritos no cardápio.</p></div> : <form className={s.ticketForm} onSubmit={submit}>
-        <div className={s.ticketBody}><div className={s.orderItems}>{items.map(item => <article className={s.orderItem} key={item.product.id}><div className={s.orderItemTitle}><h3>{item.product.name}</h3><strong>{formatPrice(effectivePrice(item.product) * item.qty)}</strong></div><div className={s.orderItemControls}>{quantity(item.product, item.qty)}</div><label className={o.itemNote}>Observação do item<input maxLength={160} value={item.notes} disabled={locked} placeholder="Ex.: sem cebola" onChange={e => setItems(current => current.map(i => i.product.id === item.product.id ? { ...i, notes: e.target.value } : i))} /></label></article>)}</div>
+        <div className={s.ticketBody}><div className={s.orderItems}>{items.map(item => <article className={s.orderItem} key={keyOf(item.product)}><div className={s.orderItemTitle}><h3>{!item.product.shared && <small className={o.restaurantTag} data-brand={item.product.brand}>{SHORT[item.product.brand]}</small>}{item.product.name}</h3><strong>{formatPrice(effectivePrice(item.product) * item.qty)}</strong></div><div className={s.orderItemControls}>{quantity(item.product, item.qty)}</div><label className={o.itemNote}>Observação do item<input maxLength={160} value={item.notes} disabled={locked} placeholder="Ex.: sem cebola" onChange={e => setItems(current => current.map(i => keyOf(i.product) === keyOf(item.product) ? { ...i, notes: e.target.value } : i))} /></label></article>)}</div>
         <div className={s.checkout}>
           {!table && <fieldset className={s.payment} disabled={locked}><legend>Como você quer receber?</legend><div>{(["pickup", "delivery"] as const).map(type => <label key={type} className={orderType === type ? s.paymentSelected : ""}><input type="radio" name={`${prefix}-type`} checked={orderType === type} disabled={type === "delivery" && !deliveryEnabled} onChange={() => { setOrderType(type); setError(""); }} />{type === "pickup" ? "Retirada" : "Entrega"}</label>)}</div>{!deliveryEnabled && <p className={s.paymentHint}>Hoje, pedidos online para retirada na loja.</p>}</fieldset>}
           {!table && orderType === "delivery" && <><label className={s.field} htmlFor={`${prefix}-address`}>Endereço completo<textarea id={`${prefix}-address`} required minLength={12} maxLength={400} disabled={locked} value={address} onChange={e => { setAddress(e.target.value); setQuote(null); }} placeholder="Rua, número, bairro, cidade e complemento" /></label><button type="button" className={s.secondary} disabled={locked || quoting || address.trim().length < 12} onClick={() => void calculateFreight()}>{quoting ? "Calculando…" : "Calcular frete"}</button>{quote && <p className={o.freight}>Frete: <strong>{formatPrice(quote.feeCents)}</strong></p>}</>}
@@ -235,7 +240,7 @@ export function OnlineMenu({ initialBrand, tableToken }: { initialBrand: Brand; 
       <h1 ref={receiptTitle} tabIndex={-1} aria-live="polite">{receipt.status === "cancelled" ? "Pedido cancelado" : paid ? STAGES[receipt.status] ?? "Pagamento confirmado" : "Pague para confirmar seu pedido"}</h1>
       <p>{receipt.status === "cancelled" ? "Este pedido foi encerrado. Se você efetuou o pagamento, fale com a equipe para conferir o estorno." : paid ? `Pix recebido. ${receipt.tableNumber ? `A entrega será na mesa ${receipt.tableNumber}.` : receipt.orderType === "delivery" ? "Vamos entregar no endereço informado." : "Acompanhe o preparo e retire na loja."}` : "Seu pedido está reservado nesta tela. A cozinha recebe após a confirmação do pagamento."}</p>
       {receipt.environment !== "production" && <p className={s.formError}>Ambiente de teste. Não faça pagamento real.</p>}
-      <div className={s.receiptTicket}><span>{NAMES[receipt.brand]} · Pedido</span><strong>#{receipt.orderNumber}</strong>{receipt.items.map((item, index) => <p key={index}>{item.qty}× {item.name} <b>{formatPrice(item.qty * item.priceCents)}</b>{item.notes && <small className={o.lineNote}>{item.notes}</small>}</p>)}<p>Produtos: {formatPrice(receipt.subtotalCents)}{receipt.orderType === "delivery" && ` · Frete: ${formatPrice(receipt.deliveryFeeCents)}`}</p><div><span>Total</span><b>{formatPrice(receipt.totalCents)}</b></div></div>
+      <div className={s.receiptTicket}><span>{receipt.items.some(i => i.restaurant && i.restaurant !== SHORT[receipt.brand]) ? "Pedido" : `${NAMES[receipt.brand]} · Pedido`}</span><strong>#{receipt.orderNumber}</strong>{receipt.items.map((item, index) => <p key={index}>{item.qty}× {item.restaurant ? `${item.restaurant} · ` : ""}{item.name} <b>{formatPrice(item.qty * item.priceCents)}</b>{item.notes && <small className={o.lineNote}>{item.notes}</small>}</p>)}<p>Produtos: {formatPrice(receipt.subtotalCents)}{receipt.orderType === "delivery" && ` · Frete: ${formatPrice(receipt.deliveryFeeCents)}`}</p><div><span>Total</span><b>{formatPrice(receipt.totalCents)}</b></div></div>
       {!paid && receipt.status !== "cancelled" && receipt.pix && <section className={o.pix} aria-label="Pagamento Pix"><h2>Pix de {formatPrice(receipt.totalCents)}</h2>{/* Provider-owned base64 QR code, never a remote tracking image. */}<Image unoptimized src={`data:image/png;base64,${receipt.pix.encodedImage}`} alt={`QR Code Pix do pedido ${receipt.orderNumber}`} width="240" height="240" /><label htmlFor="pix-code">Pix copia e cola</label><textarea id="pix-code" readOnly value={receipt.pix.payload} rows={3} onFocus={e => e.target.select()} /><button type="button" className={s.primary} onClick={async () => { try { await navigator.clipboard.writeText(receipt.pix!.payload); setCopied(true); } catch { setError("Selecione o código acima e copie para o aplicativo do seu banco."); } }}>{copied ? "Código copiado" : "Copiar código Pix"}</button><p>Após pagar no banco, aguarde a confirmação aqui.</p></section>}
       {error && <p role="alert" className={s.formError}>{error}</p>}
       {receipt.status !== "cancelled" && receipt.status !== "delivered" && <button className={s.secondary} disabled={busy} onClick={() => void refreshPayment()}>{busy ? "Consultando…" : paid ? "Atualizar preparo" : "Verificar pagamento"}</button>}
@@ -243,12 +248,12 @@ export function OnlineMenu({ initialBrand, tableToken }: { initialBrand: Brand; 
       {(paid || receipt.status === "cancelled") && <button type="button" className={s.primary} onClick={newOrder}>Fazer outro pedido</button>}
       <p className={o.help}>Precisa de ajuda? Informe à equipe o número #{receipt.orderNumber}.</p>
     </main> : <main className={s.main}><section className={s.catalog} aria-label="Cardápio">
-      <nav className={o.brands} aria-label="Restaurantes">{(["chelas", "barbacue", "barbadog"] as Brand[]).map(b => <button type="button" key={b} aria-pressed={brand === b} disabled={locked} onClick={() => { setBrand(b); setItems([]); setCategory(null); setQuery(""); setQuote(null); setError(""); }}>{NAMES[b]}</button>)}</nav>
+      <nav className={o.brands} aria-label="Restaurantes">{(["chelas", "barbacue", "barbadog"] as Brand[]).map(b => <button type="button" key={b} aria-pressed={brand === b} disabled={locked} onClick={() => { setBrand(b); setCategory(null); setQuery(""); setError(""); }}>{NAMES[b]}{countByBrand(b) > 0 && <span className={o.brandCount}>{countByBrand(b)}</span>}</button>)}</nav>
       <div className={s.intro}><div><h1>{brand === "barbacue" ? "Seu pedido, na brasa." : brand === "barbadog" ? "Capricha no seu dog." : "Hoje tem mexicano."}</h1><p>{table ? `Escolha para a mesa ${table.number}.` : "Escolha seus favoritos e pague por aqui."}</p></div><span className={`${s.status} ${status?.open ? s.statusOpen : ""}`}><i />{loading ? "Carregando" : status?.open ? "Recebendo pedidos" : "Pedidos pausados"}</span></div>
       {loading ? <div className={s.loading} role="status"><div /><p>Preparando o cardápio…</p></div> : loadError || tableError ? <div className={s.notice} role="alert"><h2>Vamos tentar de novo</h2><p>{loadError || tableError}</p><button className={s.secondary} onClick={() => setReload(n => n + 1)}>Carregar novamente</button></div> : <>
         {!status?.open && <div className={s.closedNotice}><strong>Pedidos pausados neste momento</strong><p>{status?.reason} {status?.nextOpen}</p><button type="button" onClick={() => setReload(n => n + 1)}>Verificar disponibilidade</button></div>}
         <div className={s.menuTools}><label className={s.search}><input type="search" aria-label="Buscar no cardápio" placeholder="O que você quer comer?" value={query} onChange={e => setQuery(e.target.value)} /></label><nav className={s.categories} aria-label="Categorias"><button type="button" aria-pressed={category === null} onClick={() => setCategory(null)}>Tudo</button>{menu.map(g => <button type="button" key={g.id} aria-pressed={category === g.id} onClick={() => setCategory(g.id)}>{g.name}</button>)}</nav></div>
-        {filtered.map(g => <section className={s.category} key={g.id}><div className={s.categoryTitle}><h2>{g.name}</h2><span>{g.products.length} opções</span></div><div className={s.productGrid}>{g.products.map((product, index) => { const selected = items.find(i => i.product.id === product.id); const photo = orderingImage(brand, product); return <article key={product.id} className={`${s.product} ${selected ? s.productSelected : ""}`}><div className={s.productPhoto}><ProductImage src={photo.src} alt={product.name} sizes="(max-width: 599px) 144px, (max-width: 999px) 45vw, 320px" priority={index < 2 && g.id === menu[0]?.id} />{photo.illustrative && <span className={o.photoCaption}>Imagem ilustrativa</span>}</div><div className={s.productCopy}><h3>{product.name}</h3>{product.description && <p>{product.description}</p>}<div className={s.productBottom}><div className={s.price}><strong>{formatPrice(effectivePrice(product))}</strong></div>{selected ? quantity(product, selected.qty) : <button className={s.add} type="button" disabled={!canOrder || locked} aria-label={`Adicionar ${product.name}`} onClick={() => change(product, 1)}><span>+</span> Adicionar</button>}</div></div></article>; })}</div></section>)}
+        {filtered.map(g => <section className={s.category} key={g.id}><div className={s.categoryTitle}><h2>{g.name}</h2><span>{g.products.length} opções</span></div><div className={s.productGrid}>{g.products.map((product, index) => { const selected = items.find(i => keyOf(i.product) === keyOf(product)); const photo = orderingImage(brand, product); return <article key={product.id} className={`${s.product} ${selected ? s.productSelected : ""}`}><div className={s.productPhoto}><ProductImage src={photo.src} alt={product.name} sizes="(max-width: 599px) 144px, (max-width: 999px) 45vw, 320px" priority={index < 2 && g.id === menu[0]?.id} />{photo.illustrative && <span className={o.photoCaption}>Imagem ilustrativa</span>}</div><div className={s.productCopy}><h3>{product.name}</h3>{product.description && <p>{product.description}</p>}<div className={s.productBottom}><div className={s.price}><strong>{formatPrice(effectivePrice(product))}</strong></div>{selected ? quantity(product, selected.qty) : <button className={s.add} type="button" disabled={!canOrder || locked} aria-label={`Adicionar ${product.name}`} onClick={() => change(product, 1)}><span>+</span> Adicionar</button>}</div></div></article>; })}</div></section>)}
         {!filtered.length && <div className={s.noResults}><h2>Nenhum item encontrado</h2><p>Tente outro nome ou outra categoria.</p></div>}
       </>}
       {recovery && !receipt && <div className={s.closedNotice}><strong>Seu envio está salvo</strong><p>Consulte para recuperar o mesmo pedido.</p>{error && <p role="alert">{error}</p>}<button disabled={busy} onClick={() => void refreshPayment()}>{busy ? "Consultando…" : "Recuperar meu pedido"}</button></div>}

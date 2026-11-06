@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { NextRequest } from "next/server";
 import { brandFromHost } from "@/lib/brand-storefront";
 import { getManagedBrandStorefront } from "@/lib/managed-catalog";
+import { isSharedCategory } from "@/lib/brands";
 
 function slugify(value: string) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
@@ -42,6 +43,9 @@ export async function GET(request: NextRequest) {
         available: true,
         sortOrder: productIndex,
         ifoodUrl: item.ifoodUrl,
+        // Carrinho único: o cliente envia a marca de volta em cada item.
+        brand: brandSlug,
+        shared: isSharedCategory(name),
       })),
     })));
   }
@@ -59,7 +63,8 @@ export async function GET(request: NextRequest) {
 
   const grouped = cats.map((cat) => ({
     ...cat,
-    products: prods.filter((p) => p.categoryId === cat.id),
+    products: prods.filter((p) => p.categoryId === cat.id)
+      .map((p) => ({ ...p, brand: "barbacue" as const, shared: isSharedCategory(cat.name) })),
   }));
 
   return Response.json(grouped);

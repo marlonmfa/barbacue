@@ -4,8 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import { OrderImport } from "@/components/admin/OrderImport";
 import { AdminIcon } from "@/components/admin/AdminIcons";
 import "./order-manager.css";
+import { orderLineLabel } from "@/lib/brands";
 
-interface OrderItem { name: string; priceCents: number; qty: number; notes?: string | null; }
+interface OrderItem { name: string; restaurant?: string | null; priceCents: number; qty: number; notes?: string | null; }
 interface Order {
   id: string; customerName: string; customerPhone: string;
   brand: "barbacue" | "barbadog" | "chelas";
@@ -277,7 +278,7 @@ export default function AdminOrders() {
               <div className="bg-[#0e0b0a] rounded-xl p-4 flex flex-col gap-2">
                 {(Array.isArray(selected.items) ? selected.items : []).map((item, i) => (
                   <div key={i} className="flex justify-between">
-                    <span className="text-[#a89a8c]">{item.qty}× {item.name}{item.notes && <small className="block text-[#c8b89a]">{item.notes}</small>}</span>
+                    <span className="text-[#a89a8c]">{item.qty}× {orderLineLabel(item)}{item.notes && <small className="block text-[#c8b89a]">{item.notes}</small>}</span>
                     <span className="text-[#ed1b24]">{fmtR(item.priceCents * item.qty)}</span>
                   </div>
                 ))}

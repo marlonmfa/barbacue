@@ -1,3 +1,4 @@
+import { orderLineLabel } from "@/lib/brands";
 import { NextResponse } from "next/server";
 import { and, asc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
@@ -14,7 +15,7 @@ export const GET = withStaff(async () => {
       .where(and(eq(orders.orderType, "dine_in"), inArray(orders.status, ["pending", "confirmed", "preparing", "ready"])))
       .orderBy(asc(orders.createdAt)).limit(200),
   ]);
-  return NextResponse.json({ tables, orders: rows.map(row => ({ ...row, items: Array.isArray(row.items) ? row.items.map((item: { name?: string; qty?: number; notes?: string | null }) => ({ name: item.name ?? "Item", qty: item.qty ?? 1, notes: item.notes ?? null })) : [] })) }, { headers: { "Cache-Control": "no-store" } });
+  return NextResponse.json({ tables, orders: rows.map(row => ({ ...row, items: Array.isArray(row.items) ? row.items.map((item: { name?: string; restaurant?: string | null; qty?: number; notes?: string | null }) => ({ name: orderLineLabel({ name: item.name ?? "Item", restaurant: item.restaurant }), qty: item.qty ?? 1, notes: item.notes ?? null })) : [] })) }, { headers: { "Cache-Control": "no-store" } });
 });
 
 const serveSchema = z.object({ id: z.string().uuid(), status: z.literal("delivered") }).strict();

@@ -78,8 +78,9 @@ export function BrandStorefront({ brand }: { brand: BrandStorefrontData }) {
             <span>{brand.monogram}</span>
             <strong>{brand.name}</strong>
           </a>
-          <a className="brand-order-link" href="#cardapio">
-            Montar pedido <span aria-hidden>↓</span>
+          {/* Pedido online único: junta itens dos três restaurantes no mesmo carrinho. */}
+          <a className="brand-order-link" href={`/pedir?restaurante=${brand.slug}`}>
+            Fazer pedido <span aria-hidden>→</span>
           </a>
         </nav>
 
@@ -88,7 +89,7 @@ export function BrandStorefront({ brand }: { brand: BrandStorefrontData }) {
           <h1>{brand.tagline}</h1>
           <p className="brand-intro">{brand.description}</p>
           <div className="brand-hero-actions">
-            <a className="brand-primary-cta" href="#cardapio">Explorar cardápio <span aria-hidden>↓</span></a>
+            <a className="brand-primary-cta" href={`/pedir?restaurante=${brand.slug}`}>Fazer pedido <span aria-hidden>→</span></a>
             <div className="brand-facts" aria-label="Informações da loja">
               <span>{brand.rating}</span>
               <span>{brand.minimumOrder}</span>

@@ -1,3 +1,4 @@
+import { orderLineLabel } from "@/lib/brands";
 import { NextResponse } from "next/server";
 import { and, asc, eq, inArray, or, ne, isNull } from "drizzle-orm";
 import { z } from "zod";
@@ -6,7 +7,7 @@ import { kitchenPrintJobs, orders, restaurantTables } from "@/db/schema";
 import { withStaff } from "@/lib/admin-auth";
 const projection = { id: orders.id, brand: orders.brand, items: orders.items, notes: orders.notes, status: orders.status, createdAt: orders.createdAt, orderType: orders.orderType, channel: orders.channel, customerName: orders.customerName };
 function kitchenTicket(row: { id: string; brand: string; items: unknown; notes: string | null; status: string | null; createdAt: Date | null; orderType: string; channel: string | null; customerName: string; tableNumber?: number | null; ticket?: { tableNumber: number | null } | null; printStatus?: string | null }) {
-  const items = Array.isArray(row.items) ? row.items.map((item: { name?: string; qty?: number; notes?: string | null }) => ({ name: item.name ?? "Item", qty: item.qty ?? 1, notes: item.notes ?? null })) : [];
+  const items = Array.isArray(row.items) ? row.items.map((item: { name?: string; restaurant?: string | null; qty?: number; notes?: string | null }) => ({ name: orderLineLabel({ name: item.name ?? "Item", restaurant: item.restaurant }), qty: item.qty ?? 1, notes: item.notes ?? null })) : [];
   const { ticket, ...safe } = row;
   return { ...safe, customerName: row.orderType === "pickup" ? row.customerName : null, tableNumber: ticket?.tableNumber ?? row.tableNumber ?? null, items };
 }

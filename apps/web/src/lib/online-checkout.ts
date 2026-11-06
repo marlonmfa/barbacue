@@ -1,12 +1,11 @@
 import { Pool } from "pg";
 import { randomUUID } from "node:crypto";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { brandCatalogProducts, closedDays, deliveryQuotes, deliverySettings, kitchenPrintJobs, onlineCheckouts, orders, products, restaurantTables, storeSettings } from "@/db/schema";
+import { closedDays, deliveryQuotes, deliverySettings, kitchenPrintJobs, onlineCheckouts, orders, restaurantTables, storeSettings } from "@/db/schema";
 import { asaasConfig, asaasRequest, findAsaasPayment, getAsaasPayment, type PixCode } from "@/lib/asaas";
 import { asaasPaymentState, assertPaymentMatches, OnlinePaymentError, paymentReference, secureEquals, tokenHash, type AsaasPayment, type OnlineOrderInput } from "@/lib/online-payment";
-import { canonicalSelfServiceItems } from "@/lib/self-service";
-import { effectivePrice } from "@/lib/pricing";
+import { mainBrand, OrderItemError, orderLineLabel, resolveOrderLines } from "@/lib/order-items";
 import { computeStoreStatus } from "@/lib/store-hours";
 import { deliveryAddressKey } from "@/lib/delivery";
 import { rateLimit } from "@/lib/rate-limit";
@@ -47,13 +46,10 @@ export async function createOnlineOrder(input: OnlineOrderInput, ip: string) {
       [table] = await tx.select().from(restaurantTables).where(and(eq(restaurantTables.token, input.tableToken!), eq(restaurantTables.active, true))).for("share");
       if (!table) throw new OnlinePaymentError("Mesa inválida ou desativada. Escaneie o QR Code novamente.", 422);
     }
-    const ids = [...new Set(input.items.map(item => item.productId))];
-    const catalog = input.brand === "barbacue"
-      ? (await tx.select().from(products).where(inArray(products.id, ids)).for("share")).map(p => ({ ...p, priceCents: effectivePrice(p) }))
-      : await tx.select().from(brandCatalogProducts).where(and(eq(brandCatalogProducts.brand, input.brand), inArray(brandCatalogProducts.id, ids))).for("share");
+    // O pedido pode juntar itens dos três restaurantes; cada item traz a sua marca.
     let items;
-    try { items = canonicalSelfServiceItems(input.items, catalog); }
-    catch { throw new OnlinePaymentError("Um produto ficou indisponível. Atualize o cardápio e revise o pedido.", 422); }
+    try { items = await resolveOrderLines(tx, input.items, input.brand); }
+    catch (error) { if (error instanceof OrderItemError) throw new OnlinePaymentError("Um produto ficou indisponível. Atualize o cardápio e revise o pedido.", 422); throw error; }
     const subtotalCents = items.reduce((n, item) => n + item.priceCents * item.qty, 0);
     let quote = null;
     if (input.orderType === "delivery") {
@@ -67,7 +63,7 @@ export async function createOnlineOrder(input: OnlineOrderInput, ip: string) {
     const totalCents = subtotalCents + (quote?.feeCents ?? 0);
     if (!Number.isSafeInteger(totalCents) || totalCents < 100 || totalCents > 1_000_000) throw new OnlinePaymentError("O total deve ficar entre R$ 1 e R$ 10.000. Confira os itens.", 422);
     const orderId = randomUUID();
-    await tx.insert(orders).values({ id: orderId, brand: input.brand, customerName: input.customerName, customerPhone: input.customerPhone,
+    await tx.insert(orders).values({ id: orderId, brand: mainBrand(items, input.brand), customerName: input.customerName, customerPhone: input.customerPhone,
       orderType: input.orderType, tableId: table?.id ?? null, deliveryAddress: quote ? input.deliveryAddress : null,
       deliveryQuoteId: quote?.id ?? null, deliveryFeeCents: quote?.feeCents ?? 0, deliveryDistanceMeters: quote?.distanceMeters ?? null,
       deliveryDurationSeconds: quote?.durationSeconds ?? null, deliveryRoute: quote?.routeLinks ?? null,
@@ -148,7 +144,7 @@ export async function applyVerifiedPayment(id: string, payment: AsaasPayment) {
       const ticket: KitchenTicket = {
         version: 2, orderId: order.id, orderNumber: order.id.slice(0, 8).toUpperCase(), brand: order.brand as KitchenTicket["brand"], channel: "online", orderType: order.orderType,
         tableNumber: table?.number ?? null, tableLabel: table?.label ?? null, customerName: order.customerName, customerPhone: order.customerPhone, deliveryAddress: order.deliveryAddress,
-        items: (order.items as { name: string; qty: number; priceCents: number; notes: string | null }[]), notes: order.notes, createdAt: (order.createdAt ?? new Date()).toISOString(),
+        items: (order.items as { name: string; restaurant?: string | null; qty: number; priceCents: number; notes: string | null }[]).map(item => ({ ...item, name: orderLineLabel(item) })), notes: order.notes, createdAt: (order.createdAt ?? new Date()).toISOString(),
         payment: { method: "pix", status: "paid", label: "Pix pago" }, subtotalCents: order.subtotalCents, totalCents: order.totalCents, deliveryFeeCents: order.deliveryFeeCents, reprint: false,
       };
       await tx.insert(kitchenPrintJobs).values({ orderId: order.id, ticket }).onConflictDoNothing({ target: kitchenPrintJobs.orderId });

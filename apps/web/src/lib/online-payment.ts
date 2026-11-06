@@ -23,7 +23,7 @@ export const onlineOrderSchema = z.object({
   deliveryAddress: text(400).optional(),
   deliveryQuoteId: z.string().uuid().optional(),
   notes: text(500).optional(),
-  items: z.array(z.object({ productId: z.number().int().positive(), qty: z.number().int().min(1).max(20), notes: text(160).optional() }).strict()).min(1).max(60),
+  items: z.array(z.object({ productId: z.number().int().positive(), qty: z.number().int().min(1).max(20), notes: text(160).optional(), brand: z.enum(["barbacue", "barbadog", "chelas"]).optional() }).strict()).min(1).max(60),
 }).strict().superRefine((input, ctx) => {
   if (input.orderType === "dine_in" && !input.tableToken) ctx.addIssue({ code: "custom", message: "Escaneie o QR Code da mesa.", path: ["tableToken"] });
   if (input.orderType === "delivery" && (input.deliveryAddress?.length ?? 0) < 12) ctx.addIssue({ code: "custom", message: "Informe rua, número, bairro e cidade.", path: ["deliveryAddress"] });

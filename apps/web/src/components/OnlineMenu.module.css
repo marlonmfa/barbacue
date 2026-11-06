@@ -23,3 +23,9 @@
 .photoCaption { position: absolute; right: 8px; bottom: 8px; background: #17120fe6; color: #d3c2b1; font-size: 9px; line-height: 1.5; padding: 3px 7px; border-radius: 4px; }
 
 .pix img { background: #fff; padding: 8px; border-radius: 8px; }
+
+/* Carrinho único: etiqueta do restaurante de cada item e contagem por marca. */
+.restaurantTag { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase; vertical-align: middle; color: #fff; background: #ed1b24; }
+.restaurantTag[data-brand="chelas"] { color: #1d3227; background: #f4c93d; }
+.restaurantTag[data-brand="barbadog"] { color: #ffd34e; background: #182448; }
+.brandCount { display: inline-grid; place-items: center; min-width: 20px; height: 20px; margin-left: 8px; padding: 0 5px; border-radius: 10px; font-size: 11px; color: #17120f; background: #fff; }
