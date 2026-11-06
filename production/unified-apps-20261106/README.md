@@ -15,8 +15,9 @@ Fonte: `production/admin-access-20261103/active-inputs.tar.gz` + overlay daquela
 - Login Google/Apple (`b5f70cf`), migration 0021 aplicada manualmente em transação.
 - Ambiente PM2: `GOOGLE_*`, `APPLE_*`, `DOMAIN_CHELAS`, `DOMAIN_HOTDOG`.
 
-O checkout web (`/pedir`) continua com o carrinho misto de 31/10: em pedido misto o nome leva
-o restaurante na frente, inclusive nas bebidas. Não foi alterado nesta publicação.
+O checkout web (`/pedir`) continua com o carrinho misto de 31/10. Em pedido misto o nome leva o
+restaurante na frente, exceto bebidas e cervejas (ajuste publicado na segunda troca de 06/11;
+backup em `backup-pedir`).
 
 Backup e reversão em `/srv/barbacue-unified-20261106/backup`: `barbacue.dump` (pg_dump),
 `dump.pm2`, `live-build`, `previous-runtime`. Para reverter o código: parar `barbacue`, trocar

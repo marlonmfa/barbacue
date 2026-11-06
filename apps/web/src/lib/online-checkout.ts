@@ -2,7 +2,7 @@ import { Pool } from "pg";
 import { randomUUID } from "node:crypto";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { brandCatalogProducts, closedDays, deliveryQuotes, deliverySettings, kitchenPrintJobs, onlineCheckouts, orders, products, restaurantTables, storeSettings } from "@/db/schema";
+import { brandCatalogProducts, categories, closedDays, deliveryQuotes, deliverySettings, kitchenPrintJobs, onlineCheckouts, orders, products, restaurantTables, storeSettings } from "@/db/schema";
 import { asaasConfig, asaasRequest, findAsaasPayment, getAsaasPayment, type PixCode } from "@/lib/asaas";
 import { asaasPaymentState, assertPaymentMatches, OnlinePaymentError, paymentReference, secureEquals, tokenHash, type AsaasPayment, type OnlineOrderInput } from "@/lib/online-payment";
 import { canonicalOnlineItems } from "@/lib/unified-cart";
@@ -51,9 +51,13 @@ export async function createOnlineOrder(input: OnlineOrderInput, ip: string) {
     const catalog = [];
     for (const brand of new Set(input.items.map(item => item.brand ?? input.brand))) {
       const ids = input.items.filter(item => (item.brand ?? input.brand) === brand).map(item => item.productId);
-      const rows = brand === "barbacue"
-        ? (await tx.select().from(products).where(inArray(products.id, ids)).for("share")).map(p => ({ ...p, priceCents: effectivePrice(p) }))
-        : await tx.select().from(brandCatalogProducts).where(and(eq(brandCatalogProducts.brand, brand), inArray(brandCatalogProducts.id, ids))).for("share");
+      let rows;
+      if (brand === "barbacue") {
+        const native = await tx.select().from(products).where(inArray(products.id, ids)).for("share");
+        const categoryIds = [...new Set(native.flatMap(p => p.categoryId == null ? [] : [p.categoryId]))];
+        const names = new Map((categoryIds.length ? await tx.select({ id: categories.id, name: categories.name }).from(categories).where(inArray(categories.id, categoryIds)) : []).map(c => [c.id, c.name]));
+        rows = native.map(p => ({ ...p, priceCents: effectivePrice(p), category: p.categoryId == null ? null : names.get(p.categoryId) ?? null }));
+      } else rows = await tx.select().from(brandCatalogProducts).where(and(eq(brandCatalogProducts.brand, brand), inArray(brandCatalogProducts.id, ids))).for("share");
       catalog.push(...rows.map(p => ({ ...p, brand: brand as Brand })));
     }
     let items;

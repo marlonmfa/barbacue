@@ -1,4 +1,4 @@
-import { BRANDS, type Brand } from "./brands";
+import { BRANDS, isSharedCategory, type Brand } from "./brands";
 
 export function cartRecommendations(brands: readonly Brand[]): Brand[] {
   if (!brands.length) return [];
@@ -13,7 +13,7 @@ export function cartItemKey(brand: Brand, productId: number): string {
 export function canonicalOnlineItems(
   requested: { productId: number; brand?: Brand; qty: number; notes?: string }[],
   defaultBrand: Brand,
-  catalog: { id: number; brand: Brand; name: string; priceCents: number; available: boolean | null }[],
+  catalog: { id: number; brand: Brand; name: string; priceCents: number; available: boolean | null; category?: string | null }[],
 ) {
   const byKey = new Map(catalog.map(product => [cartItemKey(product.brand, product.id), product]));
   const seen = new Set<string>();
@@ -26,7 +26,8 @@ export function canonicalOnlineItems(
       throw new Error("Um produto ficou indisponível. Atualize o cardápio e revise o pedido.");
     }
     seen.add(key);
-    return { productId: product.id, brand, name: mixed ? `${BRANDS[brand]} · ${product.name}` : product.name,
+    return { productId: product.id, brand, // Bebidas e cervejas são comuns aos três restaurantes: ficam sem o prefixo.
+      name: mixed && !isSharedCategory(product.category) ? `${BRANDS[brand]} · ${product.name}` : product.name,
       priceCents: product.priceCents, qty: item.qty, notes: item.notes || null };
   });
 }

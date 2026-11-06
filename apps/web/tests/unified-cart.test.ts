@@ -1,3 +1,4 @@
+import { canonicalOnlineItems } from "../src/lib/unified-cart";
 // Carrinho único dos três restaurantes: marca por item, etiqueta e marca principal.
 //
 //   ../../node_modules/.bin/tsx --test tests/unified-cart.test.ts
@@ -45,4 +46,25 @@ test("marca principal ignora bebidas e usa a origem quando só há itens comuns"
   ], "barbacue", catalog);
   assert.equal(mainBrand(lines, "barbacue"), "chelas");
   assert.equal(mainBrand(canonicalOrderLines([{ productId: 30, qty: 2, brand: "chelas" }], "barbadog", catalog), "barbadog"), "barbadog");
+});
+
+test("/pedir: em pedido misto só itens próprios levam o restaurante no nome", () => {
+  const lines = canonicalOnlineItems(
+    [{ productId: 7, brand: "chelas", qty: 1 }, { productId: 7, brand: "barbadog", qty: 2 }, { productId: 9, brand: "barbacue", qty: 1 }, { productId: 10, brand: "chelas", qty: 1 }],
+    "barbacue",
+    [
+      { id: 7, brand: "chelas", name: "Burrito", priceCents: 3000, available: true, category: "Burritos" },
+      { id: 7, brand: "barbadog", name: "Hot dog", priceCents: 2500, available: true, category: "Hot dogs" },
+      { id: 9, brand: "barbacue", name: "Coca-Cola", priceCents: 800, available: true, category: "Bebidas" },
+      { id: 10, brand: "chelas", name: "Corona", priceCents: 1400, available: true, category: "Cervejas" },
+    ],
+  );
+  assert.deepEqual(lines.map(line => line.name), ["Chelas · Burrito", "Barbadog · Hot dog", "Coca-Cola", "Corona"]);
+  assert.deepEqual(lines.map(line => line.brand), ["chelas", "barbadog", "barbacue", "chelas"]);
+});
+
+test("/pedir: pedido de um só restaurante não recebe prefixo", () => {
+  const [line] = canonicalOnlineItems([{ productId: 7, qty: 1 }], "chelas",
+    [{ id: 7, brand: "chelas", name: "Burrito", priceCents: 3000, available: true, category: "Burritos" }]);
+  assert.equal(line.name, "Burrito");
 });

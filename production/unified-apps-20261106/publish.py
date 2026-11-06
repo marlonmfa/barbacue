@@ -3,11 +3,11 @@
 Never prints secrets. Only barbacue is restarted."""
 import json,os,pathlib,re,shutil,subprocess,sys,time,urllib.request,urllib.error
 root=pathlib.Path('/srv/barbacue-unified-20261106');ctx=root/'context';web=pathlib.Path('/root/barbacue/apps/web');D='.next-mobile-session-20261024'
-live=web/D;cand=ctx/'apps/web'/D;bk=root/'backup';img='node:22.23.2-bookworm-slim@sha256:48e4b67d85f87bd551df43704e24d252f56cc5f8e9718841aace50f19948f0f9'
+live=web/D;cand=ctx/'apps/web'/D;bk=root/os.environ.get('BK_NAME','backup');img='node:22.23.2-bookworm-slim@sha256:48e4b67d85f87bd551df43704e24d252f56cc5f8e9718841aace50f19948f0f9'
 run=lambda *a,**k:subprocess.run(a,check=True,text=True,capture_output=True,**k).stdout
 procs=lambda:json.loads(run('pm2','jlist'))
 me=lambda ps:[p for p in ps if p['name']=='barbacue'][0]
-social=json.loads((root/'social.private.json').read_text())
+sf=root/'social.private.json';social=json.loads(sf.read_text()) if sf.exists() else {}
 def app_env():
     e=me(procs())['pm2_env'];return {k:v for k,v in e['env'].items() if isinstance(v,str)}
 expected=json.loads((root/'before-build.json').read_text())['build']
