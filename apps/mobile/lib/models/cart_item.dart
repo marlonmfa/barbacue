@@ -68,3 +68,7 @@ String cartKey(String brand, int productId) => '$brand:$productId';
 /// Chave do carrinho para um produto do cardápio.
 String productCartKey(Product product) =>
     cartKey(product.brand ?? currentBrand.slug, product.id);
+
+/// Itens do carrinho único que o atendente virtual (só Barbacue) pode ver.
+List<CartItem> barbacueCartItems(List<CartItem> cart) =>
+    cart.where((item) => item.brand == 'barbacue').toList(growable: false);

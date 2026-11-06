@@ -69,7 +69,9 @@ void main() {
       final menu = await tester.runAsync(ApiService.fetchMenu);
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [menuProvider.overrideWith((ref) async => menu!)],
+          overrides: [
+            brandMenuProvider(brand).overrideWith((ref) async => menu!),
+          ],
           child: MaterialApp(
             theme: captureTheme(),
             home: const BrandMenuScreen(),

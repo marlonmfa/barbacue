@@ -158,7 +158,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
       final res = await ApiService.sendChat(
         messages: outbound,
-        cart: currentCart,
+        // O atendente só conhece o cardápio do Barbacue: um ID de outro
+        // restaurante coincidiria com um produto diferente no servidor.
+        cart: barbacueCartItems(currentCart),
         checkout: checkout,
         tableToken: tableToken,
       );
