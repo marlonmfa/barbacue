@@ -42,6 +42,9 @@ def checks(port):
     base={'customerName':'Teste','customerPhone':'47999990000','deliveryAddress':'Rua Teste 123 Centro','paymentMethod':'cash'}
     body=dict(base,items=[{'productId':ids['chelas'],'qty':1,'brand':'chelas'},{'productId':99999999,'qty':1,'brand':'barbadog'}])
     s,b,_=req('/api/orders',port,'barbacue.cog.ia.br','POST',json.dumps(body).encode());assert s==422 and b'99999999' in b,(s,b[:120])
+    # Checkout web, também sem gravar: o item inexistente desfaz a transação (ou a loja fechada recusa antes).
+    co={'requestId':__import__('uuid').uuid4().__str__(),'accessToken':'a'*64,'brand':'barbacue','customerName':'Teste','customerPhone':'47999990000','cpf':'52998224725','orderType':'pickup','items':[{'productId':ids['barbacue'],'brand':'barbacue','qty':1},{'productId':99999999,'brand':'barbadog','qty':1}]}
+    s,b,_=req('/api/checkout',port,'barbacue.cog.ia.br','POST',json.dumps(co).encode());assert s==422,(s,b[:160]);print('checkout-probe',b[:90].decode(errors='ignore'))
     return ids
 def prepare():
     assert (live/'BUILD_ID').read_text().strip()==expected,'Active build changed'
