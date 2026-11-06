@@ -1,6 +1,9 @@
 "use client";
 
+import { useRefreshOnResume } from "@/lib/use-refresh-on-resume";
+import { BrandLogo } from "@/components/BrandLogo";
 import { useCallback, useEffect, useState } from "react";
+import { isBrand } from "@/lib/brands";
 import { OrderImport } from "@/components/admin/OrderImport";
 import { AdminIcon } from "@/components/admin/AdminIcons";
 import "./order-manager.css";
@@ -42,6 +45,10 @@ const channelLabel = (channel: string | null) => CHANNELS[channel ?? "other"] ??
 
 const STATUS_MAP = Object.fromEntries(STATUSES.map((s) => [s.key, s]));
 const BRAND_LABEL = { barbacue: "Barbacue", barbadog: "Barbadog", chelas: "Chelas" } as const;
+function OrderBrand({ brand }: { brand: Order["brand"] }) {
+  const identity = isBrand(brand) ? brand : "barbacue";
+  return <span style={{ display: "inline-flex", alignItems: "center", gap: 6, verticalAlign: "middle" }}><BrandLogo brand={identity} alt="" width={28} height={28} style={{ borderRadius: 6, objectFit: "contain", flexShrink: 0 }} />{BRAND_LABEL[identity]}</span>;
+}
 const destination = (order: Order) => order.tableNumber ? `Mesa ${order.tableNumber}` : order.orderType === "pickup" ? "Retirada no balcão" : order.orderType === "dine_in" ? "No local" : "Entrega";
 
 function fmtR(cents: number) {
@@ -56,7 +63,7 @@ export default function AdminOrders() {
   const [filterChannel, setFilterChannel] = useState("");
   const [view, setView] = useState("board");
   const [search, setSearch] = useState("");
-  const [drivers, setDrivers] = useState<{ id: number; name: string }[]>([]);
+  const [drivers, setDrivers] = useState<{ id: number; name: string; online: boolean; activeDeliveries: number }[]>([]);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -78,6 +85,7 @@ export default function AdminOrders() {
     return () => { controller.abort(); window.clearTimeout(initial); window.clearInterval(timer); };
   }, [load]);
 
+  useRefreshOnResume(load, !!busy);
   const selectedId = selected?.id;
   useEffect(() => {
     if (!selectedId) return;
@@ -135,6 +143,12 @@ export default function AdminOrders() {
       </div>
       {error && <p role="alert" className="mb-5 border border-red-900/60 bg-red-950/40 text-red-200 p-4 rounded-xl text-sm">{error}</p>}
 
+      <details className="order-display-options"><summary>Opções de exibição e atendimento</summary><div className="order-display-options-body">
+      <section className="driver-roster" aria-label="Equipe de entrega">
+        <div><h2>Entregadores online</h2><p>{drivers.filter(driver => driver.online).length} disponíveis · Abra um pedido para atribuir a entrega.</p></div>
+        <ul>{drivers.filter(driver => driver.online).map(driver => <li key={driver.id}><strong>{driver.name}</strong><span>{driver.activeDeliveries} em andamento</span></li>)}</ul>
+        {!loading && !drivers.some(driver => driver.online) && <p>Nenhum entregador online. Peça à equipe para entrar em Minhas entregas e selecionar Ficar online.</p>}
+      </section>
       <details className="order-import"><summary>Importar pedido</summary><OrderImport onImported={() => void load()} /></details>
       <div className="order-controls">
         <div role="group" aria-label="Visualização dos pedidos"><button aria-pressed={view === "board"} onClick={() => setView("board")}>Quadros</button><button aria-pressed={view === "list"} onClick={() => setView("list")}>Lista</button></div>
@@ -159,6 +173,8 @@ export default function AdminOrders() {
         })}
       </div>
 
+      </div></details>
+
       {loading ? (
         <p className="text-[#a89a8c] text-sm">Carregando...</p>
       ) : view === "board" ? (
@@ -170,7 +186,7 @@ export default function AdminOrders() {
             {entries.map(order => <button className="order-card" key={order.id} onClick={() => setSelected(order)} aria-label={`Ver pedido ${order.id.slice(0, 8)}`}>
               <div><strong>#{order.id.slice(0, 8).toUpperCase()}</strong><time>{order.createdAt ? new Date(order.createdAt).toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" }) : "—"}</time></div>
               <h3>{order.customerName}</h3><p>{destination(order)} · {channelLabel(order.channel)}</p>
-              <p>{BRAND_LABEL[order.brand] ?? "Barbacue"}</p>
+              <p><OrderBrand brand={order.brand} /></p>
               <div><span>{(Array.isArray(order.items) ? order.items : []).reduce((sum, item) => sum + item.qty, 0)} itens</span><strong>{fmtR(order.totalCents)}</strong></div>
               <p className="order-card-status">{STATUS_MAP[order.status]?.label ?? order.status}{order.deliveryStatus === "out_for_delivery" ? " · Em entrega" : ""}</p>
               {order.channel === "online" && order.paymentStatus !== "paid" && <p>Aguardando pagamento</p>}
@@ -204,7 +220,7 @@ export default function AdminOrders() {
                           <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-emerald-300">TESTE</span>
                         )}
                       </p>
-                      <p className="text-[#a89a8c] text-xs">{BRAND_LABEL[o.brand] ?? "Barbacue"} · {destination(o)}{o.customerPhone ? ` · ${o.customerPhone}` : ""}</p>
+                      <p className="text-[#a89a8c] text-xs"><OrderBrand brand={o.brand} /> · {destination(o)}{o.customerPhone ? ` · ${o.customerPhone}` : ""}</p>
                       {o.channel === "online" && <p className="text-[#c8b89a] text-xs mt-1">Pix · {o.paymentStatus === "paid" ? "Pago pelo Asaas" : o.paymentStatus === "failed" ? "Pagamento estornado ou falhou — conferir" : "Aguardando confirmação do pagamento"}</p>}
                       {(o.channel === "kiosk" || o.channel === "table_qr") && <p className="text-[#c8b89a] text-xs mt-1">{o.channel === "kiosk" ? "Totem" : "QR na mesa"} · {o.paymentStatus === "paid" ? "Pago" : "Pagamento no local pendente"}</p>}
                       {o.orderType === "delivery" && <p className="text-[#c8b89a] text-xs mt-1">{o.deliveryDriverName ?? "Sem entregador"}{o.deliveryStatus === "out_for_delivery" ? " · Em entrega" : o.deliveryStatus === "delivered" ? " · Entrega concluída" : ""}</p>}
@@ -259,7 +275,7 @@ export default function AdminOrders() {
               <div>
                 <p className="hidden print:block text-xs font-bold uppercase tracking-widest">Grupo Barbacue</p>
                 <h2 className="text-lg font-bold text-white">Pedido #{selected.id.slice(0, 8).toUpperCase()}</h2>
-                <p className="text-xs text-[#a89a8c]">{BRAND_LABEL[selected.brand] ?? "Barbacue"} · {channelLabel(selected.channel)}</p>
+                <p className="text-xs text-[#a89a8c]"><OrderBrand brand={selected.brand} /> · {channelLabel(selected.channel)}</p>
                 {selected.channel === "test" && <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">Pedido de teste</p>}
               </div>
               <button onClick={() => setSelected(null)} className="no-print min-w-12 min-h-12 text-[#a89a8c] hover:text-white text-2xl leading-none" aria-label="Fechar">×</button>
@@ -308,9 +324,9 @@ export default function AdminOrders() {
                 <select id="assigned-driver" className="w-full min-h-12 bg-[#241d18] border border-[#352b24] text-white rounded-lg px-3 text-sm" value={selected.deliveryDriverId ?? ""} disabled={busy !== null || selected.deliveryStatus === "out_for_delivery" || selected.deliveryStatus === "delivered" || selected.status === "delivered" || selected.status === "cancelled"} onChange={event => void updateOrder(selected.id, { deliveryDriverId: event.target.value ? Number(event.target.value) : null })}>
                   <option value="">Sem entregador</option>
                   {selected.deliveryDriverId && !drivers.some(driver => driver.id === selected.deliveryDriverId) && <option value={selected.deliveryDriverId}>{selected.deliveryDriverName ?? "Entregador indisponível"} (indisponível)</option>}
-                  {drivers.map(driver => <option key={driver.id} value={driver.id}>{driver.name}</option>)}
+                  {drivers.map(driver => <option key={driver.id} value={driver.id} disabled={!driver.online}>{driver.name} · {driver.online ? `Online · ${driver.activeDeliveries} em andamento` : "Offline"}</option>)}
                 </select>
-                <p className="text-[#a89a8c] text-xs leading-relaxed mt-2">{selected.deliveryStatus === "out_for_delivery" ? "O entregador já registrou a saída." : selected.deliveryStatus === "delivered" ? "Entrega concluída." : "O pedido aparece somente para o entregador escolhido. Ele registra a saída quando estiver pronto."}</p>
+                <p className="text-[#a89a8c] text-xs leading-relaxed mt-2">{selected.deliveryStatus === "out_for_delivery" ? "O entregador já registrou a saída." : selected.deliveryStatus === "delivered" ? "Entrega concluída." : "Escolha um entregador online. O pedido aparece somente na conta escolhida; a saída é registrada quando estiver pronto."}</p>
                 {!!selected.deliveryDistanceMeters && <p className="text-[#c8b89a] text-xs mt-3">Trajeto: {(selected.deliveryDistanceMeters / 1000).toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km{selected.deliveryDurationSeconds ? ` · ${Math.ceil(selected.deliveryDurationSeconds / 60)} min` : ""}</p>}
                 {selected.navigationLinks && <div className="flex flex-wrap gap-2 mt-3">{([['Google Maps', selected.navigationLinks.google], ['Apple Maps', selected.navigationLinks.apple], ['OpenStreetMap', selected.navigationLinks.osm]] as const).filter(([, url]) => url).map(([label, url]) => <a key={label} className="inline-flex min-h-12 items-center rounded-lg border border-[#352b24] px-3 text-xs text-[#c8b89a]" href={url!} target="_blank" rel="noopener noreferrer">{label}</a>)}</div>}
               </section>}

@@ -4,7 +4,7 @@ import { OnlineMenu } from "@/components/OnlineMenu";
 import { brandFromHost } from "@/lib/brand-storefront";
 import { getTableSession } from "@/lib/table-session";
 export const dynamic = "force-dynamic";
-export const viewport: Viewport = { themeColor: "#17120f", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#fbf7f2", colorScheme: "light" };
 export default async function OrderPage({ searchParams }: { searchParams: Promise<{ mesa?: string | string[]; restaurante?: string }> }) {
   const [query, requestHeaders, session] = await Promise.all([searchParams, headers(), getTableSession()]);
   const requestedBrand = ["barbacue", "barbadog", "chelas"].includes(query.restaurante ?? "") ? query.restaurante as "barbacue" | "barbadog" | "chelas" : null;

@@ -1,7 +1,6 @@
 import { isBrand } from "@/lib/brands";
 import { NextRequest } from "next/server";
 import OpenAI from "openai";
-import { resolveAI } from "@/lib/ai-settings";
 import { db } from "@/db";
 import {
   categories,
@@ -23,6 +22,7 @@ import { ensureBrandCatalogs } from "@/lib/managed-catalog";
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
+const MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
 
 interface AgentItem {
   productId: number;
@@ -53,7 +53,7 @@ const cartSummary = (cart: AgentItem[]) => {
 };
 
 export async function POST(req: NextRequest) {
-  const { apiKey, model, provider } = await resolveAI();
+  const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_KEY;
   if (!apiKey) {
     return Response.json({ error: "AI indisponível (sem chave configurada)." }, { status: 503 });
   }
@@ -232,7 +232,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const openai = new OpenAI({ apiKey, ...(provider === "anthropic" ? { baseURL: "https://api.anthropic.com/v1/" } : {}), timeout: 25000, maxRetries: 0 });
+  const openai = new OpenAI({ apiKey });
 
   const system = `Você é o atendente virtual do restaurante "${brandName}". Atende em português brasileiro, de forma calorosa, breve e objetiva — como um atendente de WhatsApp.
 
@@ -475,11 +475,10 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
   try {
     for (let step = 0; step < 6; step++) {
       const completion = await openai.chat.completions.create({
-        model,
+        model: MODEL,
         messages,
         tools,
-        ...(provider === "openai" ? { temperature: 0.3 } : {}),
-        max_tokens: 4096,
+        temperature: 0.3,
       });
       const msg = completion.choices[0].message;
       messages.push(msg);
@@ -502,7 +501,7 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
       }
     }
   } catch (err) {
-    console.error("chat agent error", { provider, kind: err instanceof Error ? err.name : "unknown" });
+    console.error("chat agent error", err);
     return Response.json(
       { error: "Não consegui processar agora. Tente novamente em instantes." },
       { status: 502 },

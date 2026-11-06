@@ -1,3 +1,4 @@
+import { oidcConfig, requestOrigin, revokeOidc, GRANT_COOKIE, FLOW_COOKIE, CHECK_COOKIE } from "@/lib/cog-oidc";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
@@ -6,6 +7,7 @@ import { customerAccounts } from "@/db/schema";
 import { hashPassword, verifyPassword } from "@/lib/staff-auth";
 import { clearMemberCookie, getMember, setMemberCookie } from "@/lib/member-auth";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { endCogSession } from '@/lib/cog-sso';
 const schema = z.object({ mode: z.enum(["login", "register"]), name: z.string().trim().min(2).max(100).optional(), email: z.string().trim().email().max(254).transform(s => s.toLowerCase()), password: z.string().min(8).max(128) });
 export async function GET() { return NextResponse.json({ member: await getMember() }, { headers: { "Cache-Control": "no-store" } }); }
 export async function POST(req: NextRequest) {
@@ -28,4 +30,13 @@ export async function POST(req: NextRequest) {
   }
   const response = NextResponse.json({ ok: true }); setMemberCookie(response, user.id); return response;
 }
-export async function DELETE() { const response = NextResponse.json({ ok: true }); clearMemberCookie(response); return response; }
+export async function DELETE(req:NextRequest) {
+  const central=req.cookies.get('cogia_sessao')?.value;
+  try{await revokeOidc(oidcConfig(requestOrigin(req.headers)),req.cookies.get(GRANT_COOKIE)?.value);await endCogSession(central);}catch{return NextResponse.json({error:'Não foi possível encerrar a sessão Cog. Tente novamente.'},{status:503});}
+  const response = NextResponse.json({ ok: true });
+  if(central && process.env.COGIA_SSO_IDENTITY_KEY)response.cookies.set('cogia_sessao','',{domain:'cog.ia.br',path:'/',maxAge:0,httpOnly:true,secure:true,sameSite:'lax'});
+  response.cookies.set(GRANT_COOKIE,'',{path:'/',maxAge:0});
+  response.cookies.set(FLOW_COOKIE,'',{path:'/',maxAge:0});
+  response.cookies.set(CHECK_COOKIE,'1',{path:'/',maxAge:300,httpOnly:true,secure:requestOrigin(req.headers).startsWith('https:'),sameSite:'lax'});
+  clearMemberCookie(response);return response;
+}

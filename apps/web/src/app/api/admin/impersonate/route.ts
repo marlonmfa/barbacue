@@ -1,3 +1,4 @@
+import { technicalStaff } from "@/lib/cog-staff";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { customers, staffUsers } from "@/db/schema";
@@ -14,9 +15,9 @@ export const POST = withRole("admin", async (req: NextRequest, _ctx, session) =>
   if (!limit.ok) return NextResponse.json({ error: "Muitas tentativas. Tente novamente em alguns minutos." }, { status: 429 });
   const body = await req.json().catch(() => ({}));
   const { customerId, currentPassword } = (body ?? {}) as { customerId?: number; currentPassword?: string };
-  const [user] = await db.select({ passwordHash: staffUsers.passwordHash, active: staffUsers.active }).from(staffUsers).where(eq(staffUsers.id, session.userId));
+  const [user] = await db.select({ passwordHash: staffUsers.passwordHash, active: staffUsers.active, role: staffUsers.role }).from(staffUsers).where(eq(staffUsers.id, session.userId));
 
-  if (!user?.active || typeof currentPassword !== "string" || currentPassword.length > 256 || !(await verifyPassword(currentPassword, user.passwordHash))) {
+  if (!user?.active || user.role!=="admin" || technicalStaff(user) || typeof currentPassword !== "string" || currentPassword.length > 256 || !(await verifyPassword(currentPassword, user.passwordHash))) {
     return NextResponse.json({ error: "Senha da sua conta incorreta" }, { status: 401 });
   }
 

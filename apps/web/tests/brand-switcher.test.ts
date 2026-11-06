@@ -16,8 +16,8 @@ test("order is always Chelas, Barbacue, Barbadog; only the domain brand is featu
 test("every brand has its own logo, icon and colors", () => {
   for (const slug of Object.keys(BRANDS) as (keyof typeof BRANDS)[]) {
     const t = BRAND_THEME[slug];
-    assert.match(t.logo, new RegExp(`/brand/icons/${slug}-`));
-    assert.match(t.icon, new RegExp(`/brand/icons/${slug}-`));
+    assert.match(t.logo, new RegExp(`/brand/logos-20261030/${slug}\\.png`));
+    assert.match(t.icon, new RegExp(`/brand/logos-20261030/${slug}\\.png`));
     assert.match(t.background, /^#[0-9a-f]{6}$/i);
   }
 });

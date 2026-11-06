@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandLogo } from "@/components/BrandLogo";
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { AdminIcon } from "@/components/admin/AdminIcons";
@@ -423,7 +424,7 @@ export function TestOrderChat() {
                   disabled={busy || automatic}
                   className={`${styles.brandButton} ${brand === item.id ? styles.brandButtonActive : ""}`}
                 >
-                  <span>{item.short}</span>
+                  <BrandLogo brand={item.id} alt="" width={27} height={27}/>
                   {item.name}
                 </button>
               ))}
@@ -485,7 +486,7 @@ export function TestOrderChat() {
         <section className={styles.phoneStage}>
           <div className={styles.phone}>
             <div className={styles.chatHeader}>
-              <div className={styles.agentAvatar}>{brandInfo.short}</div>
+              <BrandLogo brand={brand} alt={`Logo ${brandInfo.name}`} width={42} height={42}/>
               <div className={styles.agentIdentity}>
                 <strong>Atendimento {brandInfo.name}</strong>
                 <span><i /> Agente conectado pelo número central</span>

@@ -35,7 +35,19 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    ".next-individual-login-20261024/types/**/*.ts",
+    ".next-individual-login-20261024/dev/types/**/*.ts",
+    ".next-online-20261024/types/**/*.ts",
+    ".next-online-20261024/dev/types/**/*.ts",
+    ".next-online-preview/types/**/*.ts",
+    ".next-online-preview/dev/types/**/*.ts",
+    ".next-dark-preview/types/**/*.ts",
+    ".next-dark-preview/dev/types/**/*.ts",
+    ".next-dark-images-20261024/types/**/*.ts",
+    ".next-dark-images-20261024/dev/types/**/*.ts",
+    ".next-mobile-session-20261024/types/**/*.ts",
+    ".next-mobile-session-20261024/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

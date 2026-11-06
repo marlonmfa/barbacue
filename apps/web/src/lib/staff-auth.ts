@@ -1,3 +1,4 @@
+import { technicalStaff } from "./cog-staff";
 import { scrypt, randomBytes, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import { db } from "@/db";
@@ -36,11 +37,15 @@ export async function authenticateStaff(
   username: string,
   password: string,
 ): Promise<AdminSession | null> {
-  const [user] = await db
-    .select()
-    .from(staffUsers)
-    .where(eq(staffUsers.username, username.trim().toLowerCase()));
-  if (!user || !user.active) return null;
+  const identifier = username.trim().toLowerCase();
+  // Short names identify the corporate e-mail account, including when an old
+  // separate account already has the same short username.
+  const corporate = identifier.includes("@") ? identifier : `${identifier}@barbacue.cog.ia.br`;
+  let [user] = await db.select().from(staffUsers).where(eq(staffUsers.username, corporate));
+  if (!user && !identifier.includes("@")) {
+    [user] = await db.select().from(staffUsers).where(eq(staffUsers.username, identifier));
+  }
+  if (!user || !user.active || technicalStaff(user)) return null;
   if (!(await verifyPassword(password, user.passwordHash))) return null;
   return { userId: user.id, role: user.role, mustChangePassword: user.mustChangePassword };
 }

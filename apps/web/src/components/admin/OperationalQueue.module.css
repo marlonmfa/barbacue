@@ -87,3 +87,8 @@
   .empty { padding: 34px 20px; }
   .tableHeading, .floorOrder { padding-right: 17px; padding-left: 17px; }
 }
+.availability { display:flex; align-items:center; justify-content:space-between; gap:22px; padding:20px; margin:0 0 24px; border:1px solid #455653; border-radius:10px; background:#172323; }
+.availability strong { color:#f3f1eb; font-size:16px; }
+.availability p { color:#b7c5c0; font-size:13px; max-width:65ch; margin-top:8px; line-height:1.6; }
+.availability [role="alert"] { color:#ffb4ad; }
+@media(max-width:600px) { .availability { align-items:stretch; flex-direction:column; } }

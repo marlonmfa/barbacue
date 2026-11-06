@@ -139,16 +139,14 @@ export const staffUsers = pgTable("staff_users", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
-// Verified recovery address; codes are stored only as keyed hashes.
-export const staffAlternateEmails = pgTable("staff_alternate_emails", {
+// Availability expires when the collaborator stops sending foreground heartbeats.
+export const staffPresence = pgTable("staff_presence", {
   userId: integer("user_id").primaryKey().references(() => staffUsers.id, { onDelete: "cascade" }),
-  email: text("email").notNull(),
-  codeHash: text("code_hash"),
-  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
-  sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(),
-  attempts: integer("attempts").notNull().default(0),
-  verifiedAt: timestamp("verified_at", { withTimezone: true }),
+  available: boolean("available").notNull().default(false),
+  lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+
 
 // ─── Employees (HR records, separate from system logins) ─────────────────────
 // An employee does not automatically receive access to the admin. `staffUsers`
@@ -371,30 +369,11 @@ export const kitchenPrintJobs = pgTable("kitchen_print_jobs", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   printedAt: timestamp("printed_at", { withTimezone: true }),
-  destination: jsonb("destination").$type<import("@/lib/kitchen-print").PrintDestination>(),
 }, table => [index("kitchen_print_jobs_ready_idx").on(table.status, table.nextAttemptAt)]);
 
 export const kitchenPrintAgentState = pgTable("kitchen_print_agent_state", {
   id: integer("id").primaryKey().default(1),
   lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
-});
-
-// Inventory is reported by an authenticated local desktop, never discovered
-// from the web server. Printer names are OS device names, not network URLs.
-export const kitchenPrintDevices = pgTable("kitchen_print_devices", {
-  id: uuid("id").primaryKey(),
-  name: text("name").notNull(),
-  printers: jsonb("printers").$type<{ name: string; displayName: string }[]>().notNull(),
-  lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
-});
-
-// No row preserves the existing default-printer behavior. A row with no
-// device deliberately holds that restaurant's orders in the queue.
-export const kitchenPrinterRoutes = pgTable("kitchen_printer_routes", {
-  brand: text("brand").$type<import("@/lib/brands").Brand>().primaryKey(),
-  deviceId: uuid("device_id").references(() => kitchenPrintDevices.id),
-  printerName: text("printer_name"),
-  paper: integer("paper").notNull().default(80),
 });
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -513,9 +492,19 @@ export const onlineCheckouts = pgTable("online_checkouts", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-// Private server-only AI settings; never part of store settings responses.
-export const aiProviderSettings = pgTable("ai_provider_settings", {
-  id: integer("id").primaryKey(),
-  encryptedValue: text("encrypted_value").notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+// Tabelas da migration 0017, usadas pelo painel de impressoras da main.
+export const kitchenPrintDevices = pgTable("kitchen_print_devices", {
+  id: uuid("id").primaryKey(),
+  name: text("name").notNull(),
+  printers: jsonb("printers").$type<{ name: string; displayName: string }[]>().notNull(),
+  lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// No row preserves the existing default-printer behavior. A row with no
+// device deliberately holds that restaurant's orders in the queue.
+export const kitchenPrinterRoutes = pgTable("kitchen_printer_routes", {
+  brand: text("brand").$type<import("@/lib/brands").Brand>().primaryKey(),
+  deviceId: uuid("device_id").references(() => kitchenPrintDevices.id),
+  printerName: text("printer_name"),
+  paper: integer("paper").notNull().default(80),
 });

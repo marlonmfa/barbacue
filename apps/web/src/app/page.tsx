@@ -46,12 +46,12 @@ async function getMenu() {
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ mesa?: string; loja?: string }>;
+  searchParams: Promise<{ mesa?: string; loja?: string; restaurante?: string }>;
 }) {
   const [staff, query] = await Promise.all([requireStaff().catch(() => null), searchParams]);
   if (staff && query.loja !== "1") redirect(landingPath(staff));
   const requestHeaders = await headers();
-  const brandSlug = brandFromHost(
+  const brandSlug = query.restaurante === "barbacue" ? null : query.restaurante === "chelas" || query.restaurante === "barbadog" ? query.restaurante : brandFromHost(
     requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host")
   );
 

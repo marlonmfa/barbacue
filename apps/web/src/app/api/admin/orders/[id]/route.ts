@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/db";
-import { orders, staffUsers } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
+import { orders, staffUsers, staffPresence } from "@/db/schema";
+import { and, eq, sql } from "drizzle-orm";
 import { withStaff } from "@/lib/admin-auth";
+import { PRESENCE_TTL_MS } from "@/lib/staff-presence";
 import { can } from "@/lib/permissions";
 
 const PatchSchema = z.object({
@@ -34,6 +35,10 @@ export const PATCH = withStaff(async (req: NextRequest, { params }: Params) => {
           const [driver] = await tx.select({ role: staffUsers.role, permissions: staffUsers.permissions }).from(staffUsers)
             .where(and(eq(staffUsers.id, deliveryDriverId), eq(staffUsers.role, "driver"), eq(staffUsers.active, true))).for("share");
           if (!driver || !can(driver, "deliveries")) throw new OrderUpdateError("Escolha um entregador ativo com acesso às entregas.", 422);
+          // Lock availability as well as the order so an offline change cannot race assignment.
+          const [presence] = await tx.select({ userId: staffPresence.userId }).from(staffPresence)
+            .where(and(eq(staffPresence.userId, deliveryDriverId), eq(staffPresence.available, true), sql`${staffPresence.lastSeenAt} > clock_timestamp() - ${PRESENCE_TTL_MS} * interval '1 millisecond'`)).for("share");
+          if (!presence) throw new OrderUpdateError("Este entregador está offline. Atualize e escolha alguém online.", 409);
         }
         const [saved] = await tx.update(orders).set({ deliveryDriverId, deliveryStatus: deliveryDriverId === null ? null : "assigned", dispatchedAt: null, deliveredAt: null })
           .where(eq(orders.id, id)).returning({ id: orders.id, status: orders.status, deliveryDriverId: orders.deliveryDriverId, deliveryStatus: orders.deliveryStatus });

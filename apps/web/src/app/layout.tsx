@@ -1,8 +1,14 @@
+import { SessionWatch } from "@/components/SessionWatch";
+import { actorView } from "@/lib/session-view";
+import { requestOrigin } from "@/lib/cog-oidc";
+import { getStaffSession } from "@/lib/admin-auth";
+import { getMember } from "@/lib/member-auth";
 import { brandIcons } from "@/lib/brand-icons";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { Geist, Anton } from "next/font/google";
 import "./globals.css";
+import { DiagnosticsRuntime } from "@/components/DiagnosticsRuntime";
 import { CartProvider } from "@/components/CartProvider";
 import { brandFromHost, getBrandStorefront } from "@/lib/brand-storefront";
 
@@ -47,13 +53,15 @@ export const viewport = {
   themeColor: "#fbf7f2",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const [staff, member] = await Promise.all([getStaffSession(), getMember()]);
+  const view = await actorView(requestOrigin(await headers()), staff, member);
   return (
     <html lang="pt-BR" className={`${geist.variable} ${anton.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-[var(--bg)] text-[var(--text)]">
-        <CartProvider>{children}</CartProvider>
+        <DiagnosticsRuntime /><CartProvider><SessionWatch view={view} />{children}</CartProvider>
       </body>
     </html>
   );

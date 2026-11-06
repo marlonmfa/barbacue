@@ -1,8 +1,11 @@
+import type { Brand } from "./brands";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export interface CartItem {
   productId: number;
+  brand?: Brand;
+  notes?: string;
   name: string;
   priceCents: number;
   imageUrl: string | null;
@@ -12,8 +15,8 @@ export interface CartItem {
 interface CartStore {
   items: CartItem[];
   add: (item: Omit<CartItem, "qty">) => void;
-  remove: (productId: number) => void;
-  setQty: (productId: number, qty: number) => void;
+  remove: (productId: number, brand?: Brand) => void;
+  setQty: (productId: number, qty: number, brand?: Brand) => void;
   /** Replace the whole cart — used by the AI agent to sync its resulting cart. */
   replace: (items: CartItem[]) => void;
   clear: () => void;
@@ -26,26 +29,26 @@ export const useCart = create<CartStore>()(
     (set, get) => ({
       items: [],
       add: (item) => {
-        const existing = get().items.find((i) => i.productId === item.productId);
+        const existing = get().items.find((i) => i.productId === item.productId && (i.brand ?? "barbacue") === (item.brand ?? "barbacue"));
         if (existing) {
           set((s) => ({
             items: s.items.map((i) =>
-              i.productId === item.productId ? { ...i, qty: i.qty + 1 } : i
+              i.productId === item.productId && (i.brand ?? "barbacue") === (item.brand ?? "barbacue") ? { ...i, qty: i.qty + 1 } : i
             ),
           }));
         } else {
           set((s) => ({ items: [...s.items, { ...item, qty: 1 }] }));
         }
       },
-      remove: (productId) =>
-        set((s) => ({ items: s.items.filter((i) => i.productId !== productId) })),
-      setQty: (productId, qty) => {
+      remove: (productId, brand = "barbacue") =>
+        set((s) => ({ items: s.items.filter((i) => (i.productId !== productId || (i.brand ?? "barbacue") !== brand)) })),
+      setQty: (productId, qty, brand = "barbacue") => {
         if (qty <= 0) {
-          get().remove(productId);
+          get().remove(productId, brand);
         } else {
           set((s) => ({
             items: s.items.map((i) =>
-              i.productId === productId ? { ...i, qty } : i
+              i.productId === productId && (i.brand ?? "barbacue") === brand ? { ...i, qty } : i
             ),
           }));
         }

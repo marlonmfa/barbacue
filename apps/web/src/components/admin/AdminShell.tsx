@@ -27,7 +27,7 @@ const groups: { label: string; items: NavItem[] }[] = [
       { href: "/admin/ifood", label: "Gestor iFood", icon: "orders" },
       { href: "/admin/waiter", label: "Salão", icon: "tables" },
       { href: "/admin/delivery", label: "Minhas entregas", icon: "delivery" },
-      { href: "/whatsapp", label: "WhatsApp", icon: "whatsapp", adminOnly: true },
+      { href: "/whatsapp", label: "WhatsApp", icon: "whatsapp" },
       { href: "/teste_pedido", label: "Testar pedido", icon: "beaker" },
     ],
   },
@@ -46,7 +46,7 @@ const groups: { label: string; items: NavItem[] }[] = [
       { href: "/admin/tables", label: "Mesas", icon: "tables" },
       { href: "/admin/customers", label: "Clientes", icon: "customers" },
       { href: "/admin/team", label: "Funcionários", icon: "team", adminOnly: true },
-      { href: "/admin/staff", label: "Usuários e acessos", icon: "user", adminOnly: true },
+      { href: "/admin/staff", label: "Usuários e acessos", icon: "user" },
       { href: "/admin/settings", label: "Loja e horários", icon: "calendar" },
       { href: "/admin/delivery-settings", label: "Entrega e frete", icon: "route" },
     ],
@@ -54,6 +54,7 @@ const groups: { label: string; items: NavItem[] }[] = [
   {
     label: "Sistema",
     items: [
+      { href: "/admin/diagnostics", label: "Diagnóstico e erros", icon: "system" },
       { href: "/admin/beta", label: "Beta do app", icon: "beaker" },
       { href: "/admin/system", label: "Integrações", icon: "system", adminOnly: true },
       { href: "/admin/downloads", label: "Programa Windows", icon: "printer", adminOnly: true },

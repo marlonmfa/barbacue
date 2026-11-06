@@ -1,4 +1,5 @@
 "use client";
+import { useRefreshOnResume } from "@/lib/use-refresh-on-resume";
 import Link from "next/link";
 import {
   useCallback,
@@ -151,6 +152,7 @@ export default function ErpPage() {
       );
     setData(body);
   }, []);
+  useRefreshOnResume(load, busy || !!form);
   useEffect(() => {
     load().catch((e) => setError(e.message));
   }, [load]);

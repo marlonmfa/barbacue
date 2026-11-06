@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { DriverAvailability } from "@/components/admin/DriverAvailability";
 import { AdminIcon } from "@/components/admin/AdminIcons";
 import styles from "@/components/admin/OperationalQueue.module.css";
 
@@ -56,6 +57,7 @@ export default function DeliveryPage() {
 
   return <div className={`${styles.page} ${styles.driverPage}`}>
     <header className={styles.heading}><div><h1>Minhas entregas</h1><p>Confira a retirada, abra a rota e registre a entrega.</p></div><button className={styles.secondary} onClick={() => void load()}><AdminIcon name="clock" /> Atualizar</button></header>
+    <DriverAvailability />
     <div className={styles.filters} aria-label="Filtrar minhas entregas"><button aria-pressed={!completed} onClick={() => setCompleted(false)}>Em andamento <span>{active.length}</span></button><button aria-pressed={completed} onClick={() => setCompleted(true)}>Concluídas <span>{done.length}</span></button></div>
     {error && <p role="alert" className={styles.error}>{error}</p>}{notice && <p role="status" className={styles.notice}>{notice}</p>}
     {loading ? <p className={styles.empty}>Carregando suas entregas…</p> : !visible.length ? <div className={styles.empty}><AdminIcon name="delivery" size={40} /><h2>{completed ? "Nenhuma entrega concluída nas últimas 24 horas" : "Nenhuma entrega atribuída a você"}</h2><p>{completed ? "As entregas que você concluir ficam aqui por 24 horas." : "Quando o caixa atribuir uma entrega, ela aparece aqui."}</p></div> : <div className={styles.deliveries}>{visible.map(delivery => <article className={styles.delivery} key={delivery.id}>

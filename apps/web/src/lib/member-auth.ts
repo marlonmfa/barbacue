@@ -1,9 +1,12 @@
+import { GRANT_COOKIE } from "./cog-oidc";
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { customerAccounts } from "@/db/schema";
+import { sql } from 'drizzle-orm';
+import { resolveCogEmail, uniqueEligibleAccount } from './cog-sso';
 const COOKIE = "barbacue_member";
 const MAX_AGE = 60 * 60 * 24 * 7;
 function signature(payload: string) {
@@ -17,7 +20,13 @@ export function setMemberCookie(response: NextResponse, id: number) {
 }
 export function clearMemberCookie(response: NextResponse) { response.cookies.set(COOKIE, "", { path: "/", maxAge: 0 }); }
 export async function getMember() {
-  const token = (await cookies()).get(COOKIE)?.value;
+  const store=await cookies();
+  return resolveRequestMember(store.get(COOKIE)?.value,store.get("cogia_sessao")?.value,await headers(),store.get(GRANT_COOKIE)?.value);
+}
+export async function resolveRequestMember(nativeToken:string|undefined,cogToken:string|undefined,requestHeaders?:Pick<Headers,"get">,grant?:string) {
+  const email=await resolveCogEmail(cogToken,requestHeaders,grant);
+  if(email){ const user=await findCogMember(email);if(user)return user; }
+  const token = nativeToken;
   if (!token) return null;
   const [payload, mac] = token.split(".");
   if (!payload || !mac) return null;
@@ -27,4 +36,10 @@ export async function getMember() {
   if (!Number.isSafeInteger(id) || id <= 0 || !Number.isFinite(expiry) || expiry <= Date.now()) return null;
   const [member] = await db.select({ id: customerAccounts.id, name: customerAccounts.name, email: customerAccounts.email }).from(customerAccounts).where(eq(customerAccounts.id, id));
   return member ?? null;
+}
+
+/** A verified identity only selects an existing, unique local customer. */
+export async function findCogMember(email:string) {
+    const users=await db.select({id:customerAccounts.id,name:customerAccounts.name,email:customerAccounts.email}).from(customerAccounts).where(sql`lower(${customerAccounts.email}) = ${email}`).limit(2);
+    return uniqueEligibleAccount(users);
 }

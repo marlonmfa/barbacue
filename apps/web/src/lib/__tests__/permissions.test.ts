@@ -68,12 +68,29 @@ test("Windows installer page and direct download are administrator-only", () => 
   }
 });
 
-test("WhatsApp console and its API are administrator-only", () => {
+test("WhatsApp requires explicit service permission; pairing remains administrator-only", () => {
   for (const path of ["/whatsapp", "/whatsapp/", "/api/admin/whatsapp/pair", "/api/admin/whatsapp/messages", "/admin/whatsapp"]) {
     assert.equal(canAccessPath({ role: "admin", permissions: [] }, path), true, `admin: ${path}`);
     for (const role of ["manager", "cashier", "kitchen", "waiter", "driver", "employee"] as const) {
-      assert.equal(canAccessPath({ role, permissions: PERMISSIONS.map(p => p.id) }, path), false, `${role}: ${path}`);
+      assert.equal(canAccessPath({ role, permissions: PERMISSIONS.filter(p => p.id !== "whatsapp").map(p => p.id) }, path), false, `${role}: ${path}`);
     }
   }
   assert.equal(canAccessPath({ role: "manager" }, "/teste_pedido"), true);
+});
+
+test("staff management is available to administrators and managers only", () => {
+  for (const path of ["/admin/staff", "/api/admin/staff", "/api/admin/staff/2"]) {
+    for (const role of ["admin", "manager"] as const) assert.equal(canAccessPath({role}, path), true);
+    for (const role of ["cashier", "kitchen", "waiter", "driver", "employee"] as const) assert.equal(canAccessPath({role, permissions: PERMISSIONS.map(p => p.id)}, path), false);
+  }
+  assert.equal(canAccessPath({role:"manager"}, "/api/admin/system"), false);
+  assert.equal(canAccessPath({role:"manager"}, "/admin/impersonate"), false);
+});
+
+test('WhatsApp service is delegated explicitly and does not grant administrator routes', () => {
+  const terminal = { role: 'cashier' as const, permissions: ['orders', 'whatsapp'] as const };
+  assert.equal(canAccessPath({ ...terminal, permissions: [...terminal.permissions] }, '/whatsapp'), true);
+  assert.equal(canAccessPath({ ...terminal, permissions: [...terminal.permissions] }, '/api/admin/whatsapp/messages'), true);
+  assert.equal(canAccessPath({ ...terminal, permissions: [...terminal.permissions] }, '/admin/system'), false);
+  assert.equal(canAccessPath({ role: 'cashier', permissions: ['orders'] }, '/whatsapp'), false);
 });

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Preserve the active build utilities also scanned from historical workspace inputs. */
+@source inline("!container backdrop-blur-md backdrop-filter bg-black bg-blue-500 bg-green-900 bg-green-950 bg-orange-500 bg-red-500 bg-red-900 bg-red-950 bg-yellow-500 bg-yellow-950 border-collapse border-emerald-600 border-green-800 border-green-900 border-red-900 border-yellow-500 border-yellow-900 bottom-1 ease-in-out ease-out flex-shrink gap-0 left-2 mt-0 outline p-0 px-1 py-0 shadow-black text-wrap top-2 w-1 w-3 space-y-0");
+
 :root {
   /* ── BARBACUE & Co brand — red on warm white (butcher-paper identity) ── */
   --brand-red: #ed1b24;
@@ -260,13 +263,10 @@ html { scroll-behavior: smooth; }
 }
 
 .brand-wordmark { display: inline-flex; align-items: center; gap: 12px; }
-.brand-wordmark > span {
-  width: 42px; height: 42px; display: grid; place-items: center;
-  color: var(--brand-deep); background: var(--brand-accent);
-  font-weight: 950; letter-spacing: -.08em;
-  transform: rotate(-4deg); border-radius: 50%;
+.brand-wordmark-logo {
+  width: 42px; height: 42px; object-fit: contain; flex: none;
+  border-radius: 10px; background: #fff;
 }
-.brand-site--barbadog .brand-wordmark > span { border-radius: 9px 9px 16px 16px; transform: rotate(3deg); }
 .brand-wordmark strong { color: #fff; font: 400 1.25rem/1 var(--font-anton), Impact, sans-serif; text-transform: uppercase; letter-spacing: .03em; }
 
 .brand-order-link, .brand-primary-cta {
@@ -350,7 +350,7 @@ html { scroll-behavior: smooth; }
 
 .brand-footer { padding: 36px max(20px, calc((100vw - 1180px) / 2)); display: flex; align-items: center; justify-content: space-between; gap: 20px; background: var(--brand-deep); color: #fff; }
 .brand-footer > div { display: flex; align-items: center; gap: 14px; }
-.brand-footer-mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; background: var(--brand-accent); color: var(--brand-deep); font-weight: 950; }
+.brand-footer-logo { width: 42px; height: 42px; object-fit: contain; flex: none; border-radius: 10px; background: #fff; }
 .brand-footer strong { font: 400 1.2rem/1 var(--font-anton), Impact, sans-serif; text-transform: uppercase; }
 .brand-footer p { margin-top: 4px; color: rgba(255,255,255,.6); font-size: .7rem; }
 .brand-footer > a { color: var(--brand-accent); font-size: .78rem; font-weight: 850; }

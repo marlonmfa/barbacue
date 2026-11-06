@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AIProviderSettings, { type AIStatus } from "./ai-provider-settings";
 
 interface SystemHealth {
-  ai: AIStatus;
   openai: { configured: boolean; model: string };
   whatsappBot: { configured: boolean };
   gmail: { configured: boolean; address: string | null };
@@ -37,17 +35,16 @@ export default function AdminSystem() {
     <div className="max-w-2xl">
       <h1 className="text-2xl font-bold mb-1">Sistema</h1>
       <p className="text-[#a89a8c] text-sm mb-6">
-        Configure o provedor de IA e acompanhe o status das integrações. As chaves salvas ficam protegidas no servidor.
+        Status das integrações e chaves. Por segurança, os valores secretos nunca são exibidos nem
+        editáveis aqui — eles ficam no <code className="text-[#c8b89a]">.env</code> do servidor.
       </p>
 
       {err && <p className="text-red-400 text-sm bg-red-950/40 rounded-xl px-4 py-2.5">{err}</p>}
 
-      {health && <AIProviderSettings initial={health.ai} onSaved={ai => setHealth({ ...health, ai })} />}
-
       {health && (
         <div className="flex flex-col gap-3">
           {[
-            { label: `IA do atendente (${health.ai.provider === "anthropic" ? "Anthropic" : "OpenAI"})`, ok: health.ai.provider === "anthropic" ? health.ai.anthropicConfigured : health.ai.openaiConfigured, extra: `Modelo: ${health.ai.provider === "anthropic" ? health.ai.anthropicModel : health.ai.openaiModel}` },
+            { label: "IA do atendente (OpenAI)", ok: health.openai.configured, extra: `Modelo: ${health.openai.model}` },
             { label: "Bot do WhatsApp (token)", ok: health.whatsappBot.configured },
             {
               label: "Gmail do Barbacue",

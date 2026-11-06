@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandLogo } from "@/components/BrandLogo";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AdminIcon, type AdminIconName } from "./AdminIcons";
@@ -10,7 +11,6 @@ type BrandId = "all" | "barbacue" | "barbadog" | "chelas";
 type BrandSummary = {
   id: Exclude<BrandId, "all">;
   name: string;
-  monogram: string;
   itemCount: number;
   detail: string;
 };
@@ -66,7 +66,8 @@ function BrandButton({ brand, active, onSelect }: { brand: BrandSummary; active:
   const brandClass = brand.id === "barbacue" ? styles.brandBarbacue : brand.id === "barbadog" ? styles.brandBarbadog : styles.brandChelas;
   return (
     <button className={`${styles.brandCard} ${brandClass} ${active ? styles.brandActive : ""}`} onClick={onSelect} aria-pressed={active}>
-      <span className={styles.monogram}>{brand.monogram}</span>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <BrandLogo className={styles.brandLogo} brand={brand.id} alt="" width={54} height={54} />
       <span className={styles.brandCopy}>
         <span className={styles.brandName}><i className={styles.statusDot} />{brand.name}</span>
         <p>{brand.detail}</p>

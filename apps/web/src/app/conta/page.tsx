@@ -1,5 +1,7 @@
 import AccountForm from "./AccountForm";
 import { configuredProviders, safeReturnTo } from "@/lib/social-auth";
+import { getMember } from '@/lib/member-auth';
+import { redirect } from 'next/navigation';
 
 export const dynamic = "force-dynamic";
 
@@ -16,5 +18,6 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
   const query = await searchParams;
   const erro = typeof query.erro === "string" ? query.erro : "";
   const returnTo = safeReturnTo(typeof query.returnTo === "string" ? query.returnTo : "/");
+  if(await getMember())redirect(returnTo==='/conta'?'/':returnTo);
   return <AccountForm providers={configuredProviders()} initialError={ERRORS[erro] ?? ""} returnTo={returnTo} />;
 }

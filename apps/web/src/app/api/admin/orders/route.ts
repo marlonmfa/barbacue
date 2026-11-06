@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { orders, restaurantTables, staffUsers, storeSettings } from "@/db/schema";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { withStaff } from "@/lib/admin-auth";
-import { can } from "@/lib/permissions";
+import { driverRoster } from "@/lib/driver-roster";
 import { addressNavigationLinks } from "@/lib/delivery-navigation";
 
 export const GET = withStaff(async req => {
   if (req.nextUrl.searchParams.get("drivers") === "1") {
-    const drivers = await db.select({ id: staffUsers.id, name: staffUsers.name, role: staffUsers.role, permissions: staffUsers.permissions })
-      .from(staffUsers).where(and(eq(staffUsers.active, true), eq(staffUsers.role, "driver"))).orderBy(asc(staffUsers.name));
-    return NextResponse.json({ drivers: drivers.filter(driver => can(driver, "deliveries")).map(({ id, name }) => ({ id, name })) }, { headers: { "Cache-Control": "no-store" } });
+    return NextResponse.json(await driverRoster(), { headers: { "Cache-Control": "no-store" } });
   }
   const rows = await db
     .select({

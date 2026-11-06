@@ -25,7 +25,7 @@ export function ProductCard({ product, isClosed = false }: Props) {
   // first client render agree — otherwise the qty stepper pops in / flashes.
   const mounted = useSyncExternalStore(subscribeToHydration, clientSnapshot, serverSnapshot);
 
-  const cartItem = mounted ? items.find((i) => i.productId === product.id) : undefined;
+  const cartItem = mounted ? items.find((i) => i.productId === product.id && (i.brand ?? "barbacue") === "barbacue") : undefined;
   const onSale = isPromoActive(product);
   const price = effectivePrice(product);
   const illustrative = product.imageUrl?.startsWith("/menu/review-2026-09/");
