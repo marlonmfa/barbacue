@@ -29,6 +29,13 @@ class Product {
   @JsonKey(name: 'ifoodUrl')
   final String? ifoodUrl;
 
+  /// Restaurante do produto, enviado pelo servidor (barbacue, chelas, barbadog).
+  final String? brand;
+
+  /// Bebidas e itens comuns aos três restaurantes.
+  @JsonKey(defaultValue: false)
+  final bool shared;
+
   const Product({
     required this.id,
     this.externalId,
@@ -43,6 +50,8 @@ class Product {
     required this.available,
     required this.sortOrder,
     this.ifoodUrl,
+    this.brand,
+    this.shared = false,
   });
 
   /// True when a discount is active right now (within the optional window).

@@ -86,7 +86,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          menuProvider.overrideWith((ref) async => _menu),
+          brandMenuProvider.overrideWith((ref, brand) async => _menu),
           settingsProvider.overrideWith((ref) async => _settings),
           storeStatusProvider.overrideWith(
             (ref) async => const StoreStatus(open: true, reason: 'Aberto'),

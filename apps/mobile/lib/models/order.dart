@@ -2,18 +2,26 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'order.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class OrderItem {
   final int productId;
   final String name;
   final int priceCents;
   final int qty;
 
+  /// Restaurante do item: o carrinho único junta produtos das três marcas.
+  final String? brand;
+
+  /// Etiqueta devolvida pelo servidor (null para bebidas e itens comuns).
+  final String? restaurant;
+
   const OrderItem({
     required this.productId,
     required this.name,
     required this.priceCents,
     required this.qty,
+    this.brand,
+    this.restaurant,
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) =>

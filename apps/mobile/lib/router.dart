@@ -1,11 +1,10 @@
 import 'package:go_router/go_router.dart';
-import 'screens/menu_screen.dart';
 import 'screens/cart_screen.dart';
 import 'screens/payment_screen.dart';
 import 'screens/chat_screen.dart';
 import 'screens/confirmation_screen.dart';
 import 'screens/mesa_screen.dart';
-import 'screens/brand_menu_screen.dart';
+import 'screens/unified_menu_screen.dart';
 import 'config/app_brand.dart';
 
 GoRouter createRouter(BrandConfig brand) => GoRouter(
@@ -13,9 +12,7 @@ GoRouter createRouter(BrandConfig brand) => GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => brand.brand == AppBrand.barbacue
-          ? const MenuScreen()
-          : const BrandMenuScreen(),
+      builder: (context, state) => const UnifiedMenuScreen(),
     ),
     if (brand.hasNativeCheckout) ...[
       GoRoute(path: '/cart', builder: (context, state) => const CartScreen()),
@@ -23,8 +20,8 @@ GoRouter createRouter(BrandConfig brand) => GoRouter(
         path: '/payment',
         builder: (context, state) => const PaymentScreen(),
       ),
-      if (brand.hasAiChat)
-        GoRoute(path: '/chat', builder: (context, state) => const ChatScreen()),
+      // O atendente do Barbacue fica disponível nos três apps.
+      GoRoute(path: '/chat', builder: (context, state) => const ChatScreen()),
       // The target of every printed table QR. Reached from the phone's camera via
       // universal links / app links — never linked to from inside the app.
       GoRoute(

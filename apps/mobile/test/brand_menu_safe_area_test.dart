@@ -11,7 +11,7 @@ void main() {
     addTearDown(() => configureBrand(AppBrand.barbacue));
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [menuProvider.overrideWith((ref) async => [])],
+        overrides: [brandMenuProvider.overrideWith((ref, brand) async => [])],
         child: MaterialApp(
           builder: (context, child) => MediaQuery(
             data: const MediaQueryData(padding: EdgeInsets.only(top: 32)),

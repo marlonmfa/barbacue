@@ -76,6 +76,8 @@ class ChatResponse {
                 name: e['name'] as String,
                 priceCents: e['priceCents'] as int,
                 qty: e['qty'] as int,
+                // O atendente virtual vende o cardápio do Barbacue.
+                brand: 'barbacue',
               ))
           .toList(),
       customer: ChatCustomer.fromJson(

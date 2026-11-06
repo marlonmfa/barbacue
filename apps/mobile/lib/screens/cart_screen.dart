@@ -11,6 +11,7 @@ import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/header_chip.dart';
 import '../widgets/product_thumb.dart';
+import '../widgets/restaurant_tag.dart';
 
 /// Widest the cart is allowed to grow — beyond this the 64px thumbs float
 /// beside dead space on a tablet.
@@ -586,6 +587,8 @@ class _CartItemRow extends ConsumerWidget {
                     color: AppTheme.textPrimary,
                   ),
                 ),
+                if (item.restaurant != null)
+                  RestaurantTag(brand: item.brand, label: item.restaurant!),
                 Text(
                   formatPrice(item.priceCents),
                   style: const TextStyle(
@@ -605,7 +608,7 @@ class _CartItemRow extends ConsumerWidget {
             background: AppTheme.surfaceAlt,
             foreground: AppTheme.textSecondary,
             semanticLabel: 'Diminuir ${item.name}',
-            onTap: () => notifier.setQty(item.productId, item.qty - 1),
+            onTap: () => notifier.setQty(item.key, item.qty - 1),
           ),
           SizedBox(
             width: 28,
@@ -624,7 +627,7 @@ class _CartItemRow extends ConsumerWidget {
             background: AppTheme.brand,
             foreground: Colors.white,
             semanticLabel: 'Aumentar ${item.name}',
-            onTap: () => notifier.setQty(item.productId, item.qty + 1),
+            onTap: () => notifier.setQty(item.key, item.qty + 1),
           ),
         ],
       ),

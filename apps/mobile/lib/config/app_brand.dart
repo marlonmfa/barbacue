@@ -43,7 +43,8 @@ class BrandConfig {
   String get logoAsset => brand == AppBrand.barbacue
       ? 'assets/icon/icon.png'
       : 'assets/brands/$slug-icon.png';
-  bool get hasAiChat => brand == AppBrand.barbacue;
+  // O atendente virtual vende o cardápio do Barbacue, presente nos três apps.
+  bool get hasAiChat => true;
   Uri get siteUri => Uri.https(domain);
   Uri legalUri(String page) => Uri.https(domain, '/legal/$slug/$page.html');
   Uri? get ifoodUri => ifoodUrl == null ? null : Uri.parse(ifoodUrl!);
@@ -111,4 +112,14 @@ BrandConfig currentBrand = brandConfigs[AppBrand.barbacue]!;
 
 void configureBrand(AppBrand brand) {
   currentBrand = brandConfigs[brand]!;
+}
+
+/// Ordem do seletor de restaurantes, igual nos três apps e no site.
+const brandSwitcherOrder = [AppBrand.chelas, AppBrand.barbacue, AppBrand.barbadog];
+
+BrandConfig? brandBySlug(String slug) {
+  for (final config in brandConfigs.values) {
+    if (config.slug == slug) return config;
+  }
+  return null;
 }

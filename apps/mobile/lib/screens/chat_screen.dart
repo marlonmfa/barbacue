@@ -166,8 +166,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       // Sync the agent's resulting state into the shared stores. Re-attaching the
       // images is not cosmetic: replace() persists, so dropping them here would
       // blank every thumbnail for good — including items the agent never touched.
-      final imageById = {for (final i in currentCart) i.productId: i.imageUrl};
+      // O atendente só monta itens do Barbacue; os dos outros restaurantes
+      // continuam no carrinho único.
+      final imageById = {
+        for (final i in currentCart)
+          if (i.brand == 'barbacue') i.productId: i.imageUrl,
+      };
       cart.replace([
+        ...currentCart.where((i) => i.brand != 'barbacue'),
         for (final i in res.cart)
           CartItem(
             productId: i.productId,
@@ -175,6 +181,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             priceCents: i.priceCents,
             qty: i.qty,
             imageUrl: imageById[i.productId],
+            brand: 'barbacue',
           ),
       ]);
 

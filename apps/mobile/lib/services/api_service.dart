@@ -139,13 +139,16 @@ class ApiService {
     }
   }
 
-  static Future<List<Category>> fetchMenu() async {
+  /// Cardápio de um restaurante. Os três apps mostram os três cardápios (o
+  /// carrinho é único), então a marca vem do seletor, não do app.
+  static Future<List<Category>> fetchMenu({AppBrand? brand}) async {
+    final menuBrand = brandConfigs[brand ?? currentBrand.brand]!;
     try {
       final response = await _client
           .get(
             Uri.parse(
               '$baseUrl/api/products',
-            ).replace(queryParameters: {'brand': currentBrand.slug}),
+            ).replace(queryParameters: {'brand': menuBrand.slug}),
             headers: {'Accept': 'application/json'},
           )
           .timeout(const Duration(seconds: 15));
@@ -153,24 +156,33 @@ class ApiService {
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         resolveImageUrls(data, baseUrl);
+        // Servidores antigos não enviam a marca de cada produto.
+        for (final category in data) {
+          for (final product in (category as Map<String, dynamic>)['products']
+              as List<dynamic>) {
+            (product as Map<String, dynamic>)['brand'] ??= menuBrand.slug;
+          }
+        }
         final parsed = data.map((json) => Category.fromJson(json)).toList();
         return parsed;
       }
     } catch (_) {
-      if (currentBrand.brand == AppBrand.barbacue) rethrow;
+      if (menuBrand.brand == AppBrand.barbacue) rethrow;
     }
     // Offline snapshots are browsing-only: their synthetic IDs must never
     // reach checkout, which requires the live managed catalog IDs.
-    if (currentBrand.brand != AppBrand.barbacue) return _bundledBrandMenu();
+    if (menuBrand.brand != AppBrand.barbacue) {
+      return _bundledBrandMenu(menuBrand);
+    }
     throw Exception('Falha ao carregar o cardápio.');
   }
 
   /// Offline-safe snapshot made from the same iFood scrape that feeds the site.
   /// It is also a rollout guard: Chelas/Barbadog remain correct even before a
   /// new API bundle reaches every production edge.
-  static Future<List<Category>> _bundledBrandMenu() async {
+  static Future<List<Category>> _bundledBrandMenu(BrandConfig brand) async {
     final raw = await rootBundle.loadString(
-      'assets/brands/${currentBrand.slug}-menu.json',
+      'assets/brands/${brand.slug}-menu.json',
     );
     final decoded = jsonDecode(raw) as Map<String, dynamic>;
     final items = (decoded['items'] as List<dynamic>?) ?? const [];
@@ -195,6 +207,7 @@ class ApiService {
                   entry.$2 as Map<String, dynamic>,
                   categoryIndex,
                   entry.$1,
+                  brand.slug,
                 ),
           ],
         ),
@@ -205,6 +218,7 @@ class ApiService {
     Map<String, dynamic> json,
     int categoryIndex,
     int productIndex,
+    String brand,
   ) {
     final salePrice = (json['priceCents'] as num).toInt();
     final original = (json['originalPriceCents'] as num?)?.toInt();
@@ -220,6 +234,7 @@ class ApiService {
       available: false,
       sortOrder: productIndex,
       ifoodUrl: json['ifoodUrl']?.toString(),
+      brand: brand,
     );
   }
 

@@ -97,7 +97,7 @@ Future<void> _pumpMenu(WidgetTester tester, StoreStatus status) async {
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
-        menuProvider.overrideWith((ref) async => _menu),
+        brandMenuProvider.overrideWith((ref, brand) async => _menu),
         settingsProvider.overrideWith((ref) async => _settings),
         storeStatusProvider.overrideWith((ref) async => status),
       ],

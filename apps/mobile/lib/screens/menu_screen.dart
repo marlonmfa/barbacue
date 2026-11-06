@@ -2,6 +2,7 @@ import 'package:barbacue/lib/category_art.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../config/app_brand.dart';
 import '../models/product.dart';
 import '../providers/menu_provider.dart';
 import '../widgets/hero_header.dart';
@@ -60,7 +61,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
   }
 
   Future<void> _refresh() async {
-    ref.invalidate(menuProvider);
+    ref.invalidate(brandMenuProvider(AppBrand.barbacue));
     ref.invalidate(storeStatusProvider);
     ref.invalidate(settingsProvider);
     await ref.read(storeStatusProvider.future);
@@ -144,7 +145,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
 
   @override
   Widget build(BuildContext context) {
-    final menuAsync = ref.watch(menuProvider);
+    final menuAsync = ref.watch(brandMenuProvider(AppBrand.barbacue));
 
     return Scaffold(
       body: menuAsync.when(
@@ -167,7 +168,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
               ),
               const SizedBox(height: 8),
               FilledButton(
-                onPressed: () => ref.invalidate(menuProvider),
+                onPressed: () => ref.invalidate(brandMenuProvider(AppBrand.barbacue)),
                 child: const Text('Tentar novamente'),
               ),
             ],

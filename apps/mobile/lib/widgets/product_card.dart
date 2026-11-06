@@ -34,7 +34,7 @@ class ProductCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qty = ref.watch(itemQtyProvider(product.id));
+    final qty = ref.watch(itemQtyProvider(productCartKey(product)));
     // orElse: false keeps the fail-open posture of the status endpoint — a
     // loading or unreachable /api/store-status must never stop a customer
     // ordering. The server re-checks on POST /api/orders regardless.
@@ -313,6 +313,8 @@ class _AddButton extends ConsumerWidget {
                 // Use the promotional price; the server re-sources prices anyway.
                 priceCents: product.effectivePriceCents,
                 imageUrl: product.imageUrl,
+                brand: product.brand,
+                shared: product.shared,
               ),
             );
       },
@@ -373,7 +375,7 @@ class _QtyControlsState extends ConsumerState<_QtyControls>
         children: [
           _CircleButton(
             icon: Icons.remove,
-            onTap: () => notifier.setQty(widget.product.id, widget.qty - 1),
+            onTap: () => notifier.setQty(productCartKey(widget.product), widget.qty - 1),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -384,7 +386,7 @@ class _QtyControlsState extends ConsumerState<_QtyControls>
           ),
           _CircleButton(
             icon: Icons.add,
-            onTap: () => notifier.setQty(widget.product.id, widget.qty + 1),
+            onTap: () => notifier.setQty(productCartKey(widget.product), widget.qty + 1),
           ),
         ],
       ),

@@ -12,7 +12,10 @@ import '../providers/menu_provider.dart';
 import '../theme/app_theme.dart';
 
 class BrandMenuScreen extends ConsumerStatefulWidget {
-  const BrandMenuScreen({super.key});
+  const BrandMenuScreen({super.key, this.brand});
+
+  /// Restaurante mostrado; padrão é o do app.
+  final BrandConfig? brand;
 
   @override
   ConsumerState<BrandMenuScreen> createState() => _BrandMenuScreenState();
@@ -30,8 +33,9 @@ class _BrandMenuScreenState extends ConsumerState<BrandMenuScreen> {
 
   Future<void> _refresh() async {
     ref.invalidate(storeStatusProvider);
-    ref.invalidate(menuProvider);
-    await ref.read(menuProvider.future);
+    final menu = brandMenuProvider((widget.brand ?? currentBrand).brand);
+    ref.invalidate(menu);
+    await ref.read(menu.future);
   }
 
   void _goToCategory(int index) {
@@ -47,8 +51,8 @@ class _BrandMenuScreenState extends ConsumerState<BrandMenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final brand = currentBrand;
-    final menu = ref.watch(menuProvider);
+    final brand = widget.brand ?? currentBrand;
+    final menu = ref.watch(brandMenuProvider(brand.brand));
 
     return Scaffold(
       appBar: AppBar(
@@ -61,7 +65,7 @@ class _BrandMenuScreenState extends ConsumerState<BrandMenuScreen> {
           loading: () => _LoadingView(brand: brand),
           error: (_, _) => _ErrorView(
             brand: brand,
-            onRetry: () => ref.invalidate(menuProvider),
+            onRetry: () => ref.invalidate(brandMenuProvider(brand.brand)),
           ),
           data: (allCategories) {
             final categories = allCategories
@@ -465,7 +469,7 @@ class _NativeProductCard extends ConsumerWidget {
         .watch(storeStatusProvider)
         .maybeWhen(data: (status) => !status.open, orElse: () => false);
     final canAdd = product.available && !closed;
-    final qty = ref.watch(itemQtyProvider(product.id));
+    final qty = ref.watch(itemQtyProvider(productCartKey(product)));
     return Semantics(
       button: true,
       label: 'Detalhes de ${product.name}',
@@ -505,6 +509,8 @@ class _NativeProductCard extends ConsumerWidget {
                                     priceCents: product.effectivePriceCents,
                                     qty: 1,
                                     imageUrl: product.imageUrl,
+                                    brand: product.brand ?? brand.slug,
+                                    shared: product.shared,
                                   ),
                                 );
                             Navigator.pop(sheetContext);

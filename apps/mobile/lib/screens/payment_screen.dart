@@ -305,6 +305,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   name: e.name,
                   priceCents: e.priceCents,
                   qty: e.qty,
+                  brand: e.brand,
                 ),
               )
               .toList(),

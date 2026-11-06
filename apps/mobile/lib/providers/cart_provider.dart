@@ -36,7 +36,7 @@ class CartNotifier extends Notifier<List<CartItem>> {
   }
 
   void add(CartItem item) {
-    final idx = state.indexWhere((e) => e.productId == item.productId);
+    final idx = state.indexWhere((e) => e.key == item.key);
     if (idx >= 0) {
       final updated = List<CartItem>.from(state);
       updated[idx] = updated[idx].copyWith(qty: updated[idx].qty + 1);
@@ -47,18 +47,18 @@ class CartNotifier extends Notifier<List<CartItem>> {
     _persist();
   }
 
-  void remove(int productId) {
-    state = state.where((e) => e.productId != productId).toList();
+  void remove(String key) {
+    state = state.where((e) => e.key != key).toList();
     _persist();
   }
 
-  void setQty(int productId, int qty) {
+  void setQty(String key, int qty) {
     if (qty <= 0) {
-      remove(productId);
+      remove(key);
       return;
     }
     final updated = state.map((e) {
-      return e.productId == productId ? e.copyWith(qty: qty) : e;
+      return e.key == key ? e.copyWith(qty: qty) : e;
     }).toList();
     state = updated;
     _persist();
@@ -104,8 +104,18 @@ final cartTotalItemsProvider = Provider<int>((ref) {
   return items.fold(0, (sum, e) => sum + e.qty);
 });
 
-final itemQtyProvider = Provider.family<int, int>((ref, productId) {
+/// Quantidade no carrinho pela chave `marca:produto` (ver [cartKey]).
+final itemQtyProvider = Provider.family<int, String>((ref, key) {
   final items = ref.watch(cartProvider);
-  final found = items.where((e) => e.productId == productId);
+  final found = items.where((e) => e.key == key);
   return found.isEmpty ? 0 : found.first.qty;
+});
+
+/// Quantidade de itens no carrinho por restaurante, para o seletor de marcas.
+final cartItemsByBrandProvider = Provider<Map<String, int>>((ref) {
+  final counts = <String, int>{};
+  for (final item in ref.watch(cartProvider)) {
+    counts[item.brand] = (counts[item.brand] ?? 0) + item.qty;
+  }
+  return counts;
 });
