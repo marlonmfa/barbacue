@@ -44,8 +44,11 @@ services:
       DATABASE_URL: postgresql://barbacue:barbacue@postgres:5432/barbacue
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       DOMAIN_BARBA: ${DOMAIN_BARBA:-barbacue.cog.ia.br}
-      DOMAIN_CHELAS: ${DOMAIN_CHELAS:-chelas.hirableaiagents.com}
-      DOMAIN_HOTDOG: ${DOMAIN_HOTDOG:-barbadog.hirableaiagents.com}
+      DOMAIN_CHELAS: ${DOMAIN_CHELAS:-chelas.cog.ia.br}
+      DOMAIN_HOTDOG: ${DOMAIN_HOTDOG:-barbadog.cog.ia.br}
+      ANOTA_WEBHOOK_TOKEN_BARBACUE: ${ANOTA_WEBHOOK_TOKEN_BARBACUE:-}
+      ANOTA_WEBHOOK_TOKEN_BARBADOG: ${ANOTA_WEBHOOK_TOKEN_BARBADOG:-}
+      ANOTA_WEBHOOK_TOKEN_CHELAS: ${ANOTA_WEBHOOK_TOKEN_CHELAS:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-haiku-5-5}
