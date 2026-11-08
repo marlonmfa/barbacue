@@ -1,0 +1,21 @@
+# Serviço independente no host do Barbacue, ao lado do monitor iFood; banco nativo preservado.
+name: barbacue-anotaai
+services:
+  monitor:
+    image: barbacue-anotaai:${ANOTAAI_IMAGE_TAG:?defina a tag da imagem}
+    restart: unless-stopped
+    init: true
+    network_mode: host
+    env_file: .env
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD, node, -e, "const h=JSON.parse(require('fs').readFileSync('/tmp/anotaai-health.json','utf8'));process.exit(Date.now()-(h.state==='waiting_pages'?h.lastCheck:h.lastSuccess)<600000?0:1)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 90s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+        max-file: '3'
