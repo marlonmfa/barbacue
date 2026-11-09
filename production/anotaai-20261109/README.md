@@ -33,3 +33,16 @@ O portal aponta para `https://{barbacue,barbadog,chelas}.cog.ia.br/api/webhooks/
   pedidos não são afetados, porque o polling cobre as três lojas.
 
 Parar: `cd /root/barbacue-anotaai && docker compose -f compose.prod.yml down` (sem `-v`).
+
+## Rótulo "Anota AI" — 09/11/2026 ~20:40 UTC
+
+`8797ce8`: canal `anotaai` aparece como "Anota AI" em `/admin/orders` e na linha "Origem" do ticket da cozinha
+(o ticket já traz a marca e a nota "Loja Anota AI: …"). Web publicada com `publish.py` (BK_NAME
+`backup-anotaai-labels-20261109`, em `/srv/barbacue-unified-20261106`): build `UFVaWtKTkFQlGNuukUwmD` →
+`xPvAVHhzdVb9MzfEaGupR`, 135 rotas nas duas, candidata testada, troca com reversão automática. Só
+`apps/web/src/app/admin/orders/page.tsx` mudou no contexto do servidor (cópia anterior ao lado,
+`.before-anotaai-labels`). O `print-agent` só muda no próximo instalador Windows.
+
+Fila de impressão: 746 tickets `queued`, nenhum impresso, nenhum agente jamais conectado. O claim
+(`claimKitchenPrintJob`) pega o mais antigo, sem filtro de idade: o primeiro agente imprimiria todos.
+A fila não foi alterada; aguarda decisão do Marlon.
