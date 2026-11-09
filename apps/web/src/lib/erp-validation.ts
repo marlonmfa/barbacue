@@ -6,6 +6,13 @@ const date = z.iso.date();
 const month = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/);
 const brand = z.enum(["barbacue", "barbadog", "chelas"]);
 const name = z.string().trim().min(2).max(200);
+// Categorias do lançamento manual; cada uma cai numa linha do DRE/DFC
+// (src/lib/financeiro/engine.ts). "payroll" só nasce pela folha.
+export const FINANCE_CATEGORIES = [
+  "operating", "tax", "other", "purchase", "packaging", "delivery", "marketplace", "fees",
+  "rent", "utilities", "marketing", "admin", "maintenance", "financial", "investment",
+  "loan", "withdrawal", "ifood", "sales",
+] as const;
 const notes = z.string().trim().max(4000).default("");
 const part = z.object({ ingredientId: id, quantityMilli: quantity });
 const line = part.extend({ unitCostCents: amount });
@@ -98,7 +105,7 @@ export const erpCommand = z.discriminatedUnion("action", [
     id: id.optional(),
     brand,
     kind: z.enum(["payable", "receivable"]),
-    category: z.enum(["operating", "tax", "other"]),
+    category: z.enum(FINANCE_CATEGORIES),
     description: name,
     amountCents: amount.refine((v) => v > 0),
     dueDate: date,

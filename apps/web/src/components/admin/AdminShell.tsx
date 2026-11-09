@@ -42,6 +42,7 @@ const groups: { label: string; items: NavItem[] }[] = [
   {
     label: "Gestão",
     items: [
+      { href: "/admin/financeiro", label: "DRE e fluxo de caixa", icon: "orders", adminOnly: true },
       { href: "/admin/erp", label: "ERP e financeiro", icon: "orders", adminOnly: true },
       { href: "/admin/tables", label: "Mesas", icon: "tables" },
       { href: "/admin/customers", label: "Clientes", icon: "customers" },
