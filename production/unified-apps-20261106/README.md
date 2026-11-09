@@ -49,3 +49,21 @@ Publicação: `run-ifood-20261109.sh` (na pasta do servidor): backup do banco e 
 0027 e 0030 (aditivas), candidata `ufFkyeQwDaxyPwlZGWEWK` testada, troca com reversão automática, e
 depois o monitor com a imagem `barbacue-ifood:events-20261109` (fonte `build-events-20261109`: a do
 webhook-audit de 23/10 + `order-store.ts`/`poller.ts` desta versão). O serviço `webhook` não mudou.
+
+## DRE, fluxo de caixa e extratos — 09/11/2026
+`/admin/financeiro` (DRE, DFC, visão geral e aba Extratos bancários) e as categorias novas do ERP
+(PR #10). Fonte: `delta-financeiro-20261109.tgz` aplicado sobre `context`, com cópia dos arquivos
+anteriores em `backup-financeiro-src-20261109/context-before.tgz`. Os seis arquivos alterados eram
+idênticos aos da `main` antes da mudança.
+
+Publicação: `build_candidate.py`, depois `BK_NAME=backup-financeiro-20261109
+EXTRA_MIGRATIONS=0031_bank_statements.sql python3 publish.py prepare` e `swap`. O build saiu de
+`ufFkyeQwDaxyPwlZGWEWK` para `UFVaWtKTkFQlGNuukUwmD` (133 → 135 rotas). A migração 0031 é
+aditiva e cria `bank_transactions` e `bank_rules`.
+
+Conferido em produção com sessão de admin: a página carrega, a API de extratos responde 200,
+sem login a página dá 307 e a API 401, e o ERP segue respondendo 200.
+
+Reversão: em `/srv/barbacue-unified-20261106/backup-financeiro-20261109/` estão o `barbacue.dump`
+e o `previous-runtime`; parar `barbacue`, trocar o dist por `previous-runtime` e reiniciar. As
+tabelas novas podem ficar, porque o build antigo não as usa.
