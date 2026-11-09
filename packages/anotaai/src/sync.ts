@@ -4,6 +4,12 @@ import { actionsFor, type AnotaListDoc, type AnotaOrder } from './map';
 import { RANK, anotaLocalId, localOfCheck, toBarbacueOrder, type LocalStatus, type OrderStore } from './order-store';
 
 export const CANCEL_REQUESTED = 'Anota AI: o cliente pediu o cancelamento deste pedido';
+const ACTION_LABEL = { accept: 'aceitar', ready: 'pronto/despachado', finalize: 'concluir', cancel: 'cancelar' } as const;
+/** Nota visível no painel quando a Anota AI recusa uma ação (texto estável: appendNote não repete). */
+export function actionFailedNote(action: keyof typeof ACTION_LABEL, message: string) {
+  const why = message.replace(/^Anota AI \S+ \S+ \d+: /, '').replace(/\s+/g, ' ').slice(0, 160);
+  return `Anota AI não registrou "${ACTION_LABEL[action]}": ${why}. A loja tenta de novo a cada ciclo; se persistir, atualizar no painel da Anota AI.`;
+}
 const UPPER: Record<LocalStatus, string> = { pending: 'PENDING', confirmed: 'CONFIRMED', preparing: 'PREPARING', ready: 'READY', delivered: 'DELIVERED', cancelled: 'CANCELED' };
 
 /** Pedidos do dia da loja (todas as páginas). excludeIfood=1: o Barbacue já recebe o iFood pela Merchant API. */
@@ -52,17 +58,23 @@ export async function syncPage(client: AnotaClient, store: OrderStore, page: Ano
         continue;
       }
       if (!cfg.actions || cfg.dryRun) continue;
-      if (cur === 'cancelled') {
-        if (d.check !== 4 && d.check !== 5) {
-          await client.fetch(`${ORDERS_PREFIX}/order/cancel/${d._id}`, { method: 'POST', pageId: page.pageId, body: { justification: 'Cancelado pela loja' } });
+      const push = async (a: keyof typeof ACTION_LABEL) => {
+        try {
+          await client.fetch(`${ORDERS_PREFIX}/order/${a}/${d._id}`, { method: 'POST', pageId: page.pageId, ...(a === 'cancel' ? { body: { justification: 'Cancelado pela loja' } } : {}) });
           res.pushed++;
+          return true;
+        } catch (e) {
+          const msg = (e as Error).message;
+          res.errors.push(`${page.name} ${d._id} ação ${a} recusada: ${msg}`);
+          await store.appendNote(id, actionFailedNote(a, msg)).catch(() => undefined);
+          return false;
         }
+      };
+      if (cur === 'cancelled') {
+        if (d.check !== 4 && d.check !== 5) await push('cancel');
         continue;
       }
-      for (const a of actionsFor(UPPER[cur], d.check)) {
-        await client.fetch(`${ORDERS_PREFIX}/order/${a}/${d._id}`, { method: 'POST', pageId: page.pageId });
-        res.pushed++;
-      }
+      for (const a of actionsFor(UPPER[cur], d.check)) if (!await push(a)) break;
     } catch (e) {
       res.errors.push(`${page.name} ${d._id}: ${(e as Error).message}`);
     }

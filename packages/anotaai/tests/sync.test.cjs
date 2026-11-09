@@ -4,10 +4,10 @@ const http = require('node:http');
 const { AnotaClient } = require('../src/client.ts');
 const { parsePages, loadConfig } = require('../src/config.ts');
 const { anotaLocalId, toBarbacueOrder, localOfCheck } = require('../src/order-store.ts');
-const { syncPage, CANCEL_REQUESTED } = require('../src/sync.ts');
+const { syncPage, CANCEL_REQUESTED, actionFailedNote } = require('../src/sync.ts');
 
 const PAGE = { pageId: '65d4a42543b0de0019666db0', brand: 'barbadog', name: 'Barbadog' };
-const NEW = '66b6258e890ffb00126c4233', OLD = '66b6258e890ffb00126c4299', LOCAL = '66b6258e890ffb00126c4300', REMOTE = '66b6258e890ffb00126c4301', ASK = '66b6258e890ffb00126c4302';
+const NEW = '66b6258e890ffb00126c4233', OLD = '66b6258e890ffb00126c4299', LOCAL = '66b6258e890ffb00126c4300', REMOTE = '66b6258e890ffb00126c4301', ASK = '66b6258e890ffb00126c4302', REJECT = '66b6258e890ffb00126c4303';
 const remote = {};
 const calls = [];
 let tokens = 0;
@@ -23,6 +23,7 @@ const server = http.createServer((req, res) => {
     if (u.pathname === `${p}/ping/list`) return json({ success: true, info: { docs: Object.entries(remote).map(([_id, check]) => ({ _id, check })), limit: 100 } });
     const g = u.pathname.match(/\/ping\/get\/(\w+)$/); if (g) return json({ success: true, info: detail(g[1]) });
     const m = u.pathname.match(/\/order\/(accept|ready|finalize|cancel)\/(\w+)$/);
+    if (m && m[2] === REJECT) return json({ success: false, message: 'Pedido já foi negado' });
     if (m) { remote[m[2]] = { accept: 1, ready: 2, finalize: 3, cancel: 4 }[m[1]]; return json({ success: true, info: { check: remote[m[2]] } }); }
     json({ success: false, message: 'rota' });
   });
@@ -122,4 +123,25 @@ test('corte de importação: pedidos anteriores ao início não entram (nem sem 
   assert.equal(parseSince('2026-11-09T17:00:00Z'), Date.parse('2026-11-09T17:00:00Z'));
   assert.equal(parseSince('', 123), 123);
   assert.throws(() => parseSince('ontem'), /ISO/);
+});
+
+test('ação recusada pela Anota AI vira nota no pedido (sem repetir) e não para os demais', async () => {
+  for (const k of Object.keys(remote)) delete remote[k];
+  const ok = '66b6258e890ffb00126c4304';
+  Object.assign(remote, { [REJECT]: 0, [ok]: 0 });
+  const client = new AnotaClient({ clientId: 'c', clientSecret: 's' });
+  const store = memStore();
+  const cfg = { actions: true, dryRun: false };
+  await syncPage(client, store, PAGE, cfg);
+  store.rows.get(anotaLocalId(REJECT)).status = 'ready';
+  store.rows.get(anotaLocalId(ok)).status = 'confirmed';
+  let r = await syncPage(client, store, PAGE, cfg);
+  assert.equal(r.pushed, 1); assert.equal(remote[ok], 1); assert.equal(remote[REJECT], 0);
+  assert.equal(r.errors.length, 1); assert.match(r.errors[0], /ação accept recusada/);
+  const note = actionFailedNote('accept', 'Anota AI POST /x 200: Pedido já foi negado');
+  assert.match(note, /não registrou "aceitar": Pedido já foi negado/);
+  assert.ok(store.rows.get(anotaLocalId(REJECT)).notes.includes(note));
+  r = await syncPage(client, store, PAGE, cfg);
+  assert.equal(store.rows.get(anotaLocalId(REJECT)).notes.split(note).length, 2); // nota única
+  assert.equal(calls.filter(c => c.p.endsWith(`/order/ready/${REJECT}`)).length, 0); // parou no aceite recusado
 });
