@@ -40,7 +40,7 @@ const STATUSES = [
   { key: "cancelled", label: "Cancelado",  color: "bg-red-500/20 text-red-400" },
 ];
 
-const CHANNELS: Record<string, string> = { online: "Pedido online / Asaas", click: "Site / aplicativo", chat: "WhatsApp / chat", kiosk: "Totem", table_qr: "QR da mesa", ifood: "iFood", anotaai: "Anota AI", test: "Teste", other: "Outra origem" };
+const CHANNELS: Record<string, string> = { online: "Pedido online / Pix", click: "Site / aplicativo", chat: "WhatsApp / chat", kiosk: "Totem", table_qr: "QR da mesa", ifood: "iFood", anotaai: "Anota AI", test: "Teste", other: "Outra origem" };
 const channelLabel = (channel: string | null) => CHANNELS[channel ?? "other"] ?? channel ?? "Outra origem";
 
 const STATUS_MAP = Object.fromEntries(STATUSES.map((s) => [s.key, s]));
@@ -221,7 +221,7 @@ export default function AdminOrders() {
                         )}
                       </p>
                       <p className="text-[#a89a8c] text-xs"><OrderBrand brand={o.brand} /> · {destination(o)}{o.customerPhone ? ` · ${o.customerPhone}` : ""}</p>
-                      {o.channel === "online" && <p className="text-[#c8b89a] text-xs mt-1">Pix · {o.paymentStatus === "paid" ? "Pago pelo Asaas" : o.paymentStatus === "failed" ? "Pagamento estornado ou falhou — conferir" : "Aguardando confirmação do pagamento"}</p>}
+                      {o.channel === "online" && <p className="text-[#c8b89a] text-xs mt-1">Pix · {o.paymentStatus === "paid" ? "Pix confirmado pelo banco" : o.paymentStatus === "failed" ? "Pagamento estornado ou falhou — conferir" : "Aguardando confirmação do pagamento"}</p>}
                       {(o.channel === "kiosk" || o.channel === "table_qr") && <p className="text-[#c8b89a] text-xs mt-1">{o.channel === "kiosk" ? "Totem" : "QR na mesa"} · {o.paymentStatus === "paid" ? "Pago" : "Pagamento no local pendente"}</p>}
                       {o.orderType === "delivery" && <p className="text-[#c8b89a] text-xs mt-1">{o.deliveryDriverName ?? "Sem entregador"}{o.deliveryStatus === "out_for_delivery" ? " · Em entrega" : o.deliveryStatus === "delivered" ? " · Entrega concluída" : ""}</p>}
                     </td>
@@ -286,7 +286,7 @@ export default function AdminOrders() {
                 <p className="text-white font-semibold">{selected.customerName}</p>
                 <p className="text-white">{destination(selected)}</p>
                 <p className="text-[#a89a8c]">{selected.customerPhone}</p>
-                {selected.channel === "online" && <p className="text-[#c8b89a]">Pix / Asaas · {selected.paymentStatus === "paid" ? "Pago" : selected.paymentStatus === "failed" ? "Estornado ou falhou — conferir no Asaas" : "Aguardando pagamento. A produção será liberada automaticamente."}</p>}
+                {selected.channel === "online" && <p className="text-[#c8b89a]">Pix online · {selected.paymentStatus === "paid" ? "Pago" : selected.paymentStatus === "failed" ? "Estornado ou falhou — conferir no banco" : "Aguardando pagamento. A produção será liberada automaticamente."}</p>}
                 {(selected.channel === "kiosk" || selected.channel === "table_qr") && <p className="text-[#c8b89a]">{selected.paymentMethod === "cash" ? "Dinheiro" : "Cartão"} no local · {selected.paymentStatus === "paid" ? "Pago" : "Pagamento pendente"}</p>}
                 {selected.deliveryAddress && <p className="text-[#a89a8c]">{selected.deliveryAddress}</p>}
               </div>

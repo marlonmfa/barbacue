@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { brandCatalogProducts, categories, closedDays, deliveryQuotes, deliverySettings, kitchenPrintJobs, onlineCheckouts, orders, products, restaurantTables, storeSettings } from "@/db/schema";
 import { asaasConfig, asaasRequest, findAsaasPayment, getAsaasPayment, type PixCode } from "@/lib/asaas";
 import { asaasPaymentState, assertPaymentMatches, OnlinePaymentError, paymentReference, secureEquals, tokenHash, type AsaasPayment, type OnlineOrderInput } from "@/lib/online-payment";
+import { assertC6CobMatches, c6ChargeState, c6Configured, c6Environment, c6PixCode, c6Txid, createC6Cob, getC6Cob, removeC6Cob, type C6Cob } from "@/lib/c6-pix";
 import { canonicalOnlineItems } from "@/lib/unified-cart";
 import type { Brand } from "@/lib/brands";
 import { effectivePrice } from "@/lib/pricing";
@@ -28,8 +29,23 @@ async function withPaymentLock<T>(id: string, action: () => Promise<T>): Promise
   finally { connection.release(); }
 }
 
+/** Provedor do Pix online. Cada checkout guarda o ambiente em que nasceu:
+ * "sandbox"/"production" = Asaas (legado); "c6:sandbox"/"c6:production" = C6 Bank. */
+export const isC6Environment = (environment: string) => environment.startsWith("c6:");
+export function activeCheckoutEnvironment() {
+  return process.env.PIX_PROVIDER?.trim().toLowerCase() === "c6" ? `c6:${c6Environment()}` : asaasConfig().environment;
+}
+function assertEnvironmentUsable(environment: string) {
+  const current = isC6Environment(environment) ? (c6Configured() ? `c6:${c6Environment()}` : null) : asaasConfig().environment;
+  if (current !== environment) {
+    console.error(`[online-checkout] checkout do ambiente ${environment} não pode ser processado no ambiente atual (${current ?? "C6 sem configuração"})`);
+    throw new OnlinePaymentError("Este pedido pertence a outro ambiente de pagamento. Fale com a loja.", 409);
+  }
+}
+export const publicEnvironment = (environment: string) => environment.endsWith("production") ? "production" : "sandbox";
+
 export async function createOnlineOrder(input: OnlineOrderInput, ip: string) {
-  const environment = asaasConfig().environment;
+  const environment = activeCheckoutEnvironment();
   const requestHash = tokenHash(JSON.stringify(input));
   return db.transaction(async tx => {
     await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${`online-order:${input.requestId}`}, 0))`);
@@ -99,9 +115,10 @@ export async function ensureOnlinePayment(id: string, input?: OnlineOrderInput) 
   await withPaymentLock(id, async () => {
     const [checkout] = await db.select().from(onlineCheckouts).where(eq(onlineCheckouts.id, id));
     if (!checkout) throw new OnlinePaymentError("Pedido não encontrado.", 404);
-    if (checkout.environment !== asaasConfig().environment) throw new OnlinePaymentError("Este pedido pertence a outro ambiente de pagamento. Fale com a loja.", 409);
+    assertEnvironmentUsable(checkout.environment);
     const [order] = await db.select().from(orders).where(eq(orders.id, checkout.orderId));
     if (!order || order.status === "cancelled") return;
+    if (isC6Environment(checkout.environment)) return ensureC6Charge(checkout, order, input);
     let customerId = checkout.customerId;
     let payment = checkout.paymentId ? await getAsaasPayment(checkout.paymentId) : await findAsaasPayment(paymentReference(order.id));
     if (!payment) {
@@ -140,16 +157,63 @@ export async function ensureOnlinePayment(id: string, input?: OnlineOrderInput) 
   });
 }
 
-export async function applyVerifiedPayment(id: string, payment: AsaasPayment) {
+type CheckoutRow = typeof onlineCheckouts.$inferSelect;
+type OrderRow = typeof orders.$inferSelect;
+
+async function ensureC6Charge(checkout: CheckoutRow, order: OrderRow, input?: OnlineOrderInput) {
+  const txid = checkout.paymentId ?? c6Txid(checkout.id);
+  let cob = await getC6Cob(txid);
+  if (!cob) {
+    // PUT idempotente pelo txid: uma resposta perdida é recuperada pelo GET
+    // acima e o banco recusa um segundo PUT com o mesmo txid.
+    await db.update(onlineCheckouts).set({ paymentAttemptedAt: new Date() }).where(eq(onlineCheckouts.id, checkout.id));
+    try {
+      cob = await createC6Cob(txid, {
+        totalCents: order.totalCents, orderId: order.id,
+        description: `${order.brand} pedido ${order.id.slice(0, 8).toUpperCase()}`,
+        payer: input ? { cpf: input.cpf, name: input.customerName } : undefined,
+      });
+    } catch (error) {
+      if (error instanceof OnlinePaymentError && !error.uncertain) await db.update(onlineCheckouts).set({ paymentAttemptedAt: null }).where(eq(onlineCheckouts.id, checkout.id));
+      throw error;
+    }
+  }
+  assertC6CobMatches(cob, { txid, totalCents: order.totalCents });
+  await db.update(onlineCheckouts).set({ paymentId: txid }).where(eq(onlineCheckouts.id, checkout.id));
+  await applyVerifiedC6Charge(checkout.id, cob);
+  if (c6ChargeState(cob, order.totalCents) === "pending" && cob.status === "ATIVA" && !checkout.pix) {
+    await db.update(onlineCheckouts).set({ pix: await c6PixCode(cob) }).where(eq(onlineCheckouts.id, checkout.id));
+  }
+}
+
+export function applyVerifiedC6Charge(id: string, cob: C6Cob) {
+  return settleCheckout(id, (checkout, order) => {
+    if (!isC6Environment(checkout.environment)) throw new OnlinePaymentError("Cobrança não encontrada para este ambiente.", 409);
+    const txid = checkout.paymentId ?? c6Txid(checkout.id);
+    assertC6CobMatches(cob, { txid, totalCents: order.totalCents });
+    return { paymentId: txid, providerStatus: cob.status, state: c6ChargeState(cob, order.totalCents) };
+  });
+}
+
+export function applyVerifiedPayment(id: string, payment: AsaasPayment) {
+  return settleCheckout(id, (checkout, order) => {
+    if (checkout.environment !== asaasConfig().environment || !checkout.customerId) throw new OnlinePaymentError("Cobrança não encontrada para este ambiente.", 409);
+    assertPaymentMatches(payment, { paymentId: checkout.paymentId, customerId: checkout.customerId, orderId: order.id, totalCents: order.totalCents });
+    return { paymentId: payment.id, providerStatus: payment.status, state: asaasPaymentState(payment) };
+  });
+}
+
+/** Persiste uma situação já verificada no provedor. Pagamento, etapa do pedido
+ * e comanda da cozinha são gravados na mesma transação. */
+async function settleCheckout(id: string, verify: (checkout: CheckoutRow, order: OrderRow) => { paymentId: string; providerStatus: string; state: "paid" | "pending" | "failed" }) {
   return db.transaction(async tx => {
     const [checkout] = await tx.select().from(onlineCheckouts).where(eq(onlineCheckouts.id, id)).for("update");
-    if (!checkout || checkout.environment !== asaasConfig().environment || !checkout.customerId) throw new OnlinePaymentError("Cobrança não encontrada para este ambiente.", 409);
+    if (!checkout) throw new OnlinePaymentError("Cobrança não encontrada para este ambiente.", 409);
     const [order] = await tx.select().from(orders).where(eq(orders.id, checkout.orderId)).for("update");
-    assertPaymentMatches(payment, { paymentId: checkout.paymentId, customerId: checkout.customerId, orderId: order.id, totalCents: order.totalCents });
-    const state = asaasPaymentState(payment);
+    const { paymentId, providerStatus, state } = verify(checkout, order);
     // An old/pending response may never undo an already confirmed settlement.
     const effectiveState = checkout.paidAt && state === "pending" ? order.paymentStatus ?? "paid" : state;
-    await tx.update(onlineCheckouts).set({ paymentId: payment.id, providerStatus: payment.status, lastCheckedAt: new Date(), ...(state === "paid" ? { paidAt: checkout.paidAt ?? new Date() } : {}) }).where(eq(onlineCheckouts.id, id));
+    await tx.update(onlineCheckouts).set({ paymentId, providerStatus, lastCheckedAt: new Date(), ...(state === "paid" ? { paidAt: checkout.paidAt ?? new Date() } : {}) }).where(eq(onlineCheckouts.id, id));
     const release = state === "paid" && order.status === "pending";
     await tx.update(orders).set({ paymentStatus: effectiveState, ...(release ? { status: "confirmed" as const } : {}), ...(state === "failed" && ["pending", "confirmed"].includes(order.status ?? "") ? { status: "cancelled" as const } : {}) }).where(eq(orders.id, order.id));
     if (release) {
@@ -173,7 +237,7 @@ export async function onlineReceipt(id: string) {
     orderType: row.order.orderType, tableNumber: row.tableNumber, status: row.order.status, paymentStatus: row.order.paymentStatus,
     subtotalCents: row.order.subtotalCents, deliveryFeeCents: row.order.deliveryFeeCents, totalCents: row.order.totalCents, items: row.order.items,
     pix: row.order.status !== "cancelled" && row.order.paymentStatus === "pending" ? row.checkout.pix : null,
-    environment: row.checkout.environment, paidAt: row.checkout.paidAt, checkedAt: row.checkout.lastCheckedAt };
+    environment: publicEnvironment(row.checkout.environment), provider: isC6Environment(row.checkout.environment) ? "c6" : "asaas", paidAt: row.checkout.paidAt, checkedAt: row.checkout.lastCheckedAt };
 }
 
 /** Cancel only an unpaid charge. A payment racing cancellation is reconciled
@@ -181,10 +245,25 @@ export async function onlineReceipt(id: string) {
 export async function cancelOnlineCheckout(id: string) {
   await withPaymentLock(id, async () => {
     const [checkout] = await db.select().from(onlineCheckouts).where(eq(onlineCheckouts.id, id));
-    if (!checkout || checkout.environment !== asaasConfig().environment) throw new OnlinePaymentError("Pedido não encontrado neste ambiente.", 404);
+    if (!checkout) throw new OnlinePaymentError("Pedido não encontrado neste ambiente.", 404);
+    assertEnvironmentUsable(checkout.environment);
     const [order] = await db.select().from(orders).where(eq(orders.id, checkout.orderId));
     if (order.paymentStatus === "paid") throw new OnlinePaymentError("O pagamento já foi confirmado. Fale com a loja para cancelar e conferir o estorno.", 409);
     if (order.status === "cancelled") return;
+    if (isC6Environment(checkout.environment)) {
+      const txid = checkout.paymentId ?? c6Txid(checkout.id);
+      const cob = await getC6Cob(txid);
+      if (cob) {
+        assertC6CobMatches(cob, { txid, totalCents: order.totalCents });
+        if (c6ChargeState(cob, order.totalCents) === "paid") {
+          await applyVerifiedC6Charge(id, cob);
+          throw new OnlinePaymentError("O Pix já foi recebido. Fale com a loja para cancelar e conferir o estorno.", 409);
+        }
+        // Um Pix pago durante a remoção faz o banco recusar o PATCH, e o
+        // pedido não é cancelado localmente.
+        if (cob.status === "ATIVA") await removeC6Cob(txid);
+      }
+    } else {
     const payment = checkout.paymentId ? await getAsaasPayment(checkout.paymentId) : await findAsaasPayment(paymentReference(order.id));
     if (!payment && checkout.paymentAttemptedAt) throw new OnlinePaymentError("A emissão ainda precisa de conferência no Asaas. Fale com a loja antes de cancelar.", 409);
     if (payment) {
@@ -194,6 +273,7 @@ export async function cancelOnlineCheckout(id: string) {
         throw new OnlinePaymentError("O Pix já foi recebido. Fale com a loja para cancelar e conferir o estorno.", 409);
       }
       if (!payment.deleted) await asaasRequest(`/payments/${encodeURIComponent(payment.id)}`, "DELETE");
+    }
     }
     // Cancellation takes the same row lock as settlement. A webhook that won
     // the race must never be overwritten by this request.
@@ -205,4 +285,20 @@ export async function cancelOnlineCheckout(id: string) {
       await write.update(onlineCheckouts).set({ providerStatus: "DELETED", lastCheckedAt: new Date() }).where(eq(onlineCheckouts.id, id));
     });
   });
+}
+
+/** Segunda via para quando o webhook do banco não chega e o cliente fechou a
+ * aba: confere no C6 os checkouts abertos das últimas horas. Chamado pelo
+ * src/instrumentation.ts a cada 30 s, no máximo uma vez a cada 20 s. */
+let lastReconcile = 0;
+export async function reconcileOpenC6Checkouts() {
+  if (!c6Configured() || Date.now() - lastReconcile < 20_000) return;
+  lastReconcile = Date.now();
+  const open = await db.select({ id: onlineCheckouts.id }).from(onlineCheckouts).innerJoin(orders, eq(orders.id, onlineCheckouts.orderId))
+    .where(and(sql`${onlineCheckouts.environment} LIKE 'c6:%'`, sql`${onlineCheckouts.paidAt} IS NULL`, eq(orders.status, "pending"), sql`${onlineCheckouts.createdAt} > now() - interval '3 hours'`))
+    .limit(20);
+  for (const { id } of open) {
+    try { await ensureOnlinePayment(id); }
+    catch (error) { console.error(`[online-checkout] conciliação C6 do checkout ${id} falhou: ${(error as Error).message}`); }
+  }
 }

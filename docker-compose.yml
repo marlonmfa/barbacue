@@ -60,6 +60,14 @@ services:
       ASAAS_ENVIRONMENT: ${ASAAS_ENVIRONMENT:-sandbox}
       ASAAS_API_KEY: ${ASAAS_API_KEY:-}
       ASAAS_WEBHOOK_TOKEN: ${ASAAS_WEBHOOK_TOKEN:-}
+      PIX_PROVIDER: ${PIX_PROVIDER:-asaas}
+      C6_ENVIRONMENT: ${C6_ENVIRONMENT:-sandbox}
+      C6_CLIENT_ID: ${C6_CLIENT_ID:-}
+      C6_CLIENT_SECRET: ${C6_CLIENT_SECRET:-}
+      C6_PIX_KEY: ${C6_PIX_KEY:-}
+      C6_CERT_PATH: ${C6_CERT_PATH:-}
+      C6_KEY_PATH: ${C6_KEY_PATH:-}
+      C6_WEBHOOK_TOKEN: ${C6_WEBHOOK_TOKEN:-}
       # Login social dos clientes (docs/LOGIN-SOCIAL.md)
       APP_URL: ${APP_URL:-https://barbacue.cog.ia.br}
       INSTAGRAM_APP_ID: ${INSTAGRAM_APP_ID:-}
