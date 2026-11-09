@@ -110,3 +110,16 @@ test('success:false vira erro e não derruba os outros pedidos', async () => {
   const client = new AnotaClient({ clientId: 'c', clientSecret: 's' });
   await assert.rejects(syncPage(client, memStore(), { ...PAGE, pageId: '65d4a42543b0de0019666dff' }, { actions: true, dryRun: false }), /x-page-id inválido/);
 });
+
+test('corte de importação: pedidos anteriores ao início não entram (nem sem data)', async () => {
+  const { parseSince } = require('../src/config.ts');
+  const id = '66b6258e890ffb00126c4401'; remote[id] = 0;
+  const client = new AnotaClient({ clientId: 'c', clientSecret: 's' });
+  const store = memStore();
+  const r = await syncPage(client, store, PAGE, { actions: false, dryRun: false, importSince: Date.now() + 86_400_000 });
+  assert.equal(r.created, 0);
+  assert.equal(store.rows.size, 0);
+  assert.equal(parseSince('2026-11-09T17:00:00Z'), Date.parse('2026-11-09T17:00:00Z'));
+  assert.equal(parseSince('', 123), 123);
+  assert.throws(() => parseSince('ontem'), /ISO/);
+});

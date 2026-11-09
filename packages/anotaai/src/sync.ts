@@ -25,7 +25,7 @@ export type PageResult = { created: number; updated: number; pushed: number; err
  * ANOTAAI_ACTIONS=on, leva para a Anota AI o que avançou no painel (aceitar → pronto → finalizar, cancelar).
  * Sem estado próprio: a comparação é entre o check da listagem e o status da linha em `orders`.
  */
-export async function syncPage(client: AnotaClient, store: OrderStore, page: AnotaPageConfig, cfg: Pick<AnotaConfig, 'actions' | 'dryRun'>): Promise<PageResult> {
+export async function syncPage(client: AnotaClient, store: OrderStore, page: AnotaPageConfig, cfg: Pick<AnotaConfig, 'actions' | 'dryRun'> & { importSince?: number }): Promise<PageResult> {
   const res: PageResult = { created: 0, updated: 0, pushed: 0, errors: [] };
   const docs = (await listToday(client, page.pageId)).filter(d => d?._id && /^[0-9a-f]{24}$/i.test(d._id));
   const local = await store.statuses(docs.map(d => anotaLocalId(d._id)));
@@ -38,6 +38,9 @@ export async function syncPage(client: AnotaClient, store: OrderStore, page: Ano
         if (d.check === 3 || d.check === 4 || d.check === 5) continue; // encerrados antes de o Barbacue acompanhar a loja
         const det = await client.fetch<{ info?: AnotaOrder }>(`${ORDERS_PREFIX}/ping/get/${d._id}`, { pageId: page.pageId });
         if (!det?.info) continue;
+        // Primeira partida e reinícios: pedidos anteriores ao corte não entram (não imprimem na cozinha).
+        const created = Date.parse(String(det.info.createdAt ?? ""));
+        if (cfg.importSince && (!Number.isFinite(created) || created < cfg.importSince)) continue;
         const order = toBarbacueOrder({ ...det.info, _id: d._id }, page);
         if (!cfg.dryRun && await store.insert(order, localOfCheck(det.info.check ?? d.check) || 'pending')) res.created++;
         continue;

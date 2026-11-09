@@ -15,6 +15,8 @@ export interface AnotaConfig {
   actions: boolean;
   /** Igual ao monitor iFood: só grava no banco com ANOTAAI_DRY_RUN=false. */
   dryRun: boolean;
+  /** Pedidos criados antes disto não entram (evita imprimir pedidos antigos na primeira partida). ms epoch. */
+  importSince: number;
 }
 
 /** ANOTAAI_PAGES_JSON = [{"pageId":"<24 hex>","brand":"barbacue","name":"Barbacue"}, ...] */
@@ -36,5 +38,14 @@ export function loadConfig(env = process.env): AnotaConfig {
   const clientId = env.ANOTAAI_CLIENT_ID?.trim(), clientSecret = env.ANOTAAI_CLIENT_SECRET?.trim();
   if (!clientId || !clientSecret) throw new Error('Configure ANOTAAI_CLIENT_ID e ANOTAAI_CLIENT_SECRET no .env da raiz do monorepo');
   return { clientId, clientSecret, pages: parsePages(env.ANOTAAI_PAGES_JSON), pollIntervalMs,
-    actions: (env.ANOTAAI_ACTIONS?.trim() || 'on') !== 'off', dryRun: env.ANOTAAI_DRY_RUN !== 'false' };
+    actions: (env.ANOTAAI_ACTIONS?.trim() || 'on') !== 'off', dryRun: env.ANOTAAI_DRY_RUN !== 'false',
+    importSince: parseSince(env.ANOTAAI_IMPORT_SINCE) };
+}
+
+/** ANOTAAI_IMPORT_SINCE (ISO). Sem valor, vale o momento em que o monitor iniciou: nada do passado entra. */
+export function parseSince(raw: string | undefined, now = Date.now()) {
+  if (!raw?.trim()) return now;
+  const t = Date.parse(raw.trim());
+  if (!Number.isFinite(t)) throw new Error('ANOTAAI_IMPORT_SINCE deve ser uma data ISO');
+  return t;
 }
