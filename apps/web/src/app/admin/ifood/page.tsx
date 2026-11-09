@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { IfoodTabs } from "@/components/admin/ifood/IfoodTabs";
 
 type Action = "confirm" | "startPreparation" | "readyToPickup" | "dispatch" | "cancel";
 interface OrderItem { name: string; priceCents: number; qty: number; notes?: string | null }
@@ -136,6 +137,7 @@ export default function IfoodManager() {
 
   return (
     <div>
+      <IfoodTabs />
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-white">Gestor iFood</h1>

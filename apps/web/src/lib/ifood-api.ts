@@ -46,7 +46,7 @@ async function token(refresh = false): Promise<string> {
   return inflight;
 }
 
-async function call<T>(path: string, init: { method?: string; body?: unknown } = {}, retry = true): Promise<T | null> {
+export async function call<T>(path: string, init: { method?: string; body?: unknown } = {}, retry = true): Promise<T | null> {
   const res = await fetch(`${BASE}${path}`, {
     method: init.method ?? "GET",
     headers: { Authorization: `Bearer ${await token()}`, ...(init.body !== undefined ? { "Content-Type": "application/json" } : {}) },
@@ -93,7 +93,7 @@ export async function cancellationReasons(externalId: string) {
   return (await call<{ cancelCodeId: string; description: string }[]>(`/order/v1.0/orders/${encodeURIComponent(externalId)}/cancellationReasons`)) ?? [];
 }
 
-function assertLive() {
+export function assertLive() {
   if (ifoodSettings().dryRun) throw new IfoodApiError("Modo simulação ativo (IFOOD_DRY_RUN). Nenhuma ação foi enviada ao iFood.", 409);
 }
 

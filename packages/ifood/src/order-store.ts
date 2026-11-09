@@ -87,4 +87,24 @@ export async function checkIfoodStore(): Promise<void> {
   // Verificação somente de leitura; nunca aplica migrações no banco ativo.
   await pool.query('SELECT id, brand, channel, status, items, notes FROM orders LIMIT 0');
   await pool.query('SELECT order_id, status, next_attempt_at, attempts FROM kitchen_print_jobs LIMIT 0');
+  await pool.query('SELECT id, code, dispute_id, payload FROM ifood_order_events LIMIT 0');
+}
+
+/** Linha guardada para cada evento: disputas e código de entrega precisam do metadata, que some após o ACK. */
+export function ifoodEventRecord(event: IfoodEvent, brand?: string) {
+  const metadata = (event.metadata ?? {}) as Record<string, unknown>;
+  const disputeId = typeof metadata.disputeId === 'string' ? metadata.disputeId : null;
+  const payload = JSON.stringify(event);
+  if (payload.length > 200_000) throw new Error('Evento iFood grande demais para registrar');
+  return [event.id, event.orderId, event.merchantId ?? null, brand ?? null, event.code, event.fullCode ?? null, disputeId, payload, event.createdAt ?? null] as const;
+}
+
+export async function recordIfoodEvent(event: IfoodEvent, brand?: string, dryRun = process.env.IFOOD_DRY_RUN !== 'false') {
+  if (dryRun) return;
+  if (!process.env.DATABASE_URL) throw new Error('Configure DATABASE_URL para registrar eventos iFood');
+  const client = await pool.connect();
+  try {
+    await client.query(`INSERT INTO ifood_order_events (id,order_external_id,merchant_id,brand,code,full_code,dispute_id,payload,created_at)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8::jsonb,coalesce($9::timestamptz, now())) ON CONFLICT (id) DO NOTHING`, [...ifoodEventRecord(event, brand)]);
+  } finally { client.release(); }
 }

@@ -15,7 +15,7 @@ export const PERMISSIONS = [
   { id: "dashboard", label: "Visão geral", description: "Consultar indicadores e resumo da operação", href: "/admin" },
   { id: "orders", label: "Caixa e pedidos", description: "Consultar pedidos e gerenciar atendimento e entrega", href: "/admin/orders" },
   { id: "whatsapp", label: "Atendimento WhatsApp", description: "Ler conversas e enviar mensagens; conexão gerenciada pelo administrador", href: "/whatsapp" },
-  { id: "ifood", label: "Gestor iFood", description: "Confirmar, preparar, despachar e cancelar pedidos do iFood e pausar as lojas", href: "/admin/ifood" },
+  { id: "ifood", label: "Gestor iFood", description: "Pedidos, disputas, cardápio, horários, avaliações e financeiro das lojas no iFood", href: "/admin/ifood" },
   { id: "kitchen", label: "Preparo na cozinha", description: "Ver itens e observações; iniciar e concluir o preparo", href: "/admin/kitchen" },
   { id: "floor", label: "Salão", description: "Acompanhar mesas, lançar pedidos e registrar quando foram servidos", href: "/admin/waiter" },
   { id: "deliveries", label: "Minhas entregas", description: "Consultar somente as entregas atribuídas à sua conta e registrar a saída e conclusão", href: "/admin/delivery" },

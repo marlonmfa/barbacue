@@ -29,3 +29,13 @@ test('dry run does not write to the database', async () => {
   try { await storeIfoodEvent({ id: '1', orderId: fixture().id, code: 'PLC' }, fixture()); }
   finally { if (old === undefined) delete process.env.IFOOD_DRY_RUN; else process.env.IFOOD_DRY_RUN = old; if (oldDB === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = oldDB; }
 });
+
+test('event record keeps dispute metadata and the dispute id for the manager', () => {
+  const { ifoodEventRecord, recordIfoodEvent } = require('../src/order-store.ts');
+  const event = { id: 'ev-1', code: 'HSD', fullCode: 'HANDSHAKE_DISPUTE', orderId: 'order-1', merchantId: 'm1', createdAt: '2026-11-09T12:00:00Z', metadata: { disputeId: 'd-9', alternatives: [] } };
+  const row = ifoodEventRecord(event, 'chelas');
+  assert.equal(row[0], 'ev-1'); assert.equal(row[3], 'chelas'); assert.equal(row[4], 'HSD'); assert.equal(row[6], 'd-9');
+  assert.equal(JSON.parse(row[7]).metadata.disputeId, 'd-9');
+  assert.equal(ifoodEventRecord({ id: 'ev-2', code: 'DDCR', orderId: 'o' })[6], null);
+  return recordIfoodEvent(event, 'chelas', true); // dry run: não toca no banco
+});

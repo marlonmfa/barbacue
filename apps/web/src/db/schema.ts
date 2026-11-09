@@ -508,3 +508,16 @@ export const kitchenPrinterRoutes = pgTable("kitchen_printer_routes", {
   printerName: text("printer_name"),
   paper: integer("paper").notNull().default(80),
 });
+
+// Eventos do iFood (disputas, código de entrega e demais) gravados pelo monitor; migration 0030.
+export const ifoodOrderEvents = pgTable("ifood_order_events", {
+  id: text("id").primaryKey(),
+  orderExternalId: text("order_external_id").notNull(),
+  merchantId: text("merchant_id"),
+  brand: text("brand"),
+  code: text("code").notNull(),
+  fullCode: text("full_code"),
+  disputeId: text("dispute_id"),
+  payload: jsonb("payload").$type<Record<string, unknown>>().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});

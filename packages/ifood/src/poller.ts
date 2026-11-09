@@ -3,7 +3,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { IfoodClient } from './client';
 import { IfoodEvent, IfoodOrder } from './types';
 import { loadConfig } from './config';
-import { checkIfoodStore, hasStoredIfoodOrder, storeIfoodEvent } from './order-store';
+import { checkIfoodStore, hasStoredIfoodOrder, recordIfoodEvent, storeIfoodEvent } from './order-store';
 import { resolveMerchant } from './merchants';
 
 const ACCESS_RECHECK_MS = 5 * 60_000;
@@ -19,6 +19,8 @@ export type OrderHandler = (event: IfoodEvent, order: IfoodOrder | null, client:
 // Monitorar não confirma o pedido comercialmente. A confirmação automática é opt-in.
 export const defaultHandler: OrderHandler = async (event, order, client) => {
   const merchant = resolveMerchant(client.config.merchants, event.merchantId, order?.merchant?.id);
+  // Guardar o evento antes do ACK: disputas e código de entrega só existem no metadata.
+  if (!client.config.dryRun) await recordIfoodEvent(event, merchant.brand, client.config.dryRun);
   if (!client.config.dryRun) await storeIfoodEvent(event, order, merchant.brand, client.config.dryRun);
   console.log(`[${merchant.name}] pedido ${order?.displayId ?? event.orderId}: ${event.code}`);
   if (event.code === 'PLC' && client.config.autoConfirm && !client.config.dryRun) {

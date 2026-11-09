@@ -64,6 +64,11 @@ def prepare():
         subprocess.run(['psql',url,'-v','ON_ERROR_STOP=1','--single-transaction'],input=sql,text=True,check=True,capture_output=True);mig='applied'
     else: assert have=='2';mig='already'
     assert run('psql',url,'-At','-c',q).strip()=='2'
+    # Migrations aditivas e idempotentes (CREATE ... IF NOT EXISTS), listadas em EXTRA_MIGRATIONS.
+    for name in [m for m in os.environ.get('EXTRA_MIGRATIONS','').split(',') if m]:
+        sql=(ctx/'apps/web/drizzle/migrations'/name).read_text().replace('--> statement-breakpoint','')
+        assert re.search(r'\b(DROP|DELETE|TRUNCATE|ALTER\s+TABLE\s+\S+\s+DROP)\b',sql,re.I) is None,'Migration destrutiva: '+name
+        subprocess.run(['psql',url,'-v','ON_ERROR_STOP=1','--single-transaction'],input=sql,text=True,check=True,capture_output=True);mig+=f',{name}'
     # Candidata com o ambiente real, em porta isolada.
     ef=root/'cand.env';ef.touch(mode=0o600);full={**env,**social,'PORT':'43303','NEXT_DIST_DIR':D}
     ef.write_text(''.join(f'{k}={v}\n' for k,v in full.items() if '\n' not in v and re.fullmatch(r'[A-Z_][A-Z0-9_]*',k) and k not in('PATH','HOME','PWD','OLDPWD','HOSTNAME','SHLVL','_')))
