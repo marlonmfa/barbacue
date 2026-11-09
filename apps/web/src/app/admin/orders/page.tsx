@@ -183,7 +183,7 @@ export default function AdminOrders() {
           return <section key={stage.title} aria-label={stage.title} className="order-stage">
             <h2>{stage.title}<span>{entries.length}</span></h2>
             {entries.length === 0 && <p className="order-stage-empty">Nenhum pedido nesta etapa.</p>}
-            {entries.map(order => <button className="order-card" key={order.id} onClick={() => setSelected(order)} aria-label={`Ver pedido ${order.id.slice(0, 8)}`}>
+            {entries.map(order => <button className="order-card" data-brand={isBrand(order.brand) ? order.brand : "barbacue"} key={order.id} onClick={() => setSelected(order)} aria-label={`Ver pedido ${order.id.slice(0, 8)}`}>
               <div><strong>#{order.id.slice(0, 8).toUpperCase()}</strong><time>{order.createdAt ? new Date(order.createdAt).toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" }) : "—"}</time></div>
               <h3>{order.customerName}</h3><p>{destination(order)} · {channelLabel(order.channel)}</p>
               <p><OrderBrand brand={order.brand} /></p>
@@ -211,7 +211,7 @@ export default function AdminOrders() {
                 const st = STATUS_MAP[o.status] ?? STATUSES[0];
                 const items = Array.isArray(o.items) ? o.items : [];
                 return (
-                  <tr key={o.id} className="border-t border-[#352b24] hover:bg-[#241d18]">
+                  <tr key={o.id} data-brand={isBrand(o.brand) ? o.brand : "barbacue"} className="border-t border-[#352b24] hover:bg-[#241d18]">
                     <td className="px-5 py-3">
                       <p className="flex items-center gap-2 text-white font-medium">
                         {o.customerName}
