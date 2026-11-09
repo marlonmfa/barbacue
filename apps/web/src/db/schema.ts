@@ -467,6 +467,24 @@ export const erpLeaves = pgTable("erp_leaves", {
   kind: text("kind").notNull(), startDate: date("start_date").notNull(), endDate: date("end_date").notNull(),
   notes: text("notes"), status: text("status").notNull().default("planned"),
 });
+// Extrato bancário importado (OFX). Cada linha classificada vira (ou baixa) um
+// lançamento em erp_finance; migração 0031_bank_statements.sql.
+export const bankTransactions = pgTable("bank_transactions", {
+  id: serial("id").primaryKey(), brand: text("brand").notNull(), bank: text("bank").notNull(),
+  account: text("account").notNull(), fitid: text("fitid").notNull(), postedDate: date("posted_date").notNull(),
+  amountCents: integer("amount_cents").notNull(), description: text("description").notNull(),
+  counterparty: text("counterparty"), document: text("document"),
+  status: text("status").$type<"pending" | "posted" | "ignored">().notNull().default("pending"),
+  category: text("category"), rule: text("rule"), financeId: integer("finance_id").references(() => erpFinance.id),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+}, t => [unique("bank_transactions_unique").on(t.bank, t.account, t.fitid)]);
+export const bankRules = pgTable("bank_rules", {
+  id: serial("id").primaryKey(), pattern: text("pattern").notNull(),
+  direction: text("direction").$type<"debit" | "credit">().notNull(),
+  action: text("action").$type<"post" | "ignore">().notNull(), category: text("category"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, t => [unique("bank_rules_unique").on(t.pattern, t.direction)]);
 export const erpAudit = pgTable("erp_audit", {
   id: serial("id").primaryKey(), requestId: uuid("request_id").notNull().unique(),
   actorId: integer("actor_id").notNull(), action: text("action").notNull(),

@@ -26,6 +26,9 @@ await mkdir(out, { recursive: true });
 const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
 await client.connect();
 await client.query("DELETE FROM orders WHERE notes = 'fin-visual'");
+await client.query(
+  "UPDATE bank_transactions SET finance_id = NULL WHERE finance_id IN (SELECT id FROM erp_finance WHERE source_key LIKE 'fin-visual:%')",
+).catch(() => {}); // tabela só existe com a migração 0031
 await client.query("DELETE FROM erp_finance WHERE source_key LIKE 'fin-visual:%'");
 const { rows: [staff] } = await client.query(
   `INSERT INTO staff_users (name, username, password_hash, role, active)

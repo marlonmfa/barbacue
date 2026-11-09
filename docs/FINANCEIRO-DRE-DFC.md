@@ -57,6 +57,37 @@ fica em `src/lib/financeiro/queries.ts`. Os testes estão em `tests/financeiro-e
 5. **Ponto de equilíbrio** = despesas fixas ÷ % de margem de contribuição sobre a receita
    bruta. Com margem de contribuição negativa, o ponto não é atingível.
 
+## Extratos bancários (aba "Extratos bancários")
+- O usuário importa o OFX de cada conta (C6, Itaú, Inter…) informando a loja dona da conta.
+  Cada lançamento fica em `bank_transactions` (migração `0031_bank_statements.sql`, aplicada
+  à mão como as 0024/0027/0030). A chave única é banco + conta + FITID, então reimportar o
+  mesmo arquivo não duplica.
+- As regras ficam em `src/lib/financeiro/classify.ts` e são aplicadas nesta ordem:
+  1. Regra aprendida (favorecido + direção).
+  2. Transferência entre os CNPJs do grupo: ignorada.
+  3. Regras fixas por texto: DAS, folha, tarifas, aluguel, contas de consumo, fornecedores
+     conhecidos, embalagens, marketing, administrativo, iFood, maquininha e manutenção.
+  4. Sem regra: o lançamento fica "A revisar".
+- Créditos de maquininha e Pix de cliente são **ignorados**, porque as vendas já entram pelos
+  pedidos. O crédito do iFood vira "Repasse iFood" e substitui a estimativa do repasse no DFC.
+- Lançado = cria em `erp_finance` uma conta baixada na data do extrato (`source_key`
+  `bank:<id>`), com competência no mês do extrato. Antes de criar, procura uma conta em aberto
+  da **mesma loja, categoria e valor**, com vencimento até 10 dias antes ou depois. Se achar,
+  baixa essa conta (conciliação). Valor sozinho não basta: o teste mostrou duas despesas
+  diferentes com o mesmo valor.
+- Ao reclassificar, o efeito anterior é desfeito: a conta criada é cancelada, ou a conta
+  baixada volta a ficar em aberto. Com "lembrar", nasce uma regra em `bank_rules`, que é
+  aplicada na hora aos outros pendentes do mesmo favorecido.
+
+## Notas de entrada pela SEFAZ (rota proposta, não implementada aqui)
+A Distribuição DF-e já roda no contabil.cog.ia.br (Barbacue e Chelas cadastradas lá), com
+API pública `/companies/:id/dfe/{config,documents,sync,import}`. Para virar CMV aqui faltam:
+- A1 vigente do Barbacue (o último venceu em 06/03/2026).
+- Manifestação de ciência (evento 210210), sem a qual a SEFAZ entrega só o resumo da nota.
+- O consumo da API pelo Barbacue, que vira `erp_purchases` e `erp_finance` com as duplicatas.
+
+A SEFAZ guarda só cerca de 90 dias e não traz NFC-e.
+
 ## Limitações conhecidas (09/11/2026)
 - Em produção, `erp_finance` está vazio. Até os lançamentos começarem, o DRE mostra só
   vendas, descontos e a comissão estimada.

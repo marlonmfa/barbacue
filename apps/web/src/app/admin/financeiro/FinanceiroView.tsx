@@ -22,13 +22,15 @@ import {
   type Statement,
 } from "@/lib/financeiro/engine";
 import styles from "./financeiro.module.css";
+import { ExtratosPanel } from "./ExtratosPanel";
 
-type Tab = "overview" | "dre" | "dfc";
+type Tab = "overview" | "dre" | "dfc" | "extratos";
 type Mode = "brands" | "months";
 const TABS: [Tab, string][] = [
   ["overview", "Visão geral"],
   ["dre", "DRE"],
   ["dfc", "Fluxo de caixa (DFC)"],
+  ["extratos", "Extratos bancários"],
 ];
 
 const money = (c: number) => (c / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -130,6 +132,10 @@ export function FinanceiroView({
         ))}
       </div>
 
+      {tab === "extratos" ? (
+        <ExtratosPanel />
+      ) : (
+      <>
       <section className={styles.filters} aria-label="Filtros">
         <div className={styles.presets}>
           {presets.map(([label, f, t], i) => (
@@ -195,6 +201,8 @@ export function FinanceiroView({
           <StatementTable statement={statement} collapsed={collapsed} toggle={(id) => setCollapsed((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; })} onCell={(row, col) => setDrill({ row, col })} />
           {drill && <Drill view={tab} drill={drill} entries={entries} onClose={() => setDrill(null)} />}
         </section>
+      )}
+      </>
       )}
     </main>
   );
