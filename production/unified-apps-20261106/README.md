@@ -35,3 +35,17 @@ o da `main` (produção aplicou 0020, 0021 e 0024 fora do journal) e `schema.ts`
 Arquivos só da `main` (configuração de IA, painel de impressoras) foram mantidos, mas não estão
 em produção. O trabalho sem commit em `~/Repos/barbacue.cog.ia.br` (caixa, entregas por QR etc.)
 não foi trazido. Parte dele já está em produção e agora na `main`; o resto continua só lá.
+
+## Operações iFood — 09/11/2026
+`/admin/ifood` ganhou abas: Disputas e código de entrega, Cardápio (pausar/ativar e preço), Horários,
+Avaliações (ler e responder) e Financeiro (vendas e repasses), nas três lojas. O programa Windows abre
+as mesmas páginas. O monitor grava cada evento em `ifood_order_events` (migration 0030) antes do ACK.
+Módulo não liberado no portal do iFood aparece como "sem permissão no iFood".
+
+A `main` também recebeu `e6000a2` (webhooks da Anota AI), que já estava no ar desde 07/11 (build
+`ecpo86NYZDc8TakgDozo8`) sem estar no repositório.
+
+Publicação: `run-ifood-20261109.sh` (na pasta do servidor): backup do banco e do build, migrations
+0027 e 0030 (aditivas), candidata `ufFkyeQwDaxyPwlZGWEWK` testada, troca com reversão automática, e
+depois o monitor com a imagem `barbacue-ifood:events-20261109` (fonte `build-events-20261109`: a do
+webhook-audit de 23/10 + `order-store.ts`/`poller.ts` desta versão). O serviço `webhook` não mudou.
