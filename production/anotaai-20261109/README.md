@@ -46,3 +46,19 @@ Parar: `cd /root/barbacue-anotaai && docker compose -f compose.prod.yml down` (s
 Fila de impressão: 746 tickets `queued`, nenhum impresso, nenhum agente jamais conectado. O claim
 (`claimKitchenPrintJob`) pega o mais antigo, sem filtro de idade: o primeiro agente imprimiria todos.
 A fila não foi alterada; aguarda decisão do Marlon.
+
+## Fila de impressão antiga descartada e filtro de 6 h — 09/11/2026 ~20:30–21:00 UTC
+
+Decisão do Marlon (20:28 UTC): "ignorar cupons antigos e não imprimir".
+
+- Backup da tabela: `/srv/barbacue-unified-20261106/backup-print-queue-20261109/kitchen_print_jobs.dump`.
+- Antes: 746 `queued` (07/10 a 09/11 20:12 UTC), nenhum impresso. `UPDATE` só nesses: `status='failed'`,
+  `last_error='Descartado: ticket antigo, não imprimir (decisão do Marlon em 09/11/2026).'`. Nenhuma linha
+  apagada; cada um pode ser reimpresso manualmente. Depois: 746 `failed`, 0 candidatos ao claim.
+- `4ea5866`: o claim marca como `failed` (`STALE_PRINT_ERROR`) os `queued` com `next_attempt_at` há mais de
+  6 h (`PRINT_MAX_QUEUE_AGE_HOURS`), então um agente que reconecta não imprime fila velha. `next_attempt_at`
+  respeita pedidos agendados do iFood. Teste `apps/web/tests/kitchen-print-age.test.ts`; SQL conferido em
+  Postgres 16.
+- Web publicada com `publish.py` (BK_NAME `backup-print-age-20261109`): `xPvAVHhzdVb9MzfEaGupR` →
+  `i4X0Bxo-ctSlkwfzrUBda`, 135 rotas, candidata testada. Fontes anteriores do contexto em
+  `backup-print-age-src-20261109`.
