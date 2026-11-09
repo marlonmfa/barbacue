@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { and, asc, desc, eq, inArray, lte, ne, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { kitchenPrintAgentState, kitchenPrintJobs, orders } from "@/db/schema";
-import { printAgentConfigured, printFailureStatus, printRetryDelaySeconds, PRINT_LEASE_SECONDS, type KitchenTicket } from "@/lib/kitchen-print";
+import { printAgentConfigured, printFailureStatus, printRetryDelaySeconds, PRINT_LEASE_SECONDS, PRINT_MAX_QUEUE_AGE_HOURS, STALE_PRINT_ERROR, type KitchenTicket } from "@/lib/kitchen-print";
 
 type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
@@ -20,6 +20,9 @@ export async function claimKitchenPrintJob() {
     // Cancellation can happen before the local agent picks up a queued ticket.
     await tx.execute(sql`UPDATE kitchen_print_jobs j SET status = 'failed', last_error = 'Pedido cancelado; não imprimir.', updated_at = now()
       FROM orders o WHERE j.order_id = o.id AND j.status = 'queued' AND o.status = 'cancelled'`);
+    // Tickets velhos (agente desligado por horas) não saem ao reconectar; ver PRINT_MAX_QUEUE_AGE_HOURS.
+    await tx.execute(sql`UPDATE kitchen_print_jobs SET status = 'failed', last_error = ${STALE_PRINT_ERROR}, updated_at = now()
+      WHERE status = 'queued' AND next_attempt_at < now() - make_interval(hours => ${PRINT_MAX_QUEUE_AGE_HOURS})`);
     const result = await tx.execute<{ id: string }>(sql`
       SELECT j.id FROM kitchen_print_jobs j JOIN orders o ON o.id = j.order_id
       WHERE j.status = 'queued' AND j.next_attempt_at <= now() AND o.status <> 'cancelled' AND (o.channel IS DISTINCT FROM 'online' OR o.payment_status = 'paid')
