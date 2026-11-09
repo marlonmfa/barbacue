@@ -40,7 +40,7 @@ const STATUSES = [
   { key: "cancelled", label: "Cancelado",  color: "bg-red-500/20 text-red-400" },
 ];
 
-const CHANNELS: Record<string, string> = { online: "Pedido online / Asaas", click: "Site / aplicativo", chat: "WhatsApp / chat", kiosk: "Totem", table_qr: "QR da mesa", ifood: "iFood", test: "Teste", other: "Outra origem" };
+const CHANNELS: Record<string, string> = { online: "Pedido online / Asaas", click: "Site / aplicativo", chat: "WhatsApp / chat", kiosk: "Totem", table_qr: "QR da mesa", ifood: "iFood", anotaai: "Anota AI", test: "Teste", other: "Outra origem" };
 const channelLabel = (channel: string | null) => CHANNELS[channel ?? "other"] ?? channel ?? "Outra origem";
 
 const STATUS_MAP = Object.fromEntries(STATUSES.map((s) => [s.key, s]));

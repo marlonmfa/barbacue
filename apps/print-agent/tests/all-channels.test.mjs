@@ -18,3 +18,6 @@ test('version 2 validates totals and permits external dine in without table', ()
   assert.throws(() => formatTicket({ ...value, totalCents: -1 }));
   assert.throws(() => formatTicket({ ...value, payment: { status: 'unknown' } }));
 });
+test('Anota AI aparece com nome legível na origem do ticket', () => {
+  for (const columns of [32, 48]) assert.match(formatTicket({ ...fixture, version: 2, channel: 'anotaai' }, { columns }), /Origem: Anota AI/);
+});

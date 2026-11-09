@@ -54,7 +54,7 @@ export function formatTicket(ticket, { columns = 48, timeZone = 'America/Sao_Pau
     if (typeof ticket.tableLabel !== 'string' || ticket.tableLabel.length > 500) throw new Error('Identificacao da mesa invalida');
     lines.push(...wrapText(ticket.tableLabel, columns));
   }
-  const channels = { kiosk: 'totem', table_qr: 'QR da mesa', click: 'site / aplicativo', chat: 'WhatsApp / chat', ifood: 'iFood', test: 'TESTE', manual: 'balcao', other: 'outra origem' };
+  const channels = { kiosk: 'totem', table_qr: 'QR da mesa', click: 'site / aplicativo', chat: 'WhatsApp / chat', ifood: 'iFood', anotaai: 'Anota AI', test: 'TESTE', manual: 'balcao', other: 'outra origem' };
   lines.push(...wrapText(`Origem: ${Object.hasOwn(channels, ticket.channel) ? channels[ticket.channel] : ticket.channel}`, columns));
   if (ticket.version === 2) {
     if (ticket.status === 'pending') lines.push('PEDIDO PENDENTE - CONFIRMAR');
