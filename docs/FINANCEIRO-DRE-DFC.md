@@ -60,7 +60,7 @@ fica em `src/lib/financeiro/queries.ts`. Os testes estão em `tests/financeiro-e
 ## Limitações conhecidas (09/11/2026)
 - Em produção, `erp_finance` está vazio. Até os lançamentos começarem, o DRE mostra só
   vendas, descontos e a comissão estimada.
-- Os pedidos no sistema começam em 27/05/2026 e só ganham volume em outubro/2026. Em outubro
-  são cerca de R$ 39 mil, contra perto de R$ 140 mil por mês nos fechamentos em planilha.
-  Para o histórico de 2023–2026 entrar no painel, é preciso importar os fechamentos do
+- Os pedidos no sistema começam em 27/05/2026 e só ganham volume em outubro/2026. É bem
+  menos do que os fechamentos em planilha registram por mês. Para o histórico de 2023–2026
+  entrar no painel, é preciso importar os fechamentos do
   Takeout (proposta em `secrets/takeout-2026-11-07/INVENTARIO.md`, ainda não aprovada).
