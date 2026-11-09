@@ -49,3 +49,17 @@ Publicação: `run-ifood-20261109.sh` (na pasta do servidor): backup do banco e 
 0027 e 0030 (aditivas), candidata `ufFkyeQwDaxyPwlZGWEWK` testada, troca com reversão automática, e
 depois o monitor com a imagem `barbacue-ifood:events-20261109` (fonte `build-events-20261109`: a do
 webhook-audit de 23/10 + `order-store.ts`/`poller.ts` desta versão). O serviço `webhook` não mudou.
+
+## Pix do C6 Bank — 09/11/2026
+Commit `09cd38e`. Copiados para o contexto só `lib/c6-pix.ts`, `lib/online-checkout.ts`, `instrumentation.ts`,
+`api/webhooks/c6/[token]/[[...path]]/route.ts`, `admin/orders/page.tsx` (textos "Asaas" → "Pix"),
+`scripts/configure-c6-pix.mjs` e `docs/PIX-C6.md`. Os dois que já existiam eram idênticos ao pai do commit;
+cópias em `*.before-pix-c6` no contexto. Build `i4X0Bxo-ctSlkwfzrUBda` → `iQChvTujoUsayhF0egSF-` (135 → 136 rotas),
+backup `backup-pix-c6-20261109`, sem migration. Ambiente PM2 não mudou: sem `PIX_PROVIDER` nem `C6_*`, o Pix
+do C6 fica inativo e o checkout segue no Asaas (produção). Verificado: `/pedir` 200 nos três hosts e
+`POST /api/webhooks/c6/<token errado>/pix` → 401.
+
+Rede para o webhook: DNS de `barbacue.cog.ia.br` aponta direto para a hirable (sem proxy do Cloudflare); o nginx
+da hirable repassa por SNI (`/etc/nginx/stream.d/sni.conf`, sem terminar TLS) ao nginx do contêiner, que termina
+TLS com Let's Encrypt. Se o C6 exigir mTLS, `ssl_verify_client` vai no nginx do contêiner
+(`/etc/nginx/sites-available/barbacue.cog.ia.br.conf`).
