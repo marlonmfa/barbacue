@@ -12,6 +12,7 @@ import {
 } from "react";
 import type { erpSnapshot } from "@/lib/erp";
 import styles from "./erp.module.css";
+import { CATEGORY_LABELS } from "@/lib/financeiro/engine";
 
 type Data = Awaited<ReturnType<typeof erpSnapshot>>;
 type Row = Record<string, unknown>;
@@ -57,6 +58,7 @@ const labels: Record<string, string> = {
   medical: "Atestado",
   absence: "Falta",
   other: "Outros",
+  ...CATEGORY_LABELS,
   operating: "Operacional",
   tax: "Imposto",
   payroll: "Folha",
@@ -538,7 +540,13 @@ export default function ErpPage() {
           {select(
             "category",
             "Categoria",
-            enumOptions("operating", "tax", "other"),
+            v.kind === "receivable"
+              ? enumOptions("ifood", "sales", "financial", "loan", "other")
+              : enumOptions(
+                  "purchase", "packaging", "delivery", "marketplace", "fees", "tax",
+                  "rent", "utilities", "marketing", "admin", "maintenance", "operating",
+                  "financial", "investment", "loan", "withdrawal", "other",
+                ),
           )}
           {field("amountCents", "Valor (R$)", "number", true, 100)}
           {field("dueDate", "Vencimento", "date")}

@@ -12,7 +12,9 @@ const nextConfig: NextConfig = {
   // Emit a self-contained server bundle for a small production Docker image.
   output: "standalone",
   transpilePackages: ["jose"],
-  outputFileTracingRoot: '/Users/marlonalcantara/Repos/barbacue.cog.ia.br',
+  // O build de produção depende deste caminho fixo; NEXT_TRACING_ROOT permite
+  // rodar o app num outro checkout (testes locais) sem mudar o build publicado.
+  outputFileTracingRoot: process.env.NEXT_TRACING_ROOT || '/Users/marlonalcantara/Repos/barbacue.cog.ia.br',
   // Two dev servers sharing one .next corrupt each other's client chunks — the
   // page then serves but never hydrates. Set NEXT_DIST_DIR to run a second
   // instance (e.g. a test server) alongside the one you are working in.

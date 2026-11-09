@@ -49,7 +49,7 @@ export function permissionForPath(path: string): Permission | "admin" | "staff-m
     dashboard: "dashboard",
     orders: "orders", ifood: "ifood", kitchen: "kitchen", waiter: "floor", delivery: "deliveries", catalogs: "catalog", products: "catalog", categories: "catalog", upload: "catalog",
     coupons: "offers", tables: "tables", customers: "customers", settings: "settings", "delivery-settings": "settings", "closed-days": "settings",
-    whatsapp: "whatsapp", beta: "beta", erp: "admin", team: "admin", employees: "admin", staff: "staff-management", system: "admin", downloads: "admin", impersonate: "admin",
+    whatsapp: "whatsapp", beta: "beta", erp: "admin", financeiro: "admin", team: "admin", employees: "admin", staff: "staff-management", system: "admin", downloads: "admin", impersonate: "admin",
   };
   return map[section] ?? null;
 }
