@@ -26,13 +26,15 @@ await db.connect();
 await db.query("delete from kitchen_print_jobs; delete from orders where customer_phone like '5547999000%'");
 const seed = [
   ["barbacue", "confirmed", "Ana Souza"], ["chelas", "confirmed", "Bruno Lima"], ["barbadog", "preparing", "Carla Dias"],
-  ["chelas", "preparing", "Diego Reis"], ["barbacue", "ready", "Eva Costa"], ["barbadog", "confirmed", "Fábio Melo"],
+  ["chelas", "preparing", "Diego Reis"], ["barbacue", "ready", "Cliente Anota AI"], ["barbadog", "confirmed", "Fábio Melo"],
 ];
 for (const [i, [brand, status, name]] of seed.entries()) {
   await db.query(
-    `insert into orders (customer_name, customer_phone, items, subtotal_cents, total_cents, brand, channel, status, order_type, created_at)
-     values ($1, $2, $3, 4590, 4590, $4, 'anotaai', $5, 'delivery', now() - ($6 || ' minutes')::interval)`,
-    [name, `5547999000${i}`, JSON.stringify([{ name: "Combo da casa", priceCents: 4590, qty: 1 }]), brand, status, String(i * 4)]);
+    `insert into orders (customer_name, customer_phone, items, subtotal_cents, total_cents, brand, channel, status, order_type, notes, created_at)
+     values ($1, $2, $3, 4590, 4590, $4, 'anotaai', $5, $6, $7, now() - ($8 || ' minutes')::interval)`,
+    [name, `5547999000${i}`, JSON.stringify([{ name: "Combo da casa", priceCents: 4590, qty: 1 }]), brand, status,
+     name === "Cliente Anota AI" ? "dine_in" : "delivery",
+     name === "Cliente Anota AI" ? "Anota AI #12829\nLoja Anota AI: Barbacue\nMesa: Mesa 16\nPagamento: A definir · Garçom: Caroline" : null, String(i * 4)]);
 }
 // Test-only staff account (scrypt "salt:hash", same format as staff-auth.ts).
 const PASSWORD = "visual-test-pw-" + randomBytes(4).toString("hex");
@@ -61,6 +63,14 @@ for (const brand of ["barbacue", "chelas", "barbadog"]) {
 }
 const backgrounds = new Set(["barbacue", "chelas", "barbadog"].map((b) => cards.find((c) => c.brand === b)?.bg));
 if (backgrounds.size !== 3) failures.push("brand backgrounds are not distinct");
+// Title shows who the order belongs to; two fixed-color tags (origin, restaurant).
+const titles = await page.locator(".order-card h3").allInnerTexts();
+if (titles.includes("Cliente Anota AI")) failures.push("generic 'Cliente Anota AI' still used as title");
+if (!titles.includes("Mesa 16")) failures.push(`salão order should be titled by table, got ${titles.join(", ")}`);
+const tags = await page.locator(".order-card").evaluateAll((els) => els.map((e) => [...e.querySelectorAll(".order-tag")].map((t) => `${t.textContent}|${getComputedStyle(t).backgroundColor}`)));
+if (!tags.every((t) => t.length === 2 && t[0].startsWith("Anota AI|"))) failures.push("each card needs origin + restaurant tags");
+if (new Set(tags.map((t) => t[0])).size !== 1) failures.push("Anota AI tag color varies between cards");
+for (const b of ["Barbacue", "Chelas", "Barbadog"]) if (new Set(tags.map((t) => t[1]).filter((x) => x.startsWith(b))).size !== 1) failures.push(`${b} tag color varies`);
 await page.screenshot({ path: path.join(SHOTS, `orders-brand-backgrounds-${STAMP}.png`), fullPage: false });
 await browser.close();
 if (failures.length) { console.error("FAIL\n" + failures.join("\n")); process.exit(1); }
