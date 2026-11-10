@@ -17,3 +17,10 @@
 .driver-roster li strong { font-size:14px; }.driver-roster li span { font-size:12px; color:#abdbba; }
 
 .order-display-options{margin-bottom:12px;border:1px solid #ddd;border-radius:6px;background:white}.order-display-options>summary{cursor:pointer;padding:10px 12px;font-weight:600;font-size:13px;color:#555}.order-display-options-body{padding:12px}.order-manager>div:first-child{margin-bottom:12px}.order-manager{padding:12px}
+
+/* Impressão pelo navegador: a loja aparece em destaque, em negativo, com a
+   moldura da comanda térmica (# Barbacue, * Chelas, = Barbadog). */
+.order-ticket .order-print-brand[data-brand]{margin:0 0 3mm;padding:2mm 0;background:#000!important;color:#fff!important;text-align:center;font:900 17pt/1.1 'Courier New',monospace;letter-spacing:0;white-space:nowrap;text-transform:uppercase;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.order-print-brand[data-brand=barbacue]::before,.order-print-brand[data-brand=barbacue]::after{content:" ### "}
+.order-print-brand[data-brand=chelas]::before,.order-print-brand[data-brand=chelas]::after{content:" *** "}
+.order-print-brand[data-brand=barbadog]::before,.order-print-brand[data-brand=barbadog]::after{content:" === "}

@@ -1,4 +1,25 @@
 const BRANDS = { barbacue: 'BARBACUE', chelas: 'CHELAS', barbadog: 'BARBADOG' };
+// As tres lojas imprimem na mesma impressora: cada uma tem moldura propria
+// (caractere e subtitulo) para a cozinha separar as comandas sem ler o texto.
+const BRAND_FRAME = {
+  barbacue: { fill: '#', subtitle: 'BURGUERS NA BRASA' },
+  chelas: { fill: '*', subtitle: 'COCINA MEXICANA' },
+  barbadog: { fill: '=', subtitle: 'HOT DOGS' },
+};
+
+export const BANNER_LINES = 5;
+
+/** Moldura de 5 linhas com o nome da loja; o desktop amplia essas linhas. */
+export function brandBanner(brand, columns) {
+  const { fill, subtitle } = BRAND_FRAME[brand];
+  const center = text => {
+    const inner = ` ${text} `;
+    const left = Math.max(2, Math.floor((columns - inner.length) / 2));
+    return (fill.repeat(left) + inner).padEnd(columns, fill).slice(0, columns);
+  };
+  const rule = fill.repeat(columns);
+  return [rule, center(BRANDS[brand]), center(subtitle), center(`LOJA ${BRANDS[brand]}`), rule];
+}
 
 // ASCII evita depender da pagina de caracteres do modelo. Nunca enviamos
 // controles ESC/POS originados de nomes/observacoes digitados pelo cliente.
@@ -46,7 +67,7 @@ export function formatTicket(ticket, { columns = 48, timeZone = 'America/Sao_Pau
     throw new Error('Pedido de mesa sem numero de mesa valido');
   }
   const separator = '-'.repeat(columns);
-  const lines = [BRANDS[ticket.brand], 'COZINHA', `PEDIDO #${ticket.orderNumber}`];
+  const lines = [...brandBanner(ticket.brand, columns), 'COZINHA', `PEDIDO #${ticket.orderNumber}`];
   if (ticket.reprint) lines.push('*** REIMPRESSAO ***');
   lines.push(ticket.orderType === 'dine_in' ? (ticket.tableNumber ? `MESA ${ticket.tableNumber}` : 'NO LOCAL') : ticket.orderType === 'delivery' ? 'ENTREGA' : 'BALCAO / RETIRADA');
   if (ticket.orderType === 'dine_in' && ticket.tableLabel &&
@@ -98,16 +119,24 @@ export function formatTicket(ticket, { columns = 48, timeZone = 'America/Sao_Pau
     const methods = { pix: 'PIX', cash: 'Dinheiro', card_on_delivery: 'Cartao no recebimento' };
     lines.push(payments[ticket.payment.status], ...wrapText(`Forma: ${methods[ticket.payment.method] ?? sanitizeText(ticket.payment.method || 'Nao informada')}`, columns), ...wrapText('Situacao no recebimento do pedido', columns));
   }
-  lines.push('NAO E COMPROVANTE DE PAGAMENTO', '', '');
+  lines.push('NAO E COMPROVANTE DE PAGAMENTO', BRAND_FRAME[ticket.brand].fill.repeat(columns),
+    ...wrapText(`FIM - ${BRANDS[ticket.brand]} #${ticket.orderNumber}`, columns), BRAND_FRAME[ticket.brand].fill.repeat(columns), '', '');
   return lines.join('\n') + '\n';
 }
 
 export function escposBytes(text, { cut = false } = {}) {
   // Somente o formatador acima deve produzir text. Nao aceitar bytes do cliente.
   if (/[^\x20-\x7e\n]/.test(text)) throw new Error('Texto nao seguro para ESC/POS');
+  const all = text.split('\n');
+  const banner = all.slice(0, BANNER_LINES).join('\n');
+  const body = all.slice(BANNER_LINES).join('\n');
   return Buffer.concat([
     Buffer.from([0x1b, 0x40]), // ESC @: initialize
-    Buffer.from(text, 'ascii'),
+    // Moldura da loja em negrito (ESC E 1 ... ESC E 0); o resto em texto normal.
+    Buffer.from([0x1b, 0x45, 0x01]),
+    Buffer.from(banner + '\n', 'ascii'),
+    Buffer.from([0x1b, 0x45, 0x00]),
+    Buffer.from(body, 'ascii'),
     Buffer.from('\n\n\n', 'ascii'),
     ...(cut ? [Buffer.from([0x1d, 0x56, 0x00])] : []), // GS V 0: full cut (opt-in)
   ]);
