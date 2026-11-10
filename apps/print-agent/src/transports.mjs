@@ -1,6 +1,6 @@
 import net from 'node:net';
 import { spawn } from 'node:child_process';
-import { escposBytes } from './ticket.mjs';
+import { escposBytes, plainText } from './ticket.mjs';
 
 export class TransportError extends Error {
   constructor(message, uncertain = false) {
@@ -81,7 +81,7 @@ export function createTransport(config) {
     if (config.transport === 'tcp') {
       return sendTcp(escposBytes(text, config), { host: config.tcpHost, port: config.tcpPort, timeoutMs: config.timeoutMs });
     }
-    return sendCups(config.cupsFormat === 'escpos' ? escposBytes(text, config) : Buffer.from(text, 'ascii'), {
+    return sendCups(config.cupsFormat === 'escpos' ? escposBytes(text, config) : Buffer.from(plainText(text), 'ascii'), {
       printer: config.cupsPrinter, format: config.cupsFormat, timeoutMs: config.timeoutMs, orderNumber: ticket.orderNumber,
     });
   };

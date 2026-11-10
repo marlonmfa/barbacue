@@ -18,3 +18,15 @@ test('desktop prints the restaurant frame inverted, above the order body', () =>
 test('text without a frame is printed unchanged', () => {
   assert.doesNotMatch(ticketHtml('linha simples', 80), /class="banner"/);
 });
+
+test('desktop renders the invite QR as local SVG and frames every part', async () => {
+  const text = formatTicket({ version: 2, brand: 'barbacue', orderNumber: 'AB12CD34', channel: 'anotaai', orderType: 'pickup',
+    items: [{ name: 'Burrito', qty: 1, restaurant: 'Chelas' }, { name: 'Smash', qty: 1 }], createdAt: '2026-11-10T13:00:00Z',
+    subtotalCents: 1000, totalCents: 1000, payment: { status: 'paid', method: 'pix' } });
+  const html = ticketHtml(text, 80);
+  assert.equal(html.match(/<pre class="banner">/g).length, 2);
+  assert.equal(html.match(/<div class="qr"><svg/g).length, 2);
+  assert.match(html, /<pre class="cut">/);
+  assert.doesNotMatch(html, /\[QR\]/);
+  assert.doesNotMatch(html, /src="http/);
+});

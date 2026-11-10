@@ -9,7 +9,8 @@ for (const channel of ['click', 'chat', 'ifood', 'telefone', 'parceiro-novo', 't
     const text = formatTicket(value, { columns });
     assert.match(text, /Cliente: Joao/); assert.match(text, /Rua A, 123/); assert.match(text, /PAGO/); assert.match(text, /59,90/); assert.match(text, /PEDIDO PENDENTE/);
     assert.doesNotMatch(text, /PAGAMENTO PENDENTE/);
-    assert.ok(text.split('\n').every(line => line.length <= columns));
+    // [QR] e linha de controle (vira QR grafico ou some no texto puro).
+    assert.ok(text.split('\n').every(line => line.startsWith('[QR] ') || line.length <= columns));
   }
 });
 test('version 2 validates totals and permits external dine in without table', () => {
