@@ -9,6 +9,7 @@ const { syncPage, CANCEL_REQUESTED, actionFailedNote } = require('../src/sync.ts
 const PAGE = { pageId: '65d4a42543b0de0019666db0', brand: 'barbadog', name: 'Barbadog' };
 const NEW = '66b6258e890ffb00126c4233', OLD = '66b6258e890ffb00126c4299', LOCAL = '66b6258e890ffb00126c4300', REMOTE = '66b6258e890ffb00126c4301', ASK = '66b6258e890ffb00126c4302', REJECT = '66b6258e890ffb00126c4303';
 const remote = {};
+const hidden = new Set(); // pedidos de dias anteriores: fora da listagem do dia
 const calls = [];
 let tokens = 0;
 const detail = id => ({ _id: id, check: remote[id], shortReference: 77, type: 'DELIVERY', customer: { name: 'Ana', phone: '47999990000' }, deliveryAddress: { formattedAddress: 'Rua A, 1', neighborhood: 'Centro' }, items: [{ name: '.Hot dog', quantity: 2, total: 30, observation: 'sem cebola', subItems: [{ name: 'Bacon', quantity: 1 }] }], payments: [{ code: 'money', value: '35', changeFor: 50, prepaid: false }], deliveryFee: 5, total: 35 });
@@ -20,7 +21,7 @@ const server = http.createServer((req, res) => {
     if (u.pathname.endsWith('/oauth-client/token')) { tokens++; return json({ accessToken: 'tok', expiresIn: 3600 }); }
     if (req.headers['x-page-id'] !== PAGE.pageId) return json({ success: false, message: 'x-page-id inválido' });
     const p = '/api-old/partnerauth/v2';
-    if (u.pathname === `${p}/ping/list`) return json({ success: true, info: { docs: Object.entries(remote).map(([_id, check]) => ({ _id, check })), limit: 100 } });
+    if (u.pathname === `${p}/ping/list`) return json({ success: true, info: { docs: Object.entries(remote).filter(([_id]) => !hidden.has(_id)).map(([_id, check]) => ({ _id, check })), limit: 100 } });
     const g = u.pathname.match(/\/ping\/get\/(\w+)$/); if (g) return json({ success: true, info: detail(g[1]) });
     const m = u.pathname.match(/\/order\/(accept|ready|finalize|cancel)\/(\w+)$/);
     if (m && m[2] === REJECT) return json({ success: false, message: 'Pedido já foi negado' });
@@ -35,6 +36,10 @@ function memStore() {
     async insert(o, status) { if (rows.has(o.id)) return false; rows.set(o.id, { ...o, status }); return true; },
     async advance(id, status) { const r = rows.get(id); if (!r || ['cancelled', 'delivered'].includes(r.status)) return false; r.status = status; return true; },
     async appendNote(id, note) { const r = rows.get(id); if (r && !r.notes.includes(note)) r.notes += '\n' + note; },
+    async openOutside(brand, exclude, since, limit) {
+      return [...rows.values()].filter(r => r.brand === brand && !exclude.includes(r.id) && ['pending', 'confirmed', 'preparing', 'ready'].includes(r.status))
+        .map(r => (r.notes.match(/Pedido externo: ([0-9a-f]{24})/) || [])[1]).filter(Boolean).slice(0, limit);
+    },
     async check() {} };
 }
 
@@ -144,4 +149,26 @@ test('ação recusada pela Anota AI vira nota no pedido (sem repetir) e não par
   r = await syncPage(client, store, PAGE, cfg);
   assert.equal(store.rows.get(anotaLocalId(REJECT)).notes.split(note).length, 2); // nota única
   assert.equal(calls.filter(c => c.p.endsWith(`/order/ready/${REJECT}`)).length, 0); // parou no aceite recusado
+});
+
+test('pedido de dia anterior fora da listagem é conferido por /ping/get e fecha no painel', async () => {
+  for (const k of Object.keys(remote)) delete remote[k];
+  const old = '66b6258e890ffb00126c4305', open = '66b6258e890ffb00126c4306';
+  Object.assign(remote, { [old]: 2, [open]: 2 });
+  const client = new AnotaClient({ clientId: 'c', clientSecret: 's' });
+  const store = memStore();
+  const cfg = { actions: true, dryRun: false };
+  await syncPage(client, store, PAGE, cfg);
+  assert.equal(store.rows.get(anotaLocalId(old)).status, 'ready');
+  hidden.add(old); hidden.add(open); remote[old] = 3;      // virou o dia; finalizado na Anota AI
+  const r = await syncPage(client, store, PAGE, cfg);
+  assert.equal(r.updated, 1); assert.deepEqual(r.errors, []);
+  assert.equal(store.rows.get(anotaLocalId(old)).status, 'delivered');
+  assert.equal(store.rows.get(anotaLocalId(open)).status, 'ready');
+  store.rows.get(anotaLocalId(open)).status = 'delivered';  // concluído no painel depois da virada
+  // concluído no painel: não está mais aberto, então não é conferido (o envio vale só enquanto está na listagem)
+  const before = calls.length;
+  await syncPage(client, store, PAGE, cfg);
+  assert.ok(calls.slice(before).every(c => !c.p.includes(`/ping/get/${open}`)));
+  hidden.clear();
 });

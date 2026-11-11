@@ -24,6 +24,10 @@ async function listToday(client: AnotaClient, pageId: string) {
   return out;
 }
 
+/** Pedidos de dias anteriores que ficaram abertos no painel saem da listagem do dia; conferimos um a um. */
+export const STALE_WINDOW_MS = 3 * 86_400_000;
+export const STALE_PER_CYCLE = 10;
+
 export type PageResult = { created: number; updated: number; pushed: number; errors: string[] };
 
 /**
@@ -34,6 +38,15 @@ export type PageResult = { created: number; updated: number; pushed: number; err
 export async function syncPage(client: AnotaClient, store: OrderStore, page: AnotaPageConfig, cfg: Pick<AnotaConfig, 'actions' | 'dryRun'> & { importSince?: number }): Promise<PageResult> {
   const res: PageResult = { created: 0, updated: 0, pushed: 0, errors: [] };
   const docs = (await listToday(client, page.pageId)).filter(d => d?._id && /^[0-9a-f]{24}$/i.test(d._id));
+  // Abertos no painel que não vieram na listagem do dia (ex.: viraram o dia em "pronto"): status atual via /ping/get.
+  for (const ext of await store.openOutside(page.brand, docs.map(d => anotaLocalId(d._id)), Date.now() - STALE_WINDOW_MS, STALE_PER_CYCLE)) {
+    try {
+      const det = await client.fetch<{ info?: AnotaOrder }>(`${ORDERS_PREFIX}/ping/get/${ext}`, { pageId: page.pageId });
+      if (det?.info && typeof det.info.check === 'number') docs.push({ _id: ext, check: det.info.check } as AnotaListDoc);
+    } catch (e) {
+      res.errors.push(`${page.name} ${ext} (pedido de dia anterior): ${(e as Error).message}`);
+    }
+  }
   const local = await store.statuses(docs.map(d => anotaLocalId(d._id)));
   for (const d of docs) {
     const id = anotaLocalId(d._id);

@@ -55,6 +55,8 @@ export interface OrderStore {
   /** Só avança (ou cancela); nunca mexe em pedido encerrado. */
   advance(id: string, status: LocalStatus): Promise<boolean>;
   appendNote(id: string, note: string): Promise<void>;
+  /** Pedidos ainda abertos no painel (da marca, criados depois de `since`) que não estão em `exclude`: id externo Anota AI. */
+  openOutside(brand: string, exclude: string[], since: number, limit: number): Promise<string[]>;
   check(): Promise<void>;
 }
 
@@ -80,6 +82,12 @@ export function pgStore(databaseUrl = process.env.DATABASE_URL): OrderStore {
     },
     async appendNote(id, note) {
       await pool.query("UPDATE orders SET notes = left(coalesce(notes,'') || E'\\n' || $2, 2000) WHERE id=$1 AND channel='anotaai' AND position($2 in coalesce(notes,'')) = 0", [id, note]);
+    },
+    async openOutside(brand, exclude, since, limit) {
+      const r = await pool.query(`SELECT substring(notes from 'Pedido externo: ([0-9a-f]{24})') AS ext FROM orders
+        WHERE channel='anotaai' AND brand=$1 AND status IN ('pending','confirmed','preparing','ready') AND created_at >= $2
+          AND NOT (id = ANY($3::uuid[])) ORDER BY created_at LIMIT $4`, [brand, new Date(since), exclude, limit]);
+      return r.rows.map(row => row.ext as string | null).filter((x): x is string => !!x);
     },
     async check() {
       // Somente leitura; nunca aplica migrações no banco ativo.
