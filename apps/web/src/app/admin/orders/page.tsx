@@ -1,7 +1,7 @@
 "use client";
 
 import { useRefreshOnResume } from "@/lib/use-refresh-on-resume";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { isBrand } from "@/lib/brands";
 import { OrderImport } from "@/components/admin/OrderImport";
 import { AdminIcon } from "@/components/admin/AdminIcons";
@@ -65,6 +65,7 @@ export default function AdminOrders() {
   const [filterStatus, setFilterStatus] = useState("");
   const [filterChannel, setFilterChannel] = useState("");
   const [view, setView] = useState("board");
+  const openedLink = useRef(false);
   const [search, setSearch] = useState("");
   const [drivers, setDrivers] = useState<{ id: number; name: string; online: boolean; activeDeliveries: number }[]>([]);
   const [error, setError] = useState("");
@@ -76,7 +77,12 @@ export default function AdminOrders() {
       const [data, driverData] = await Promise.all([response.json(), driverResponse.json()]);
       if (!response.ok || !driverResponse.ok) throw new Error("Não foi possível carregar os pedidos. Confira seu acesso e tente novamente.");
       setOrders(data); setDrivers(driverData.drivers); setError("");
-      setSelected(current => current ? data.find((order: Order) => order.id === current.id) ?? null : null);
+      // /admin/orders?pedido=<id> (link do feed) abre o pedido direto na primeira carga.
+      // O ref é lido fora do updater: o React pode chamar o updater duas vezes.
+      const linkedId = openedLink.current ? null : new URLSearchParams(window.location.search).get("pedido");
+      const linked = linkedId ? data.find((order: Order) => order.id === linkedId) ?? null : null;
+      if (linked) openedLink.current = true;
+      setSelected(current => current ? data.find((order: Order) => order.id === current.id) ?? null : linked);
     } catch (cause) { if (!signal?.aborted) setError(cause instanceof Error ? cause.message : "Confira a conexão e tente novamente."); }
     finally { if (!signal?.aborted) setLoading(false); }
   }, []);
