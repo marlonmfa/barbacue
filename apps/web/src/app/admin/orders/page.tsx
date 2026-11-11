@@ -277,7 +277,7 @@ export default function AdminOrders() {
           <div className="print-area order-ticket bg-[#1a1512] rounded-2xl border border-[#352b24] w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
               <div>
-                <p className="hidden print:block order-print-brand" data-brand={isBrand(selected.brand) ? selected.brand : "barbacue"}>{BRAND_LABEL[isBrand(selected.brand) ? selected.brand : "barbacue"]}</p>
+                <p className="hidden print:block order-print-brand" data-brand={isBrand(selected.brand) ? selected.brand : "barbacue"}>{BRAND_TAG[isBrand(selected.brand) ? selected.brand : "barbacue"].label}</p>
                 <h2 className="text-lg font-bold text-white">Pedido #{selected.id.slice(0, 8).toUpperCase()}</h2>
                 <p className="text-xs text-[#a89a8c]"><OrderTags order={selected} /></p>
                 {selected.channel === "test" && <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">Pedido de teste</p>}
