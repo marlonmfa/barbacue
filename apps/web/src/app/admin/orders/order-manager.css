@@ -24,3 +24,24 @@
 .order-print-brand[data-brand=barbacue]::before,.order-print-brand[data-brand=barbacue]::after{content:" ### "}
 .order-print-brand[data-brand=chelas]::before,.order-print-brand[data-brand=chelas]::after{content:" *** "}
 .order-print-brand[data-brand=barbadog]::before,.order-print-brand[data-brand=barbadog]::after{content:" === "}
+/* Fundo característico de cada restaurante (mesmas cores e padrões das páginas
+   das lojas) para distinguir os pedidos das três marcas na mesma tela. */
+.order-card[data-brand]{color:#fffdf4;border:0;box-shadow:0 6px 16px -10px #0009}
+.order-card[data-brand] :is(time,p,span,h3,strong){color:inherit}
+.order-card[data-brand] time,.order-card[data-brand] p{opacity:.88}
+.order-card[data-brand] .order-card-status{border-top-color:#ffffff40;color:inherit}
+.order-card[data-brand]:hover{outline:3px solid var(--brand-accent);outline-offset:-3px}
+.order-card[data-brand] img{background:white}
+.order-card[data-brand=barbacue]{--brand-accent:#ed1b24;background:radial-gradient(circle at 100% 0,#ed1b2466 0 28%,transparent 29%),linear-gradient(90deg,#ed1b24 0 6px,transparent 6px),#1c1410}
+.order-card[data-brand=chelas]{--brand-accent:#f4c93d;background:linear-gradient(90deg,#f4c93d 0 6px,transparent 6px),radial-gradient(circle at 104% 104%,#f4c93df2 0 15%,transparent 15.5%),radial-gradient(circle at center,#f4c93d55 0 2px,transparent 2.5px) 0 0/22px 22px,linear-gradient(132deg,#a90f22 0%,#cd2631 58%,#9e1327 100%)}
+.order-card[data-brand=barbadog]{--brand-accent:#ffd34e;background:linear-gradient(90deg,#ffd34e 0 6px,transparent 6px),linear-gradient(0deg,#ffd34e 0 5px,transparent 5px),repeating-linear-gradient(135deg,#ffffff0d 0 6px,transparent 6px 14px),#182448}
+.order-manager table tbody tr[data-brand]{border-left:6px solid var(--brand-accent)}
+.order-manager table tbody tr[data-brand=barbacue]{--brand-accent:#ed1b24;background:#fdeceb}
+.order-manager table tbody tr[data-brand=chelas]{--brand-accent:#cd2631;background:#fff6dc}
+.order-manager table tbody tr[data-brand=barbadog]{--brand-accent:#182448;background:#e8ecf6}
+.order-manager table tbody tr[data-brand]:hover{filter:brightness(.97)}
+
+/* Tags de origem e de restaurante: cor fixa por tag, igual em qualquer fundo. */
+.order-tags{display:inline-flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.order-tag{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:750;letter-spacing:.02em;line-height:1.3;border:1.5px solid #ffffffd9;box-shadow:0 1px 3px #0004;opacity:1!important}
+.order-manager table .order-tags{margin-top:0}

@@ -1,13 +1,13 @@
 "use client";
 
 import { useRefreshOnResume } from "@/lib/use-refresh-on-resume";
-import { BrandLogo } from "@/components/BrandLogo";
 import { useCallback, useEffect, useState } from "react";
 import { isBrand } from "@/lib/brands";
 import { OrderImport } from "@/components/admin/OrderImport";
 import { AdminIcon } from "@/components/admin/AdminIcons";
 import "./order-manager.css";
 import { orderLineLabel } from "@/lib/brands";
+import { orderOwner, originTag, BRAND_TAG } from "@/lib/order-owner";
 
 interface OrderItem { name: string; restaurant?: string | null; priceCents: number; qty: number; notes?: string | null; }
 interface Order {
@@ -44,10 +44,13 @@ const CHANNELS: Record<string, string> = { online: "Pedido online / Pix", click:
 const channelLabel = (channel: string | null) => CHANNELS[channel ?? "other"] ?? channel ?? "Outra origem";
 
 const STATUS_MAP = Object.fromEntries(STATUSES.map((s) => [s.key, s]));
-const BRAND_LABEL = { barbacue: "Barbacue", barbadog: "Barbadog", chelas: "Chelas" } as const;
-function OrderBrand({ brand }: { brand: Order["brand"] }) {
-  const identity = isBrand(brand) ? brand : "barbacue";
-  return <span style={{ display: "inline-flex", alignItems: "center", gap: 6, verticalAlign: "middle" }}><BrandLogo brand={identity} alt="" width={28} height={28} style={{ borderRadius: 6, objectFit: "contain", flexShrink: 0 }} />{BRAND_LABEL[identity]}</span>;
+function OrderTags({ order }: { order: Order }) {
+  const origin = originTag(order.channel);
+  const brand = BRAND_TAG[isBrand(order.brand) ? order.brand : "barbacue"];
+  return <span className="order-tags">
+    <span className="order-tag" data-tag="origin" style={{ background: origin.bg, color: origin.fg }}>{origin.label}</span>
+    <span className="order-tag" data-tag="brand" style={{ background: brand.bg, color: brand.fg }}>{brand.label}</span>
+  </span>;
 }
 const destination = (order: Order) => order.tableNumber ? `Mesa ${order.tableNumber}` : order.orderType === "pickup" ? "Retirada no balcão" : order.orderType === "dine_in" ? "No local" : "Entrega";
 
@@ -126,7 +129,7 @@ export default function AdminOrders() {
     { title: "Prontos", statuses: ["ready"] },
     { title: "Concluídos", statuses: ["delivered", "cancelled"] },
   ];
-  const boardOrders = filtered.filter(o => `${o.id} ${o.customerName} ${o.customerPhone}`.toLocaleLowerCase("pt-BR").includes(search.toLocaleLowerCase("pt-BR")))
+  const boardOrders = filtered.filter(o => `${o.id} ${o.customerName} ${orderOwner(o).title} ${o.customerPhone}`.toLocaleLowerCase("pt-BR").includes(search.toLocaleLowerCase("pt-BR")))
     .sort((a, b) => (Date.parse(a.createdAt || "") || 0) - (Date.parse(b.createdAt || "") || 0) || a.id.localeCompare(b.id));
   const next = selected?.status === "pending" ? { status: "confirmed", label: "Aceitar pedido" }
     : selected?.status === "confirmed" ? { status: "preparing", label: "Iniciar preparo" }
@@ -183,10 +186,11 @@ export default function AdminOrders() {
           return <section key={stage.title} aria-label={stage.title} className="order-stage">
             <h2>{stage.title}<span>{entries.length}</span></h2>
             {entries.length === 0 && <p className="order-stage-empty">Nenhum pedido nesta etapa.</p>}
-            {entries.map(order => <button className="order-card" key={order.id} onClick={() => setSelected(order)} aria-label={`Ver pedido ${order.id.slice(0, 8)}`}>
+            {entries.map(order => <button className="order-card" data-brand={isBrand(order.brand) ? order.brand : "barbacue"} key={order.id} onClick={() => setSelected(order)} aria-label={`Ver pedido ${order.id.slice(0, 8)}`}>
               <div><strong>#{order.id.slice(0, 8).toUpperCase()}</strong><time>{order.createdAt ? new Date(order.createdAt).toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" }) : "—"}</time></div>
-              <h3>{order.customerName}</h3><p>{destination(order)} · {channelLabel(order.channel)}</p>
-              <p><OrderBrand brand={order.brand} /></p>
+              <h3>{orderOwner(order).title}</h3>
+              <p>{destination(order)}{orderOwner(order).detail ? ` · ${orderOwner(order).detail}` : ""}</p>
+              <OrderTags order={order} />
               <div><span>{(Array.isArray(order.items) ? order.items : []).reduce((sum, item) => sum + item.qty, 0)} itens</span><strong>{fmtR(order.totalCents)}</strong></div>
               <p className="order-card-status">{STATUS_MAP[order.status]?.label ?? order.status}{order.deliveryStatus === "out_for_delivery" ? " · Em entrega" : ""}</p>
               {order.channel === "online" && order.paymentStatus !== "paid" && <p>Aguardando pagamento</p>}
@@ -211,16 +215,16 @@ export default function AdminOrders() {
                 const st = STATUS_MAP[o.status] ?? STATUSES[0];
                 const items = Array.isArray(o.items) ? o.items : [];
                 return (
-                  <tr key={o.id} className="border-t border-[#352b24] hover:bg-[#241d18]">
+                  <tr key={o.id} data-brand={isBrand(o.brand) ? o.brand : "barbacue"} className="border-t border-[#352b24] hover:bg-[#241d18]">
                     <td className="px-5 py-3">
                       <p className="flex items-center gap-2 text-white font-medium">
-                        {o.customerName}
-                        <span className="text-xs font-normal text-[#c8b89a]">{channelLabel(o.channel)}</span>
+                        {orderOwner(o).title}
+                        <OrderTags order={o} />
                         {o.channel === "test" && (
                           <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-emerald-300">TESTE</span>
                         )}
                       </p>
-                      <p className="text-[#a89a8c] text-xs"><OrderBrand brand={o.brand} /> · {destination(o)}{o.customerPhone ? ` · ${o.customerPhone}` : ""}</p>
+                      <p className="text-[#a89a8c] text-xs">{destination(o)}{orderOwner(o).detail ? ` · ${orderOwner(o).detail}` : ""}{o.customerPhone ? ` · ${o.customerPhone}` : ""}</p>
                       {o.channel === "online" && <p className="text-[#c8b89a] text-xs mt-1">Pix · {o.paymentStatus === "paid" ? "Pix confirmado pelo banco" : o.paymentStatus === "failed" ? "Pagamento estornado ou falhou — conferir" : "Aguardando confirmação do pagamento"}</p>}
                       {(o.channel === "kiosk" || o.channel === "table_qr") && <p className="text-[#c8b89a] text-xs mt-1">{o.channel === "kiosk" ? "Totem" : "QR na mesa"} · {o.paymentStatus === "paid" ? "Pago" : "Pagamento no local pendente"}</p>}
                       {o.orderType === "delivery" && <p className="text-[#c8b89a] text-xs mt-1">{o.deliveryDriverName ?? "Sem entregador"}{o.deliveryStatus === "out_for_delivery" ? " · Em entrega" : o.deliveryStatus === "delivered" ? " · Entrega concluída" : ""}</p>}
@@ -275,7 +279,7 @@ export default function AdminOrders() {
               <div>
                 <p className="hidden print:block order-print-brand" data-brand={isBrand(selected.brand) ? selected.brand : "barbacue"}>{BRAND_LABEL[isBrand(selected.brand) ? selected.brand : "barbacue"]}</p>
                 <h2 className="text-lg font-bold text-white">Pedido #{selected.id.slice(0, 8).toUpperCase()}</h2>
-                <p className="text-xs text-[#a89a8c]"><OrderBrand brand={selected.brand} /> · {channelLabel(selected.channel)}</p>
+                <p className="text-xs text-[#a89a8c]"><OrderTags order={selected} /></p>
                 {selected.channel === "test" && <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">Pedido de teste</p>}
               </div>
               <button onClick={() => setSelected(null)} className="no-print min-w-12 min-h-12 text-[#a89a8c] hover:text-white text-2xl leading-none" aria-label="Fechar">×</button>
@@ -283,7 +287,7 @@ export default function AdminOrders() {
 
             <div className="flex flex-col gap-3 text-sm">
               <div className="bg-[#0e0b0a] rounded-xl p-4 flex flex-col gap-1">
-                <p className="text-white font-semibold">{selected.customerName}</p>
+                <p className="text-white font-semibold">{orderOwner(selected).title}</p>{orderOwner(selected).detail && <p className="text-xs">{orderOwner(selected).detail}</p>}
                 <p className="text-white">{destination(selected)}</p>
                 <p className="text-[#a89a8c]">{selected.customerPhone}</p>
                 {selected.channel === "online" && <p className="text-[#c8b89a]">Pix online · {selected.paymentStatus === "paid" ? "Pago" : selected.paymentStatus === "failed" ? "Estornado ou falhou — conferir no banco" : "Aguardando pagamento. A produção será liberada automaticamente."}</p>}
