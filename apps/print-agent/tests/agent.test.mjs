@@ -51,7 +51,8 @@ test('cliente nao injeta controles e corte ESC/POS e opcional', () => {
   const text = formatTicket(sample);
   assert.doesNotMatch(text, /[\x00-\x09\x0b-\x1f]/);
   const bytes = escposBytes(text);
-  assert.equal(bytes.filter(byte => byte === 0x1b).length, 1);
+  // ESC @ (inicializa) + ESC E 1/0 (negrito da moldura); nada vindo do cliente.
+  assert.equal(bytes.filter(byte => byte === 0x1b).length, 3);
   assert.equal(bytes.filter(byte => byte === 0x1d).length, 0);
   assert.deepEqual([...escposBytes(text, { cut: true }).subarray(-3)], [0x1d, 0x56, 0]);
   assert.throws(() => escposBytes('unsafe\x1b@'));

@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { isBrand } from "@/lib/brands";
 import { OrderImport } from "@/components/admin/OrderImport";
 import { AdminIcon } from "@/components/admin/AdminIcons";
 import "./order-manager.css";
+import { orderOwner, originTag, BRAND_TAG } from "@/lib/order-owner";
 
 interface OrderItem { name: string; priceCents: number; qty: number; notes?: string | null; }
 interface Order {
@@ -36,11 +38,18 @@ const STATUSES = [
   { key: "cancelled", label: "Cancelado",  color: "bg-red-500/20 text-red-400" },
 ];
 
-const CHANNELS: Record<string, string> = { online: "Pedido online / Asaas", click: "Site / aplicativo", chat: "WhatsApp / chat", kiosk: "Totem", table_qr: "QR da mesa", ifood: "iFood", test: "Teste", other: "Outra origem" };
+const CHANNELS: Record<string, string> = { online: "Pedido online / Asaas", click: "Site / aplicativo", chat: "WhatsApp / chat", kiosk: "Totem", table_qr: "QR da mesa", ifood: "iFood", anotaai: "Anota AI", test: "Teste", other: "Outra origem" };
 const channelLabel = (channel: string | null) => CHANNELS[channel ?? "other"] ?? channel ?? "Outra origem";
 
 const STATUS_MAP = Object.fromEntries(STATUSES.map((s) => [s.key, s]));
-const BRAND_LABEL = { barbacue: "Barbacue", barbadog: "Barbadog", chelas: "Chelas" } as const;
+function OrderTags({ order }: { order: Order }) {
+  const origin = originTag(order.channel);
+  const brand = BRAND_TAG[isBrand(order.brand) ? order.brand : "barbacue"];
+  return <span className="order-tags">
+    <span className="order-tag" data-tag="origin" style={{ background: origin.bg, color: origin.fg }}>{origin.label}</span>
+    <span className="order-tag" data-tag="brand" style={{ background: brand.bg, color: brand.fg }}>{brand.label}</span>
+  </span>;
+}
 const destination = (order: Order) => order.tableNumber ? `Mesa ${order.tableNumber}` : order.orderType === "pickup" ? "Retirada no balcão" : order.orderType === "dine_in" ? "No local" : "Entrega";
 
 function fmtR(cents: number) {
@@ -56,6 +65,7 @@ export default function AdminOrders() {
   const [view, setView] = useState("board");
   const [search, setSearch] = useState("");
   const [drivers, setDrivers] = useState<{ id: number; name: string }[]>([]);
+  const openedLink = useRef(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -65,7 +75,12 @@ export default function AdminOrders() {
       const [data, driverData] = await Promise.all([response.json(), driverResponse.json()]);
       if (!response.ok || !driverResponse.ok) throw new Error("Não foi possível carregar os pedidos. Confira seu acesso e tente novamente.");
       setOrders(data); setDrivers(driverData.drivers); setError("");
-      setSelected(current => current ? data.find((order: Order) => order.id === current.id) ?? null : null);
+      // /admin/orders?pedido=<id> (link do feed) abre o pedido direto na primeira carga.
+      // O ref é lido fora do updater: o React pode chamar o updater duas vezes.
+      const linkedId = openedLink.current ? null : new URLSearchParams(window.location.search).get("pedido");
+      const linked = linkedId ? data.find((order: Order) => order.id === linkedId) ?? null : null;
+      if (linked) openedLink.current = true;
+      setSelected(current => current ? data.find((order: Order) => order.id === current.id) ?? null : linked);
     } catch (cause) { if (!signal?.aborted) setError(cause instanceof Error ? cause.message : "Confira a conexão e tente novamente."); }
     finally { if (!signal?.aborted) setLoading(false); }
   }, []);
@@ -117,7 +132,7 @@ export default function AdminOrders() {
     { title: "Prontos", statuses: ["ready"] },
     { title: "Concluídos", statuses: ["delivered", "cancelled"] },
   ];
-  const boardOrders = filtered.filter(o => `${o.id} ${o.customerName} ${o.customerPhone}`.toLocaleLowerCase("pt-BR").includes(search.toLocaleLowerCase("pt-BR")))
+  const boardOrders = filtered.filter(o => `${o.id} ${o.customerName} ${orderOwner(o).title} ${o.customerPhone}`.toLocaleLowerCase("pt-BR").includes(search.toLocaleLowerCase("pt-BR")))
     .sort((a, b) => (Date.parse(a.createdAt || "") || 0) - (Date.parse(b.createdAt || "") || 0) || a.id.localeCompare(b.id));
   const next = selected?.status === "pending" ? { status: "confirmed", label: "Aceitar pedido" }
     : selected?.status === "confirmed" ? { status: "preparing", label: "Iniciar preparo" }
@@ -166,10 +181,11 @@ export default function AdminOrders() {
           return <section key={stage.title} aria-label={stage.title} className="order-stage">
             <h2>{stage.title}<span>{entries.length}</span></h2>
             {entries.length === 0 && <p className="order-stage-empty">Nenhum pedido nesta etapa.</p>}
-            {entries.map(order => <button className="order-card" key={order.id} onClick={() => setSelected(order)} aria-label={`Ver pedido ${order.id.slice(0, 8)}`}>
+            {entries.map(order => <button className="order-card" data-brand={isBrand(order.brand) ? order.brand : "barbacue"} key={order.id} onClick={() => setSelected(order)} aria-label={`Ver pedido ${order.id.slice(0, 8)}`}>
               <div><strong>#{order.id.slice(0, 8).toUpperCase()}</strong><time>{order.createdAt ? new Date(order.createdAt).toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" }) : "—"}</time></div>
-              <h3>{order.customerName}</h3><p>{destination(order)} · {channelLabel(order.channel)}</p>
-              <p>{BRAND_LABEL[order.brand] ?? "Barbacue"}</p>
+              <h3>{orderOwner(order).title}</h3>
+              <p>{destination(order)}{orderOwner(order).detail ? ` · ${orderOwner(order).detail}` : ""}</p>
+              <OrderTags order={order} />
               <div><span>{(Array.isArray(order.items) ? order.items : []).reduce((sum, item) => sum + item.qty, 0)} itens</span><strong>{fmtR(order.totalCents)}</strong></div>
               <p className="order-card-status">{STATUS_MAP[order.status]?.label ?? order.status}{order.deliveryStatus === "out_for_delivery" ? " · Em entrega" : ""}</p>
               {order.channel === "online" && order.paymentStatus !== "paid" && <p>Aguardando pagamento</p>}
@@ -194,16 +210,16 @@ export default function AdminOrders() {
                 const st = STATUS_MAP[o.status] ?? STATUSES[0];
                 const items = Array.isArray(o.items) ? o.items : [];
                 return (
-                  <tr key={o.id} className="border-t border-[#352b24] hover:bg-[#241d18]">
+                  <tr key={o.id} data-brand={isBrand(o.brand) ? o.brand : "barbacue"} className="border-t border-[#352b24] hover:bg-[#241d18]">
                     <td className="px-5 py-3">
                       <p className="flex items-center gap-2 text-white font-medium">
-                        {o.customerName}
-                        <span className="text-xs font-normal text-[#c8b89a]">{channelLabel(o.channel)}</span>
+                        {orderOwner(o).title}
+                        <OrderTags order={o} />
                         {o.channel === "test" && (
                           <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-emerald-300">TESTE</span>
                         )}
                       </p>
-                      <p className="text-[#a89a8c] text-xs">{BRAND_LABEL[o.brand] ?? "Barbacue"} · {destination(o)}{o.customerPhone ? ` · ${o.customerPhone}` : ""}</p>
+                      <p className="text-[#a89a8c] text-xs">{destination(o)}{orderOwner(o).detail ? ` · ${orderOwner(o).detail}` : ""}{o.customerPhone ? ` · ${o.customerPhone}` : ""}</p>
                       {o.channel === "online" && <p className="text-[#c8b89a] text-xs mt-1">Pix · {o.paymentStatus === "paid" ? "Pago pelo Asaas" : o.paymentStatus === "failed" ? "Pagamento estornado ou falhou — conferir" : "Aguardando confirmação do pagamento"}</p>}
                       {(o.channel === "kiosk" || o.channel === "table_qr") && <p className="text-[#c8b89a] text-xs mt-1">{o.channel === "kiosk" ? "Totem" : "QR na mesa"} · {o.paymentStatus === "paid" ? "Pago" : "Pagamento no local pendente"}</p>}
                       {o.orderType === "delivery" && <p className="text-[#c8b89a] text-xs mt-1">{o.deliveryDriverName ?? "Sem entregador"}{o.deliveryStatus === "out_for_delivery" ? " · Em entrega" : o.deliveryStatus === "delivered" ? " · Entrega concluída" : ""}</p>}
@@ -256,9 +272,9 @@ export default function AdminOrders() {
           <div className="print-area order-ticket bg-[#1a1512] rounded-2xl border border-[#352b24] w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
               <div>
-                <p className="hidden print:block text-xs font-bold uppercase tracking-widest">Grupo Barbacue</p>
+                <p className="hidden print:block order-print-brand" data-brand={isBrand(selected.brand) ? selected.brand : "barbacue"}>{BRAND_TAG[isBrand(selected.brand) ? selected.brand : "barbacue"].label}</p>
                 <h2 className="text-lg font-bold text-white">Pedido #{selected.id.slice(0, 8).toUpperCase()}</h2>
-                <p className="text-xs text-[#a89a8c]">{BRAND_LABEL[selected.brand] ?? "Barbacue"} · {channelLabel(selected.channel)}</p>
+                <p className="text-xs text-[#a89a8c]"><OrderTags order={selected} /></p>
                 {selected.channel === "test" && <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">Pedido de teste</p>}
               </div>
               <button onClick={() => setSelected(null)} className="no-print min-w-12 min-h-12 text-[#a89a8c] hover:text-white text-2xl leading-none" aria-label="Fechar">×</button>
@@ -266,7 +282,7 @@ export default function AdminOrders() {
 
             <div className="flex flex-col gap-3 text-sm">
               <div className="bg-[#0e0b0a] rounded-xl p-4 flex flex-col gap-1">
-                <p className="text-white font-semibold">{selected.customerName}</p>
+                <p className="text-white font-semibold">{orderOwner(selected).title}</p>{orderOwner(selected).detail && <p className="text-xs">{orderOwner(selected).detail}</p>}
                 <p className="text-white">{destination(selected)}</p>
                 <p className="text-[#a89a8c]">{selected.customerPhone}</p>
                 {selected.channel === "online" && <p className="text-[#c8b89a]">Pix / Asaas · {selected.paymentStatus === "paid" ? "Pago" : selected.paymentStatus === "failed" ? "Estornado ou falhou — conferir no Asaas" : "Aguardando pagamento. A produção será liberada automaticamente."}</p>}

@@ -41,7 +41,9 @@
     ".next-external-accounts/types/**/*.ts",
     ".next-external-accounts/dev/types/**/*.ts",
     ".next-external-accounts-v2/types/**/*.ts",
-    ".next-external-accounts-v2/dev/types/**/*.ts"
+    ".next-external-accounts-v2/dev/types/**/*.ts",
+    ".next-order-feed-20261117/types/**/*.ts",
+    ".next-order-feed-20261117/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

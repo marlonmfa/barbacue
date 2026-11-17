@@ -5,6 +5,7 @@ export const moduleGroups = [
     { id: 'workspace', label: 'Meu trabalho', path: '/admin/workspace' },
     { id: 'dashboard', label: 'Visão geral', path: '/admin' },
     { id: 'orders', label: 'Caixa e pedidos', path: '/admin/orders', accelerator: 'F2' },
+    { id: 'order-feed', label: 'Feed de pedidos', path: '/admin/orders/feed' },
     { id: 'whatsapp', label: 'Atendimento / WhatsApp', path: '/whatsapp', accelerator: 'F3' },
     { id: 'ifood', label: 'Gestor iFood', path: '/admin/ifood' },
     { id: 'kitchen', label: 'Cozinha e impressoras', path: '/admin/kitchen', accelerator: 'F4' },

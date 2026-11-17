@@ -2,7 +2,7 @@
   "name": "@barbacue/desktop",
   "version": "1.2.1",
   "private": true,
-  "description": "Administra\u00e7\u00e3o Barbacue para Windows: produtos, atendimento, pedidos, gest\u00e3o e impress\u00e3o",
+  "description": "Administração Barbacue para Windows: produtos, atendimento, pedidos, gestão e impressão",
   "author": "Grupo Barbacue",
   "type": "module",
   "main": "src/main.mjs",
@@ -67,5 +67,8 @@
       "language": "1046",
       "deleteAppDataOnUninstall": false
     }
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
   }
 }

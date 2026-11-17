@@ -1,0 +1,25 @@
+{
+  "published": true,
+  "previousBuild": "Uzu3i5IkqaLwlx5b3GjSA",
+  "build": "DUMA3YsYPO9Ek-QXlR7Oq",
+  "routesBefore": 117,
+  "routesAfter": 119,
+  "candidateChecks": {
+    "/": 200,
+    "/api/store-status": 200,
+    "/admin/login": 200,
+    "feed": 307,
+    "comanda": 401,
+    "orders": 307
+  },
+  "liveChecks": {
+    "/": 200,
+    "/api/store-status": 200,
+    "/admin/login": 200,
+    "feed": 307,
+    "comanda": 401,
+    "orders": 307
+  },
+  "backup": "/root/deploy-backups/barbacue-order-feed-20261117",
+  "rollback": "cp server.before.js /root/barbacue/apps/web/server.js && pm2 restart barbacue"
+}
