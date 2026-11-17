@@ -232,7 +232,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const openai = new OpenAI({ apiKey, ...(provider === "anthropic" ? { baseURL: "https://api.anthropic.com/v1/" } : {}), timeout: 25000, maxRetries: 0 });
+  const openai = new OpenAI({ apiKey, ...(provider === "anthropic" ? { baseURL: "https://api.anthropic.com/v1/" } : provider === "deepseek" ? { baseURL: process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com" } : {}), timeout: 25000, maxRetries: 0 });
 
   const system = `Você é o atendente virtual do restaurante "${brandName}". Atende em português brasileiro, de forma calorosa, breve e objetiva — como um atendente de WhatsApp.
 
@@ -479,6 +479,8 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
         messages,
         tools,
         ...(provider === "openai" ? { temperature: 0.3 } : {}),
+        // DeepSeek: raciocínio desligado para caber no prazo de 25 s do pedido.
+        ...(provider === "deepseek" ? { temperature: 0.3, thinking: { type: "disabled" } } : {}),
         max_tokens: 4096,
       });
       const msg = completion.choices[0].message;

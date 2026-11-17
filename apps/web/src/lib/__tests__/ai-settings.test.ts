@@ -15,3 +15,13 @@ test('AI configuration encrypts keys, masks responses and preserves credentials 
  const broken = Buffer.from(bytes, 'base64'); broken[15] ^= 1;
  assert.throws(() => decryptAI(broken.toString('base64')));
 });
+
+test('DeepSeek: provider accepted, own key encrypted/masked, model kept', () => {
+ const current: AISettings = { provider: 'anthropic', anthropicModel: 'claude-haiku-5-5', openaiModel: 'gpt-4o-mini' };
+ const next = mergeAISettings(current, { provider: 'deepseek', deepseekApiKey: 'sk-deepseek-fixture', deepseekModel: 'deepseek-v4-pro' });
+ assert.equal(next.provider, 'deepseek'); assert.equal(next.deepseekModel, 'deepseek-v4-pro');
+ const bytes = encryptAI(next); assert.ok(!bytes.includes('sk-deepseek-fixture')); assert.deepEqual(decryptAI(bytes), next);
+ const pub = publicAISettings(next); assert.equal(pub.deepseekConfigured, true); assert.equal(pub.deepseekModel, 'deepseek-v4-pro');
+ assert.ok(!JSON.stringify(pub).includes('sk-deepseek-fixture'));
+ assert.equal(mergeAISettings(next, { deepseekApiKey: '' }).deepseekApiKey, 'sk-deepseek-fixture');
+});
