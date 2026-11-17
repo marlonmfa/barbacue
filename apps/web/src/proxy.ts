@@ -1,11 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-import { parseSession, resolveStaffSession } from "@/lib/admin-auth";
+import { resolveRequestStaff } from "@/lib/admin-auth";
 
 import { canAccessPath, landingPath } from "@/lib/permissions";
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isApi = pathname.startsWith("/api/admin");
+  const currentStaff = (pathname.startsWith("/admin") || pathname.startsWith("/api/admin") || pathname.startsWith("/whatsapp") || pathname.startsWith("/teste_pedido") || pathname === "/conta")
+    ? await resolveRequestStaff(req.cookies.get("barbacue_admin")?.value, req.cookies.get("cogia_sessao")?.value)
+    : null;
+  if (pathname === "/conta" && currentStaff && req.method === "GET" && req.headers.get("accept")?.includes("text/html")) {
+    return NextResponse.redirect(new URL("/admin", req.url));
+  }
+  const host = (req.headers.get("x-forwarded-host") || req.headers.get("host") || "").toLowerCase();
+  if (req.method === "GET" && (pathname.startsWith("/admin") || pathname === "/conta") && req.headers.get("accept")?.includes("text/html") && host === "barbacue.cog.ia.br" &&
+      process.env.COGIA_SSO_IDENTITY_KEY && !req.cookies.get("cogia_sessao") && !req.cookies.get("cog_barbacue_checked")) {
+    const destination = `https://barbacue.cog.ia.br${pathname === "/conta" ? "/conta" : "/admin"}`;
+    const response = NextResponse.redirect(`https://cog.ia.br/api/sso/continuar?${new URLSearchParams({ destino: destination })}`, 303);
+    response.cookies.set("cog_barbacue_checked", "1", { maxAge: 300, path: "/", httpOnly: true, secure: true, sameSite: "lax" });
+    response.headers.set("Cache-Control", "no-store");
+    return response;
+  }
 
   // Allow the login page and the auth endpoint (login/logout) through
   if (pathname === "/admin/login" || pathname === "/api/admin/auth") {
@@ -21,8 +36,7 @@ export async function proxy(req: NextRequest) {
     pathname.startsWith("/teste_pedido") ||
     isApi
   ) {
-    const token = await parseSession(req.cookies.get("barbacue_admin")?.value ?? "");
-    const session = token ? await resolveStaffSession(token) : null;
+    const session = currentStaff;
     if (!session) {
       if (isApi) {
         return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -47,5 +61,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*", "/whatsapp/:path*", "/teste_pedido/:path*"],
+  matcher: ["/conta", "/admin/:path*", "/api/admin/:path*", "/whatsapp/:path*", "/teste_pedido/:path*"],
 };

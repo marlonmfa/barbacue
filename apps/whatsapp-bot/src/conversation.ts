@@ -18,6 +18,7 @@ interface ConvState {
   paymentMethod: string;
   lastActivity: number;
   brand: RestaurantBrand | null;
+  activeBrands: RestaurantBrand[];
   pendingDelivery?: { quote: DeliveryQuote; fingerprint: string };
   orderOutcomeUnknown?: boolean;
 }
@@ -31,7 +32,7 @@ function getSession(phone: string, connection: string): ConvState {
   const key = `${connection}:${phone}`;
   let s = sessions.get(key);
   if (!s) {
-    s = { messages: [], cart: [], customer: { phone }, paymentMethod: "pix", lastActivity: Date.now(), brand: null };
+    s = { messages: [], cart: [], customer: { phone }, paymentMethod: "pix", lastActivity: Date.now(), brand: null, activeBrands: [] };
     sessions.set(key, s);
   }
   s.lastActivity = Date.now();
@@ -62,12 +63,21 @@ const BRAND_NAME: Record<RestaurantBrand, string> = {
   chelas: "Chelas",
 };
 
-function brandChoice(text: string): RestaurantBrand | null {
+function brandChoices(text: string): RestaurantBrand[] {
   const normalized = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  if (/^(1|barbacue|barbecue)\b/.test(normalized) || normalized.includes("barbacue")) return "barbacue";
-  if (/^(2|barbadog|barbadogs|bargadog)\b/.test(normalized) || normalized.includes("barbadog")) return "barbadog";
-  if (/^(3|chelas)\b/.test(normalized) || normalized.includes("chelas")) return "chelas";
-  return null;
+  const choices: RestaurantBrand[] = [];
+  if (/(^|\b)(1|barbacue|barbecue)(\b|$)/.test(normalized)) choices.push("barbacue");
+  if (/(^|\b)(2|barbadog|barbadogs|bargadog)(\b|$)/.test(normalized)) choices.push("barbadog");
+  if (/(^|\b)(3|chelas)(\b|$)/.test(normalized)) choices.push("chelas");
+  return choices;
+}
+
+function mergeBrands(current: RestaurantBrand[], additions: RestaurantBrand[]): RestaurantBrand[] {
+  return [...new Set([...current, ...additions])];
+}
+
+function brandList(brands: RestaurantBrand[]): string {
+  return brands.map((brand) => BRAND_NAME[brand]).join(", ").replace(/, ([^,]+)$/, " e $1");
 }
 
 const ROUTING_MENU = "Olá! 👋 Qual restaurante você quer pedir?\n\n1️⃣ Barbacue\n2️⃣ Barbadog\n3️⃣ Chelas\n\nResponda com o número ou o nome da marca.";
@@ -87,22 +97,21 @@ export async function handleMessage(phone: string, text: string, connection: Res
 
 async function processMessage(phone: string, text: string, connection: RestaurantBrand | "central"): Promise<RoutedReply> {
   const s = getSession(phone, connection);
-  if (connection !== "central") s.brand = connection;
+  if (connection !== "central") { s.brand = connection; s.activeBrands = mergeBrands(s.activeBrands, [connection]); }
   if (s.orderOutcomeUnknown) {
     if (!/^novo pedido[.!\s]*$/i.test(text.trim())) return { messages: [UNCERTAIN_ORDER], brand: s.brand };
     s.orderOutcomeUnknown = false;
     s.pendingDelivery = undefined;
     s.cart = [];
     s.messages = [];
+    s.activeBrands = s.brand ? [s.brand] : [];
     return { messages: ["Vamos começar outra compra. O que gostaria de pedir?"], brand: s.brand };
   }
-  const chosen = connection === "central" ? brandChoice(text.trim()) : null;
-  if (!s.brand && !chosen) return { messages: [ROUTING_MENU], brand: null };
-  if (chosen && chosen !== s.brand) {
-    s.brand = chosen;
-    s.cart = [];
-    s.messages = [];
-    s.pendingDelivery = undefined;
+  const chosen = connection === "central" ? brandChoices(text.trim()) : [];
+  if (!s.brand && chosen.length === 0) return { messages: [ROUTING_MENU], brand: null };
+  if (chosen.length > 0) {
+    s.activeBrands = mergeBrands(s.activeBrands, chosen);
+    s.brand = chosen.at(-1) ?? s.brand;
   }
   if (!s.brand) return { messages: [ROUTING_MENU], brand: null };
 
@@ -114,9 +123,9 @@ async function processMessage(phone: string, text: string, connection: Restauran
 
   // A bare selection gets a deterministic handoff; the next message is handled
   // by that restaurant's specialized catalog agent.
-  if (/^(1|2|3|barbacue|barbecue|barbadog|barbadogs|bargadog|chelas)[.!\s]*$/i.test(text.trim())) {
+  if (/^(?:(?:1|2|3|barbacue|barbecue|barbadog|barbadogs|bargadog|chelas)(?:\s*(?:,|e|\+)\s*)?)+[.!\s]*$/i.test(text.trim())) {
     return {
-      messages: [`Você está falando com o agente do *${BRAND_NAME[s.brand]}*. O que gostaria de pedir?`],
+      messages: [`Sou o atendente único do *Grupo Barba*. Seu pedido está aberto para *${brandList(s.activeBrands)}* e o carrinho será preservado entre os restaurantes. O que gostaria de pedir?\n\nMesmo durante o fechamento eu posso sugerir e adicionar itens das outras marcas.`],
       brand: s.brand,
     };
   }
@@ -134,6 +143,8 @@ async function processMessage(phone: string, text: string, connection: Restauran
       paymentMethod: s.paymentMethod,
       customerPhone: phone,
       brand: s.brand,
+      activeBrands: s.activeBrands,
+      unified: true,
     });
   } catch (err) {
     console.error("[conversation] chat error", err);
@@ -142,6 +153,7 @@ async function processMessage(phone: string, text: string, connection: Restauran
 
   // Adopt the agent's new truth.
   s.cart = res.cart;
+  s.activeBrands = mergeBrands(s.activeBrands, res.activeBrands ?? res.cart.map((item) => item.brand));
   s.customer = res.customer;
   s.paymentMethod = res.paymentMethod;
   s.messages.push({ role: "assistant", content: res.reply });
@@ -157,7 +169,7 @@ async function processMessage(phone: string, text: string, connection: Restauran
 }
 
 function deliveryFingerprint(s: ConvState): string {
-  return JSON.stringify({ brand: s.brand, cart: s.cart, customer: s.customer, paymentMethod: s.paymentMethod });
+  return JSON.stringify({ brand: s.brand, activeBrands: s.activeBrands, cart: s.cart, customer: s.customer, paymentMethod: s.paymentMethod });
 }
 
 async function finalizeOrder(s: ConvState, deliveryConfirmed = false): Promise<string[]> {
@@ -192,8 +204,9 @@ async function finalizeOrder(s: ConvState, deliveryConfirmed = false): Promise<s
         const quote = await quoteDelivery(s.customer.address, s.brand ?? "barbacue");
         s.pendingDelivery = { quote, fingerprint };
         const subtotal = s.cart.reduce((sum, item) => sum + item.priceCents * item.qty, 0);
+        const items = s.cart.map(item => `${item.qty}x ${BRAND_NAME[item.brand]} · ${item.name} — ${fmt(item.priceCents * item.qty)}`).join("\n");
         const distance = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 }).format(quote.distanceMeters / 1000);
-        return [`${deliveryConfirmed ? "O frete expirou e foi recalculado.\n\n" : ""}🚚 *Confira sua entrega*\n${quote.address}\nPercurso: ${distance} km • Frete: ${fmt(quote.feeCents)}\nTotal estimado com entrega: *${fmt(subtotal + quote.feeCents)}*\n\nResponda *CONFIRMAR ENTREGA* para enviar o pedido, ou escreva o que deseja alterar. Frete válido por 15 minutos.`];
+        return [`${deliveryConfirmed ? "O frete expirou e foi recalculado.\n\n" : ""}🚚 *Confira seu pedido e entrega*\n${items}\n\n${quote.address}\nPercurso: ${distance} km • Frete: ${fmt(quote.feeCents)}\nTotal estimado com entrega: *${fmt(subtotal + quote.feeCents)}*\n\nResponda *CONFIRMAR ENTREGA* para enviar o pedido, ou escreva o que deseja alterar. Frete válido por 15 minutos.`];
       }
     }
   } catch (err) {
@@ -211,7 +224,7 @@ async function finalizeOrder(s: ConvState, deliveryConfirmed = false): Promise<s
       customerPhone: s.customer.phone,
       deliveryAddress: s.customer.address,
       deliveryQuoteId,
-      items: s.cart.map((i) => ({ productId: i.productId, qty: i.qty })),
+      items: s.cart.map((i) => ({ productId: i.productId, brand: i.brand, qty: i.qty })),
       paymentMethod: s.paymentMethod,
       channel: "chat",
       brand: s.brand ?? "barbacue",

@@ -9,6 +9,10 @@ import { join } from "node:path";
 loadEnv({ path: join(process.cwd(), "../../.env") });
 
 const nextConfig: NextConfig = {
+  // This deploy candidate lives below work/. Keep Turbopack scoped to the
+  // candidate itself so standalone dependency paths do not inherit the outer
+  // repository workspace and turn packages such as pg into invalid aliases.
+  turbopack: { root: join(process.cwd(), "../..") },
   // Emit a self-contained server bundle for a small production Docker image.
   output: "standalone",
   // Two dev servers sharing one .next corrupt each other's client chunks — the

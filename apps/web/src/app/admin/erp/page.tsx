@@ -11,6 +11,7 @@ import {
 } from "react";
 import type { erpSnapshot } from "@/lib/erp";
 import styles from "./erp.module.css";
+import ExternalAccountsQueue from "@/components/admin/ExternalAccountsQueue";
 
 type Data = Awaited<ReturnType<typeof erpSnapshot>>;
 type Row = Record<string, unknown>;
@@ -23,6 +24,7 @@ type Part = {
 const tabs = [
   ["overview", "Resumo"],
   ["finance", "Financeiro"],
+  ["external-accounts", "Identificar contas externas"],
   ["tax", "Impostos"],
   ["purchases", "Compras"],
   ["ingredients", "Estoque"],
@@ -139,6 +141,10 @@ export default function ErpPage() {
     [busy, setBusy] = useState(false),
     [form, setForm] = useState<Form | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("tab");
+    if (tabs.some(([id]) => id === requested)) setTab(requested as Tab);
+  }, []);
   const retry = useRef<{ payload: string; requestId: string } | null>(null);
   const load = useCallback(async () => {
     const res = await fetch("/api/admin/erp", { cache: "no-store" });
@@ -852,6 +858,7 @@ export default function ErpPage() {
             {btn("Exportar financeiro CSV", exportCsv)}
           </div>
           {renderForm()}
+          {tab === "external-accounts" && <ExternalAccountsQueue />}
           {tab === "overview" && (
             <>
               <div className={styles.stats}>

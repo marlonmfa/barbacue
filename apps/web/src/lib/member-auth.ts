@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { customerAccounts } from "@/db/schema";
+import { sql } from "drizzle-orm";
+import { resolveCogEmail, uniqueEligibleAccount } from "./cog-sso";
 const COOKIE = "barbacue_member";
 const MAX_AGE = 60 * 60 * 24 * 7;
 function signature(payload: string) {
@@ -17,7 +19,14 @@ export function setMemberCookie(response: NextResponse, id: number) {
 }
 export function clearMemberCookie(response: NextResponse) { response.cookies.set(COOKIE, "", { path: "/", maxAge: 0 }); }
 export async function getMember() {
-  const token = (await cookies()).get(COOKIE)?.value;
+  const store = await cookies();
+  const email = await resolveCogEmail(store.get("cogia_sessao")?.value);
+  if (email) {
+    const users = await db.select({ id: customerAccounts.id, name: customerAccounts.name, email: customerAccounts.email }).from(customerAccounts).where(sql`lower(${customerAccounts.email}) = ${email}`).limit(2);
+    const user = uniqueEligibleAccount(users);
+    if (user) return user;
+  }
+  const token = store.get(COOKIE)?.value;
   if (!token) return null;
   const [payload, mac] = token.split(".");
   if (!payload || !mac) return null;

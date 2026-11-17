@@ -2,12 +2,17 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import type { StaffRole } from "@/db/schema";
 import { STAFF_ROLES, canAccessPath, type Permission } from "@/lib/permissions";
+import { resolveCogEmail, uniqueEligibleAccount } from "./cog-sso";
+import { resolveCogIdentity } from "./cog-sso";
+import { findCogAdminStaff, technicalStaff } from "./cog-staff";
 
 const COOKIE_NAME = "barbacue_admin";
 const MAX_AGE = 60 * 60 * 8; // 8 hours
 
 // Every signed session belongs to an active individual staff account.
 export interface AdminSession {
+  cogAdmin?: boolean;
+  email?: string;
   userId: number;
   mustChangePassword?: boolean;
   role: StaffRole;
@@ -73,6 +78,7 @@ const ROLES: readonly StaffRole[] = STAFF_ROLES;
 /** Build a signed session token. Expiry is embedded INSIDE the signed payload
  * so a copied cookie can't outlive it by changing MaxAge client-side. */
 export async function makeStaffToken(session: AdminSession): Promise<string> {
+  if (session.cogAdmin) throw new Error("COG authority cannot become a native session");
   if (!Number.isSafeInteger(session.userId) || session.userId <= 0) throw new Error("Individual staff account required");
   const secret = process.env.ADMIN_COOKIE_SECRET;
   if (!secret) throw new Error("ADMIN_COOKIE_SECRET is not configured");
@@ -99,12 +105,33 @@ export async function parseSession(token: string): Promise<AdminSession | null> 
 /** Called from server components / server actions / Node route handlers to gate
  * admin actions. Throws "unauthorized" when there is no valid session. */
 export async function requireStaff(): Promise<AdminSession> {
-  const store = await cookies();
-  const session = await parseSession(store.get(COOKIE_NAME)?.value ?? "");
-  if (!session) throw new Error("unauthorized");
-  const current = await resolveStaffSession(session);
+  const current = await getStaffSession();
   if (!current || current.mustChangePassword) throw new Error("unauthorized");
   return current;
+}
+
+export async function getStaffSession(): Promise<AdminSession | null> {
+  const store = await cookies();
+  return resolveRequestStaff(store.get(COOKIE_NAME)?.value, store.get("cogia_sessao")?.value);
+}
+
+export async function resolveRequestStaff(nativeToken: string | undefined, cogToken: string | undefined): Promise<AdminSession | null> {
+  const identity = await resolveCogIdentity(cogToken);
+  if (identity?.admin) {
+    const projected = await findCogAdminStaff(identity);
+    if (projected) return projected;
+  }
+  const email = identity?.email;
+  if (email) {
+    const { db } = await import("@/db");
+    const { staffUsers } = await import("@/db/schema");
+    const { sql } = await import("drizzle-orm");
+    const users = await db.select().from(staffUsers).where(sql`lower(${staffUsers.username}) = ${email}`).limit(2);
+    const user = uniqueEligibleAccount(users, true);
+    if (user && !technicalStaff(user)) return { userId: user.id, role: user.role, name: user.name, jobTitle: user.jobTitle, permissions: user.permissions, mustChangePassword: false };
+  }
+  const session = await parseSession(nativeToken ?? "");
+  return session ? resolveStaffSession(session) : null;
 }
 
 /** Resolve current permissions so revocations apply to existing sessions. */
@@ -113,10 +140,12 @@ export async function resolveStaffSession(session: AdminSession): Promise<AdminS
   const { db } = await import("@/db");
   const { staffUsers } = await import("@/db/schema");
   const { eq } = await import("drizzle-orm");
-  const [user] = await db.select({ userId: staffUsers.id, role: staffUsers.role, name: staffUsers.name, jobTitle: staffUsers.jobTitle, permissions: staffUsers.permissions, active: staffUsers.active, mustChangePassword: staffUsers.mustChangePassword }).from(staffUsers).where(eq(staffUsers.id, session.userId));
+  const [user] = await db.select({ userId: staffUsers.id, role: staffUsers.role, name: staffUsers.name, jobTitle: staffUsers.jobTitle, permissions: staffUsers.permissions, active: staffUsers.active, mustChangePassword: staffUsers.mustChangePassword, passwordHash: staffUsers.passwordHash }).from(staffUsers).where(eq(staffUsers.id, session.userId));
   // A first-access cookie cannot become a full session after the password changes.
   if (session.mustChangePassword && !user?.mustChangePassword) return null;
-  return user?.active ? user : null;
+  if (!user?.active || technicalStaff(user)) return null;
+  const { passwordHash: _privateHash, ...current } = user;
+  return current;
 }
 
 /** Require a minimum role. admin satisfies everything; manager satisfies manager. */
@@ -149,9 +178,7 @@ export function clearAdminCookie(response: NextResponse): void {
 
 /** Middleware (proxy.ts, Edge) helper — any valid staff session passes. */
 export async function isAdminRequest(req: NextRequest): Promise<boolean> {
-  const token = req.cookies.get(COOKIE_NAME)?.value ?? "";
-  const session = await parseSession(token);
-  const current = session ? await resolveStaffSession(session) : null;
+  const current = await resolveRequestStaff(req.cookies.get(COOKIE_NAME)?.value, req.cookies.get("cogia_sessao")?.value);
   return current !== null && !current.mustChangePassword;
 }
 

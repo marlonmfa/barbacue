@@ -6,9 +6,11 @@ import {
   assertSecretsConfigured,
   parseSession,
   resolveStaffSession,
+  resolveRequestStaff,
 } from "@/lib/admin-auth";
 import { authenticateStaff } from "@/lib/staff-auth";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { endCogSession } from "@/lib/cog-sso";
 
 const LoginSchema = z.object({
   username: z.string().trim().min(1).max(254),
@@ -18,8 +20,7 @@ const LoginSchema = z.object({
 // The desktop renders its own local UI and resolves the current account through
 // the same HttpOnly online session. No password, hash or signing key is exposed.
 export async function GET(req: NextRequest) {
-  const token = await parseSession(req.cookies.get("barbacue_admin")?.value ?? "");
-  const session = token ? await resolveStaffSession(token) : null;
+  const session = await resolveRequestStaff(req.cookies.get("barbacue_admin")?.value, req.cookies.get("cogia_sessao")?.value);
   const headers = { "Cache-Control": "private, no-store", Vary: "Cookie" };
   if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401, headers });
   const { userId, role, name, jobTitle, permissions, mustChangePassword } = session;
@@ -67,8 +68,11 @@ export async function POST(req: NextRequest) {
   return res;
 }
 
-export async function DELETE() {
+export async function DELETE(req: NextRequest) {
+  const central = req.cookies.get("cogia_sessao")?.value;
+  try { await endCogSession(central); } catch { return NextResponse.json({ error: "Não foi possível encerrar a sessão Cog. Tente novamente." }, { status: 503 }); }
   const res = NextResponse.json({ ok: true });
+  if (central && process.env.COGIA_SSO_IDENTITY_KEY) res.cookies.set("cogia_sessao", "", { domain: "cog.ia.br", path: "/", maxAge: 0, httpOnly: true, secure: true, sameSite: "lax" });
   clearAdminCookie(res);
   return res;
 }

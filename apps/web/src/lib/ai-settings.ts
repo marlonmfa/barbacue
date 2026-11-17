@@ -3,7 +3,14 @@ import { sql } from 'drizzle-orm';
 import { db } from '@/db';
 
 export type AISettings = { provider: 'anthropic' | 'openai'; anthropicModel: string; openaiModel: string; anthropicApiKey?: string; openaiApiKey?: string };
-const defaults: AISettings = { provider: 'anthropic', anthropicModel: 'claude-haiku-5-5', openaiModel: process.env.OPENAI_MODEL || 'gpt-4o-mini' };
+const defaultProvider: AISettings['provider'] = process.env.AI_PROVIDER === 'openai'
+  ? 'openai'
+  : process.env.AI_PROVIDER === 'anthropic'
+    ? 'anthropic'
+    : process.env.ANTHROPIC_API_KEY
+      ? 'anthropic'
+      : 'openai';
+const defaults: AISettings = { provider: defaultProvider, anthropicModel: process.env.ANTHROPIC_MODEL || 'claude-haiku-5-5', openaiModel: process.env.OPENAI_MODEL || 'gpt-4o-mini' };
 function encryptionKey() {
   const secret = process.env.AI_ENCRYPTION_KEY || process.env.ADMIN_COOKIE_SECRET;
   if (!secret || secret.length < 32) throw new Error('Configure AI_ENCRYPTION_KEY ou ADMIN_COOKIE_SECRET com pelo menos 32 caracteres');
@@ -22,7 +29,7 @@ export function decryptAI(value: string): AISettings {
 export async function readAISettings(): Promise<AISettings> {
   const rows = await db.execute(sql`SELECT encrypted_value FROM ai_provider_settings WHERE id = 1`);
   const value = rows.rows[0]?.encrypted_value;
-  return { ...defaults, ...(process.env.AI_PROVIDER === 'openai' ? { provider: 'openai' as const } : {}), ...(process.env.ANTHROPIC_MODEL ? { anthropicModel: process.env.ANTHROPIC_MODEL } : {}), ...(typeof value === 'string' ? decryptAI(value) : {}) };
+  return { ...defaults, ...(typeof value === 'string' ? decryptAI(value) : {}) };
 }
 export function publicAISettings(settings: AISettings) {
   return { provider: settings.provider, anthropicModel: settings.anthropicModel, openaiModel: settings.openaiModel, anthropicConfigured: Boolean(settings.anthropicApiKey || process.env.ANTHROPIC_API_KEY), openaiConfigured: Boolean(settings.openaiApiKey || process.env.OPENAI_API_KEY || process.env.OPENAI_KEY) };

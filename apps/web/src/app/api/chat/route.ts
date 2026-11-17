@@ -1,4 +1,4 @@
-import { isBrand } from "@/lib/brands";
+import { BRANDS, isBrand, type Brand } from "@/lib/brands";
 import { NextRequest } from "next/server";
 import OpenAI from "openai";
 import { resolveAI } from "@/lib/ai-settings";
@@ -26,6 +26,7 @@ export const maxDuration = 30;
 
 interface AgentItem {
   productId: number;
+  brand: Brand;
   name: string;
   priceCents: number;
   qty: number;
@@ -33,6 +34,7 @@ interface AgentItem {
 
 interface AgentProduct {
   id: number;
+  brand: Brand;
   name: string;
   description: string | null;
   category: string;
@@ -47,7 +49,7 @@ const cartSummary = (cart: AgentItem[]) => {
   if (cart.length === 0) return "Carrinho vazio.";
   const total = cart.reduce((s, i) => s + i.priceCents * i.qty, 0);
   return (
-    cart.map((i) => `#${i.productId} ${i.name} x${i.qty} (${fmt(i.priceCents * i.qty)})`).join("; ") +
+    cart.map((i) => `${BRANDS[i.brand]} #${i.productId} ${i.name} x${i.qty} (${fmt(i.priceCents * i.qty)})`).join("; ") +
     ` — Total: ${fmt(total)}`
   );
 };
@@ -68,6 +70,8 @@ export async function POST(req: NextRequest) {
     // When seated via QR, the dining table's opaque token (dine-in mode).
     tableToken?: string;
     brand?: "barbacue" | "barbadog" | "chelas";
+    activeBrands?: Brand[];
+    unified?: boolean;
   };
   try {
     body = await req.json();
@@ -76,6 +80,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (body.brand !== undefined && !isBrand(body.brand)) return Response.json({ error: "Restaurante inválido." }, { status: 400 });
+  if (body.activeBrands !== undefined && (!Array.isArray(body.activeBrands) || body.activeBrands.some((brand) => !isBrand(brand)))) return Response.json({ error: "Estados de restaurante inválidos." }, { status: 400 });
   if (!Array.isArray(body.messages) || body.messages.some((message) => !message || !["user", "assistant"].includes(message.role) || typeof message.content !== "string" || message.content.length > 8000) || (body.cart !== undefined && !Array.isArray(body.cart))) return Response.json({ error: "Pedido inválido." }, { status: 400 });
   const history = (body.messages ?? []).slice(-20);
   if (history.length === 0) {
@@ -88,13 +93,16 @@ export async function POST(req: NextRequest) {
   // they merely typed (IDOR). isBot gates all cross-customer reads.
   const botToken = process.env.BOT_API_TOKEN;
   const isBot = Boolean(botToken) && safeEqual(req.headers.get("x-bot-token") ?? "", botToken!);
+  const unified = isBot && body.unified === true;
 
   // ─── Load the live menu so the agent can never invent products/prices ───
   const [settings] = await db.select().from(storeSettings).where(eq(storeSettings.id, 1));
   const brand = body.brand ?? "barbacue";
+  const activeBrands = [...new Set((body.activeBrands ?? [brand]).filter(isBrand))] as Brand[];
+  if (!activeBrands.includes(brand)) activeBrands.push(brand);
   const brandName = brand === "barbadog" ? "Barbadog" : brand === "chelas" ? "Chelas" : settings?.storeName ?? "Barbacue";
   let prods: AgentProduct[] = [];
-  if (brand === "barbacue") {
+  if (brand === "barbacue" || unified) {
     const cats = await db.select().from(categories).orderBy(asc(categories.sortOrder));
     const categoryName = new Map(cats.map((category) => [category.id, category.name]));
     const native = await db
@@ -104,27 +112,30 @@ export async function POST(req: NextRequest) {
       .orderBy(asc(products.sortOrder));
     prods = native.map((product) => ({
       id: product.id,
+      brand: "barbacue" as const,
       name: product.name,
       description: product.description,
       category: categoryName.get(product.categoryId ?? -1) ?? "Outros",
       priceCents: effectivePrice(product),
       originalPriceCents: isPromoActive(product) ? product.priceCents : null,
     }));
-  } else {
+  }
+  if (brand !== "barbacue" || unified) {
     await ensureBrandCatalogs();
     const managed = await db
       .select()
       .from(brandCatalogProducts)
-      .where(and(eq(brandCatalogProducts.brand, brand), eq(brandCatalogProducts.available, true)))
+      .where(unified ? eq(brandCatalogProducts.available, true) : and(eq(brandCatalogProducts.brand, brand), eq(brandCatalogProducts.available, true)))
       .orderBy(asc(brandCatalogProducts.sortOrder));
-    prods = managed.map((product) => ({
+    prods.push(...managed.map((product) => ({
       id: product.id,
+      brand: product.brand as Brand,
       name: product.name,
       description: product.description,
       category: product.category,
       priceCents: product.priceCents,
       originalPriceCents: product.originalPriceCents,
-    }));
+    })));
   }
 
   // Short-circuit an empty catalog instead of letting the agent loop on
@@ -143,14 +154,16 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const byId = new Map(prods.map((p) => [p.id, p]));
+  const productKey = (productBrand: Brand, productId: number) => `${productBrand}:${productId}`;
+  const byKey = new Map(prods.map((p) => [productKey(p.brand, p.id), p]));
+  const productFor = (productId: number, productBrand?: unknown) => byKey.get(productKey(isBrand(productBrand) ? productBrand : brand, productId));
   const menuText = prods
     .map((p) => {
       const desc = p.description ? ` — ${p.description}` : "";
       if (p.originalPriceCents && p.originalPriceCents > p.priceCents) {
-        return `#${p.id} | ${p.name} | ${fmt(p.priceCents)} (PROMO! de ${fmt(p.originalPriceCents)}) | ${p.category}${desc}`;
+        return `${BRANDS[p.brand]} | #${p.id} | ${p.name} | ${fmt(p.priceCents)} (PROMO! de ${fmt(p.originalPriceCents)}) | ${p.category}${desc}`;
       }
-      return `#${p.id} | ${p.name} | ${fmt(p.priceCents)} | ${p.category}${desc}`;
+      return `${BRANDS[p.brand]} | #${p.id} | ${p.name} | ${fmt(p.priceCents)} | ${p.category}${desc}`;
     })
     .join("\n");
 
@@ -179,9 +192,10 @@ export async function POST(req: NextRequest) {
   const isDineIn = validTableToken !== null;
 
   // Working copies the tools mutate; returned to the client as the new truth.
-  let cart: AgentItem[] = (body.cart ?? []).filter((i) => i && byId.has(i.productId) && Number.isSafeInteger(i.qty) && i.qty > 0 && i.qty <= 99).map((i) => {
-    const product = byId.get(i.productId)!;
-    return { productId: product.id, name: product.name, priceCents: product.priceCents, qty: i.qty };
+  let cart: AgentItem[] = (body.cart ?? []).flatMap((i) => {
+    if (!i || !Number.isSafeInteger(i.qty) || i.qty <= 0 || i.qty > 99) return [];
+    const product = productFor(i.productId, i.brand);
+    return product ? [{ productId: product.id, brand: product.brand, name: product.name, priceCents: product.priceCents, qty: i.qty }] : [];
   });
   const customer = { ...(body.customer ?? {}) };
   let paymentMethod = body.paymentMethod ?? "pix";
@@ -194,7 +208,7 @@ export async function POST(req: NextRequest) {
   if (isBot && body.customerPhone) customer.phone = knownPhone;
 
   let historyText = "";
-  const lastOrderItems: { productId: number; qty: number }[] = [];
+  const lastOrderItems: { productId: number; brand: Brand; qty: number }[] = [];
 
   if (knownPhone) {
     const [record] = await db.select().from(customers).where(eq(customers.phone, knownPhone));
@@ -203,42 +217,47 @@ export async function POST(req: NextRequest) {
       if (!customer.address && record.address) customer.address = record.address;
     }
     const past = await db
-      .select({ items: orders.items, createdAt: orders.createdAt, totalCents: orders.totalCents })
+      .select({ items: orders.items, brand: orders.brand, createdAt: orders.createdAt, totalCents: orders.totalCents })
       .from(orders)
-      .where(and(eq(orders.customerPhone, knownPhone), eq(orders.brand, brand)))
+      .where(unified ? eq(orders.customerPhone, knownPhone) : and(eq(orders.customerPhone, knownPhone), eq(orders.brand, brand)))
       .orderBy(desc(orders.createdAt))
       .limit(3);
 
     if (past.length > 0) {
-      const summarize = (items: unknown): string => {
+      const summarize = (items: unknown, orderBrand: string): string => {
         const arr = Array.isArray(items) ? (items as Record<string, unknown>[]) : [];
         return arr
           .map((it) => {
             const id = Number(it.productId ?? it.product_id);
-            const p = byId.get(id);
+            const itemBrand = isBrand(it.brand) ? it.brand : isBrand(orderBrand) ? orderBrand : brand;
+            const p = byKey.get(productKey(itemBrand, id));
             const name = p?.name ?? String(it.name ?? "item");
             return `${it.qty}x ${name}`;
           })
           .join(", ");
       };
-      historyText = past.map((o, idx) => `Pedido ${idx + 1}: ${summarize(o.items)}`).join("\n");
+      historyText = past.map((o, idx) => `Pedido ${idx + 1}: ${summarize(o.items, o.brand)}`).join("\n");
 
       const recent = Array.isArray(past[0].items) ? (past[0].items as Record<string, unknown>[]) : [];
       for (const it of recent) {
         const id = Number(it.productId ?? it.product_id);
+        const itemBrand = isBrand(it.brand) ? it.brand : isBrand(past[0].brand) ? past[0].brand : brand;
         const qty = Math.max(1, Number(it.qty) || 1);
-        if (byId.has(id)) lastOrderItems.push({ productId: id, qty });
+        if (byKey.has(productKey(itemBrand, id))) lastOrderItems.push({ productId: id, brand: itemBrand, qty });
       }
     }
   }
 
   const openai = new OpenAI({ apiKey, ...(provider === "anthropic" ? { baseURL: "https://api.anthropic.com/v1/" } : {}), timeout: 25000, maxRetries: 0 });
 
-  const system = `Você é o atendente virtual do restaurante "${brandName}". Atende em português brasileiro, de forma calorosa, breve e objetiva — como um atendente de WhatsApp.
+  const system = `Você é um único atendente virtual do Grupo Barba de Restaurantes${unified ? ", responsável simultaneamente por Barbacue, Barbadog e Chelas" : `, atendendo agora o restaurante "${brandName}"`}. Atende em português brasileiro, de forma calorosa, breve e objetiva — como um atendente de WhatsApp.
 
 Seu trabalho: anotar o pedido do cliente conversando e, quando ele estiver pronto, levá-lo direto para a página de pagamento usando a ferramenta go_to_payment. O cliente pode misturar livremente clicar no cardápio e escrever — os dois valem igual.
 
 Regras:
+- ${unified ? `Estados ativos agora: ${activeBrands.map((item) => BRANDS[item]).join(", ")}. Um estado indica onde a conversa já está atuando, mas não restringe o catálogo. Ao adicionar item de outra marca, ela também passa a ficar ativa.` : `O catálogo atual pertence ao ${brandName}.`}
+- ${unified ? "O carrinho é único e compartilhado entre as três marcas. Nunca remova itens ao mudar de restaurante. Mesmo enquanto coleta endereço, pagamento ou confirmação de uma marca, você pode recomendar complementos de QUALQUER uma das outras duas e adicioná-los somente se o cliente aceitar." : "Não misture itens de outra marca neste atendimento."}
+- ${unified ? "IDs numéricos podem se repetir entre restaurantes. Em toda alteração de item, informe obrigatoriamente também a marca correta." : "Use a marca atual nas alterações de item."}
 - Use SOMENTE itens do cardápio abaixo, pelo #id exato. Nunca invente produtos ou preços.
 - Ao adicionar/remover itens use as ferramentas (add_item, set_quantity, remove_item). Não diga que adicionou sem chamar a ferramenta.
 - NUNCA mexa em itens que já estão no carrinho se o cliente não pediu. Para adicionar um novo item use add_item; não use set_quantity para "manter" itens existentes.
@@ -258,7 +277,7 @@ ${
     ? `- ATENÇÃO: a loja está FECHADA agora (${storeStatus.reason}${storeStatus.nextOpen ? " " + storeStatus.nextOpen : ""}). Avise o cliente logo no começo que NÃO é possível finalizar o pedido agora e ofereça anotar para a reabertura. NÃO chame go_to_payment enquanto fechada.\n`
     : ""
 }
-CARDÁPIO (#id | nome | preço | categoria — descrição):
+CARDÁPIO (restaurante | #id | nome | preço | categoria — descrição):
 ${menuText}
 
 Estado atual do pedido: ${cartSummary(cart)}
@@ -281,9 +300,10 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
           type: "object",
           properties: {
             productId: { type: "integer", description: "O #id exato do produto no cardápio" },
+            brand: { type: "string", enum: ["barbacue", "barbadog", "chelas"] },
             qty: { type: "integer", minimum: 1, default: 1 },
           },
-          required: ["productId"],
+          required: ["brand", "productId"],
         },
       },
     },
@@ -296,9 +316,10 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
           type: "object",
           properties: {
             productId: { type: "integer" },
+            brand: { type: "string", enum: ["barbacue", "barbadog", "chelas"] },
             qty: { type: "integer", minimum: 0 },
           },
-          required: ["productId", "qty"],
+          required: ["brand", "productId", "qty"],
         },
       },
     },
@@ -309,8 +330,8 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
         description: "Remove totalmente um produto do carrinho.",
         parameters: {
           type: "object",
-          properties: { productId: { type: "integer" } },
-          required: ["productId"],
+          properties: { productId: { type: "integer" }, brand: { type: "string", enum: ["barbacue", "barbadog", "chelas"] } },
+          required: ["brand", "productId"],
         },
       },
     },
@@ -386,30 +407,33 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
   async function runTool(name: string, args: Record<string, unknown>): Promise<string> {
     switch (name) {
       case "add_item": {
-        const p = byId.get(Number(args.productId));
+        const p = productFor(Number(args.productId), args.brand);
         if (!p) return JSON.stringify({ error: "Produto não encontrado", cart: cartSummary(cart) });
         const qty = Math.max(1, Number(args.qty) || 1);
-        const existing = cart.find((i) => i.productId === p.id);
+        const existing = cart.find((i) => i.brand === p.brand && i.productId === p.id);
         if (existing) existing.qty += qty;
-        else cart.push({ productId: p.id, name: p.name, priceCents: p.priceCents, qty });
+        else cart.push({ productId: p.id, brand: p.brand, name: p.name, priceCents: p.priceCents, qty });
+        if (!activeBrands.includes(p.brand)) activeBrands.push(p.brand);
         return JSON.stringify({ ok: true, added: `${qty}x ${p.name}`, cart: cartSummary(cart) });
       }
       case "set_quantity": {
-        const p = byId.get(Number(args.productId));
+        const p = productFor(Number(args.productId), args.brand);
         if (!p) return JSON.stringify({ error: "Produto não encontrado", cart: cartSummary(cart) });
         const qty = Math.max(0, Number(args.qty) || 0);
-        const existing = cart.find((i) => i.productId === p.id);
+        const existing = cart.find((i) => i.brand === p.brand && i.productId === p.id);
         if (qty === 0) {
-          cart = cart.filter((i) => i.productId !== p.id);
+          cart = cart.filter((i) => i.brand !== p.brand || i.productId !== p.id);
         } else if (existing) {
           existing.qty = qty; // mutate in place → stable cart order
         } else {
-          cart.push({ productId: p.id, name: p.name, priceCents: p.priceCents, qty });
+          cart.push({ productId: p.id, brand: p.brand, name: p.name, priceCents: p.priceCents, qty });
         }
+        if (qty > 0 && !activeBrands.includes(p.brand)) activeBrands.push(p.brand);
         return JSON.stringify({ ok: true, cart: cartSummary(cart) });
       }
       case "remove_item": {
-        cart = cart.filter((i) => i.productId !== Number(args.productId));
+        const itemBrand = isBrand(args.brand) ? args.brand : brand;
+        cart = cart.filter((i) => i.brand !== itemBrand || i.productId !== Number(args.productId));
         return JSON.stringify({ ok: true, cart: cartSummary(cart) });
       }
       case "set_customer": {
@@ -450,8 +474,8 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
           return JSON.stringify({ error: "Sem pedido anterior para repetir." });
         cart = [];
         for (const it of lastOrderItems) {
-          const p = byId.get(it.productId);
-          if (p) cart.push({ productId: p.id, name: p.name, priceCents: p.priceCents, qty: it.qty });
+          const p = byKey.get(productKey(it.brand, it.productId));
+          if (p) cart.push({ productId: p.id, brand: p.brand, name: p.name, priceCents: p.priceCents, qty: it.qty });
         }
         return JSON.stringify({ ok: true, repeated: true, cart: cartSummary(cart) });
       }
@@ -520,6 +544,7 @@ ${historyText ? `\nPEDIDOS ANTERIORES deste cliente (mais recente primeiro):\n${
     orderType: isDineIn ? "dine_in" : "delivery",
     tableNumber,
     brand,
+    activeBrands,
     navigate,
   });
 }

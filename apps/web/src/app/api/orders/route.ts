@@ -23,16 +23,20 @@ import { requireStaff } from "@/lib/admin-auth";
 import { can } from "@/lib/permissions";
 import { deliveryAddressKey, type DeliveryRouteLinks } from "@/lib/delivery";
 import { orderTotalCents } from "@/lib/order-totals";
+import type { Brand } from "@/lib/brands";
 
 // Only productId + qty are trusted from the client. Name and priceCents are
 // resolved from the products table server-side to prevent price tampering.
 const OrderItemSchema = z.object({
   productId: z.number().int().positive(),
+  brand: z.enum(["barbacue", "barbadog", "chelas"]).optional(),
   qty: z.number().int().positive(),
   // Tolerated for backwards compat with existing clients; ignored server-side.
   name: z.string().optional(),
   priceCents: z.number().int().nonnegative().optional(),
 });
+
+const cartItemKey = (brand: Brand, productId: number) => `${brand}:${productId}`;
 
 const OrderSchema = z.object({
   customerName: z.string().min(2),
@@ -137,38 +141,30 @@ export async function POST(request: NextRequest) {
   if (orderType !== "delivery" && deliveryQuoteId) return fail("Pedidos na mesa não têm frete. Atualize o pedido.", 422);
 
   // ─── Re-source every line item from the products table ──────────────
-  const requestedIds = Array.from(new Set(requestedItems.map((i) => i.productId)));
-  const canonicalProducts: { id: number; name: string; priceCents: number; available: boolean }[] = [];
-  if (brand === "barbacue") {
-    const nativeProducts = await db.select().from(products).where(inArray(products.id, requestedIds));
-    canonicalProducts.push(...nativeProducts.map((product) => ({
-      id: product.id,
-      name: product.name,
-      priceCents: effectivePrice(product),
-      available: Boolean(product.available),
-    })));
-  } else {
-    const managedProducts = await db
-      .select()
-      .from(brandCatalogProducts)
-      .where(and(eq(brandCatalogProducts.brand, brand), inArray(brandCatalogProducts.id, requestedIds)));
-    canonicalProducts.push(...managedProducts.map((product) => ({
-      id: product.id,
-      name: product.name,
-      priceCents: product.priceCents,
-      available: product.available,
-    })));
+  const requestedBrands = [...new Set(requestedItems.map((item) => (item.brand ?? brand) as Brand))];
+  const canonicalProducts: { id: number; brand: Brand; name: string; priceCents: number; available: boolean }[] = [];
+  for (const itemBrand of requestedBrands) {
+    const ids = [...new Set(requestedItems.filter((item) => (item.brand ?? brand) === itemBrand).map((item) => item.productId))];
+    if (itemBrand === "barbacue") {
+      const nativeProducts = await db.select().from(products).where(inArray(products.id, ids));
+      canonicalProducts.push(...nativeProducts.map((product) => ({ id: product.id, brand: itemBrand, name: product.name, priceCents: effectivePrice(product), available: Boolean(product.available) })));
+    } else {
+      const managedProducts = await db.select().from(brandCatalogProducts).where(and(eq(brandCatalogProducts.brand, itemBrand), inArray(brandCatalogProducts.id, ids)));
+      canonicalProducts.push(...managedProducts.map((product) => ({ id: product.id, brand: itemBrand, name: product.name, priceCents: product.priceCents, available: product.available })));
+    }
   }
-  const byId = new Map(canonicalProducts.map((p) => [p.id, p]));
+  const byKey = new Map(canonicalProducts.map((product) => [cartItemKey(product.brand, product.id), product]));
 
-  const canonicalItems: { productId: number; name: string; priceCents: number; qty: number }[] = [];
+  const canonicalItems: { productId: number; brand: Brand; name: string; priceCents: number; qty: number }[] = [];
   for (const i of requestedItems) {
-    const p = byId.get(i.productId);
+    const itemBrand = (i.brand ?? brand) as Brand;
+    const p = byKey.get(cartItemKey(itemBrand, i.productId));
     if (!p || !p.available) {
       return fail(`Produto indisponível: ${i.name ?? i.productId}`, 422);
     }
     canonicalItems.push({
       productId: p.id,
+      brand: itemBrand,
       name: p.name,
       priceCents: p.priceCents,
       qty: i.qty,

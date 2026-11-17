@@ -2,6 +2,7 @@ import { config } from "./config.js";
 
 export interface AgentItem {
   productId: number;
+  brand: RestaurantBrand;
   name: string;
   priceCents: number;
   qty: number;
@@ -20,6 +21,7 @@ export interface ChatResponse {
   customer: ChatCustomer;
   paymentMethod: string;
   navigate: boolean;
+  activeBrands?: RestaurantBrand[];
 }
 
 export type RestaurantBrand = "barbacue" | "barbadog" | "chelas";
@@ -73,6 +75,8 @@ export async function chat(payload: {
   paymentMethod: string;
   customerPhone: string;
   brand: RestaurantBrand;
+  activeBrands: RestaurantBrand[];
+  unified: true;
 }): Promise<ChatResponse> {
   return postJson<ChatResponse>("/api/chat", payload);
 }
@@ -83,7 +87,7 @@ export async function createOrder(payload: {
   customerPhone: string;
   deliveryAddress?: string;
   deliveryQuoteId?: string;
-  items: { productId: number; qty: number }[];
+  items: { productId: number; brand: RestaurantBrand; qty: number }[];
   paymentMethod: string;
   channel: "chat";
   brand: RestaurantBrand;
