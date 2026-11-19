@@ -19,3 +19,13 @@ Regra permanente autorizada em 07/10/2026, aplicável a todos os serviços:
 - Preservar bancos, emails, volumes, contas, chaves, .env e configurações ativas.
   Não usar down -v, prune, recriar contas ou sobrescrever ambientes no ajuste.
 - Relatar por projeto o estado anterior, a mudança, os testes e se foi publicada.
+
+## Logos do Centro de comando no deploy web
+
+Antes de trocar o runtime ou reiniciar o PM2, executar
+`node /root/barbacue-release-checks/verify-dashboard-logos.mjs <dist-do-candidato>`
+em `otherpages`, apontando para o diretório Next já desempacotado que contém
+`BUILD_ID`, `server` e `static`. Aplicar também a hotfixes, builds diretos com
+`next build` e releases montadas a partir de snapshots. Em caso de falha, manter
+o runtime ativo e corrigir a candidata. A cópia versionada do verificador fica
+em `apps/web/scripts/verify-dashboard-logos.mjs` e roda no postbuild do npm.

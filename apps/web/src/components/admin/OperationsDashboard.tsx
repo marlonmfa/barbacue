@@ -10,7 +10,6 @@ type BrandId = "all" | "barbacue" | "barbadog" | "chelas";
 type BrandSummary = {
   id: Exclude<BrandId, "all">;
   name: string;
-  monogram: string;
   itemCount: number;
   detail: string;
 };
@@ -66,7 +65,7 @@ function BrandButton({ brand, active, onSelect }: { brand: BrandSummary; active:
   const brandClass = brand.id === "barbacue" ? styles.brandBarbacue : brand.id === "barbadog" ? styles.brandBarbadog : styles.brandChelas;
   return (
     <button className={`${styles.brandCard} ${brandClass} ${active ? styles.brandActive : ""}`} onClick={onSelect} aria-pressed={active}>
-      <span className={styles.monogram}>{brand.monogram}</span>
+      <span className={styles.brandLogo} aria-hidden="true" />
       <span className={styles.brandCopy}>
         <span className={styles.brandName}><i className={styles.statusDot} />{brand.name}</span>
         <p>{brand.detail}</p>
