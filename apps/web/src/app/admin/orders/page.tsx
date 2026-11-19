@@ -1,5 +1,7 @@
 "use client";
 
+import { ifoodReceiptReferences } from "../../../../../print-agent/src/ifood-references.cjs";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { isBrand } from "@/lib/brands";
 import { OrderImport } from "@/components/admin/OrderImport";
@@ -134,6 +136,7 @@ export default function AdminOrders() {
   ];
   const boardOrders = filtered.filter(o => `${o.id} ${o.customerName} ${orderOwner(o).title} ${o.customerPhone}`.toLocaleLowerCase("pt-BR").includes(search.toLocaleLowerCase("pt-BR")))
     .sort((a, b) => (Date.parse(a.createdAt || "") || 0) - (Date.parse(b.createdAt || "") || 0) || a.id.localeCompare(b.id));
+  const receipt = selected?.channel === "ifood" ? ifoodReceiptReferences(selected.notes) : null;
   const next = selected?.status === "pending" ? { status: "confirmed", label: "Aceitar pedido" }
     : selected?.status === "confirmed" ? { status: "preparing", label: "Iniciar preparo" }
     : selected?.status === "preparing" ? { status: "ready", label: "Pedido pronto" }
@@ -275,6 +278,8 @@ export default function AdminOrders() {
                 <p className="hidden print:block order-print-brand" data-brand={isBrand(selected.brand) ? selected.brand : "barbacue"}>{BRAND_TAG[isBrand(selected.brand) ? selected.brand : "barbacue"].label}</p>
                 <h2 className="text-lg font-bold text-white">Pedido #{selected.id.slice(0, 8).toUpperCase()}</h2>
                 <p className="text-xs text-[#a89a8c]"><OrderTags order={selected} /></p>
+                {receipt?.displayId && <p className="hidden print:block">Pedido iFood #{receipt.displayId}</p>}
+                {receipt?.localizer && <p className="hidden print:block">Localizador iFood: {receipt.localizer}</p>}
                 {selected.channel === "test" && <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">Pedido de teste</p>}
               </div>
               <button onClick={() => setSelected(null)} className="no-print min-w-12 min-h-12 text-[#a89a8c] hover:text-white text-2xl leading-none" aria-label="Fechar">×</button>
@@ -311,9 +316,10 @@ export default function AdminOrders() {
               </div>
 
               {selected.notes && (
-                <div className="bg-[#ed1b24]/10 border border-[#ed1b24]/30 rounded-xl p-4">
+                <div className={`bg-[#ed1b24]/10 border border-[#ed1b24]/30 rounded-xl p-4 ${receipt && !receipt.remainingNotes ? "print:hidden" : ""}`}>
                   <p className="text-[#c8b89a] text-xs font-semibold mb-1">Observações</p>
-                  <p className="text-[#f6efe8] text-sm">{selected.notes}</p>
+                  <p className={`text-[#f6efe8] text-sm ${receipt ? "print:hidden" : ""}`}>{selected.notes}</p>
+                  {receipt?.remainingNotes && <p className="hidden print:block text-sm">{receipt.remainingNotes}</p>}
                 </div>
               )}
 

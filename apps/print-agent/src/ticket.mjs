@@ -1,3 +1,4 @@
+import { ifoodReceiptReferences } from './ifood-references.cjs';
 const BRANDS = { barbacue: 'BARBACUE', chelas: 'CHELAS', barbadog: 'BARBADOG' };
 // As tres lojas imprimem na mesma impressora: cada uma tem moldura propria
 // (caractere e subtitulo) para a cozinha separar as comandas sem ler o texto.
@@ -131,6 +132,9 @@ function formatPart(ticket, { columns = 48, timeZone = 'America/Sao_Paulo', invi
   }
   const channels = { kiosk: 'totem', table_qr: 'QR da mesa', click: 'site / aplicativo', chat: 'WhatsApp / chat', ifood: 'iFood', test: 'TESTE', manual: 'balcao', other: 'outra origem' };
   lines.push(...wrapText(`Origem: ${Object.hasOwn(channels, ticket.channel) ? channels[ticket.channel] : ticket.channel}`, columns));
+  const receipt = ticket.channel === 'ifood' ? ifoodReceiptReferences(ticket.notes) : null;
+  if (receipt?.displayId) lines.push(...wrapText(`PEDIDO IFOOD: #${receipt.displayId}`, columns));
+  if (receipt?.localizer) lines.push(`LOCALIZADOR IFOOD: ${receipt.localizer}`);
   if (ticket.version === 2) {
     if (ticket.status === 'pending') lines.push('PEDIDO PENDENTE - CONFIRMAR');
     for (const [label, value] of [['Cliente', ticket.customerName], ['Telefone', ticket.customerPhone], ['Endereco', ticket.orderType === 'delivery' ? ticket.deliveryAddress : null]]) {
@@ -155,7 +159,8 @@ function formatPart(ticket, { columns = 48, timeZone = 'America/Sao_Paulo', invi
   }
   if (ticket.notes) {
     if (typeof ticket.notes !== 'string' || ticket.notes.length > 2000) throw new Error('Observacao invalida');
-    lines.push(separator, ...wrapText(`OBS DO PEDIDO: ${ticket.notes}`, columns));
+    const notes = receipt ? receipt.remainingNotes : ticket.notes;
+    if (notes) lines.push(separator, ...wrapText(`OBS DO PEDIDO: ${notes}`, columns));
   }
   // Comanda de preparo: sem endereco, telefone ou outros dados de entrega.
   if (ticket.version === 1) {

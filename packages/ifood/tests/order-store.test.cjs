@@ -7,10 +7,36 @@ test('iFood maps real totals, options, payment and stable ID', () => {
   assert.equal(order.id, ifoodLocalId(fixture().id));
   assert.equal(order.total, 4400); assert.equal(order.fee, 500);
   assert.equal(order.items[0].priceCents, 2000);
-  assert.match(order.items[0].notes, /1x Queijo/);
+  assert.deepEqual(order.items[0].components, [{ name: 'Queijo', qty: 1 }]);
+  assert.equal(order.items[0].notes, 'Sem cebola');
   assert.equal(order.paid, true);
   assert.equal(order.paymentMethod, null); // never mislabel online card as PIX/cash
   assert.match(order.notes, /CREDIT ONLINE/);
+});
+test('iFood keeps combo name, components and observations in separate fields', () => {
+  const input = fixture();
+  input.items[0] = {
+    name: 'Combo Barba', quantity: 1, totalPrice: 42, observations: 'Molho separado',
+    options: [{ name: 'Barba Burger', quantity: 1 }, { name: 'Batata P', quantity: 1 }, { name: 'Refrigerante', quantity: 2 }],
+  };
+  const mapped = mapIfoodOrder(input);
+  assert.equal(mapped.items[0].name, 'Combo Barba');
+  assert.deepEqual(mapped.items[0].components, [
+    { name: 'Barba Burger', qty: 1 },
+    { name: 'Batata P', qty: 1 },
+    { name: 'Refrigerante', qty: 2 },
+  ]);
+  assert.equal(mapped.items[0].notes, 'Molho separado');
+});
+test('iFood appends the neighborhood omitted from formattedAddress without duplicating existing parts', () => {
+  const input = fixture();
+  input.delivery.deliveryAddress = {
+    formattedAddress: 'R. Ema Rumpel Bartel, 574, Jaraguá do Sul - SC',
+    neighborhood: 'Vila Baependi', city: 'Jaraguá do Sul', state: 'SC',
+  };
+  assert.equal(mapIfoodOrder(input).deliveryAddress, 'R. Ema Rumpel Bartel, 574, Jaraguá do Sul - SC, Vila Baependi');
+  input.delivery.deliveryAddress.formattedAddress += ', Vila Baependi';
+  assert.equal(mapIfoodOrder(input).deliveryAddress.match(/Vila Baependi/g).length, 1);
 });
 test('mixed payment retains paid and due amounts without declaring fully paid', () => {
   const input = fixture(); input.payments.prepaid = 20; input.payments.pending = 24;

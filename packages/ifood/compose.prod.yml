@@ -1,18 +1,23 @@
-# Serviço independente no host atual do Barbacue; banco nativo preservado.
 name: barbacue-ifood
 services:
   webhook:
-    image: barbacue-ifood:webhook-audit-20261023
-    command: [node, packages/ifood/dist/webhook.js]
+    image: barbacue-ifood:localizador-20261119
+    command:
+    - node
+    - packages/ifood/dist/webhook.js
     restart: unless-stopped
     init: true
     network_mode: host
-    env_file: .env
-    environment:
-      IFOOD_WEBHOOK_PORT: '3467'
-    security_opt: [no-new-privileges:true]
+    env_file:
+    - /run/cog-control-env/0450a5084c66deb922a1b17919199157/config
+    security_opt:
+    - no-new-privileges:true
     healthcheck:
-      test: [CMD, node, -e, "const h=JSON.parse(require('fs').readFileSync('/tmp/ifood-webhook-health.json','utf8'));process.exit(Date.now()-h.lastSuccess<180000?0:1)"]
+      test:
+      - CMD
+      - node
+      - -e
+      - const h=JSON.parse(require('fs').readFileSync('/tmp/ifood-webhook-health.json','utf8'));process.exit(Date.now()-h.lastSuccess<180000?0:1)
       interval: 30s
       timeout: 5s
       start_period: 60s
@@ -23,14 +28,20 @@ services:
         max-size: 5m
         max-file: '3'
   monitor:
-    image: barbacue-ifood:20261018
+    image: barbacue-ifood:localizador-20261119
     restart: unless-stopped
     init: true
     network_mode: host
-    env_file: .env
-    security_opt: [no-new-privileges:true]
+    env_file:
+    - /run/cog-control-env/92e4e66a8459763392b76465bfb89134/config
+    security_opt:
+    - no-new-privileges:true
     healthcheck:
-      test: [CMD, node, -e, "const h=JSON.parse(require('fs').readFileSync('/tmp/ifood-health.json','utf8'));process.exit(Date.now()-(h.state==='waiting_authorization'?h.lastCheck:h.lastSuccess)<300000?0:1)"]
+      test:
+      - CMD
+      - node
+      - -e
+      - const h=JSON.parse(require('fs').readFileSync('/tmp/ifood-health.json','utf8'));process.exit(Date.now()-(h.state==='waiting_authorization'?h.lastCheck:h.lastSuccess)<300000?0:1)
       interval: 30s
       timeout: 5s
       start_period: 60s
