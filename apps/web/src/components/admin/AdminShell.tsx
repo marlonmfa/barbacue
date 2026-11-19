@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { AdminLogout } from "@/components/AdminLogout";
 import { AdminIcon, type AdminIconName } from "./AdminIcons";
 import styles from "./AdminShell.module.css";
@@ -154,6 +155,7 @@ export function AdminShell({
             <div className={styles.currentPerson}><strong>{name || ROLE_LABELS[role]}</strong><span>{jobTitle || ROLE_LABELS[role]}</span></div>
           </div>
           <div className={styles.topbarRight}>
+            <ThemeToggle />
             <span className={styles.date}>{today}</span>
             <span className={styles.profile} aria-label={`Perfil: ${ROLE_LABELS[role]}`}>{(name || ROLE_LABELS[role]).slice(0, 2).toUpperCase()}</span>
           </div>

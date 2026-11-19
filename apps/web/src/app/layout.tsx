@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { Geist, Anton } from "next/font/google";
 import "./globals.css";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { themeInit } from "@/lib/theme-init.mjs";
 import { CartProvider } from "@/components/CartProvider";
 import { brandFromHost, getBrandStorefront } from "@/lib/brand-storefront";
 
@@ -45,14 +47,17 @@ export async function generateMetadata(): Promise<Metadata> {
 // Warm-white browser chrome to match the light "butcher-paper" identity.
 export const viewport = {
   themeColor: "#fbf7f2",
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${geist.variable} ${anton.variable} h-full antialiased`}>
+    <html lang="pt-BR" suppressHydrationWarning className={`${geist.variable} ${anton.variable} h-full antialiased`}>
+      <head><script dangerouslySetInnerHTML={{ __html: themeInit }} /></head>
       <body className="min-h-full flex flex-col bg-[var(--bg)] text-[var(--text)]">
+        <div className="theme-bar no-print"><ThemeToggle /></div>
         <CartProvider>{children}</CartProvider>
       </body>
     </html>
