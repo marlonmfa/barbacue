@@ -2,8 +2,10 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:
 import { sql } from 'drizzle-orm';
 import { db } from '@/db';
 
-export type AISettings = { provider: 'anthropic' | 'openai'; anthropicModel: string; openaiModel: string; anthropicApiKey?: string; openaiApiKey?: string };
-const defaults: AISettings = { provider: 'anthropic', anthropicModel: 'claude-haiku-5-5', openaiModel: process.env.OPENAI_MODEL || 'gpt-4o-mini' };
+// DeepSeek (17/11/2026): API compatível com OpenAI; deepseek-flash (padrão) ou deepseek-v4-pro.
+export type AIProvider = 'anthropic' | 'openai' | 'deepseek';
+export type AISettings = { provider: AIProvider; anthropicModel: string; openaiModel: string; deepseekModel?: string; anthropicApiKey?: string; openaiApiKey?: string; deepseekApiKey?: string };
+const defaults: AISettings = { provider: process.env.AI_PROVIDER === 'deepseek' ? 'deepseek' : 'anthropic', anthropicModel: 'claude-haiku-5-5', openaiModel: process.env.OPENAI_MODEL || 'gpt-4o-mini', deepseekModel: process.env.DEEPSEEK_MODEL || 'deepseek-flash' };
 function encryptionKey() {
   const secret = process.env.AI_ENCRYPTION_KEY || process.env.ADMIN_COOKIE_SECRET;
   if (!secret || secret.length < 32) throw new Error('Configure AI_ENCRYPTION_KEY ou ADMIN_COOKIE_SECRET com pelo menos 32 caracteres');
@@ -25,13 +27,13 @@ export async function readAISettings(): Promise<AISettings> {
   return { ...defaults, ...(process.env.AI_PROVIDER === 'openai' ? { provider: 'openai' as const } : {}), ...(process.env.ANTHROPIC_MODEL ? { anthropicModel: process.env.ANTHROPIC_MODEL } : {}), ...(typeof value === 'string' ? decryptAI(value) : {}) };
 }
 export function publicAISettings(settings: AISettings) {
-  return { provider: settings.provider, anthropicModel: settings.anthropicModel, openaiModel: settings.openaiModel, anthropicConfigured: Boolean(settings.anthropicApiKey || process.env.ANTHROPIC_API_KEY), openaiConfigured: Boolean(settings.openaiApiKey || process.env.OPENAI_API_KEY || process.env.OPENAI_KEY) };
+  return { provider: settings.provider, anthropicModel: settings.anthropicModel, openaiModel: settings.openaiModel, deepseekModel: settings.deepseekModel || 'deepseek-flash', deepseekConfigured: Boolean(settings.deepseekApiKey || process.env.DEEPSEEK_API_KEY), anthropicConfigured: Boolean(settings.anthropicApiKey || process.env.ANTHROPIC_API_KEY), openaiConfigured: Boolean(settings.openaiApiKey || process.env.OPENAI_API_KEY || process.env.OPENAI_KEY) };
 }
 export function mergeAISettings(current: AISettings, patch: Record<string, unknown>): AISettings {
   if (!patch || typeof patch !== 'object' || Array.isArray(patch)) throw new Error('Configuração inválida');
-  if (patch.provider !== undefined && !['anthropic', 'openai'].includes(String(patch.provider))) throw new Error('Provedor inválido');
+  if (patch.provider !== undefined && !['anthropic', 'openai', 'deepseek'].includes(String(patch.provider))) throw new Error('Provedor inválido');
   const result = { ...current };
-  for (const name of ['provider', 'anthropicModel', 'openaiModel', 'anthropicApiKey', 'openaiApiKey'] as const) {
+  for (const name of ['provider', 'anthropicModel', 'openaiModel', 'deepseekModel', 'anthropicApiKey', 'openaiApiKey', 'deepseekApiKey'] as const) {
     const value = patch[name];
     if (value === undefined) continue;
     if (typeof value !== 'string' || value.length > 500) throw new Error('Configuração inválida');
@@ -45,8 +47,9 @@ export async function saveAISettings(patch: Record<string, unknown>) {
   await db.execute(sql`INSERT INTO ai_provider_settings(id,encrypted_value) VALUES(1,${value}) ON CONFLICT(id) DO UPDATE SET encrypted_value=EXCLUDED.encrypted_value,updated_at=now()`);
   return publicAISettings(settings);
 }
-export async function resolveAI(providerOverride?: 'anthropic' | 'openai') {
+export async function resolveAI(providerOverride?: AIProvider) {
   const settings = await readAISettings(), provider = providerOverride || settings.provider;
+  if (provider === 'deepseek') return { provider, model: settings.deepseekModel || 'deepseek-flash', apiKey: settings.deepseekApiKey || process.env.DEEPSEEK_API_KEY || '' };
   const key = settings[`${provider}ApiKey`] || (provider === 'anthropic' ? process.env.ANTHROPIC_API_KEY : process.env.OPENAI_API_KEY || process.env.OPENAI_KEY);
   return { provider, model: settings[`${provider}Model`], apiKey: key || '' };
 }
