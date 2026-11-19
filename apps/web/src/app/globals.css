@@ -1,30 +1,6 @@
 @import "tailwindcss";
 
-:root {
-  /* ── BARBACUE & Co brand — red on warm white (butcher-paper identity) ── */
-  --brand-red: #ed1b24;
-  --brand-red-hover: #c8141c;
-  --brand-red-soft: #fdeceb;      /* pale red wash for selected/tint states */
-  --brand-ink: #1b1613;           /* near-black warm — wordmark/headings */
-  --brand-tan: #8a6a45;           /* warm brown — secondary text/labels (≥4.5:1 on white) */
-  --brand-tan-soft: #a9855c;      /* lighter warm brown — decorative accent */
-
-  /* ── Light "butcher-paper" surfaces (warm white, not flat gray) ── */
-  --bg: #fbf7f2;                  /* warm cream page */
-  --surface: #ffffff;             /* cards / raised */
-  --surface-2: #f4ede3;           /* subtle inset / hover */
-  --border: #e9ded0;              /* warm hairline */
-  --border-hover: #d8c7b2;
-  --text: #1b1613;                /* near-black warm ink */
-  /* ≥4.5:1 contrast on --bg/--surface for body text (a11y). */
-  --text-muted: #6f6155;
-
-  /* Warm paper wash for branded image fallbacks + accents (subtle red bloom). */
-  --ember: radial-gradient(120% 120% at 50% 0%, #fdeceb 0%, #fbf7f2 55%, #f4ede3 100%);
-
-  --background: var(--bg);
-  --foreground: var(--text);
-}
+@import "./theme.css";
 
 @theme inline {
   --color-background: var(--background);
