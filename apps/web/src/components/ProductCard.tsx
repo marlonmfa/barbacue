@@ -1,8 +1,10 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useCart, formatPrice } from "@/lib/cart";
 import { isPromoActive, effectivePrice } from "@/lib/pricing";
+import { CustomizeOrderItem } from "@/components/CustomizeOrderItem";
+import { cartLineKey, menuOptionsTotal, type MenuChoice, type MenuOptionGroup } from "@/lib/menu-options";
 import { ProductImage } from "@/components/ProductImage";
 import type { Product } from "@/db/schema";
 
@@ -13,28 +15,31 @@ interface Props {
   categoryName?: string | null;
   /** When the store is closed, ordering is disabled (badge shown instead). */
   isClosed?: boolean;
+  optionGroups?: MenuOptionGroup[];
 }
 
 const subscribeToHydration = () => () => {};
 const clientSnapshot = () => true;
 const serverSnapshot = () => false;
 
-export function ProductCard({ product, isClosed = false }: Props) {
-  const { add, items, setQty } = useCart();
+export function ProductCard({ product, isClosed = false, optionGroups = [] }: Props) {
+  const { add, items, setLineQty } = useCart();
+  const [customizing, setCustomizing] = useState(false);
   // Gate cart-derived UI until after hydration so the server (empty cart) and the
   // first client render agree — otherwise the qty stepper pops in / flashes.
   const mounted = useSyncExternalStore(subscribeToHydration, clientSnapshot, serverSnapshot);
 
-  const cartItem = mounted ? items.find((i) => i.productId === product.id) : undefined;
+  const cartItem = mounted ? items.find((i) => cartLineKey(i) === cartLineKey({ productId: product.id })) : undefined;
   const onSale = isPromoActive(product);
   const price = effectivePrice(product);
   const illustrative = product.imageUrl?.startsWith("/menu/review-2026-09/");
 
-  function handleAdd() {
+  function handleAdd(choices: MenuChoice[] = [], notes = "") {
     add({
       productId: product.id,
       name: product.name,
-      priceCents: price,
+      priceCents: price + menuOptionsTotal(choices, optionGroups),
+      choices, notes,
       imageUrl: product.imageUrl ?? null,
     });
   }
@@ -85,10 +90,14 @@ export function ProductCard({ product, isClosed = false }: Props) {
             <span className="text-[11px] font-semibold text-[var(--text-muted)] border border-[var(--border)] rounded-full px-3 py-1.5">
               Loja fechada
             </span>
+          ) : optionGroups.length > 0 ? (
+            <button onClick={() => setCustomizing(true)} className="btn-brand text-xs font-bold px-5 py-2.5 rounded-full">
+              Personalizar
+            </button>
           ) : cartItem ? (
             <div className="flex items-center gap-2 animate-pop">
               <button
-                onClick={() => setQty(cartItem.productId, cartItem.qty - 1)}
+                onClick={() => setLineQty(cartLineKey(cartItem), cartItem.qty - 1)}
                 aria-label={`Diminuir ${product.name}`}
                 className="w-8 h-8 rounded-full border border-[var(--border-hover)] text-[var(--text)] font-bold flex items-center justify-center hover:border-[var(--brand-red)] active:scale-90 transition-all"
               >
@@ -98,7 +107,7 @@ export function ProductCard({ product, isClosed = false }: Props) {
                 {cartItem.qty}
               </span>
               <button
-                onClick={handleAdd}
+                onClick={() => handleAdd()}
                 aria-label={`Aumentar ${product.name}`}
                 className="w-8 h-8 rounded-full btn-brand font-bold flex items-center justify-center"
               >
@@ -107,7 +116,7 @@ export function ProductCard({ product, isClosed = false }: Props) {
             </div>
           ) : (
             <button
-              onClick={handleAdd}
+              onClick={() => handleAdd()}
               className="btn-brand text-xs font-bold px-5 py-2.5 rounded-full"
             >
               Adicionar
@@ -115,6 +124,8 @@ export function ProductCard({ product, isClosed = false }: Props) {
           )}
         </div>
       </div>
+      {customizing && <CustomizeOrderItem name={product.name} description={product.description} priceCents={price}
+        groups={optionGroups} onSave={handleAdd} onClose={() => setCustomizing(false)} />}
     </div>
   );
 }

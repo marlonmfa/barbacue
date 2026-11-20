@@ -1,11 +1,14 @@
 import { Pool } from "pg";
 import { randomUUID } from "node:crypto";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, lt, or, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { brandCatalogProducts, closedDays, deliveryQuotes, deliverySettings, kitchenPrintJobs, onlineCheckouts, orders, products, restaurantTables, storeSettings } from "@/db/schema";
+import { brandCatalogProducts, categories, closedDays, coupons, deliveryQuotes, deliverySettings, kitchenPrintJobs, onlineCheckouts, orders, products, restaurantTables, storeSettings } from "@/db/schema";
 import { asaasConfig, asaasRequest, findAsaasPayment, getAsaasPayment, type PixCode } from "@/lib/asaas";
 import { asaasPaymentState, assertPaymentMatches, OnlinePaymentError, paymentReference, secureEquals, tokenHash, type AsaasPayment, type OnlineOrderInput } from "@/lib/online-payment";
-import { canonicalSelfServiceItems } from "@/lib/self-service";
+import { onlineMinimumCents, PAY_ON_RECEIPT } from "@/lib/online-order-policy";
+import { canonicalOnlineItems } from "@/lib/unified-cart";
+import type { Brand } from "@/lib/brands";
+import { checkoutAmounts } from "@/lib/delivery-checkout";
 import { effectivePrice } from "@/lib/pricing";
 import { computeStoreStatus } from "@/lib/store-hours";
 import { deliveryAddressKey } from "@/lib/delivery";
@@ -27,8 +30,10 @@ async function withPaymentLock<T>(id: string, action: () => Promise<T>): Promise
   finally { connection.release(); }
 }
 
-export async function createOnlineOrder(input: OnlineOrderInput, ip: string) {
-  const environment = asaasConfig().environment;
+export async function createOnlineOrder(input: OnlineOrderInput, ip: string, accountId: number | null = null) {
+  const method = input.paymentMethod ?? "pix";
+  const payOnReceipt = method !== "pix";
+  const environment = payOnReceipt ? PAY_ON_RECEIPT : asaasConfig().environment;
   const requestHash = tokenHash(JSON.stringify(input));
   return db.transaction(async tx => {
     await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${`online-order:${input.requestId}`}, 0))`);
@@ -47,14 +52,26 @@ export async function createOnlineOrder(input: OnlineOrderInput, ip: string) {
       [table] = await tx.select().from(restaurantTables).where(and(eq(restaurantTables.token, input.tableToken!), eq(restaurantTables.active, true))).for("share");
       if (!table) throw new OnlinePaymentError("Mesa inválida ou desativada. Escaneie o QR Code novamente.", 422);
     }
-    const ids = [...new Set(input.items.map(item => item.productId))];
-    const catalog = input.brand === "barbacue"
-      ? (await tx.select().from(products).where(inArray(products.id, ids)).for("share")).map(p => ({ ...p, priceCents: effectivePrice(p) }))
-      : await tx.select().from(brandCatalogProducts).where(and(eq(brandCatalogProducts.brand, input.brand), inArray(brandCatalogProducts.id, ids))).for("share");
+    if (input.items.some(item => item.brand && item.brand !== input.brand)) {
+      throw new OnlinePaymentError("Finalize os itens separadamente por restaurante.", 422);
+    }
+    const catalog = [];
+    for (const brand of new Set(input.items.map(item => item.brand ?? input.brand))) {
+      const ids = [...new Set(input.items.filter(item => (item.brand ?? input.brand) === brand)
+        .flatMap(item => [item.productId, ...(item.choices ?? []).map(choice => choice.productId)]))];
+      const rows = brand === "barbacue"
+        ? (await tx.select({ product: products, category: categories.slug }).from(products)
+          .leftJoin(categories, eq(products.categoryId, categories.id)).where(inArray(products.id, ids)).for("share", { of: products }))
+          .map(({ product, category }) => ({ ...product, category, priceCents: effectivePrice(product) }))
+        : await tx.select().from(brandCatalogProducts).where(and(eq(brandCatalogProducts.brand, brand), inArray(brandCatalogProducts.id, ids))).for("share");
+      catalog.push(...rows.map(p => ({ ...p, brand: brand as Brand })));
+    }
     let items;
-    try { items = canonicalSelfServiceItems(input.items, catalog); }
-    catch { throw new OnlinePaymentError("Um produto ficou indisponível. Atualize o cardápio e revise o pedido.", 422); }
+    try { items = canonicalOnlineItems(input.items, input.brand, catalog); }
+    catch (cause) { throw new OnlinePaymentError(cause instanceof Error ? cause.message : "Revise os itens do pedido.", 422); }
     const subtotalCents = items.reduce((n, item) => n + item.priceCents * item.qty, 0);
+    const minimum = onlineMinimumCents(input.brand, input.orderType);
+    if (subtotalCents < minimum) throw new OnlinePaymentError(`O pedido mínimo para entrega é de ${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(minimum / 100)}.`, 422);
     let quote = null;
     if (input.orderType === "delivery") {
       const [config] = await tx.select().from(deliverySettings).where(eq(deliverySettings.id, 1)).for("share");
@@ -64,14 +81,31 @@ export async function createOnlineOrder(input: OnlineOrderInput, ip: string) {
       [quote] = await tx.select().from(deliveryQuotes).where(eq(deliveryQuotes.id, input.deliveryQuoteId)).for("share");
       if (!quote || quote.brand !== input.brand || quote.addressKey !== deliveryAddressKey(input.deliveryAddress!) || quote.expiresAt.getTime() <= Date.now()) throw new OnlinePaymentError("O frete expirou ou corresponde a outro endereço. Calcule novamente.", 422);
     }
-    const totalCents = subtotalCents + (quote?.feeCents ?? 0);
+    let coupon: typeof coupons.$inferSelect | undefined;
+    if (input.couponCode) {
+      [coupon] = await tx.update(coupons).set({ usedCount: sql`coalesce(${coupons.usedCount}, 0) + 1` })
+        .where(and(eq(coupons.code, input.couponCode), eq(coupons.active, true),
+          or(eq(coupons.audience, "all"), eq(coupons.audience, accountId ? "member" : "visitor")),
+          or(isNull(coupons.expiresAt), sql`${coupons.expiresAt} >= now()`),
+          or(isNull(coupons.maxUsages), lt(sql`coalesce(${coupons.usedCount}, 0)`, coupons.maxUsages))))
+        .returning();
+      if (!coupon) throw new OnlinePaymentError("O cupom não está mais disponível para este pedido.", 422);
+      if (subtotalCents < (coupon.minOrderCents ?? 0)) throw new OnlinePaymentError("O subtotal ficou abaixo do mínimo do cupom.", 422);
+    }
+    const discount = coupon?.discountType === "percentage" ? Math.round(subtotalCents * coupon.discountValue / 100) : coupon?.discountValue ?? 0;
+    const { total: totalCents, discount: discountCents } = checkoutAmounts(subtotalCents, discount, quote?.feeCents);
     if (!Number.isSafeInteger(totalCents) || totalCents < 100 || totalCents > 1_000_000) throw new OnlinePaymentError("O total deve ficar entre R$ 1 e R$ 10.000. Confira os itens.", 422);
+    if (input.expectedTotalCents != null && input.expectedTotalCents !== totalCents) {
+      throw new OnlinePaymentError("O preço de um item ou do frete mudou. Revise a sacola antes de enviar.", 422);
+    }
+    if (input.changeForCents != null && input.changeForCents < totalCents) throw new OnlinePaymentError("O valor para troco precisa cobrir o total com o frete.", 422);
     const orderId = randomUUID();
     await tx.insert(orders).values({ id: orderId, brand: input.brand, customerName: input.customerName, customerPhone: input.customerPhone,
       orderType: input.orderType, tableId: table?.id ?? null, deliveryAddress: quote ? input.deliveryAddress : null,
       deliveryQuoteId: quote?.id ?? null, deliveryFeeCents: quote?.feeCents ?? 0, deliveryDistanceMeters: quote?.distanceMeters ?? null,
       deliveryDurationSeconds: quote?.durationSeconds ?? null, deliveryRoute: quote?.routeLinks ?? null,
-      items, subtotalCents, totalCents, discountCents: 0, channel: "online", paymentMethod: "pix", paymentStatus: "pending", status: "pending", notes: input.notes || null });
+      items, subtotalCents, totalCents, discountCents, couponId: coupon?.id, couponCode: coupon?.code, channel: payOnReceipt ? "click" : "online",
+      paymentMethod: method, changeForCents: method === "cash" ? input.changeForCents ?? null : null, paymentStatus: "pending", status: "pending", notes: input.notes || null });
     await tx.insert(onlineCheckouts).values({ id: input.requestId, requestHash, accessTokenHash: tokenHash(input.accessToken), orderId, environment });
     return input.requestId;
   });
@@ -90,6 +124,7 @@ export async function ensureOnlinePayment(id: string, input?: OnlineOrderInput) 
   await withPaymentLock(id, async () => {
     const [checkout] = await db.select().from(onlineCheckouts).where(eq(onlineCheckouts.id, id));
     if (!checkout) throw new OnlinePaymentError("Pedido não encontrado.", 404);
+    if (checkout.environment === PAY_ON_RECEIPT) return;
     if (checkout.environment !== asaasConfig().environment) throw new OnlinePaymentError("Este pedido pertence a outro ambiente de pagamento. Fale com a loja.", 409);
     const [order] = await db.select().from(orders).where(eq(orders.id, checkout.orderId));
     if (!order || order.status === "cancelled") return;
@@ -103,7 +138,7 @@ export async function ensureOnlinePayment(id: string, input?: OnlineOrderInput) 
         const found = await asaasRequest<{ data: { id: string; notificationDisabled: boolean }[] }>(`/customers?externalReference=${encodeURIComponent(reference)}&limit=100`);
         customerId = found.data.find(c => c.notificationDisabled)?.id ?? null;
         if (!customerId) {
-          const customer = await asaasRequest<{ id: string }>("/customers", "POST", { name: order.customerName, cpfCnpj: input.cpf, mobilePhone: order.customerPhone, externalReference: reference, notificationDisabled: true });
+          const customer = await asaasRequest<{ id: string }>("/customers", "POST", { name: order.customerName, cpfCnpj: input.cpf!, mobilePhone: order.customerPhone, externalReference: reference, notificationDisabled: true });
           if (!customer.id) throw new OnlinePaymentError("O cadastro do pagamento ainda não foi confirmado.", 503, true);
           customerId = customer.id;
         }
@@ -142,6 +177,9 @@ export async function applyVerifiedPayment(id: string, payment: AsaasPayment) {
     const effectiveState = checkout.paidAt && state === "pending" ? order.paymentStatus ?? "paid" : state;
     await tx.update(onlineCheckouts).set({ paymentId: payment.id, providerStatus: payment.status, lastCheckedAt: new Date(), ...(state === "paid" ? { paidAt: checkout.paidAt ?? new Date() } : {}) }).where(eq(onlineCheckouts.id, id));
     const release = state === "paid" && order.status === "pending";
+    if (state === "failed" && order.status === "pending" && order.couponId && !checkout.paidAt) {
+      await tx.update(coupons).set({ usedCount: sql`greatest(0, coalesce(${coupons.usedCount}, 0) - 1)` }).where(eq(coupons.id, order.couponId));
+    }
     await tx.update(orders).set({ paymentStatus: effectiveState, ...(release ? { status: "confirmed" as const } : {}), ...(state === "failed" && ["pending", "confirmed"].includes(order.status ?? "") ? { status: "cancelled" as const } : {}) }).where(eq(orders.id, order.id));
     if (release) {
       const [table] = order.tableId ? await tx.select().from(restaurantTables).where(eq(restaurantTables.id, order.tableId)) : [];
@@ -149,7 +187,7 @@ export async function applyVerifiedPayment(id: string, payment: AsaasPayment) {
         version: 2, orderId: order.id, orderNumber: order.id.slice(0, 8).toUpperCase(), brand: order.brand as KitchenTicket["brand"], channel: "online", orderType: order.orderType,
         tableNumber: table?.number ?? null, tableLabel: table?.label ?? null, customerName: order.customerName, customerPhone: order.customerPhone, deliveryAddress: order.deliveryAddress,
         items: (order.items as { name: string; qty: number; priceCents: number; notes: string | null }[]), notes: order.notes, createdAt: (order.createdAt ?? new Date()).toISOString(),
-        payment: { method: "pix", status: "paid", label: "Pix pago" }, subtotalCents: order.subtotalCents, totalCents: order.totalCents, deliveryFeeCents: order.deliveryFeeCents, reprint: false,
+        payment: { method: "pix", status: "paid", label: "Pix pago" }, subtotalCents: order.subtotalCents, discountCents: order.discountCents ?? undefined, totalCents: order.totalCents, deliveryFeeCents: order.deliveryFeeCents, reprint: false,
       };
       await tx.insert(kitchenPrintJobs).values({ orderId: order.id, ticket }).onConflictDoNothing({ target: kitchenPrintJobs.orderId });
     }
@@ -161,8 +199,8 @@ export async function onlineReceipt(id: string) {
     .innerJoin(orders, eq(orders.id, onlineCheckouts.orderId)).leftJoin(restaurantTables, eq(restaurantTables.id, orders.tableId)).where(eq(onlineCheckouts.id, id));
   if (!row) throw new OnlinePaymentError("Pedido não encontrado.", 404);
   return { checkoutId: id, orderId: row.order.id, orderNumber: row.order.id.slice(0, 8).toUpperCase(), brand: row.order.brand,
-    orderType: row.order.orderType, tableNumber: row.tableNumber, status: row.order.status, paymentStatus: row.order.paymentStatus,
-    subtotalCents: row.order.subtotalCents, deliveryFeeCents: row.order.deliveryFeeCents, totalCents: row.order.totalCents, items: row.order.items,
+    orderType: row.order.orderType, tableNumber: row.tableNumber, status: row.order.status, paymentStatus: row.order.paymentStatus, paymentMethod: row.order.paymentMethod,
+    subtotalCents: row.order.subtotalCents, discountCents: row.order.discountCents, deliveryFeeCents: row.order.deliveryFeeCents, totalCents: row.order.totalCents, items: row.order.items,
     pix: row.order.status !== "cancelled" && row.order.paymentStatus === "pending" ? row.checkout.pix : null,
     environment: row.checkout.environment, paidAt: row.checkout.paidAt, checkedAt: row.checkout.lastCheckedAt };
 }
@@ -172,6 +210,18 @@ export async function onlineReceipt(id: string) {
 export async function cancelOnlineCheckout(id: string) {
   await withPaymentLock(id, async () => {
     const [checkout] = await db.select().from(onlineCheckouts).where(eq(onlineCheckouts.id, id));
+    if (checkout?.environment === PAY_ON_RECEIPT) {
+      await db.transaction(async tx => {
+        const [current] = await tx.select().from(orders).where(eq(orders.id, checkout.orderId)).for("update");
+        if (current?.status === "cancelled") return;
+        if (current?.status !== "pending" || current.paymentStatus !== "pending") {
+          throw new OnlinePaymentError("A loja já recebeu o pedido. Fale com a equipe para cancelar.", 409);
+        }
+        await tx.update(orders).set({ status: "cancelled", paymentStatus: "failed" }).where(eq(orders.id, current.id));
+        if (current.couponId) await tx.update(coupons).set({ usedCount: sql`greatest(0, coalesce(${coupons.usedCount}, 0) - 1)` }).where(eq(coupons.id, current.couponId));
+      });
+      return;
+    }
     if (!checkout || checkout.environment !== asaasConfig().environment) throw new OnlinePaymentError("Pedido não encontrado neste ambiente.", 404);
     const [order] = await db.select().from(orders).where(eq(orders.id, checkout.orderId));
     if (order.paymentStatus === "paid") throw new OnlinePaymentError("O pagamento já foi confirmado. Fale com a loja para cancelar e conferir o estorno.", 409);
@@ -192,7 +242,9 @@ export async function cancelOnlineCheckout(id: string) {
       await write.select().from(onlineCheckouts).where(eq(onlineCheckouts.id, id)).for("update");
       const [current] = await write.select().from(orders).where(eq(orders.id, order.id)).for("update");
       if (current.paymentStatus === "paid") throw new OnlinePaymentError("Pagamento recebido durante a consulta. Fale com a loja para conferir o cancelamento.", 409);
+      if (current.status === "cancelled") return;
       await write.update(orders).set({ status: "cancelled", paymentStatus: "failed" }).where(eq(orders.id, order.id));
+      if (current.couponId) await write.update(coupons).set({ usedCount: sql`greatest(0, coalesce(${coupons.usedCount}, 0) - 1)` }).where(eq(coupons.id, current.couponId));
       await write.update(onlineCheckouts).set({ providerStatus: "DELETED", lastCheckedAt: new Date() }).where(eq(onlineCheckouts.id, id));
     });
   });

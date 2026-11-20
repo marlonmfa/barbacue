@@ -7,6 +7,7 @@ import type { WeeklyHours, StoreSettings, ClosedDay } from "@/db/schema";
 export interface StoreStatus {
   open: boolean;
   reason: string;          // human-readable, pt-BR
+  closesAt?: string;
   nextOpen: string | null; // best-effort "abre <dia> às HH:MM", or null
 }
 
@@ -82,9 +83,9 @@ export function computeStoreStatus(
   }
 
   const ranges = dayRanges(weekly, dow);
-  const openNow = ranges.some((r) => minutes >= r.open && minutes < r.close);
-  if (openNow) {
-    return { open: true, reason: "Aberto agora.", nextOpen: null };
+  const current = ranges.find((range) => minutes >= range.open && minutes < range.close);
+  if (current) {
+    return { open: true, reason: "Aberto agora.", nextOpen: null, closesAt: fmtMinutes(current.close) };
   }
 
   return {

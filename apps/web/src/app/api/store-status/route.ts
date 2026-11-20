@@ -22,6 +22,8 @@ export async function GET() {
     open: status.open,
     reason: status.reason,
     nextOpen: status.nextOpen,
+    closesAt: status.closesAt ?? null,
+    address: settings?.address ?? null,
     openingHours: settings?.openingHours ?? null,
     weeklyHours: settings?.weeklyHours ?? null,
     timezone: settings?.timezone ?? "America/Sao_Paulo",

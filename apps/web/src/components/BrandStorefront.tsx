@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandLogo } from "@/components/BrandLogo";
 import type { CSSProperties } from "react";
 import type { BrandStorefront as BrandStorefrontData, ScrapedMenuItem } from "@/lib/brand-storefront";
 import { useCart } from "@/lib/cart";
@@ -18,10 +19,10 @@ function slugify(value: string) {
     .replace(/^-|-$/g, "");
 }
 
-function MenuCard({ item }: { item: ScrapedMenuItem }) {
+function MenuCard({ item, brand }: { item: ScrapedMenuItem; brand: BrandStorefrontData["slug"] }) {
   const onSale = item.originalPriceCents && item.originalPriceCents > item.priceCents;
   const add = useCart((store) => store.add);
-  const qty = useCart((store) => store.items.find((cartItem) => cartItem.productId === Number(item.id))?.qty ?? 0);
+  const qty = useCart((store) => store.items.reduce((total, cartItem) => total + (cartItem.productId === Number(item.id) && cartItem.brand === brand ? cartItem.qty : 0), 0));
 
   return (
     <article className="brand-menu-card">
@@ -50,7 +51,7 @@ function MenuCard({ item }: { item: ScrapedMenuItem }) {
           </div>
           <button
             type="button"
-            onClick={() => add({ productId: Number(item.id), name: item.name, priceCents: item.priceCents, imageUrl: item.imageUrl })}
+            onClick={() => add({ brand, productId: Number(item.id), name: item.name, priceCents: item.priceCents, imageUrl: item.imageUrl })}
             aria-label={`Adicionar ${item.name} ao pedido`}
           >
             {qty > 0 ? `${qty} no pedido · +1` : "Adicionar"} <span aria-hidden>＋</span>
@@ -75,7 +76,9 @@ export function BrandStorefront({ brand }: { brand: BrandStorefrontData }) {
         <div className="brand-hero-pattern" aria-hidden />
         <nav className="brand-topbar" aria-label="Navegação principal">
           <a className="brand-wordmark" href="#top" aria-label={brand.name}>
-            <span>{brand.monogram}</span>
+            {/* The source artwork is the same approved mark used by this store on iFood. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <BrandLogo className="brand-wordmark-logo" brand={brand.slug} alt="" width={52} height={52} />
             <strong>{brand.name}</strong>
           </a>
           <a className="brand-order-link" href="#cardapio">
@@ -125,7 +128,7 @@ export function BrandStorefront({ brand }: { brand: BrandStorefrontData }) {
               <span>{items.length} {items.length === 1 ? "item" : "itens"}</span>
             </header>
             <div className="brand-menu-grid">
-              {items.map((item) => <MenuCard key={item.id} item={item} />)}
+              {items.map((item) => <MenuCard key={item.id} item={item} brand={brand.slug} />)}
             </div>
           </section>
         ))}
@@ -133,12 +136,13 @@ export function BrandStorefront({ brand }: { brand: BrandStorefrontData }) {
 
       <footer className="brand-footer">
         <div>
-          <span className="brand-footer-mark">{brand.monogram}</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <BrandLogo className="brand-footer-logo" brand={brand.slug} alt="" width={48} height={48} />
           <div><strong>{brand.name}</strong><p>Jaraguá do Sul · Santa Catarina</p></div>
         </div>
         <a href="#cardapio">Voltar ao cardápio ↑</a>
       </footer>
-      <CartDrawer />
+      <CartDrawer brand={brand.slug} />
     </div>
   );
 }

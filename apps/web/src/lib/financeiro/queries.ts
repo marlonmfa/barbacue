@@ -64,7 +64,7 @@ export async function loadFinanceReport(): Promise<FinanceReport> {
          AND o.status IS DISTINCT FROM 'cancelled'
          AND o.channel IS DISTINCT FROM 'test'
          AND (o.channel = 'ifood' OR o.status NOT IN ('pending', 'cancelled'))
-         AND (c.id IS NULL OR c.environment IN ('production', 'c6:production'))
+         AND (c.id IS NULL OR c.environment IN ('production', 'c6:production') OR (o.channel = 'click' AND c.environment = 'pay-on-receipt'))
          AND (o.created_at AT TIME ZONE 'America/Sao_Paulo')::date <= ${today}::date
        GROUP BY 1, 2, 3
        ORDER BY 1, 2, 3

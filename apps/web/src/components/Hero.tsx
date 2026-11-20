@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 
 interface Props {
@@ -70,15 +71,9 @@ export function Hero({
 
         {/* CTAs */}
         <div className="flex flex-wrap items-center justify-center gap-2.5 mt-2">
-          <a
-            href="#menu"
-            className="btn-brand text-sm font-bold px-6 py-3 rounded-xl inline-flex items-center gap-2"
-          >
-            Ver cardápio
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <path d="M12 5v14M19 12l-7 7-7-7" />
-            </svg>
-          </a>
+          <Link href="/pedir" className="btn-brand text-sm font-bold px-6 py-3 rounded-xl">
+            Ver cardápio e pedir
+          </Link>
           <a
             href="#aplicativo"
             className="border border-[var(--border-hover)] bg-[var(--surface)] text-[var(--text)] text-sm font-semibold px-5 py-3 rounded-xl transition-colors hover:bg-[var(--surface-2)] active:scale-95 inline-flex items-center gap-2"

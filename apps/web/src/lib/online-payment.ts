@@ -17,14 +17,23 @@ export const onlineOrderSchema = z.object({
   brand: z.enum(["barbacue", "barbadog", "chelas"]),
   customerName: text(80).pipe(z.string().min(2, "Informe seu nome.")),
   customerPhone: z.string().transform(s => s.replace(/\D/g, "").replace(/^55(?=\d{10,11}$)/, "")).pipe(z.string().regex(/^\d{10,11}$/, "Informe um telefone com DDD.")),
-  cpf: z.string().transform(s => s.replace(/\D/g, "")).refine(validCpf, "Informe um CPF válido para o pagamento."),
+  cpf: z.string().transform(s => s.replace(/\D/g, "")).optional(),
+  paymentMethod: z.enum(["pix", "cash", "card_on_delivery"]).optional(),
+  couponCode: text(60).transform(code => code.toUpperCase()).optional(),
+  expectedTotalCents: z.number().int().nonnegative().optional(),
+  changeForCents: z.number().int().min(1).max(1_000_000).optional(),
   orderType: z.enum(["pickup", "delivery", "dine_in"]),
   tableToken: z.string().uuid().optional(),
   deliveryAddress: text(400).optional(),
   deliveryQuoteId: z.string().uuid().optional(),
   notes: text(500).optional(),
-  items: z.array(z.object({ productId: z.number().int().positive(), qty: z.number().int().min(1).max(20), notes: text(160).optional() }).strict()).min(1).max(60),
+  items: z.array(z.object({ productId: z.number().int().positive(), brand: z.enum(["barbacue", "barbadog", "chelas"]).optional(), qty: z.number().int().min(1).max(20), notes: text(160).optional(), choices: z.array(z.object({ productId: z.number().int().positive(), qty: z.number().int().min(1).max(9) }).strict()).max(36).optional() }).strict()).min(1).max(60),
 }).strict().superRefine((input, ctx) => {
+  const method = input.paymentMethod ?? "pix";
+  if (method === "pix" && !validCpf(input.cpf ?? "")) ctx.addIssue({ code: "custom", message: "Informe um CPF válido para o pagamento.", path: ["cpf"] });
+  if (method !== "pix" && input.cpf) ctx.addIssue({ code: "custom", message: "CPF é usado somente no Pix online.", path: ["cpf"] });
+  if (method !== "cash" && input.changeForCents != null) ctx.addIssue({ code: "custom", message: "Troco está disponível somente para pagamento em dinheiro.", path: ["changeForCents"] });
+  if (method !== "pix" && input.orderType === "dine_in") ctx.addIssue({ code: "custom", message: "Pedidos pelo QR da mesa são pagos com Pix.", path: ["paymentMethod"] });
   if (input.orderType === "dine_in" && !input.tableToken) ctx.addIssue({ code: "custom", message: "Escaneie o QR Code da mesa.", path: ["tableToken"] });
   if (input.orderType === "delivery" && (input.deliveryAddress?.length ?? 0) < 12) ctx.addIssue({ code: "custom", message: "Informe rua, número, bairro e cidade.", path: ["deliveryAddress"] });
   if (input.items.reduce((n, item) => n + item.qty, 0) > 100) ctx.addIssue({ code: "custom", message: "Limite de 100 itens por pedido.", path: ["items"] });
@@ -36,6 +45,7 @@ export function secureEquals(a: string, b: string) {
   return left.length === right.length && timingSafeEqual(left, right);
 }
 export const paymentReference = (orderId: string) => `barbacue:order:${orderId}`;
+export interface OnlinePixCode { encodedImage: string; payload: string; expirationDate: string }
 export interface AsaasPayment { id: string; customer: string; externalReference: string; value: number; status: string; billingType: string; deleted?: boolean }
 export function assertPaymentMatches(payment: AsaasPayment, expected: { paymentId?: string | null; customerId: string; orderId: string; totalCents: number }) {
   if ((expected.paymentId && payment.id !== expected.paymentId) || payment.customer !== expected.customerId || payment.externalReference !== paymentReference(expected.orderId) || payment.billingType !== "PIX" || !Number.isFinite(payment.value) || Math.abs(payment.value * 100 - expected.totalCents) > 0.001) {

@@ -1,10 +1,7 @@
-import { getCustomerSession } from "@/lib/customer-session";
-import { getTableSession } from "@/lib/table-session";
-import { CartClient } from "@/components/CartClient";
+import { redirect } from "next/navigation";
+import { isBrand } from "@/lib/brands";
 
-export const dynamic = "force-dynamic";
-
-export default async function CartPage() {
-  const [prefill, table] = await Promise.all([getCustomerSession(), getTableSession()]);
-  return <CartClient prefill={prefill} table={table} />;
+export default async function CartPage({ searchParams }: { searchParams: Promise<{ restaurante?: string }> }) {
+  const { restaurante } = await searchParams;
+  redirect(isBrand(restaurante) ? `/pedir?restaurante=${restaurante}` : "/pedir");
 }

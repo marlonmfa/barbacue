@@ -1,3 +1,5 @@
+import { optionGroupsFor } from "@/lib/menu-options";
+import { effectivePrice } from "@/lib/pricing";
 import { BrandNavigation } from "@/components/BrandNavigation";
 import { BRANDS } from "@/lib/brands";
 import { redirect } from "next/navigation";
@@ -46,12 +48,12 @@ async function getMenu() {
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ mesa?: string; loja?: string }>;
+  searchParams: Promise<{ mesa?: string; loja?: string; restaurante?: string }>;
 }) {
   const [staff, query] = await Promise.all([requireStaff().catch(() => null), searchParams]);
   if (staff && query.loja !== "1") redirect(landingPath(staff));
   const requestHeaders = await headers();
-  const brandSlug = brandFromHost(
+  const brandSlug = query.restaurante === "barbacue" ? null : query.restaurante === "chelas" || query.restaurante === "barbadog" ? query.restaurante : brandFromHost(
     requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host")
   );
 
@@ -123,6 +125,12 @@ export default async function HomePage({
                     categorySlug={category.slug}
                     categoryName={category.name}
                     isClosed={isClosed}
+                    optionGroups={optionGroupsFor("barbacue", category.slug).flatMap(slug => {
+                      const group = menu.find(category => category.slug === slug);
+                      return group ? [{ slug, name: group.name, options: group.products.map(option => ({
+                        id: option.id, name: option.name, priceCents: effectivePrice(option),
+                      })) }] : [];
+                    })}
                   />
                 ))}
               </div>

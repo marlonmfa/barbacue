@@ -197,6 +197,10 @@ export function PaymentClient({
 
   async function placeOrder() {
     if (placing.current || loading) return;
+    if (items.some(item => item.notes || item.choices?.length)) {
+      setError("Volte para a sacola para concluir este pedido com os adicionais e as observações.");
+      return;
+    }
     if (!checkout.name.trim() || checkout.phone.trim().replace(/\D/g, "").length < 8) {
       setError("Preencha nome e telefone na etapa anterior.");
       return;
@@ -307,7 +311,7 @@ export function PaymentClient({
             </div>
           )}
           <div className="flex justify-between gap-3 text-sm py-1 text-[var(--text-muted)]">
-            <span>Frete</span><span>{isDineIn ? "Não se aplica" : deliveryReady ? formatPrice(deliveryQuote?.feeCents ?? 0) : "A calcular"}</span>
+            <span>Frete</span><span>{isDineIn ? "Não se aplica" : deliveryQuote ? formatPrice(deliveryQuote.feeCents) : deliveryAvailability === "disabled" ? "Sem cotação automática" : "A calcular"}</span>
           </div>
           <div className="flex justify-between font-bold text-lg text-[var(--text)] pt-2 mt-2 border-t border-[var(--border)]">
             <span>{deliveryReady ? "Total" : "Total parcial"}</span><span className="text-[var(--brand-tan)]">{formatPrice(total)}</span>

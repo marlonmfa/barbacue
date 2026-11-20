@@ -105,6 +105,7 @@ export function DeliveryQuote({ address, brand, quote, availability, disabled = 
         }} className={styles.address} />
       <p id="delivery-address-help" className={styles.help}>Inclua o número, a cidade e o CEP para localizar a entrega.</p>
       {availability === "loading" && <p role="status" className={styles.help}>Verificando as condições de entrega…</p>}
+      {availability === "disabled" && <p className={styles.help}>A cotação automática está indisponível. Volte ao cardápio para escolher retirada ou confira a taxa com a loja.</p>}
       {availability === "error" && <div className={styles.error} role="alert"><p>Não foi possível verificar a entrega. Confira sua conexão e tente novamente.</p><button type="button" disabled={disabled} onClick={() => void checkAvailability()}>Verificar entrega</button></div>}
       {availability === "enabled" && <>
         {currentQuote ? <div className={styles.result} role="status">
