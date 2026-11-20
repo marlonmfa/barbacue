@@ -164,7 +164,7 @@ export default function DispatchPage() {
     </section>;
   }
 
-  return <div className={queue.page}>
+  return <div className={`${queue.page} ${styles.dispatchPage}`}>
     <header className={queue.heading}>
       <div><h1>Despacho de entregas</h1><p>Organize pedidos prontos em rotas e registre a saída com o entregador.</p></div>
       <button className={queue.secondary} disabled={!data?.mapsReady || busy} onClick={() => void mutate("POST")}><AdminIcon name="route" /> {busy ? "Processando…" : "Gerar rotas"}</button>
@@ -319,7 +319,7 @@ function RouteTimeline({ route, now, vehicle, riderName }: { route: Route; now: 
   const returned = route.phase === "returned";
   const position = estimatedRoutePosition(route, now);
   const markerStyle = position ? {
-    "--bike-left": `${50 - (position.destination - position.step) * 100}%`,
+    "--bike-offset": `${(position.step - position.destination) * 100}%`,
   } as CSSProperties : undefined;
   return <ol className={riderName ? `${styles.timeline} ${styles.namedTimeline}` : styles.timeline} ref={scroller} role="list" aria-label="Sequência de paradas da rota" tabIndex={0}>
     <li className={styles.timelineStep} data-state={waiting ? "current" : "done"}
