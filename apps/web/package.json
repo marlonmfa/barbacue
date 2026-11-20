@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "node scripts/verify-dashboard-logos.mjs",
+    "postbuild": "node scripts/verify-dashboard-logos.mjs && node scripts/verify-checkout-logos.mjs",
     "start": "next start",
     "lint": "eslint",
     "db:generate": "drizzle-kit generate",
