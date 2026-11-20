@@ -66,10 +66,16 @@ async function main() {
     assert.equal(settings.status(), 200);
     const empty = await operator.newPage();
     await empty.goto(new URL("/admin/dispatch", url).href);
-    await empty.getByRole("list", { name: "Exemplo da linha de entregas" }).waitFor();
+    await empty.getByText("Nenhuma rota no momento.", { exact: true }).waitFor();
     const idleRoster = empty.getByRole("list", { name: "Entregadores cadastrados" });
     assert.equal(await idleRoster.getByRole("listitem").count(), 5);
     assert.equal(await idleRoster.getByText("Fora de serviço", { exact: true }).count(), 5);
+    assert.equal(await idleRoster.getByText("Aguardando rota", { exact: true }).count(), 5);
+    assert.equal(await idleRoster.getByRole("img", { name: /Moto/ }).count(), 5);
+    assert.equal(await idleRoster.locator('[style*="--bike-left: 0%"]').count(), 5);
+    if (process.env.DISPATCH_TEST_EMPTY_SCREENSHOT) {
+      await empty.screenshot({ path: process.env.DISPATCH_TEST_EMPTY_SCREENSHOT, fullPage: true });
+    }
     for (let index = 1; index <= 5; index++) {
       const name = `Entregador de homologação ${index}`;
       const button = idleRoster.getByRole("button", { name: `Ver rota de ${name}` });
@@ -80,13 +86,8 @@ async function main() {
       assert.equal(await button.getAttribute("aria-pressed"), "true");
       assert.equal(await panel.getByRole("list", { name: "Sequência de paradas da rota" }).count(), 0);
     }
-    if (process.env.DISPATCH_TEST_EMPTY_SCREENSHOT) {
-      await idleRoster.getByRole("button", { name: "Ver rota de Entregador de homologação 1" }).click();
-      await empty.getByRole("heading", { name: "Aguardando rota" }).waitFor();
-      await empty.screenshot({ path: process.env.DISPATCH_TEST_EMPTY_SCREENSHOT, fullPage: true });
-    }
     await empty.getByRole("button", { name: "Voltar às rotas" }).click();
-    await empty.getByRole("list", { name: "Exemplo da linha de entregas" }).waitFor();
+    await empty.getByText("Nenhuma rota no momento.", { exact: true }).waitFor();
     await empty.close();
     const geocodable = process.env.DISPATCH_TEST_GEOCODABLE_ADDRESS;
     if (geocodable) {
@@ -161,6 +162,7 @@ async function main() {
     const roster = page.getByRole("list", { name: "Entregadores cadastrados" });
     await roster.getByText(`Entrega 1 de ${stops.length}`, { exact: true }).waitFor();
     assert.equal(await roster.getByText("Fora de serviço", { exact: true }).count(), 4);
+    assert.equal(await roster.getByText("Aguardando rota", { exact: true }).count(), 4);
     const activeCourier = roster.getByRole("button", { name: "Ver rota de Entregador de homologação 1" });
     await activeCourier.click();
     const detail = page.getByRole("region", { name: "Rota de Entregador de homologação 1" });
@@ -206,6 +208,9 @@ async function main() {
         const target = document.querySelector('[aria-current="step"] [style*="--bike-left"]') as HTMLElement;
         return target && Math.abs(Number.parseFloat(target.style.getPropertyValue("--bike-left")) - expected) < 0.1;
       }, Math.min(fraction, 1) * 100 - 50);
+      const miniPosition = await activeCourier.locator('[style*="--bike-left"]').evaluate(el =>
+        Number.parseFloat((el as HTMLElement).style.getPropertyValue("--bike-left")));
+      assert(Math.abs(miniPosition - Math.min(fraction, 1) * 100 / (stops.length + 1)) < 0.1);
       assert.equal((await dispatch()).routes[0].currentPosition, 1);
       if (fraction === 0.75 && process.env.DISPATCH_TEST_ESTIMATE_SCREENSHOT) {
         await page.setViewportSize({ width: 1440, height: 980 });
@@ -250,6 +255,8 @@ async function main() {
     assert(returned.returnedAt);
     assert.equal(returned.segment, null);
     await assertWaiting(detail);
+    await activeCourier.getByText("Aguardando rota", { exact: true }).waitFor();
+    assert.equal(await activeCourier.locator('[style*="--bike-left: 0%"]').count(), 1);
     await detail.getByRole("button", { name: "Voltar às rotas" }).click();
     assert.equal(await activeCourier.getAttribute("aria-pressed"), "false");
     assert(await activeCourier.evaluate(el => document.activeElement === el));
@@ -265,7 +272,7 @@ async function main() {
       assert.equal(await bike.getAttribute("data-silhouette"), silhouette);
       assert.equal(await bike.evaluate(el => getComputedStyle(el).getPropertyValue("--bike-paint").trim()), paint);
     }
-    console.log("Navegador validado: cinco cartões com motinha na loja e sem horários enquanto aguardam, previsões em rota e retorno ao estado de espera.");
+    console.log("Navegador validado: cinco motinhas nos cartões, Aguardando rota, movimento sincronizado e volta à loja.");
   } finally {
     await browser.close();
     await pool.end();

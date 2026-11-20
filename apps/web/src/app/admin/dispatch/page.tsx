@@ -175,7 +175,7 @@ export default function DispatchPage() {
           </div>}
         </form>
       </details>
-      <CourierRoster couriers={data.couriers} activeRoutes={activeRoutes} selectedId={courierId}
+      <CourierRoster couriers={data.couriers} activeRoutes={activeRoutes} selectedId={courierId} now={now}
         onSelect={id => setCourierId(current => current === id ? null : id)} />
       {courier ? <section id="dispatch-courier-route" aria-labelledby="dispatch-courier-route-title">
         <div className={styles.courierRouteHeading}>
@@ -201,7 +201,9 @@ export default function DispatchPage() {
         ) : (
           visibleRoutes.length ? <div className={`${queue.deliveries} ${styles.routeList}`}>
             {visibleRoutes.map(renderRoute)}
-          </div> : <EmptyTimeline hasRoutes={data.routes.length > 0} />
+          </div> : data.couriers.length ? <p className={queue.empty}>
+            {data.routes.length ? "Nenhuma rota nesta aba." : "Nenhuma rota no momento."}
+          </p> : <EmptyTimeline hasRoutes={data.routes.length > 0} />
         )}
       </>}
       {(courier ? courierRoute : tab !== "pending" && visibleRoutes.length > 0) && <p className={styles.attribution}>Dados de mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a></p>}
@@ -209,9 +211,9 @@ export default function DispatchPage() {
   </div>;
 }
 
-function CourierRoster({ couriers, activeRoutes, selectedId, onSelect }: {
+function CourierRoster({ couriers, activeRoutes, selectedId, now, onSelect }: {
   couriers: Data["couriers"]; activeRoutes: Map<number | null, Route>;
-  selectedId: number | null; onSelect: (id: number) => void;
+  selectedId: number | null; now: number; onSelect: (id: number) => void;
 }) {
   return <section className={styles.roster} aria-labelledby="dispatch-couriers">
     <h2 id="dispatch-couriers">Entregadores <span>{couriers.length}</span></h2>
@@ -221,17 +223,26 @@ function CourierRoster({ couriers, activeRoutes, selectedId, onSelect }: {
         const selected = selectedId === courier.id;
         const status = route?.phase === "returning" ? "Retornando à loja"
           : route?.phase === "delivering" ? `Entrega ${route.currentPosition} de ${route.totalStops}`
+          : "Aguardando rota";
+        const availability = route || courier.available ? null
           : !courier.active ? "Cadastro inativo" : courier.busy ? "Em entrega avulsa"
-          : courier.available ? "Aguardando rota" : courier.online ? "Indisponível" : "Fora de serviço";
+          : courier.online ? "Indisponível" : "Fora de serviço";
+        const position = route ? (estimatedRoutePosition(route, now)?.step ?? 0) / (route.stops.length + 1) : 0;
+        const trackStyle = { "--bike-left": `${position * 100}%` } as CSSProperties;
         return <li key={courier.id}>
           <button type="button" id={`dispatch-courier-${courier.id}`} className={styles.courierButton}
             aria-label={`Ver rota de ${courier.name}`} aria-pressed={selected}
             aria-describedby={`dispatch-courier-status-${courier.id}`}
             aria-controls={selected ? "dispatch-courier-route" : undefined} onClick={() => onSelect(courier.id)}>
-            <span className={styles.rosterBike}><DispatchMotorcycle vehicle={courier.vehicle} /></span>
             <span className={styles.courierDetails}><strong>{courier.name}</strong>
-              <span id={`dispatch-courier-status-${courier.id}`}>{status}</span>
+              <span id={`dispatch-courier-status-${courier.id}`}>
+                <span className={styles.courierStatus}>{status}</span>
+                {availability && <span className={styles.courierAvailability}>{availability}</span>}
+              </span>
               {route && <span>A receber {money(route.amountToCollectCents)}</span>}
+            </span>
+            <span className={styles.rosterTrack} style={trackStyle}>
+              <DispatchMotorcycle vehicle={courier.vehicle} />
             </span>
           </button>
         </li>;
@@ -288,6 +299,16 @@ function RouteCard({ route, drivers, busy, now, start, release }: {
   </article>;
 }
 
+function estimatedRoutePosition(route: Route, now: number) {
+  if (!route.segment) return null;
+  const activeIndex = route.phase === "returning" ? route.stops.length : route.stops.findIndex(stop => stop.id === route.currentStopId);
+  if (activeIndex < 0) return null;
+  const from = route.stops.slice(0, activeIndex).findLastIndex(stop => stop.state === "delivered") + 1;
+  const destination = activeIndex + 1;
+  const elapsed = Math.min(1, Math.max(0, (now - route.segment.from) / Math.max(1, route.segment.to - route.segment.from)));
+  return { destination, step: from + elapsed * (destination - from) };
+}
+
 function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; vehicle?: DispatchVehicle }) {
   const scroller = useRef<HTMLOListElement>(null);
   const current = useRef<HTMLLIElement>(null);
@@ -301,14 +322,10 @@ function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; veh
   const waiting = route.phase === "waiting";
   const returning = route.phase === "returning";
   const returned = route.phase === "returned";
-  const activeIndex = returning ? route.stops.length : route.stops.findIndex(stop => stop.id === route.currentStopId);
-  const lastConfirmedIndex = route.stops.slice(0, Math.max(0, activeIndex)).findLastIndex(stop => stop.state === "delivered");
-  const segment = route.segment;
-  const elapsedFraction = segment
-    ? Math.min(1, Math.max(0, (now - segment.from) / Math.max(1, segment.to - segment.from))) : null;
-  const markerStyle = elapsedFraction === null ? undefined : {
-    "--bike-left": `${50 - (1 - elapsedFraction) * (activeIndex - lastConfirmedIndex) * 100}%`,
-  } as CSSProperties;
+  const position = estimatedRoutePosition(route, now);
+  const markerStyle = position ? {
+    "--bike-left": `${50 - (position.destination - position.step) * 100}%`,
+  } as CSSProperties : undefined;
   return <ol className={styles.timeline} ref={scroller} role="list" aria-label="Sequência de paradas da rota" tabIndex={0}>
     <li className={styles.timelineStep} data-state={waiting ? "current" : "done"}
       aria-current={waiting ? "step" : undefined} ref={waiting ? current : undefined}>

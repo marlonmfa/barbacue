@@ -235,7 +235,7 @@
 .roster ul {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(175px, 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(145px, 100%), 1fr));
   gap: 8px;
   margin: 0;
   padding: 0;
@@ -247,9 +247,10 @@
   height: 100%;
   text-align: left;
   cursor: pointer;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
   min-width: 0;
-  gap: 9px;
+  gap: 6px;
   padding: 10px;
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -271,7 +272,29 @@
   margin-bottom: 12px;
 }
 .courierRouteHeading h2 { font-size: 18px; font-weight: 700; overflow-wrap: anywhere; }
-.rosterBike { position: relative; width: 46px; height: 30px; flex: 0 0 46px; }
-.rosterBike .motorcycle { bottom: 0; }
+.courierStatus, .courierAvailability { display: block; }
+.courierStatus { color: var(--text); font-weight: 600; }
+.rosterTrack {
+  position: relative;
+  display: block;
+  align-self: stretch;
+  height: 38px;
+  margin: 0 23px;
+  background: linear-gradient(var(--border-hover), var(--border-hover)) center bottom 4px / 100% 1px no-repeat;
+}
+.rosterTrack::before, .rosterTrack::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--border-hover);
+  background: var(--surface);
+  transform: translateX(-50%);
+}
+.rosterTrack::before { left: 0; }
+.rosterTrack::after { left: 100%; }
+.rosterTrack .motorcycle { bottom: 8px; }
 
 .estimateNote { margin-top: 5px; font-size: 12px; color: var(--text-muted); }
