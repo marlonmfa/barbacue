@@ -1,9 +1,24 @@
 // Use a separate database with all migrations applied and a local web server.
 import assert from "node:assert/strict";
 import { randomBytes, scryptSync } from "node:crypto";
-import { chromium } from "@playwright/test";
+import { chromium, type Locator } from "@playwright/test";
 import { Pool } from "pg";
 import { deliveryAddressKey } from "../src/lib/delivery";
+
+async function assertWaiting(panel: Locator) {
+  await panel.getByRole("heading", { name: "Aguardando rota" }).waitFor();
+  const line = panel.getByRole("list", { name: "Linha de entregas em espera" });
+  const store = line.getByRole("listitem").first();
+  await store.getByText("Loja", { exact: true }).waitFor();
+  await store.getByRole("img", { name: /Moto/ }).waitFor();
+  assert.equal(await store.getAttribute("aria-current"), "step");
+  assert.equal(await line.getByRole("img", { name: /Moto/ }).count(), 1);
+  assert.equal(await panel.locator("time").count(), 0);
+  assert.equal(await panel.getByText(/Chegada estimada|A receber/).count(), 0);
+  assert(await line.getByRole("listitem").last().evaluate(el =>
+    getComputedStyle(el.firstElementChild!, "::before").borderTopStyle === "dashed"));
+  return store;
+}
 
 async function main() {
   const database = new URL(process.env.DATABASE_URL ?? "");
@@ -60,15 +75,18 @@ async function main() {
       const button = idleRoster.getByRole("button", { name: `Ver rota de ${name}` });
       await button.click();
       const panel = empty.getByRole("region", { name: `Rota de ${name}` });
-      await panel.getByText("Sem rota ativa para este entregador.").waitFor();
+      const store = await assertWaiting(panel);
+      if (index === 1) await store.getByRole("img", { name: "Moto CG Fan 160, Prata" }).waitFor();
       assert.equal(await button.getAttribute("aria-pressed"), "true");
       assert.equal(await panel.getByRole("list", { name: "Sequência de paradas da rota" }).count(), 0);
     }
-    await empty.getByRole("button", { name: "Voltar às rotas" }).click();
-    await empty.getByRole("list", { name: "Exemplo da linha de entregas" }).waitFor();
     if (process.env.DISPATCH_TEST_EMPTY_SCREENSHOT) {
+      await idleRoster.getByRole("button", { name: "Ver rota de Entregador de homologação 1" }).click();
+      await empty.getByRole("heading", { name: "Aguardando rota" }).waitFor();
       await empty.screenshot({ path: process.env.DISPATCH_TEST_EMPTY_SCREENSHOT, fullPage: true });
     }
+    await empty.getByRole("button", { name: "Voltar às rotas" }).click();
+    await empty.getByRole("list", { name: "Exemplo da linha de entregas" }).waitFor();
     await empty.close();
     const geocodable = process.env.DISPATCH_TEST_GEOCODABLE_ADDRESS;
     if (geocodable) {
@@ -151,7 +169,7 @@ async function main() {
     assert((await detail.locator("article header").innerText()).includes(amount));
     await detail.getByText(/Chegada estimada · falt/).first().waitFor();
     await roster.getByRole("button", { name: "Ver rota de Entregador de homologação 2" }).click();
-    await page.getByRole("region", { name: "Rota de Entregador de homologação 2" }).getByText("Sem rota ativa para este entregador.").waitFor();
+    await assertWaiting(page.getByRole("region", { name: "Rota de Entregador de homologação 2" }));
     assert.equal(await timeline.count(), 0);
     await activeCourier.click();
     await detail.getByRole("list", { name: "Sequência de paradas da rota" }).waitFor();
@@ -231,7 +249,7 @@ async function main() {
     assert.equal(returned.phase, "returned");
     assert(returned.returnedAt);
     assert.equal(returned.segment, null);
-    await detail.getByText("Sem rota ativa para este entregador.").waitFor();
+    await assertWaiting(detail);
     await detail.getByRole("button", { name: "Voltar às rotas" }).click();
     assert.equal(await activeCourier.getAttribute("aria-pressed"), "false");
     assert(await activeCourier.evaluate(el => document.activeElement === el));
@@ -247,7 +265,7 @@ async function main() {
       assert.equal(await bike.getAttribute("data-silhouette"), silhouette);
       assert.equal(await bike.evaluate(el => getComputedStyle(el).getPropertyValue("--bike-paint").trim()), paint);
     }
-    console.log("Navegador validado: cinco cartões clicáveis, rota isolada por entregador, valor a receber, avanço estimado, paradas e retorno.");
+    console.log("Navegador validado: cinco cartões com motinha na loja e sem horários enquanto aguardam, previsões em rota e retorno ao estado de espera.");
   } finally {
     await browser.close();
     await pool.end();

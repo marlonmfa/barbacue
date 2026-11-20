@@ -183,7 +183,7 @@ export default function DispatchPage() {
             document.getElementById(`dispatch-courier-${courier.id}`)?.focus();
           }}>Voltar às rotas</button>
         </div>
-        {courierRoute ? renderRoute(courierRoute) : <p className={queue.empty}>Sem rota ativa para este entregador.</p>}
+        {courierRoute ? renderRoute(courierRoute) : <WaitingTimeline vehicle={courier.vehicle} />}
       </section> : <>
         <nav className={queue.filters} aria-label="Filtrar despacho">
           <button aria-pressed={tab === "all"} onClick={() => setTab("all")}>Todas as rotas <span>{data.routes.length}</span></button>
@@ -351,6 +351,27 @@ function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; veh
           <small>Chegada estimada · {countdown(route.returnEstimate, now)}</small></> : null}
     </li>
   </ol>;
+}
+
+function WaitingTimeline({ vehicle }: { vehicle: DispatchVehicle }) {
+  return <article className={`${queue.delivery} ${styles.timelinePreview}`}>
+    <h3>Aguardando rota</h3>
+    <ol className={`${styles.timeline} ${styles.waitingTimeline}`} role="list" aria-label="Linha de entregas em espera">
+      <li className={styles.timelineStep} aria-current="step">
+        <div className={styles.trackPoint}>
+          <DispatchMotorcycle vehicle={vehicle} />
+          <span className={styles.point}><AdminIcon name="home" size={17} /></span>
+        </div>
+        <strong>Loja</strong>
+      </li>
+      <li className={styles.timelineStep}>
+        <div className={styles.trackPoint}>
+          <span className={styles.point}><AdminIcon name="route" size={17} /></span>
+        </div>
+        <strong>Entregas</strong>
+      </li>
+    </ol>
+  </article>;
 }
 
 function EmptyTimeline({ hasRoutes }: { hasRoutes: boolean }) {

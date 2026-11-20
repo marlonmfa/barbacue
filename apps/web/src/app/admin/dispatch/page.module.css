@@ -223,7 +223,8 @@
 .motorcycle[data-silhouette="twister"] .bikeTank { left: 15px; top: 8px; width: 21px; height: 12px; border-radius: 65% 22% 49% 27%; }
 .motorcycle[data-silhouette="twister"] .bikeSeat { transform: rotate(-5deg); }
 
-.timelinePreview h2 { font-size: 17px; font-weight: 700; }
+.timelinePreview :is(h2, h3) { font-size: 17px; font-weight: 700; }
+.waitingTimeline { grid-auto-columns: minmax(0, 1fr); margin-bottom: 0; }
 .timelinePreview > p { color: var(--text-muted); font-size: 13px; margin-top: 5px; }
 @media (prefers-reduced-motion: reduce) { .motorcycle { transition: none; } }
 
