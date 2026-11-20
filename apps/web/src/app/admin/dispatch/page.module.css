@@ -304,3 +304,18 @@ div.dispatchPage { max-width: none; }
 }
 
 .ifoodSummary strong { color: var(--text); }
+
+.routeHeading { flex-wrap: wrap; }
+.routeActions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.routeEditor { margin: 12px 0 0; color: var(--text-muted); font-size: 13px; }
+.routeEditor ol { margin: 8px 0 0; padding: 0; list-style: none; }
+.routeEditor li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+}
+.routeEditor strong { color: var(--text); }

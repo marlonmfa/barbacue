@@ -1,9 +1,11 @@
+import { isDeepStrictEqual } from "node:util";
 import { and, asc, desc, eq, gt, inArray, isNull, ne, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { deliveryQuotes, deliverySettings, dispatchRoutes, dispatchSettings, orderSchedules, orders, staffPresence, staffUsers } from "@/db/schema";
 import { DeliveryError, deliveryAddressKey, deliveryCoordinatesSchema, type DeliveryCoordinates } from "@/lib/delivery";
 import { deliveryProviderConfigured, getDeliveryProvider } from "@/lib/delivery-provider";
-import { defaultDispatchConfig, evaluateDispatch, planDispatch, waitLimitMs, type DispatchConfig, type DispatchIssue, type DispatchOrder, type DispatchPlan, type DispatchReport } from "@/lib/dispatch-planner";
+import { defaultDispatchConfig, evaluateDispatch, measureDispatch, planDispatch, waitLimitMs, type DispatchConfig, type DispatchIssue, type DispatchOrder, type DispatchPlan, type DispatchReport } from "@/lib/dispatch-planner";
+import { dispatchGoogleMapsLinks } from "@/lib/dispatch-maps";
 import { dispatchProgress } from "@/lib/dispatch-progress";
 import { can } from "@/lib/permissions";
 import { dispatchAvailablePresence } from "@/lib/courier-availability";
@@ -239,6 +241,55 @@ export async function changeDispatchRoute(id: string, driverId: number | null) {
   });
 }
 
+export async function removeDispatchStop(id: string, stopId: string) {
+  const [snapshot] = await db.select().from(dispatchRoutes).where(and(eq(dispatchRoutes.id, id), queued));
+  if (!snapshot) throw new DispatchError("A rota já saiu ou foi retirada da fila.");
+  if (!snapshot.plan.stops.some(stop => stop.id === stopId)) throw new DispatchError("A parada já foi removida desta rota.");
+  const remaining = snapshot.plan.stops.filter(stop => stop.id !== stopId);
+  let adjusted: DispatchPlan | null = null;
+  if (remaining.length) {
+    const origin = await readOrigin();
+    if (!origin || origin.key !== snapshot.originKey) throw new DispatchError("A origem da rota mudou. Gere as rotas novamente.");
+    try {
+      const matrix = await getDeliveryProvider(origin.provider).matrix([origin.coordinates, ...remaining.map(stop => stop.point)]);
+      const sequence = remaining.map(({ id, address, brand, placedAt, scheduledAt, point }) => ({ id, address, brand, placedAt, scheduledAt, point }));
+      adjusted = measureDispatch(sequence, matrix);
+    } catch (error) {
+      if (!(error instanceof DeliveryError)) throw error;
+      throw new DispatchError("O serviço de mapas está indisponível. A edição não foi salva.", 503);
+    }
+    if (!adjusted) throw new DispatchError("Não foi possível recalcular o caminho entre as paradas restantes.");
+  }
+
+  return db.transaction(async tx => {
+    const { config } = await lockSettings(tx);
+    const [route] = await tx.select().from(dispatchRoutes).where(and(eq(dispatchRoutes.id, id), queued)).for("update");
+    if (!route || route.originKey !== snapshot.originKey || !isDeepStrictEqual(route.plan, snapshot.plan)) {
+      throw new DispatchError("A rota mudou durante a edição. Atualize o despacho.");
+    }
+    if (!adjusted) {
+      await release(tx, route, new Date());
+      return;
+    }
+    const origin = await readOrigin(tx);
+    if (origin?.key !== route.originKey) throw new DispatchError("A origem da rota mudou. Gere as rotas novamente.");
+    const linked = await tx.select({ ...orderFields, eligible: sql<boolean>`(${ownDelivery}) is true` })
+      .from(orders).where(eq(orders.dispatchRouteId, id)).orderBy(asc(orders.id)).for("update");
+    const kept = linked.filter(order => order.id !== stopId);
+    if (kept.some(order => !order.eligible) || !matchesPlan(kept, adjusted)) {
+      throw new DispatchError("Outro pedido da rota mudou. Atualize o despacho.");
+    }
+    const { violations } = evaluateDispatch(adjusted, config, Date.now());
+    if (violations.length) throw new DispatchError(`A rota restante viola as regras atuais: ${violations.join(" · ")}.`);
+    await tx.update(orders).set({ dispatchPosition: null }).where(eq(orders.dispatchRouteId, id));
+    await tx.update(orders).set({ dispatchRouteId: null }).where(and(eq(orders.id, stopId), eq(orders.dispatchRouteId, id)));
+    for (const [index, stop] of adjusted.stops.entries()) {
+      await tx.update(orders).set({ dispatchPosition: index + 1 }).where(eq(orders.id, stop.id));
+    }
+    await tx.update(dispatchRoutes).set({ plan: adjusted }).where(eq(dispatchRoutes.id, id));
+  });
+}
+
 export async function returningDispatchRoute(driverId: number) {
   const [route] = await db.select({ id: dispatchRoutes.id }).from(dispatchRoutes)
     .where(and(eq(dispatchRoutes.driverId, driverId), openRoute, sql`not ${hasUnfinishedStops}`))
@@ -311,6 +362,8 @@ export async function dispatchOverview(includeAllPending = false) {
       });
       return {
         ...progress,
+        googleMapsLinks: dispatchGoogleMapsLinks(route.originKey, route.plan.stops
+          .filter(stop => progress.stops.find(row => row.id === stop.id)?.state !== "cancelled").map(stop => stop.point)),
         id: route.id, createdAt: route.createdAt, startedAt: route.startedAt, returnedAt: route.returnedAt, driverId: route.driverId, driverName,
         vehicle: { model: vehicleModel, color: vehicleColor },
         waitingForScheduledTime: !route.startedAt && now < stats.earliestDeparture,

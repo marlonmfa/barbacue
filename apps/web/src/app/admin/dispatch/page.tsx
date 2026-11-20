@@ -17,6 +17,7 @@ type Route = {
   phase: "waiting" | "delivering" | "returning" | "returned";
   totalStops: number; remainingStops: number; currentStopId: string | null; currentPosition: number | null;
   amountToCollectCents: number; returnEstimate: string | null; returnedAt: string | null;
+  googleMapsLinks?: string[];
   stops: { id: string; address: string; brand: string; estimatedArrival: string; deliveredAt: string | null;
     state: "pending" | "delivered" | "cancelled"; amountToCollectCents: number }[];
 };
@@ -142,6 +143,7 @@ export default function DispatchPage() {
   function renderRoute(route: Route, riderName?: string, availability?: ReactNode) {
     return <RouteCard key={route.id} route={route} riderName={riderName} availability={availability} drivers={data?.drivers ?? []} busy={busy} now={now}
       start={driverId => void mutate("PATCH", { id: route.id, driverId }, "Saída registrada. As paradas estão em Minhas entregas.")}
+      removeStop={stopId => void mutate("PATCH", { id: route.id, removeStopId: stopId }, "Parada removida. O pedido voltou ao planejamento.")}
       release={() => void mutate("PATCH", { id: route.id, driverId: null }, "Pedidos devolvidos para planejamento.")} />;
   }
 
@@ -265,10 +267,12 @@ function defaultLimit(metric: Exclude<keyof typeof dispatchMetrics, "waitMinutes
   return { stops: 4, distanceKm: 25, durationMinutes: 45, legMinutes: 20 }[metric];
 }
 
-function RouteCard({ route, riderName, availability, drivers, busy, now, start, release }: {
-  route: Route; riderName?: string; availability?: ReactNode; now: number; drivers: Data["drivers"]; busy: boolean; start: (driverId: number) => void; release: () => void;
+function RouteCard({ route, riderName, availability, drivers, busy, now, start, release, removeStop }: {
+  route: Route; riderName?: string; availability?: ReactNode; now: number; drivers: Data["drivers"]; busy: boolean; start: (driverId: number) => void; release: () => void; removeStop: (stopId: string) => void;
 }) {
   const [driver, setDriver] = useState("");
+  const [editing, setEditing] = useState(false);
+  const mapsLinks = route.googleMapsLinks ?? [];
   const selectedDriver = drivers.find(option => String(option.id) === driver);
   const activeDriver = Boolean(selectedDriver);
   const tooEarly = route.waitingForScheduledTime;
@@ -293,7 +297,25 @@ function RouteCard({ route, riderName, availability, drivers, busy, now, start, 
       </p>
       {route.segment && <p className={styles.estimateNote}>Posição estimada pelo tempo da etapa</p>}
       {route.returnedAt && <p>Chegou à loja às {time(route.returnedAt)}</p>}
-    </div>{availability ?? <AdminIcon name="route" size={28} />}</header>
+    </div><div className={styles.routeActions}>
+      {availability}
+      {mapsLinks.map((href, index) => <a key={href} className={queue.secondary} href={href}
+        target="_blank" rel="noopener noreferrer"><AdminIcon name="route" size={18} />
+        {mapsLinks.length === 1 ? "Abrir no Google Maps" : `Google Maps · Trecho ${index + 1}`}
+      </a>)}
+      {!route.startedAt && <button type="button" className={queue.secondary} aria-expanded={editing}
+        aria-controls={editing ? `edit-route-${route.id}` : undefined} onClick={() => setEditing(!editing)}>
+        {editing ? "Fechar edição" : "Editar rota"}
+      </button>}
+    </div></header>
+    {editing && !route.startedAt && <section className={styles.routeEditor} id={`edit-route-${route.id}`} aria-label="Editar paradas da rota">
+      <p>A parada removida volta ao planejamento. Ao remover a última, a rota sai da fila.</p>
+      <ol>{route.stops.map((stop, index) => <li key={stop.id}>
+        <span><strong>Parada {index + 1}</strong> · {stop.address}</span>
+        <button type="button" className={queue.secondary} disabled={busy} aria-label={`Remover parada ${index + 1}`}
+          onClick={() => removeStop(stop.id)}>Remover parada</button>
+      </li>)}</ol>
+    </section>}
     <RouteTimeline route={route} now={now} riderName={riderName} vehicle={route.startedAt ? route.vehicle : selectedDriver?.vehicle} />
     {!!route.violations.length && <p className={queue.error}>Replaneje esta rota. {route.violations.join(" · ")}</p>}
     {!route.startedAt && <form className={styles.dispatchForm} onSubmit={event => { event.preventDefault(); if (activeDriver && !tooEarly) start(Number(driver)); }}>

@@ -1,14 +1,17 @@
 import { z } from "zod";
 import { withStaff } from "@/lib/admin-auth";
 import { dispatchConfigSchema } from "@/lib/dispatch-planner";
-import { changeDispatchRoute, dispatchFailure, dispatchOverview, generateDispatch, saveDispatchConfig } from "@/lib/dispatch-service";
+import { changeDispatchRoute, dispatchFailure, dispatchOverview, generateDispatch, removeDispatchStop, saveDispatchConfig } from "@/lib/dispatch-service";
 import { canSetCourierAvailability } from "@/lib/courier-availability";
 import { canReviewCourierPay } from "@/lib/courier-pay-report";
 import { can } from "@/lib/permissions";
 
 export const runtime = "nodejs";
 const configInput = z.object({ config: dispatchConfigSchema, revision: z.number().int().nonnegative() }).strict();
-const routeAction = z.object({ id: z.string().uuid(), driverId: z.number().int().positive().nullable() }).strict();
+const routeAction = z.union([
+  z.object({ id: z.string().uuid(), driverId: z.number().int().positive().nullable() }).strict(),
+  z.object({ id: z.string().uuid(), removeStopId: z.string().uuid() }).strict(),
+]);
 const headers = { "Cache-Control": "private, no-store" };
 
 export const GET = withStaff(async (request, _context, session) => {
@@ -35,9 +38,10 @@ export const PUT = withStaff(async (request, _context, session) => {
 
 export const PATCH = withStaff(async request => {
   const parsed = routeAction.safeParse(await request.json().catch(() => null));
-  if (!parsed.success) return Response.json({ error: "Informe uma rota e um entregador válido." }, { status: 422 });
+  if (!parsed.success) return Response.json({ error: "Informe uma rota e um entregador ou parada válidos." }, { status: 422 });
   try {
-    await changeDispatchRoute(parsed.data.id, parsed.data.driverId);
+    if ("removeStopId" in parsed.data) await removeDispatchStop(parsed.data.id, parsed.data.removeStopId);
+    else await changeDispatchRoute(parsed.data.id, parsed.data.driverId);
     return Response.json({ ok: true }, { headers });
   } catch (error) { return dispatchFailure(error); }
 });

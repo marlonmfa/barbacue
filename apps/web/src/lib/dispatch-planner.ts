@@ -73,6 +73,20 @@ export function evaluateDispatch(plan: DispatchPlan, config: DispatchConfig, dep
   return { stops, distanceMeters: distance, durationSeconds, earliestDeparture, latestDeparture, violations };
 }
 
+export function measureDispatch(orders: DispatchOrder[], matrix: (DeliveryRoadRoute | null)[][],
+  sequence = orders.map((_, index) => index + 1)): DispatchPlan | null {
+  const stops: DispatchStop[] = [];
+  let previous = 0;
+  for (const index of sequence) {
+    const leg = matrix[previous][index];
+    if (!leg) return null;
+    stops.push({ ...orders[index - 1], leg, originDistanceMeters: matrix[0][index]?.distanceMeters });
+    previous = index;
+  }
+  const returnLeg = matrix[previous][0];
+  return returnLeg ? { stops, returnLeg } : null;
+}
+
 /** Seed each route with the oldest viable order, then insert stops at the
  * position with the smallest added road time among feasible candidates. */
 export function planDispatch(
@@ -81,18 +95,7 @@ export function planDispatch(
   config: DispatchConfig,
   departure: number,
 ) {
-  function measure(sequence: number[]): DispatchPlan | null {
-    const stops: DispatchStop[] = [];
-    let previous = 0;
-    for (const index of sequence) {
-      const leg = matrix[previous][index];
-      if (!leg) return null;
-      stops.push({ ...orders[index - 1], leg, originDistanceMeters: matrix[0][index]?.distanceMeters });
-      previous = index;
-    }
-    const returnLeg = matrix[previous][0];
-    return returnLeg ? { stops, returnLeg } : null;
-  }
+  const measure = (sequence: number[]) => measureDispatch(orders, matrix, sequence);
 
   const remaining = new Set(orders.map((_, index) => index + 1)
     .sort((a, b) => orders[a - 1].placedAt - orders[b - 1].placedAt || orders[a - 1].id.localeCompare(orders[b - 1].id)));
