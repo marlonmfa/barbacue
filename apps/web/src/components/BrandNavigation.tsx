@@ -39,8 +39,9 @@ export function BrandNavigation({ active, chat = false, onSelect, disabled = fal
           </Link>
         : <Link key={slug} {...selection(slug)} title={BRANDS[slug]} aria-label={BRANDS[slug]}
             className="flex shrink-0 flex-col items-center gap-0.5 rounded-xl px-1.5 py-1 text-[11px] font-semibold opacity-75 transition hover:bg-white/15 hover:opacity-100">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={BRAND_THEME[slug].icon} alt="" width={28} height={28} className="h-7 w-7 rounded-full bg-white object-contain" />
+            {onSelect && slug !== "chelas" ? <BrandLogo checkout brand={slug} width={28} /> :
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={BRAND_THEME[slug].icon} alt="" width={28} height={28} className="h-7 w-7 rounded-full bg-white object-contain" />}
             <span className="hidden sm:inline">{BRANDS[slug]}</span>
           </Link>)}
     </div>
