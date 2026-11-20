@@ -7,7 +7,7 @@ import { BRAND_THEME, type Brand } from "@/lib/brands";
 export function BrandLogo({ brand, width, height = width, alt = "", className, style, preload, checkout }: {
   brand: Brand; width: number; height?: number; alt?: string; className?: string; style?: CSSProperties; preload?: boolean; checkout?: boolean;
 }) {
-  if (checkout && brand !== "chelas") {
+  if (checkout) {
     return <span className={`${checkoutLogos.logo} ${checkoutLogos[brand]} ${className ?? ""}`}
       role={alt ? "img" : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}
       data-brand={brand} style={{ ...style, width, height }} />;

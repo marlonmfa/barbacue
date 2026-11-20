@@ -9,7 +9,7 @@ const assignment = /__RSC_MANIFEST\s*\[\s*["']\/pedir\/page["']\s*\]\s*=\s*/.exe
 assert(assignment, "Manifesto do checkout ausente.");
 const route = JSON.parse(manifest.slice(assignment.index + assignment[0].length).trim().replace(/;$/, ""));
 const styles = [...new Set(Object.values(route.entryCSSFiles).flat().map(item => item.path))];
-for (const brand of ["barbacue", "barbadog"]) {
+for (const brand of ["barbacue", "barbadog", "chelas"]) {
   const approved = new URL(`../src/components/admin/logos/${brand}.webp`, import.meta.url);
   const digest = data => createHash("sha256").update(data).digest("hex");
   const expected = digest(readFileSync(approved));
@@ -23,4 +23,4 @@ for (const brand of ["barbacue", "barbadog"]) {
   });
   assert(found, `Logo aprovada de ${brand} ausente no checkout.`);
 }
-console.log("Checkout validado: logos aprovadas de Barbacue e Barbadog.");
+console.log("Checkout validado: logos aprovadas de Barbacue, Barbadog e Chelas.");
