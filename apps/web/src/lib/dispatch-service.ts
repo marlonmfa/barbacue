@@ -23,7 +23,7 @@ const ownDelivery = and(
   or(isNull(orders.channel), ne(orders.channel, "online"), eq(orders.paymentStatus, "paid")),
 );
 const orderFields = { id: orders.id, brand: orders.brand, address: orders.deliveryAddress, placedAt, scheduledAt };
-const driverFields = { id: staffUsers.id, name: staffUsers.name, role: staffUsers.role, permissions: staffUsers.permissions };
+const driverFields = { id: staffUsers.id, name: staffUsers.name, role: staffUsers.role, permissions: staffUsers.permissions, vehicleModel: staffUsers.vehicleModel, vehicleColor: staffUsers.vehicleColor };
 const activeDriver = and(eq(staffUsers.role, "driver"), eq(staffUsers.active, true));
 const freshPresence = and(eq(staffPresence.available, true), sql`${staffPresence.lastSeenAt} > clock_timestamp() - ${PRESENCE_TTL_MS} * interval '1 millisecond'`);
 const openRoute = and(sql`${dispatchRoutes.startedAt} is not null`, isNull(dispatchRoutes.returnedAt));
@@ -254,7 +254,7 @@ export async function dispatchOverview() {
   const [[state], origin, routes, candidates, drivers] = await Promise.all([
     db.select().from(dispatchSettings).where(settingsFilter),
     readOrigin(),
-    db.select({ route: dispatchRoutes, driverName: staffUsers.name }).from(dispatchRoutes)
+    db.select({ route: dispatchRoutes, driverName: staffUsers.name, vehicleModel: staffUsers.vehicleModel, vehicleColor: staffUsers.vehicleColor }).from(dispatchRoutes)
       .leftJoin(staffUsers, eq(dispatchRoutes.driverId, staffUsers.id))
       .where(or(queued, openRoute, gt(dispatchRoutes.startedAt, recent), gt(dispatchRoutes.returnedAt, recent)))
       .orderBy(desc(isNull(dispatchRoutes.startedAt)), asc(dispatchRoutes.createdAt)).limit(100),
@@ -271,8 +271,8 @@ export async function dispatchOverview() {
   return {
     config, revision: state?.revision ?? 0, report: state?.report ?? null,
     mapsReady: !!origin && deliveryProviderConfigured(origin.provider),
-    drivers: drivers.filter(driver => can(driver, "deliveries")).map(({ id, name }) => ({ id, name })),
-    routes: routes.map(({ route, driverName }) => {
+    drivers: drivers.filter(driver => can(driver, "deliveries")).map(({ id, name, vehicleModel, vehicleColor }) => ({ id, name, vehicle: { model: vehicleModel, color: vehicleColor } })),
+    routes: routes.map(({ route, driverName, vehicleModel, vehicleColor }) => {
       const stats = evaluateDispatch(route.plan, route.departureConfig ?? config, route.startedAt?.getTime() ?? now);
       const rows = linked.filter(row => row.routeId === route.id);
       if (!route.startedAt && route.originKey !== origin?.key) stats.violations.push("A origem da loja mudou");
@@ -287,6 +287,7 @@ export async function dispatchOverview() {
       return {
         ...progress,
         id: route.id, createdAt: route.createdAt, startedAt: route.startedAt, returnedAt: route.returnedAt, driverName,
+        vehicle: { model: vehicleModel, color: vehicleColor },
         waitingForScheduledTime: !route.startedAt && now < stats.earliestDeparture,
         earliestDeparture: Number.isFinite(stats.earliestDeparture) ? new Date(stats.earliestDeparture) : null,
         latestDeparture: new Date(stats.latestDeparture), distanceMeters: stats.distanceMeters, durationSeconds: stats.durationSeconds,

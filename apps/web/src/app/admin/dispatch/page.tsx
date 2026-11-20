@@ -1,15 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { AdminIcon } from "@/components/admin/AdminIcons";
 import queue from "@/components/admin/OperationalQueue.module.css";
 import { dispatchConfigSchema, dispatchMetrics, type DispatchConfig, type DispatchReport } from "@/lib/dispatch-planner";
+import { DispatchMotorcycle, type DispatchVehicle } from "./DispatchMotorcycle";
 import styles from "./page.module.css";
 
 type Route = {
   id: string; startedAt: string | null; earliestDeparture: string | null; latestDeparture: string; driverName: string | null; waitingForScheduledTime: boolean;
   distanceMeters: number; durationSeconds: number; violations: string[];
+  vehicle: DispatchVehicle;
   phase: "waiting" | "delivering" | "returning" | "returned";
   totalStops: number; remainingStops: number; currentStopId: string | null; currentPosition: number | null;
   amountToCollectCents: number; returnEstimate: string | null; returnedAt: string | null;
@@ -18,7 +20,7 @@ type Route = {
 };
 type Data = {
   config: DispatchConfig; revision: number; canConfigure: boolean; mapsReady: boolean; report: DispatchReport | null;
-  routes: Route[]; drivers: { id: number; name: string }[];
+  routes: Route[]; drivers: { id: number; name: string; vehicle: DispatchVehicle }[];
   pending: { id: string; brand: string; address: string | null; reason: string }[];
 };
 type Draft = { config: DispatchConfig; revision: number };
@@ -29,11 +31,11 @@ const minutes = (seconds: number) => Math.ceil(seconds / 60);
 const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const money = (cents: number) => currency.format(cents / 100);
 const time = (value: string) => clock.format(new Date(value));
-function eta(value: string, now: number) {
+function countdown(value: string, now: number) {
   const delta = new Date(value).getTime() - now;
   const count = Math.ceil(Math.abs(delta) / 60_000);
-  if (!count) return `${time(value)} · agora`;
-  return delta > 0 ? `${time(value)} · ${count === 1 ? "falta" : "faltam"} ${count} min` : `${time(value)} · ${count} min de atraso`;
+  if (!count) return "agora";
+  return delta > 0 ? `${count === 1 ? "falta" : "faltam"} ${count} min` : `${count} min de atraso`;
 }
 const kilometres = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 });
 
@@ -181,7 +183,8 @@ function RouteCard({ route, drivers, busy, now, start, release }: {
   route: Route; now: number; drivers: Data["drivers"]; busy: boolean; start: (driverId: number) => void; release: () => void;
 }) {
   const [driver, setDriver] = useState("");
-  const activeDriver = drivers.some(option => String(option.id) === driver);
+  const selectedDriver = drivers.find(option => String(option.id) === driver);
+  const activeDriver = Boolean(selectedDriver);
   const tooEarly = route.waitingForScheduledTime;
   const phase = {
     waiting: route.waitingForScheduledTime ? "Aguardando horário de saída" : "Aguardando saída",
@@ -202,18 +205,9 @@ function RouteCard({ route, drivers, busy, now, start, release }: {
         {" · "}{remainingLabel}
         {" · "}A receber {money(route.amountToCollectCents)}
       </p>
-      {route.phase === "returning" && route.returnEstimate && <p>Retorno estimado às {eta(route.returnEstimate, now)}</p>}
       {route.returnedAt && <p>Chegou à loja às {time(route.returnedAt)}</p>}
     </div><AdminIcon name="route" size={28} /></header>
-    <ol className={styles.stops}>{route.stops.map(stop => <li key={stop.id}>
-      <strong>#{shortId(stop.id)} · {stop.brand}</strong>
-      {route.currentStopId === stop.id && <span className={styles.currentStop}>Parada atual</span>}
-      <span>{stop.address}</span>
-      <small>{stop.state === "cancelled" ? "Cancelada" : stop.state === "delivered"
-        ? stop.deliveredAt ? `Entregue às ${time(stop.deliveredAt)}` : "Entregue"
-        : `Chegada estimada às ${eta(stop.estimatedArrival, now)}${route.phase === "waiting" && !route.waitingForScheduledTime ? " · se sair agora" : ""}`}</small>
-      {stop.state === "pending" && stop.amountToCollectCents > 0 && <small>A receber {money(stop.amountToCollectCents)}</small>}
-    </li>)}</ol>
+    <RouteTimeline route={route} now={now} vehicle={route.startedAt ? route.vehicle : selectedDriver?.vehicle} />
     {!!route.violations.length && <p className={queue.error}>Replaneje esta rota. {route.violations.join(" · ")}</p>}
     {!route.startedAt && <form className={styles.dispatchForm} onSubmit={event => { event.preventDefault(); if (activeDriver && !tooEarly) start(Number(driver)); }}>
       <label>Entregador disponível
@@ -226,4 +220,63 @@ function RouteCard({ route, drivers, busy, now, start, release }: {
       <button type="button" className={queue.secondary} disabled={busy} onClick={release}>Devolver pedidos</button>
     </form>}
   </article>;
+}
+
+function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; vehicle?: DispatchVehicle }) {
+  const scroller = useRef<HTMLOListElement>(null);
+  const current = useRef<HTMLLIElement>(null);
+  useEffect(() => {
+    const track = scroller.current;
+    const step = current.current;
+    if (!track || !step || track.scrollWidth <= track.clientWidth) return;
+    track.scrollLeft = step.offsetLeft - (track.clientWidth - step.offsetWidth) / 2;
+  }, [route.currentStopId, route.phase]);
+
+  const waiting = route.phase === "waiting";
+  const returning = route.phase === "returning";
+  const returned = route.phase === "returned";
+  return <ol className={styles.timeline} ref={scroller} role="list" aria-label="Sequência de paradas da rota" tabIndex={0}>
+    <li className={styles.timelineStep} data-state={waiting ? "current" : "done"}
+      aria-current={waiting ? "step" : undefined} ref={waiting ? current : undefined}>
+      <div className={styles.trackPoint}>
+        {waiting && <DispatchMotorcycle vehicle={vehicle} />}
+        <span className={styles.point}><AdminIcon name="home" size={17} /></span>
+      </div>
+      <strong>Saída da loja</strong>
+      {route.startedAt ? <time dateTime={route.startedAt}>{time(route.startedAt)}</time>
+        : route.waitingForScheduledTime && route.earliestDeparture
+          ? <time dateTime={route.earliestDeparture}>{time(route.earliestDeparture)}</time>
+          : null}
+    </li>
+    {route.stops.map((stop, index) => {
+      const isCurrent = route.currentStopId === stop.id;
+      const date = stop.state === "delivered" ? stop.deliveredAt : stop.estimatedArrival;
+      return <li key={stop.id} className={styles.timelineStep}
+        data-state={isCurrent ? "current" : stop.state === "delivered" ? "done" : stop.state}
+        ref={isCurrent ? current : undefined} aria-current={isCurrent ? "step" : undefined}>
+        <div className={styles.trackPoint}>
+          {isCurrent && <DispatchMotorcycle vehicle={vehicle} />}
+          <span className={styles.point}>{stop.state === "delivered" ? <AdminIcon name="check" size={16} /> : index + 1}</span>
+        </div>
+        <strong>Parada {index + 1}</strong>
+        {stop.state !== "cancelled" && date && <time dateTime={date}>{time(date)}</time>}
+        <small>{stop.state === "cancelled" ? "Cancelada" : stop.state === "delivered" ? "Entregue"
+          : `Chegada estimada · ${countdown(stop.estimatedArrival, now)}`}</small>
+        <span className={styles.stopAddress}>{stop.address}</span>
+        <small>#{shortId(stop.id)} · {stop.brand}</small>
+        {stop.state === "pending" && stop.amountToCollectCents > 0 && <small>A receber {money(stop.amountToCollectCents)}</small>}
+      </li>;
+    })}
+    <li className={styles.timelineStep} data-state={returned ? "done" : returning ? "returning" : "pending"}
+      aria-current={returning || returned ? "step" : undefined} ref={returning || returned ? current : undefined}>
+      <div className={styles.trackPoint}>
+        {(returning || returned) && <DispatchMotorcycle vehicle={vehicle} />}
+        <span className={styles.point}><AdminIcon name={returned ? "check" : "home"} size={17} /></span>
+      </div>
+      <strong>Volta à loja</strong>
+      {route.returnedAt ? <time dateTime={route.returnedAt}>{time(route.returnedAt)}</time>
+        : route.returnEstimate ? <><time dateTime={route.returnEstimate}>{time(route.returnEstimate)}</time>
+          <small>Chegada estimada · {countdown(route.returnEstimate, now)}</small></> : null}
+    </li>
+  </ol>;
 }

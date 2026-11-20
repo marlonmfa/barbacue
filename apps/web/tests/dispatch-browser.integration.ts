@@ -36,6 +36,7 @@ async function main() {
 
   try {
     const [admin, driver] = await Promise.all([user("admin"), user("driver")]);
+    await pool.query("update staff_users set vehicle_model='CG Fan 160', vehicle_color='Prata' where id=$1", [driver.id]);
     assert.equal((await operator.request.get(new URL("/api/admin/dispatch", url).href)).status(), 401);
     for (const [context, account] of [[operator, admin], [courier, driver]] as const) {
       const login = await context.request.post(new URL("/api/admin/auth", url).href, { data: { username: account.username, password } });
@@ -95,8 +96,13 @@ async function main() {
     for (const stop of stops) await page.getByText(stop.address, { exact: true }).waitFor();
     await page.getByRole("link", { name: "OpenStreetMap" }).waitFor();
     await page.getByText(/Aguardando saída/).waitFor();
-    await page.getByText(/Chegada estimada às \d{2}:\d{2} · falt/).first().waitFor();
+    const timeline = page.getByRole("list", { name: "Sequência de paradas da rota" });
+    await timeline.getByText(/Chegada estimada · falt/).first().waitFor();
+    assert.equal(await timeline.getByRole("listitem").count(), stops.length + 2);
+    await timeline.getByRole("img", { name: "Moto do entregador" }).waitFor();
+    await timeline.locator("time").first().waitFor();
     await page.getByLabel("Entregador disponível").first().selectOption(String(driver.id));
+    await timeline.getByRole("img", { name: "Moto CG Fan 160, Prata" }).waitFor();
     await page.getByRole("button", { name: "Registrar saída da rota" }).first().click();
     await page.getByText("Saída registrada. As paradas estão em Minhas entregas.", { exact: true }).waitFor();
     const assigned = await (await courier.request.get(new URL("/api/admin/delivery", url).href)).json();
@@ -112,7 +118,17 @@ async function main() {
     assert(started.amountToCollectCents > 0);
     assert.equal((await courier.request.patch(new URL("/api/admin/delivery", url).href, { data: { returnRouteId: started.id } })).status(), 409);
     await page.getByText(`Entrega 1 de ${stops.length}`, { exact: true }).waitFor();
+    const marker = timeline.locator('[aria-current="step"]');
+    await marker.getByText("Parada 1", { exact: true }).waitFor();
+    const motorcycle = marker.getByRole("img", { name: "Moto CG Fan 160, Prata" });
+    assert.equal(await motorcycle.getAttribute("data-silhouette"), "fan");
     if (screenshot) await page.screenshot({ path: screenshot, fullPage: true });
+    await page.setViewportSize({ width: 390, height: 844 });
+    assert(await timeline.evaluate(el => el.scrollWidth > el.clientWidth));
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+    if (process.env.DISPATCH_TEST_MOBILE_SCREENSHOT) {
+      await page.screenshot({ path: process.env.DISPATCH_TEST_MOBILE_SCREENSHOT, fullPage: true });
+    }
     const courierPage = await courier.newPage();
     await courierPage.goto(new URL("/admin/delivery", url).href);
     const map = courierPage.getByRole("link", { name: "Google Maps" }).first();
@@ -141,13 +157,28 @@ async function main() {
     assert.equal(returning.phase, "returning");
     assert.equal(returning.amountToCollectCents, 0);
     assert(returning.returnEstimate);
+    const back = timeline.locator('[data-state="returning"]');
+    await back.getByRole("img", { name: "Moto CG Fan 160, Prata" }).waitFor();
+    await back.locator("time").waitFor();
     assert.equal((await operator.request.patch(new URL("/api/admin/delivery", url).href, { data: { returnRouteId: started.id } })).status(), 409);
     await courierPage.getByRole("button", { name: "Confirmar retorno" }).click();
     await courierPage.getByText("Retorno à loja confirmado.").waitFor();
     const returned = (await dispatch()).routes[0];
     assert.equal(returned.phase, "returned");
     assert(returned.returnedAt);
-    console.log("Navegador validado: ETA, cobrança, ordem das paradas, navegação, conclusão e retorno com permissão.");
+    for (const [model, color, silhouette, paint] of [
+      ["Twister", "Cinza", "twister", "#68778f"],
+      ["Fan", "Vermelha", "fan", "#df3e47"],
+    ]) {
+      await pool.query("update staff_users set vehicle_model=$1, vehicle_color=$2 where id=$3", [model, color, driver.id]);
+      await page.reload();
+      await page.getByRole("button", { name: /Rotas e retornos/ }).click();
+      const bike = timeline.getByRole("img", { name: `Moto ${model}, ${color}` });
+      await bike.waitFor();
+      assert.equal(await bike.getAttribute("data-silhouette"), silhouette);
+      assert.equal(await bike.evaluate(el => getComputedStyle(el).getPropertyValue("--bike-paint").trim()), paint);
+    }
+    console.log("Navegador validado: linha horizontal, moto cadastrada, ETA, cobrança, rolagem no celular e retorno.");
   } finally {
     await browser.close();
     await pool.end();
