@@ -1,15 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import FloorPlan, { type FloorTableRecord as Table } from "@/components/admin/FloorPlan";
+import type { FloorPlan as Plan } from "@/lib/floor-plan";
 import { AdminIcon } from "@/components/admin/AdminIcons";
 import styles from "@/components/admin/OperationalQueue.module.css";
 
-type Table = { id: number; number: number; label: string | null; token: string };
+type FloorData = { tables: Table[]; plan?: Plan; canManagePlan: boolean };
 type FloorOrder = { id: string; brand: string; tableId: number | null; tableNumber: number | null; items: { name: string; qty: number; notes: string | null }[]; notes: string | null; status: "pending" | "confirmed" | "preparing" | "ready"; createdAt: string | null };
 const labels = { pending: "Aguardando confirmação", confirmed: "Na fila da cozinha", preparing: "Em preparo", ready: "Pronto para servir" };
 
 export default function WaiterPage() {
-  const [tables, setTables] = useState<Table[]>([]);
+  const [floor, setFloor] = useState<FloorData>({ tables: [], canManagePlan: false });
+  const { tables, plan, canManagePlan } = floor;
   const [orders, setOrders] = useState<FloorOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -21,7 +24,10 @@ export default function WaiterPage() {
       const response = await fetch("/api/admin/waiter", { cache: "no-store", signal });
       const data = await response.json();
       if (!response.ok) throw new Error(typeof data.error === "string" ? data.error : "Não foi possível atualizar o salão.");
-      setTables(data.tables); setOrders(data.orders); setError("");
+      setFloor(current => (data.plan?.revision ?? -1) < (current.plan?.revision ?? -1)
+        ? current
+        : { tables: data.tables, plan: data.plan, canManagePlan: Boolean(data.canManagePlan) });
+      setOrders(data.orders); setError("");
     } catch (cause) {
       if (!signal?.aborted) setError(cause instanceof Error ? cause.message : "Não foi possível atualizar o salão.");
     } finally { if (!signal?.aborted) setLoading(false); }
@@ -45,6 +51,14 @@ export default function WaiterPage() {
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Confira a conexão e tente novamente."); }
     finally { setBusy(null); }
   }
+  function updatePlan(nextPlan: Plan, table?: Table) {
+    setFloor(current => {
+      if ((current.plan?.revision ?? -1) > nextPlan.revision) return current;
+      const tables = table ? [...current.tables.filter(item => item.id !== table.id), table].sort((a, b) => a.number - b.number) : current.tables;
+      return { ...current, tables, plan: nextPlan };
+    });
+  }
+
   const ready = orders.filter(order => order.status === "ready").length;
   const grouped = new Map<number | null, { table: Table | null; number: number | null; orders: FloorOrder[] }>();
   tables.forEach(table => grouped.set(table.id, { table, number: table.number, orders: [] }));
@@ -57,6 +71,8 @@ export default function WaiterPage() {
   return <div className={styles.page}>
     <header className={styles.heading}><div><h1>Salão</h1><p>Acompanhe cada mesa e leve os pedidos prontos para servir.</p></div><button className={styles.secondary} onClick={() => void load()}><AdminIcon name="clock" /> Atualizar salão</button></header>
     <div className={styles.summary}><div><strong>{tables.length}</strong><span>mesas ativas</span></div><div><strong>{orders.length}</strong><span>pedidos em andamento</span></div><div className={ready ? styles.highlight : ""}><strong>{ready}</strong><span>prontos para servir</span></div></div>
+    {plan && <FloorPlan plan={plan} tables={tables} canManage={canManagePlan} onPlan={updatePlan} refresh={load}
+      orderCounts={new Map([...grouped].map(([id, group]) => [id, group.orders.length]))} />}
     <div className={styles.filters} aria-label="Filtrar pedidos do salão"><button aria-pressed={!readyOnly} onClick={() => setReadyOnly(false)}>Todas as mesas</button><button aria-pressed={readyOnly} onClick={() => setReadyOnly(true)}>Prontos para servir <span>{ready}</span></button></div>
     {error && <p role="alert" className={styles.error}>{error}</p>}{notice && <p role="status" className={styles.notice}>{notice}</p>}
     {loading ? <p className={styles.empty}>Carregando o salão…</p> : !groups.length ? <div className={styles.empty}><AdminIcon name="tables" size={36} /><h2>{readyOnly ? "Nenhum pedido pronto para servir" : "Nenhuma mesa cadastrada"}</h2><p>{readyOnly ? "Os pedidos aparecem aqui quando a cozinha terminar o preparo." : "Peça ao caixa ou ao gerente para cadastrar as mesas."}</p></div> : <div className={styles.tables}>{groups.map(group => <section className={styles.table} key={group.table?.id ?? `inactive-${group.number ?? "unknown"}`}>

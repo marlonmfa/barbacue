@@ -16,6 +16,7 @@ import {
   doublePrecision,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+import type { FloorElement } from "../lib/floor-plan";
 
 // Postgres `bytea` mapped to a Node Buffer. drizzle-orm has no built-in bytea, so
 // we declare one: the `pg` driver returns bytea columns as Buffer on read and
@@ -205,6 +206,12 @@ export const restaurantTables = pgTable("restaurant_tables", {
   token: uuid("token").notNull().defaultRandom().unique(),
   active: boolean("active").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+});
+
+export const restaurantFloorPlan = pgTable("restaurant_floor_plan", {
+  id: integer("id").primaryKey(),
+  revision: integer("revision").notNull().default(0),
+  elements: jsonb("elements").$type<FloorElement[]>().notNull().default([]),
 });
 
 // ─── Customers ────────────────────────────────────────────────────────────────

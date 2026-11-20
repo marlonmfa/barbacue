@@ -204,6 +204,20 @@
       "when": 1795046400010,
       "tag": "0042_courier_availability",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1795212900000,
+      "tag": "0043_restaurant_floor_plan",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1795212900001,
+      "tag": "0044_seed_barbacue_floor_plan",
+      "breakpoints": true
     }
   ]
 }
