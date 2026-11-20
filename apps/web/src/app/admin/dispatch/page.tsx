@@ -6,6 +6,7 @@ import { AdminIcon } from "@/components/admin/AdminIcons";
 import queue from "@/components/admin/OperationalQueue.module.css";
 import { dispatchConfigSchema, dispatchMetrics, type DispatchConfig, type DispatchReport } from "@/lib/dispatch-planner";
 import { CourierPayPanel } from "./CourierPayPanel";
+import type { DispatchWhatsappStatus } from "@/lib/dispatch-whatsapp";
 import { DispatchMotorcycle, type DispatchVehicle } from "./DispatchMotorcycle";
 import styles from "./page.module.css";
 
@@ -17,9 +18,9 @@ type Route = {
   phase: "waiting" | "delivering" | "returning" | "returned";
   totalStops: number; remainingStops: number; currentStopId: string | null; currentPosition: number | null;
   amountToCollectCents: number; returnEstimate: string | null; returnedAt: string | null;
-  googleMapsLinks?: string[];
+  googleMapsLinks?: string[]; whatsappStatus?: DispatchWhatsappStatus | null;
   stops: { id: string; address: string; brand: string; estimatedArrival: string; deliveredAt: string | null;
-    state: "pending" | "delivered" | "cancelled"; amountToCollectCents: number }[];
+    state: "pending" | "delivered" | "cancelled"; amountToCollectCents: number; requiresConfirmationCode?: boolean }[];
 };
 type Data = {
   config: DispatchConfig; revision: number; canConfigure: boolean; canReviewCourierPay: boolean; canSetCourierAvailability: boolean; mapsReady: boolean; report: DispatchReport | null;
@@ -31,6 +32,14 @@ type Data = {
 };
 type Draft = { config: DispatchConfig; revision: number };
 const endpoint = "/api/admin/dispatch";
+const whatsappLabels: Record<DispatchWhatsappStatus, string> = {
+  pending: "Link do WhatsApp pendente",
+  sending: "Enviando link pelo WhatsApp",
+  sent: "Envio aceito pelo WhatsApp",
+  failed: "Falha ao enviar o link pelo WhatsApp",
+  missing_phone: "Entregador sem WhatsApp cadastrado",
+  unconfirmed: "Envio do WhatsApp sem confirmação",
+};
 const shortId = (id: string) => id.slice(0, 8).toUpperCase();
 const clock = new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" });
 const orderTime = new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
@@ -93,7 +102,7 @@ export default function DispatchPage() {
         setTab(payload.created ? "created" : "pending");
         setNotice(payload.created ? `${payload.created} ${payload.created === 1 ? "rota entrou" : "rotas entraram"} na fila.` : "Nenhuma nova rota atende às regras neste momento.");
       } else if (success) {
-        setNotice(success);
+        setNotice(payload.whatsappStatus ? `${success} ${whatsappLabels[payload.whatsappStatus as DispatchWhatsappStatus]}.` : success);
         if (method === "PATCH" && body && "driverId" in body && body.driverId !== null) setTab("all");
       }
     } catch (cause) {
@@ -143,6 +152,8 @@ export default function DispatchPage() {
   function renderRoute(route: Route, riderName?: string, availability?: ReactNode) {
     return <RouteCard key={route.id} route={route} riderName={riderName} availability={availability} drivers={data?.drivers ?? []} busy={busy} now={now}
       start={driverId => void mutate("PATCH", { id: route.id, driverId }, "Saída registrada. As paradas estão em Minhas entregas.")}
+      setCode={(orderId, code) => void mutate("PATCH", { id: route.id, codeOrderId: orderId, confirmationCode: code }, code ? "Código definido para a parada." : "Código removido da parada.")}
+      retryWhatsapp={() => void mutate("PATCH", { id: route.id, retryWhatsapp: true }, "Envio da rota atualizado.")}
       removeStop={stopId => void mutate("PATCH", { id: route.id, removeStopId: stopId }, "Parada removida. O pedido voltou ao planejamento.")}
       release={() => void mutate("PATCH", { id: route.id, driverId: null }, "Pedidos devolvidos para planejamento.")} />;
   }
@@ -267,8 +278,8 @@ function defaultLimit(metric: Exclude<keyof typeof dispatchMetrics, "waitMinutes
   return { stops: 4, distanceKm: 25, durationMinutes: 45, legMinutes: 20 }[metric];
 }
 
-function RouteCard({ route, riderName, availability, drivers, busy, now, start, release, removeStop }: {
-  route: Route; riderName?: string; availability?: ReactNode; now: number; drivers: Data["drivers"]; busy: boolean; start: (driverId: number) => void; release: () => void; removeStop: (stopId: string) => void;
+function RouteCard({ route, riderName, availability, drivers, busy, now, start, release, removeStop, retryWhatsapp, setCode }: {
+  route: Route; riderName?: string; availability?: ReactNode; now: number; drivers: Data["drivers"]; busy: boolean; start: (driverId: number) => void; release: () => void; removeStop: (stopId: string) => void; retryWhatsapp: () => void; setCode: (orderId: string, code: string | null) => void;
 }) {
   const [driver, setDriver] = useState("");
   const [editing, setEditing] = useState(false);
@@ -300,9 +311,14 @@ function RouteCard({ route, riderName, availability, drivers, busy, now, start, 
         ? "Posição estimada pelo tempo da etapa"
         : route.phase === "returning" ? "Previsão atingida · aguardando confirmação do retorno"
         : "Previsão atingida · aguardando confirmação da entrega"}</p>}
+      {route.whatsappStatus && <p className={styles.estimateNote}>{whatsappLabels[route.whatsappStatus]}</p>}
+      {route.startedAt && !route.returnedAt && route.whatsappStatus && route.whatsappStatus !== "missing_phone" &&
+        <p className={styles.estimateNote}>O entregador também pode enviar ROTA ao WhatsApp da loja.</p>}
       {route.returnedAt && <p>Chegou à loja às {time(route.returnedAt)}</p>}
     </div><div className={styles.routeActions}>
       {availability}
+      {!route.returnedAt && route.whatsappStatus && ["pending", "missing_phone", "failed", "unconfirmed"].includes(route.whatsappStatus) &&
+        <button type="button" className={queue.secondary} disabled={busy} onClick={retryWhatsapp}>Enviar link pelo WhatsApp</button>}
       {mapsLinks.map((href, index) => <a key={href} className={queue.secondary} href={href}
         target="_blank" rel="noopener noreferrer"><AdminIcon name="route" size={18} />
         {mapsLinks.length === 1 ? "Abrir no Google Maps" : `Google Maps · Trecho ${index + 1}`}
@@ -316,6 +332,18 @@ function RouteCard({ route, riderName, availability, drivers, busy, now, start, 
       <p>A parada removida volta ao planejamento. Ao remover a última, a rota sai da fila.</p>
       <ol>{route.stops.map((stop, index) => <li key={stop.id}>
         <span><strong>Parada {index + 1}</strong> · {stop.address}</span>
+        <form className={styles.confirmationCode} onSubmit={event => {
+          event.preventDefault();
+          const code = String(new FormData(event.currentTarget).get("code") ?? "");
+          if (/^\d{4,8}$/.test(code)) setCode(stop.id, code);
+          event.currentTarget.reset();
+        }}>
+          <label>Código de entrega <input name="code" type="password" inputMode="numeric" pattern="[0-9]{4,8}" maxLength={8}
+            required autoComplete="off" placeholder={stop.requiresConfirmationCode ? "Configurado" : "Opcional"} /></label>
+          <button type="submit" className={queue.secondary} disabled={busy}>Salvar código</button>
+          {stop.requiresConfirmationCode && <button type="button" className={queue.secondary}
+            disabled={busy} onClick={() => setCode(stop.id, null)}>Remover código</button>}
+        </form>
         <button type="button" className={queue.secondary} disabled={busy} aria-label={`Remover parada ${index + 1}`}
           onClick={() => removeStop(stop.id)}>Remover parada</button>
       </li>)}</ol>

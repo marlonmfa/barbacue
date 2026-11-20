@@ -48,9 +48,11 @@ async function getMenu() {
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ mesa?: string; loja?: string; restaurante?: string }>;
+  searchParams: Promise<{ mesa?: string; loja?: string; restaurante?: string; confirma?: string }>;
 }) {
-  const [staff, query] = await Promise.all([requireStaff().catch(() => null), searchParams]);
+  const query = await searchParams;
+  if (typeof query.confirma === "string" && /^[a-f0-9]{64}$/.test(query.confirma)) redirect(`/admin/delivery?confirma=${query.confirma}`);
+  const staff = await requireStaff().catch(() => null);
   if (staff && query.loja !== "1") redirect(landingPath(staff));
   const requestHeaders = await headers();
   const brandSlug = query.restaurante === "barbacue" ? null : query.restaurante === "chelas" || query.restaurante === "barbadog" ? query.restaurante : brandFromHost(

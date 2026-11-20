@@ -4,6 +4,8 @@ import { db } from "@/db";
 import { orders, staffUsers } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { withStaff } from "@/lib/admin-auth";
+import { completeDispatchStop } from "@/lib/dispatch-stop-completion";
+import { sendDispatchWhatsapp } from "@/lib/dispatch-whatsapp";
 import { can } from "@/lib/permissions";
 import { generateDispatchOnReady } from "@/lib/dispatch-service";
 
@@ -22,7 +24,7 @@ export const PATCH = withStaff(async (req: NextRequest, { params }: Params) => {
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
 
   try {
-    const { saved, becameReady } = await db.transaction(async tx => {
+    const { saved, becameReady, completedRoute } = await db.transaction(async tx => {
       const [order] = await tx.select().from(orders).where(eq(orders.id, id)).for("update");
       if (!order) throw new OrderUpdateError("Pedido não encontrado.", 404);
       if (order.channel === "ifood") throw new OrderUpdateError("Atualize pedidos iFood pela Cozinha ou pelo Gestor iFood.", 409);
@@ -47,6 +49,14 @@ export const PATCH = withStaff(async (req: NextRequest, { params }: Params) => {
       if (order.deliveryStatus === "out_for_delivery" && status !== "delivered" && status !== "cancelled" && status !== "ready") {
         throw new OrderUpdateError("Este pedido já está em entrega. Conclua ou cancele a saída antes de mudar o preparo.", 409);
       }
+      if (status === "delivered" && order.dispatchRouteId && order.status !== "delivered") {
+        if (order.deliveryConfirmationHash) throw new OrderUpdateError("Confirme este pedido com o código pelo WhatsApp do entregador.", 409);
+        if (order.status !== "ready" || order.deliveryStatus !== "out_for_delivery") {
+          throw new OrderUpdateError("Registre a saída da rota antes de concluir a entrega.", 409);
+        }
+        const saved = await completeDispatchStop(tx, order, new Date());
+        return { saved: { ...saved, deliveryDriverId: order.deliveryDriverId }, becameReady: false, completedRoute: order.dispatchRouteId };
+      }
       const [saved] = await tx.update(orders).set({
         status,
         ...(status === "delivered" ? { deliveredAt: order.deliveredAt ?? new Date(), ...(order.orderType === "delivery" && order.deliveryDriverId ? { deliveryStatus: "delivered" as const } : {}) } : {}),
@@ -56,6 +66,7 @@ export const PATCH = withStaff(async (req: NextRequest, { params }: Params) => {
         order.channel !== "test" && !order.archivedAt && !order.deliveryStatus && !order.deliveryDriverId;
       return { saved, becameReady };
     });
+    if (completedRoute) await sendDispatchWhatsapp(completedRoute, id);
     if (becameReady) after(generateDispatchOnReady);
     return NextResponse.json(saved);
   } catch (error) {

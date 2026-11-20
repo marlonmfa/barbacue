@@ -6,6 +6,8 @@ import { DeliveryError, deliveryAddressKey, deliveryCoordinatesSchema, type Deli
 import { deliveryProviderConfigured, getDeliveryProvider } from "@/lib/delivery-provider";
 import { defaultDispatchConfig, evaluateDispatch, measureDispatch, planDispatch, waitLimitMs, type DispatchConfig, type DispatchIssue, type DispatchOrder, type DispatchPlan, type DispatchReport } from "@/lib/dispatch-planner";
 import { dispatchGoogleMapsLinks } from "@/lib/dispatch-maps";
+import { deliveryCodeHash, routeConfirmationHash, routeConfirmationToken } from "@/lib/dispatch-confirmation";
+import { dispatchWhatsappStatus } from "@/lib/dispatch-whatsapp";
 import { dispatchProgress } from "@/lib/dispatch-progress";
 import { can } from "@/lib/permissions";
 import { dispatchAvailablePresence } from "@/lib/courier-availability";
@@ -237,7 +239,7 @@ export async function changeDispatchRoute(id: string, driverId: number | null) {
     if (violations.length) throw new DispatchError(`A rota viola as regras atuais: ${violations.join(" · ")}. Gere as rotas novamente.`);
     await tx.update(orders).set({ deliveryDriverId: driverId, deliveryStatus: "out_for_delivery", dispatchedAt: now })
       .where(eq(orders.dispatchRouteId, id));
-    await tx.update(dispatchRoutes).set({ driverId, startedAt: now, departureConfig: config }).where(eq(dispatchRoutes.id, id));
+    await tx.update(dispatchRoutes).set({ driverId, startedAt: now, departureConfig: config, confirmationHash: routeConfirmationHash(routeConfirmationToken(id)), whatsappNotification: { state: "pending", event: id } }).where(eq(dispatchRoutes.id, id));
   });
 }
 
@@ -290,6 +292,17 @@ export async function removeDispatchStop(id: string, stopId: string) {
   });
 }
 
+export async function setDispatchConfirmationCode(routeId: string, orderId: string, code: string | null) {
+  return db.transaction(async tx => {
+    const [route] = await tx.select({ id: dispatchRoutes.id }).from(dispatchRoutes)
+      .where(and(eq(dispatchRoutes.id, routeId), queued)).for("update");
+    if (!route) throw new DispatchError("O código só pode ser configurado antes da saída.");
+    const [updated] = await tx.update(orders).set({ deliveryConfirmationHash: code ? deliveryCodeHash(orderId, code) : null })
+      .where(and(eq(orders.id, orderId), eq(orders.dispatchRouteId, routeId), ownDelivery)).returning({ id: orders.id });
+    if (!updated) throw new DispatchError("O pedido não pertence mais a esta rota.");
+  });
+}
+
 export async function returningDispatchRoute(driverId: number) {
   const [route] = await db.select({ id: dispatchRoutes.id }).from(dispatchRoutes)
     .where(and(eq(dispatchRoutes.driverId, driverId), openRoute, sql`not ${hasUnfinishedStops}`))
@@ -336,7 +349,7 @@ export async function dispatchOverview(includeAllPending = false) {
   ]);
   const config = state?.config ?? defaultDispatchConfig;
   const now = Date.now();
-  const linked = routes.length ? await db.select({ ...orderFields, routeId: orders.dispatchRouteId, status: orders.status, deliveryStatus: orders.deliveryStatus, deliveredAt: orders.deliveredAt, totalCents: orders.totalCents, paymentStatus: orders.paymentStatus, eligible: sql<boolean>`(${ownDelivery}) is true` })
+  const linked = routes.length ? await db.select({ ...orderFields, routeId: orders.dispatchRouteId, status: orders.status, deliveryStatus: orders.deliveryStatus, deliveredAt: orders.deliveredAt, totalCents: orders.totalCents, paymentStatus: orders.paymentStatus, requiresConfirmationCode: sql<boolean>`${orders.deliveryConfirmationHash} is not null`, eligible: sql<boolean>`(${ownDelivery}) is true` })
     .from(orders).where(inArray(orders.dispatchRouteId, routes.map(({ route }) => route.id))) : [];
   const mapsReady = !!origin && deliveryProviderConfigured(origin.provider);
   const couriers = roster.map(({ id, name, vehicleModel, vehicleColor, active, online, busy, declaredAvailableUntil, ...permissions }) => ({
@@ -362,6 +375,8 @@ export async function dispatchOverview(includeAllPending = false) {
       });
       return {
         ...progress,
+        stops: progress.stops.map(stop => ({ ...stop, requiresConfirmationCode: rows.find(row => row.id === stop.id)?.requiresConfirmationCode ?? false })),
+        whatsappStatus: dispatchWhatsappStatus(route.whatsappNotification, now),
         googleMapsLinks: dispatchGoogleMapsLinks(route.originKey, route.plan.stops
           .filter(stop => progress.stops.find(row => row.id === stop.id)?.state !== "cancelled").map(stop => stop.point)),
         id: route.id, createdAt: route.createdAt, startedAt: route.startedAt, returnedAt: route.returnedAt, driverId: route.driverId, driverName,

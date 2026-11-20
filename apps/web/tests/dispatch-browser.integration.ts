@@ -1,6 +1,7 @@
 // Use a separate database with all migrations applied and a local web server.
 import assert from "node:assert/strict";
 import { randomBytes, scryptSync } from "node:crypto";
+import { createServer } from "node:http";
 import { chromium, type Locator } from "@playwright/test";
 import { Pool } from "pg";
 import { deliveryAddressKey } from "../src/lib/delivery";
@@ -29,9 +30,10 @@ async function assertWaiting(panel: Locator) {
 
 async function assertBikePosition(line: Locator, start: number, end: number, fraction: number) {
   const geometry = await line.evaluate((track, { start, end }) => {
-    const center = (element: Element) => { const box = element.getBoundingClientRect(); return box.x + box.width / 2; };
     const points = Array.from(track.children, step => step.firstElementChild!.lastElementChild!);
-    return { origin: center(points[start]), destination: center(points[end]), bike: center(track.querySelector('[role="img"]')!) };
+    const [origin, destination, bike] = [points[start], points[end], track.querySelector('[role="img"]')!]
+      .map(element => element.getBoundingClientRect()).map(box => box.x + box.width / 2);
+    return { origin, destination, bike };
   }, { start, end });
   assert(geometry.destination > geometry.origin);
   assert(Math.abs(geometry.bike - (geometry.origin + (geometry.destination - geometry.origin) * fraction)) < 2, JSON.stringify(geometry));
@@ -56,6 +58,22 @@ async function main() {
     { address: "Centro Cultural de Jaraguá do Sul", latitude: -26.48733, longitude: -49.08019 },
   ];
   const screenshot = process.env.DISPATCH_TEST_SCREENSHOT;
+  const whatsappPort = Number(process.env.DISPATCH_TEST_WHATSAPP_PORT);
+  const messages: { account: string; jid: string; text: string }[] = [];
+  const whatsapp = whatsappPort ? createServer(async (request, response) => {
+    if (request.method !== "POST" || request.url !== "/messages" || request.headers["x-bot-token"] !== "dispatch-fixture") {
+      response.writeHead(403).end();
+      return;
+    }
+    const chunks: Buffer[] = [];
+    for await (const chunk of request) chunks.push(chunk);
+    messages.push(JSON.parse(Buffer.concat(chunks).toString("utf8")));
+    response.writeHead(messages.length === 1 ? 503 : 201).end();
+  }) : null;
+  if (whatsapp) await new Promise<void>((resolve, reject) => {
+    whatsapp.once("error", reject);
+    whatsapp.listen(whatsappPort, "127.0.0.1", resolve);
+  });
 
   async function user(role: "admin" | "driver", index = 0) {
     const username = `roteamento-${role}-${suffix}-${index}`;
@@ -69,7 +87,7 @@ async function main() {
   try {
     const [admin, driver] = await Promise.all([user("admin"), user("driver")]);
     await Promise.all([1, 2, 3, 4].map(index => user("driver", index)));
-    await pool.query("update staff_users set vehicle_model='CG Fan 160', vehicle_color='Prata' where id=$1", [driver.id]);
+    await pool.query("update staff_users set vehicle_model='CG Fan 160', vehicle_color='Prata', whatsapp_phone='5547990000000' where id=$1", [driver.id]);
     assert.equal((await operator.request.get(new URL("/api/admin/dispatch", url).href)).status(), 401);
     for (const [context, account] of [[operator, admin], [courier, driver]] as const) {
       const login = await context.request.post(new URL("/api/admin/auth", url).href, { data: { username: account.username, password } });
@@ -195,16 +213,59 @@ async function main() {
     await assertBikePosition(timeline, 0, 1, 0);
     await timeline.locator("time").first().waitFor();
     assert.equal(await page.getByLabel("Entregador disponível").first().locator("option").count(), 2);
+    const dispatch = async () => (await operator.request.get(new URL("/api/admin/dispatch", url).href)).json();
+    let referenceWithCode = "";
+    if (whatsapp) {
+      referenceWithCode = (await dispatch()).routes[0].stops[0].id.slice(0, 8).toUpperCase();
+      await page.getByRole("button", { name: "Editar rota", exact: true }).click();
+      const editor = page.getByRole("region", { name: "Editar paradas da rota" }).getByRole("listitem").first();
+      await editor.getByLabel("Código de entrega").fill("2468");
+      await editor.getByRole("button", { name: "Salvar código" }).click();
+      await page.getByText("Código definido para a parada.", { exact: true }).waitFor();
+      await page.getByRole("button", { name: "Fechar edição", exact: true }).click();
+    }
     await page.getByLabel("Entregador disponível").first().selectOption(String(driver.id));
     await timeline.getByRole("img", { name: "Moto CG Fan 160, Prata" }).waitFor();
     await page.getByRole("button", { name: "Registrar saída da rota" }).first().click();
-    await page.getByText("Saída registrada. As paradas estão em Minhas entregas.", { exact: true }).waitFor();
+    await page.getByText(/^Saída registrada. As paradas estão em Minhas entregas./).waitFor();
     const assigned = await (await courier.request.get(new URL("/api/admin/delivery", url).href)).json();
     assert.equal(assigned.length, stops.length);
     assert.equal(new Set(assigned.map((order: { dispatchRouteId: string }) => order.dispatchRouteId)).size, 1);
     assert.deepEqual(assigned.map((order: { dispatchPosition: number }) => order.dispatchPosition), stops.map((_, index) => index + 1));
-    const dispatch = async () => (await operator.request.get(new URL("/api/admin/dispatch", url).href)).json();
     const started = (await dispatch()).routes[0];
+    if (whatsapp) {
+      assert.equal(messages.length, 1);
+      assert.equal(messages[0].account, "cogia");
+      assert.equal(messages[0].jid, "5547990000000@s.whatsapp.net");
+      const link = new URL(messages[0].text.split("\n").at(-1)!);
+      assert.equal(link.origin, "https://barbacue.cog.ia.br");
+      assert.equal(link.pathname, "/");
+      assert.match(link.searchParams.get("confirma")!, /^[a-f0-9]{64}$/);
+      assert(messages[0].text.includes("Google Maps · Rota completa"));
+      assert(messages[0].text.includes(`ENTREGUE #${referenceWithCode} seguido do código`));
+      for (const stop of started.stops) assert(messages[0].text.includes(`Pedido #${stop.id.slice(0, 8).toUpperCase()}`));
+      assert.equal(started.whatsappStatus, "failed");
+      await page.getByRole("button", { name: "Enviar link pelo WhatsApp" }).click();
+      await page.getByText("Envio aceito pelo WhatsApp", { exact: true }).waitFor();
+      assert.deepEqual(messages, [messages[0], messages[0]]);
+      assert.equal((await operator.request.patch(new URL("/api/admin/dispatch", url).href,
+        { data: { id: started.id, driverId: driver.id } })).status(), 409);
+      const repeat = await operator.request.patch(new URL("/api/admin/dispatch", url).href,
+        { data: { id: started.id, retryWhatsapp: true } });
+      assert.equal((await repeat.json()).whatsappStatus, "sent");
+      assert.equal(messages.length, 2);
+      assert.equal((await operator.request.get(new URL(`/api/admin/delivery${link.search}`, url).href)).status(), 404);
+      const fromLink = await browser.newPage();
+      await fromLink.goto(new URL(link.pathname + link.search, url).href);
+      await fromLink.waitForURL("**/admin/login?confirma=*");
+      assert.equal(new URL(fromLink.url()).searchParams.get("confirma"), link.searchParams.get("confirma"));
+      await fromLink.getByLabel("Usuário ou e-mail").fill(driver.username);
+      await fromLink.getByLabel("Senha", { exact: true }).fill(password);
+      await fromLink.getByRole("button", { name: "Entrar" }).click();
+      await fromLink.getByRole("heading", { name: `Rota #${started.id.slice(0, 8).toUpperCase()}` }).waitFor();
+      await fromLink.getByRole("heading", { name: /^Parada 1/ }).waitFor();
+      await fromLink.close();
+    }
     assert.equal(started.phase, "delivering");
     assert.equal(started.currentPosition, 1);
     assert.equal(started.remainingStops, stops.length);
@@ -272,9 +333,35 @@ async function main() {
     const reference = stops.find(stop => stop.address === first.address);
     assert(reference && Math.hypot((reference.latitude - first.point.latitude) * 111_000, (reference.longitude - first.point.longitude) * 99_000) <= 40);
     assert(!navigation.searchParams.has("key"));
+    const inbound = async (text: string, phone = "5547990000000") => courier.request.post(new URL("/api/whatsapp/inbound-role", url).href, {
+      data: { phone, text }, headers: { "x-bot-token": "dispatch-fixture" },
+    });
     for (let remaining = stops.length; remaining > 0; remaining--) {
-      await courierPage.getByRole("button", { name: "Concluir entrega" }).first().click();
-      await courierPage.getByText(/Entrega #.*concluída/).waitFor();
+      if (whatsapp && remaining === stops.length) {
+        const command = `ENTREGUE #${referenceWithCode}`;
+        const delivery = new URL("/api/admin/delivery", url).href;
+        await courierPage.getByText(new RegExp(command)).waitFor();
+        assert.equal((await courier.request.patch(delivery, { data: { id: started.stops[0].id, deliveryStatus: "delivered" } })).status(), 409);
+        assert.match((await (await inbound(command)).json()).reply, /exige código/);
+        assert.match((await (await inbound(`${command} 0000`)).json()).reply, /Código incorreto/);
+        assert.equal((await (await inbound(`${command} 2468`, "5547991000000")).json()).role, "customer");
+        assert.equal((await dispatch()).routes[0].remainingStops, remaining);
+        assert.equal(messages.length, 2);
+        assert.equal((await (await inbound("ROTA")).json()).reply, messages[0].text);
+        assert.match((await (await inbound(`${command} 2468`)).json()).reply, /confirmada/);
+        assert.match((await (await inbound(`${command} 2468`)).json()).reply, /não está entre/);
+        await courierPage.getByText(new RegExp(command)).waitFor({ state: "hidden", timeout: 20_000 });
+        assert.equal((await (await inbound("ROTA")).json()).reply, messages.at(-1)!.text);
+      } else {
+        await courierPage.getByRole("button", { name: "Concluir entrega" }).first().click();
+        await courierPage.getByText(/Entrega #.*concluída/).waitFor();
+      }
+      if (whatsapp) {
+        assert.equal(messages.length, 3 + stops.length - remaining);
+        assert(!messages.at(-1)!.text.includes(`Pedido #${started.stops[stops.length - remaining].id.slice(0, 8).toUpperCase()}`));
+        assert.equal(messages.at(-1)!.text.split("\n").at(-1), messages[0].text.split("\n").at(-1));
+        if (remaining === 1) assert(messages.at(-1)!.text.includes("Google Maps · Retorno à loja"));
+      }
       const route = (await dispatch()).routes[0];
       assert.equal(route.remainingStops, remaining - 1);
       const confirmed = route.stops[stops.length - remaining];
@@ -328,9 +415,10 @@ async function main() {
       assert.equal(await bike.getAttribute("data-silhouette"), silhouette);
       assert.equal(await bike.evaluate(el => getComputedStyle(el).getPropertyValue("--bike-paint").trim()), paint);
     }
-    console.log("Navegador validado: motinha parada antes da saída, avanço medido em pixels pelo relógio, confirmação de entrega e movimento no retorno.");
+    console.log("Navegador validado: avanço da motinha em pixels, retorno, tentativa imediata de WhatsApp, reenvio, confirmação por código, consulta por WhatsApp e link protegido.");
   } finally {
     await browser.close();
+    whatsapp?.close();
     await pool.end();
   }
 }

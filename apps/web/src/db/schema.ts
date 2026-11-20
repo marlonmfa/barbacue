@@ -360,6 +360,8 @@ export const dispatchRoutes = pgTable("dispatch_routes", {
   releasedAt: timestamp("released_at", { withTimezone: true }),
   returnedAt: timestamp("returned_at", { withTimezone: true }),
   gps: jsonb("gps"),
+  confirmationHash: text("confirmation_hash").unique(),
+  whatsappNotification: jsonb("whatsapp_notification").$type<import("@/lib/dispatch-whatsapp").DispatchWhatsappNotification>(),
   driverId: integer("driver_id").references(() => staffUsers.id, { onDelete: "set null" }),
 }, table => [index("dispatch_routes_queue_idx").on(table.createdAt).where(sql`${table.startedAt} is null and ${table.releasedAt} is null`)]);
 
@@ -384,6 +386,7 @@ export const orders = pgTable("orders", {
   deliveryRoute: jsonb("delivery_route").$type<import("@/lib/delivery").DeliveryRouteLinks>(),
   deliveryDriverId: integer("delivery_driver_id").references(() => staffUsers.id),
   deliveryStatus: text("delivery_status").$type<"assigned" | "out_for_delivery" | "delivered">(),
+  deliveryConfirmationHash: text("delivery_confirmation_hash"),
   deliveryAccessToken: uuid("delivery_access_token").notNull().defaultRandom().unique(),
   dispatchRouteId: uuid("dispatch_route_id").references(() => dispatchRoutes.id),
   dispatchPosition: integer("dispatch_position"),

@@ -3,6 +3,8 @@ import { z } from "zod";
 import { db } from "@/db";
 import { deliveryMessages, dispatchRoutes, orders } from "@/db/schema";
 import { addressNavigationLinks, dispatchNavigationDestination, wazeNavigationLink } from "@/lib/delivery-navigation";
+import { completeDispatchStop } from "./dispatch-stop-completion";
+import { sendDispatchWhatsapp } from "./dispatch-whatsapp";
 import { deliveryLinkAction, deliveryLinkAvailable, deliveryLinkTransition } from "./delivery-link-validation";
 
 export class DeliveryLinkError extends Error {
@@ -42,6 +44,7 @@ export async function deliveryLinkData(value: string, byToken = true) {
     address: order.deliveryAddress, notes: order.notes,
     items: deliveryLinkItems(order.items), totalCents: order.totalCents,
     paymentMethod: order.paymentMethod, paymentStatus: order.paymentStatus, changeForCents: order.changeForCents,
+    requiresConfirmationCode: !!order.deliveryConfirmationHash,
     status: order.status, deliveryStatus: order.deliveryStatus,
     dispatchedAt: order.dispatchedAt, deliveredAt: order.deliveredAt,
     navigation: navigation && waze ? { ...navigation, waze } : null,
@@ -54,7 +57,7 @@ export async function deliveryLinkMutate(value: string, input: unknown, sender: 
   if (!parsed.success) throw new DeliveryLinkError("Informe uma mensagem de até 1.000 caracteres ou uma etapa válida.", 422);
   if (sender === "store" && parsed.data.action !== "message") throw new DeliveryLinkError("Etapa inválida.", 422);
   if (!z.string().uuid().safeParse(value).success) throw new DeliveryLinkError("Entrega não encontrada ou link expirado.", 404);
-  await db.transaction(async tx => {
+  const completed = await db.transaction(async tx => {
     const [order] = await tx.select().from(orders).where(eq(sender === "driver" ? orders.deliveryAccessToken : orders.id, value)).for("update");
     if (!order || !deliveryLinkAvailable(order)) throw new DeliveryLinkError("Entrega não encontrada ou link expirado.", 404);
     if (parsed.data.action === "message") {
@@ -71,11 +74,15 @@ export async function deliveryLinkMutate(value: string, input: unknown, sender: 
     if (transition === "blocked" || (order.channel === "online" && order.paymentStatus !== "paid")) throw new DeliveryLinkError("Aguarde o pedido ficar pronto e registre a saída antes de concluir.", 409);
     if (transition === "unchanged") return;
     const now = new Date();
-    await tx.update(orders).set(transition === "delivered"
-      ? { status: "delivered", deliveryStatus: "delivered", deliveredAt: now }
-      : { deliveryStatus: "out_for_delivery", dispatchedAt: now })
+    if (transition === "delivered") {
+      if (order.deliveryConfirmationHash) throw new DeliveryLinkError("Confirme este pedido com o código pelo WhatsApp.", 409);
+      await completeDispatchStop(tx, order, now);
+      return order.dispatchRouteId ? { routeId: order.dispatchRouteId, orderId: order.id } : null;
+    }
+    await tx.update(orders).set({ deliveryStatus: "out_for_delivery", dispatchedAt: now })
       .where(and(eq(orders.id, order.id), eq(orders.deliveryAccessToken, order.deliveryAccessToken)));
   });
+  if (completed) await sendDispatchWhatsapp(completed.routeId, completed.orderId);
 }
 
 export function deliveryLinkFailure(error: unknown) {

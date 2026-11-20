@@ -23,7 +23,13 @@ export default function ChangePasswordPage() {
       });
       const data = await response.json();
       if (!response.ok) { setError(data.error ?? "Não foi possível alterar a senha."); return; }
-      window.location.assign(data.redirect ?? "/admin");
+      const query = new URLSearchParams(window.location.search);
+      const routeParams = new URLSearchParams();
+      for (const key of ["confirma", "rota"]) {
+        const value = query.get(key);
+        if (value) routeParams.set(key, value);
+      }
+      window.location.assign(routeParams.size ? `/admin/delivery?${routeParams}` : data.redirect ?? "/admin");
     } catch {
       setError("Não foi possível conectar. Tente novamente.");
     } finally { setLoading(false); }

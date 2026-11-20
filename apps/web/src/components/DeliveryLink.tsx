@@ -7,7 +7,7 @@ type Delivery = {
   id: string; brand: string; channel: string | null; customerName: string; customerPhone: string; address: string | null; notes: string | null;
   items: { name: string; qty: number; notes: string | null }[]; totalCents: number;
   paymentMethod: string | null; paymentStatus: string | null; changeForCents: number | null;
-  status: string; deliveryStatus: string | null; deliveredAt: string | null;
+  status: string; deliveryStatus: string | null; requiresConfirmationCode?: boolean; deliveredAt: string | null;
   navigation: { google: string; apple: string; waze: string } | null; qr?: string; url?: string;
   messages: { id: string; sender: "store" | "driver"; body: string; createdAt: string }[];
 };
@@ -113,7 +113,9 @@ export function DeliveryLink({ orderId, token }: { orderId?: string; token?: str
       <div className="no-print">
         {platform && <p>Pedido iFood: a saída e a conclusão são registradas no iFood.</p>}
         {!platform && !staff && !complete && data.deliveryStatus !== "out_for_delivery" && <><button className={styles.primary} type="button" disabled={busy || !!error || data.status !== "ready"} onClick={() => void send("start")}>Retirei o pedido · iniciar entrega</button>{data.status !== "ready" && <p>Aguardando a loja marcar o pedido como pronto.</p>}</>}
-        {!platform && <label className={styles.completed}><input type="checkbox" checked={complete} disabled={staff || complete || busy || !!error || data.deliveryStatus !== "out_for_delivery"} onChange={event => { if (event.target.checked) void send("complete"); }} /> Entrega concluída</label>}
+        {!platform && !complete && data.requiresConfirmationCode
+          ? <p>Confirme pelo WhatsApp com ENTREGUE #{data.id.slice(0, 8).toUpperCase()} seguido do código recebido no destino.</p>
+          : !platform && <label className={styles.completed}><input type="checkbox" checked={complete} disabled={staff || complete || busy || !!error || data.deliveryStatus !== "out_for_delivery"} onChange={event => { if (event.target.checked) void send("complete"); }} /> Entrega concluída</label>}
         {data.deliveredAt && <p role="status">Concluída em {dateTime(data.deliveredAt)}</p>}
         <h3>{staff ? "Mensagens com o motoboy" : "Mensagens com a loja"}</h3>
         <div ref={messagesRef} className={styles.messages} role="log" aria-live="polite" aria-label="Mensagens da entrega">

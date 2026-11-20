@@ -23,7 +23,14 @@ export default function AdminLoginPage() {
       // Use a full navigation after authentication. This guarantees the new
       // httpOnly session cookie is applied before the protected admin request
       // and avoids a stuck client transition after production redeploys.
-      window.location.assign(data.mustChangePassword ? "/admin/change-password" : "/admin");
+      const query = new URLSearchParams(window.location.search);
+      const routeParams = new URLSearchParams();
+      for (const key of ["confirma", "rota"]) {
+        const value = query.get(key);
+        if (value) routeParams.set(key, value);
+      }
+      const target = data.mustChangePassword ? "/admin/change-password" : routeParams.size ? "/admin/delivery" : "/admin";
+      window.location.assign(routeParams.size ? `${target}?${routeParams}` : target);
     } else {
       const data = await res.json();
       setError(data.error ?? "Erro ao entrar");

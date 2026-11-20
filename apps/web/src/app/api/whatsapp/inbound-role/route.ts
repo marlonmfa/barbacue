@@ -8,6 +8,8 @@ import { resolveAI } from "@/lib/ai-settings";
 import { barbaContactPhone } from "@/lib/barba-contact";
 import { declareCourierAvailable } from "@/lib/courier-availability";
 import { declaresCourierAvailability } from "@/lib/courier-availability-message";
+import { dispatchWhatsappRouteForDriver } from "@/lib/dispatch-whatsapp";
+import { confirmDispatchStopFromWhatsapp } from "@/lib/dispatch-stop-completion";
 import { findBarbaContactRole } from "@/lib/barba-contact-role";
 
 const inputSchema = z.object({
@@ -93,6 +95,22 @@ export async function POST(request: Request) {
   const headers = { "Cache-Control": "no-store" };
   if (role === "driver") {
     const driverId = staffRole === "driver" ? staff?.id ?? null : null;
+    const confirmation = /^entregue\s+#?([a-f0-9]{8})(?:\s+(\d{4,8}))?$/i.exec(input.data.text);
+    if (confirmation) {
+      const reply = driverId === null
+        ? "Confirme entregas pelo WhatsApp vinculado ao seu cadastro de entregador."
+        : await confirmDispatchStopFromWhatsapp(driverId, confirmation[1].toUpperCase(), confirmation[2]);
+      return Response.json({ role, reply }, { headers });
+    }
+    if (/^entregue\b/i.test(input.data.text)) {
+      return Response.json({ role, reply: "Envie ENTREGUE seguido do número do pedido. Se o pedido exigir código, acrescente o código ao final." }, { headers });
+    }
+    if (/^rota$/i.test(input.data.text)) {
+      const reply = driverId === null
+        ? "Consulte a rota pelo WhatsApp vinculado ao seu cadastro de entregador."
+        : await dispatchWhatsappRouteForDriver(driverId);
+      return Response.json({ role, reply }, { headers });
+    }
     if (declaresCourierAvailability(input.data.text)) {
       const until = driverId === null ? null : await declareCourierAvailable(driverId);
       const reply = until

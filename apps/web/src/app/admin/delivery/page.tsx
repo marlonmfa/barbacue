@@ -10,6 +10,7 @@ type Delivery = {
   deliveryFeeCents: number; deliveryDistanceMeters: number | null; deliveryDurationSeconds: number | null;
   totalCents: number; amountToCollectCents: number; paymentMethod: string | null; paymentStatus: string | null; changeForCents: number | null;
   itemCount: number; notes: string | null; status: string; deliveryStatus: "assigned" | "out_for_delivery" | "delivered";
+  requiresConfirmationCode?: boolean;
   dispatchRouteId?: string | null; dispatchPosition?: number | null;
   navigationLinks: { google: string; apple: string; osm: string | null } | null;
   createdAt: string | null; dispatchedAt: string | null; deliveredAt: string | null;
@@ -19,6 +20,7 @@ const paymentLabels: Record<string, string> = { cash: "Dinheiro", card_on_delive
 
 export default function DeliveryPage() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
+  const [requestedRoute, setRequestedRoute] = useState<string | null>(null);
   const [returning, setReturning] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -27,14 +29,23 @@ export default function DeliveryPage() {
   const [busy, setBusy] = useState<string | null>(null);
   const load = useCallback(async (signal?: AbortSignal) => {
     try {
+      const query = new URLSearchParams(window.location.search);
+      const routeParams = new URLSearchParams();
+      for (const key of ["confirma", "rota"]) {
+        const value = query.get(key);
+        if (value) routeParams.set(key, value);
+      }
       const [response, returnResponse] = await Promise.all([
-        fetch("/api/admin/delivery", { cache: "no-store", signal }),
+        fetch(routeParams.size ? `/api/admin/delivery?${routeParams}` : "/api/admin/delivery", { cache: "no-store", signal }),
         fetch("/api/admin/delivery?view=returning", { cache: "no-store", signal }),
       ]);
       const data = await response.json();
       if (!response.ok) throw new Error(typeof data.error === "string" ? data.error : "Não foi possível atualizar suas entregas.");
+      const route = response.headers.get("X-Dispatch-Route");
+      setRequestedRoute(route);
       setDeliveries(data);
-      setReturning(returnResponse.ok ? (await returnResponse.json()).routeId : null);
+      const returningId = returnResponse.ok ? (await returnResponse.json()).routeId : null;
+      setReturning(!route || returningId === route ? returningId : null);
       setError("");
     } catch (cause) { if (!signal?.aborted) setError(cause instanceof Error ? cause.message : "Confira a conexão e tente novamente."); }
     finally { if (!signal?.aborted) setLoading(false); }
@@ -75,7 +86,8 @@ export default function DeliveryPage() {
   const visible = completed ? done : active;
 
   return <div className={`${styles.page} ${styles.driverPage}`}>
-    <header className={styles.heading}><div><h1>Minhas entregas</h1><p>Confira a retirada, abra a rota e registre a entrega.</p></div><button className={styles.secondary} onClick={() => void load()}><AdminIcon name="clock" /> Atualizar</button></header>
+    <header className={styles.heading}><div><h1>{requestedRoute ? `Rota #${requestedRoute.slice(0, 8).toUpperCase()}` : "Minhas entregas"}</h1><p>Confira a retirada, abra a rota e registre a entrega.</p></div><button className={styles.secondary} onClick={() => void load()}><AdminIcon name="clock" /> Atualizar</button></header>
+    {requestedRoute && <a className={styles.secondary} href="/admin/delivery">Ver minhas entregas</a>}
     <DriverAvailability />
     {returning && <section className={styles.availability} aria-label="Retorno da rota">
       <div><strong>Retornando à loja</strong><p>Confirme quando chegar para ficar disponível para a próxima rota.</p></div>
@@ -91,7 +103,9 @@ export default function DeliveryPage() {
       {delivery.navigationLinks && <nav className={styles.routeLinks} aria-label={`Abrir rota do pedido ${delivery.id.slice(0, 8)}`}><a href={delivery.navigationLinks.google} target="_blank" rel="noopener noreferrer"><AdminIcon name="route" size={18} /> Google Maps</a><a href={delivery.navigationLinks.apple} target="_blank" rel="noopener noreferrer">Apple Maps</a>{delivery.navigationLinks.osm && <a href={delivery.navigationLinks.osm} target="_blank" rel="noopener noreferrer">OpenStreetMap</a>}</nav>}
       {delivery.notes && <p className={styles.notes}><strong>Observação do pedido:</strong> {delivery.notes}</p>}
       <div className={styles.collection}><div><span>{delivery.paymentStatus === "paid" ? "Pagamento recebido" : "Valor a cobrar"}</span><strong>{money(delivery.amountToCollectCents)}</strong></div><p>{paymentLabels[delivery.paymentMethod ?? ""] ?? "Confira com o caixa"}{delivery.paymentStatus === "paid" ? " · Pago" : " · Pagamento pendente"}</p><small>Total {money(delivery.totalCents)}, com frete de {money(delivery.deliveryFeeCents)} incluído.</small>{delivery.paymentMethod === "cash" && !!delivery.changeForCents && delivery.paymentStatus !== "paid" && <p>Troco para {money(delivery.changeForCents)}: <b>{money(Math.max(0, delivery.changeForCents - delivery.totalCents))}</b></p>}</div>
-      {delivery.deliveryStatus !== "delivered" && <><button className={styles.primary} disabled={busy !== null || delivery.status !== "ready"} onClick={() => void advance(delivery)}><AdminIcon name={delivery.deliveryStatus === "assigned" ? "delivery" : "check"} />{busy === delivery.id ? "Registrando…" : delivery.deliveryStatus === "assigned" ? "Iniciar entrega" : "Concluir entrega"}</button><p className={styles.actionHint}>{delivery.status !== "ready" ? "A saída fica disponível quando a cozinha marcar o pedido como pronto." : delivery.deliveryStatus === "assigned" ? "Registre a saída após retirar o pedido com a equipe." : "Conclua após entregar ao cliente. O caixa confirma o pagamento."}</p></>}
+      {delivery.deliveryStatus === "out_for_delivery" && delivery.requiresConfirmationCode
+        ? <p className={styles.actionHint}>Peça o código no destino e responda no WhatsApp com <strong>ENTREGUE #{delivery.id.slice(0, 8).toUpperCase()}</strong> seguido do código.</p>
+        : delivery.deliveryStatus !== "delivered" && <><button className={styles.primary} disabled={busy !== null || delivery.status !== "ready"} onClick={() => void advance(delivery)}><AdminIcon name={delivery.deliveryStatus === "assigned" ? "delivery" : "check"} />{busy === delivery.id ? "Registrando…" : delivery.deliveryStatus === "assigned" ? "Iniciar entrega" : "Concluir entrega"}</button><p className={styles.actionHint}>{delivery.status !== "ready" ? "A saída fica disponível quando a cozinha marcar o pedido como pronto." : delivery.deliveryStatus === "assigned" ? "Registre a saída após retirar o pedido com a equipe." : "Conclua após entregar ao cliente. O caixa confirma o pagamento."}</p></>}
     </article>)}</div>}
   </div>;
 }

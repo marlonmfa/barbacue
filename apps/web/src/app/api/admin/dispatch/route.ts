@@ -1,14 +1,17 @@
 import { z } from "zod";
 import { withStaff } from "@/lib/admin-auth";
 import { dispatchConfigSchema } from "@/lib/dispatch-planner";
-import { changeDispatchRoute, dispatchFailure, dispatchOverview, generateDispatch, removeDispatchStop, saveDispatchConfig } from "@/lib/dispatch-service";
+import { changeDispatchRoute, dispatchFailure, dispatchOverview, generateDispatch, removeDispatchStop, saveDispatchConfig, setDispatchConfirmationCode } from "@/lib/dispatch-service";
 import { canSetCourierAvailability } from "@/lib/courier-availability";
 import { canReviewCourierPay } from "@/lib/courier-pay-report";
+import { sendDispatchWhatsapp } from "@/lib/dispatch-whatsapp";
 import { can } from "@/lib/permissions";
 
 export const runtime = "nodejs";
 const configInput = z.object({ config: dispatchConfigSchema, revision: z.number().int().nonnegative() }).strict();
 const routeAction = z.union([
+  z.object({ id: z.string().uuid(), codeOrderId: z.string().uuid(), confirmationCode: z.string().regex(/^\d{4,8}$/).nullable() }).strict(),
+  z.object({ id: z.string().uuid(), retryWhatsapp: z.literal(true) }).strict(),
   z.object({ id: z.string().uuid(), driverId: z.number().int().positive().nullable() }).strict(),
   z.object({ id: z.string().uuid(), removeStopId: z.string().uuid() }).strict(),
 ]);
@@ -40,8 +43,18 @@ export const PATCH = withStaff(async request => {
   const parsed = routeAction.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return Response.json({ error: "Informe uma rota e um entregador ou parada válidos." }, { status: 422 });
   try {
-    if ("removeStopId" in parsed.data) await removeDispatchStop(parsed.data.id, parsed.data.removeStopId);
-    else await changeDispatchRoute(parsed.data.id, parsed.data.driverId);
-    return Response.json({ ok: true }, { headers });
+    const action = parsed.data;
+    if ("retryWhatsapp" in action) {
+      const whatsappStatus = await sendDispatchWhatsapp(action.id);
+      return Response.json({ ok: true, whatsappStatus }, { headers });
+    }
+    if ("codeOrderId" in action) {
+      await setDispatchConfirmationCode(action.id, action.codeOrderId, action.confirmationCode);
+      return Response.json({ ok: true }, { headers });
+    }
+    if ("removeStopId" in action) await removeDispatchStop(action.id, action.removeStopId);
+    else await changeDispatchRoute(action.id, action.driverId);
+    const whatsappStatus = "driverId" in action && action.driverId !== null ? await sendDispatchWhatsapp(action.id, action.id) : null;
+    return Response.json({ ok: true, whatsappStatus }, { headers });
   } catch (error) { return dispatchFailure(error); }
 });
