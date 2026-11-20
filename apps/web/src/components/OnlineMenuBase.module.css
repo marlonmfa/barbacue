@@ -25,6 +25,11 @@
   --ss-control-border: #625854;
   --ss-selected: #412125;
   --ss-highlight: #ffb4ad;
+  --success: #a7d6b1;
+  --success-soft: #1b3929;
+  --warning: #edcc91;
+  --warning-soft: #302617;
+  --focus: #a9d0ff;
 }
 
 :global(body):has(.shell[data-brand="chelas"]),
@@ -39,6 +44,11 @@
   --ss-control-border: #9a867f;
   --ss-selected: #fae8e7;
   --ss-highlight: #922427;
+  --success: #236340;
+  --success-soft: #e8f4ec;
+  --warning: #774b13;
+  --warning-soft: #fff0d4;
+  --focus: #1756a8;
 }
 
 :global(body):has(.shell[data-brand="barbadog"]),
@@ -53,6 +63,11 @@
   --ss-control-border: #6d87a9;
   --ss-selected: #344b75;
   --ss-highlight: #ffdb69;
+  --success: #a9ecc5;
+  --success-soft: #20453e;
+  --warning: #ffe39d;
+  --warning-soft: #45392a;
+  --focus: #a9d0ff;
 }
 
 .shell {
