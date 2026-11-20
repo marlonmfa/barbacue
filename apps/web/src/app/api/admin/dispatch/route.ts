@@ -2,6 +2,7 @@ import { z } from "zod";
 import { withStaff } from "@/lib/admin-auth";
 import { dispatchConfigSchema } from "@/lib/dispatch-planner";
 import { changeDispatchRoute, dispatchFailure, dispatchOverview, generateDispatch, saveDispatchConfig } from "@/lib/dispatch-service";
+import { canSetCourierAvailability } from "@/lib/courier-availability";
 import { canReviewCourierPay } from "@/lib/courier-pay-report";
 import { can } from "@/lib/permissions";
 
@@ -11,7 +12,7 @@ const routeAction = z.object({ id: z.string().uuid(), driverId: z.number().int()
 const headers = { "Cache-Control": "private, no-store" };
 
 export const GET = withStaff(async (_request, _context, session) => {
-  try { return Response.json({ ...await dispatchOverview(), canConfigure: can(session, "settings"), canReviewCourierPay: canReviewCourierPay(session.role) }, { headers }); }
+  try { return Response.json({ ...await dispatchOverview(), canConfigure: can(session, "settings"), canSetCourierAvailability: canSetCourierAvailability(session.role), canReviewCourierPay: canReviewCourierPay(session.role) }, { headers }); }
   catch (error) { return dispatchFailure(error); }
 });
 

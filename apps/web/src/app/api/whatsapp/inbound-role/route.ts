@@ -6,6 +6,8 @@ import { db } from "@/db";
 import { orders } from "@/db/schema";
 import { resolveAI } from "@/lib/ai-settings";
 import { barbaContactPhone } from "@/lib/barba-contact";
+import { declareCourierAvailable } from "@/lib/courier-availability";
+import { declaresCourierAvailability } from "@/lib/courier-availability-message";
 import { findBarbaContactRole } from "@/lib/barba-contact-role";
 
 const inputSchema = z.object({
@@ -90,7 +92,15 @@ export async function POST(request: Request) {
   const role = manualRole ?? staffRole ?? "customer";
   const headers = { "Cache-Control": "no-store" };
   if (role === "driver") {
-    return Response.json({ role, reply: await driverReply(staffRole === "driver" ? staff?.id ?? null : null) }, { headers });
+    const driverId = staffRole === "driver" ? staff?.id ?? null : null;
+    if (declaresCourierAvailability(input.data.text)) {
+      const until = driverId === null ? null : await declareCourierAvailable(driverId);
+      const reply = until
+        ? "Sua disponibilidade foi registrada no despacho até as 6h. Se precisar sair antes, avise a equipe ou fique offline em Minhas entregas."
+        : "Para marcar disponibilidade, vincule este WhatsApp ao seu cadastro ativo de entregador com acesso a Minhas entregas.";
+      return Response.json({ role, reply }, { headers });
+    }
+    return Response.json({ role, reply: await driverReply(driverId) }, { headers });
   }
   if (role === "admin" || role === "manager") {
     return Response.json({ role, reply: await managementReply(role, input.data.text) }, { headers });

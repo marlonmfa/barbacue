@@ -39,7 +39,7 @@ export function DriverAvailability() {
     return () => { mounted = false; controller.abort(); window.clearInterval(timer); document.removeEventListener("visibilitychange", heartbeat); window.removeEventListener("online", heartbeat); };
   }, []);
   return <section className={styles.availability} aria-label="Disponibilidade para entregas">
-    <div><strong>{online ? "Você está online para novas entregas" : "Você está offline para novas entregas"}</strong><p>Mantenha esta tela aberta durante o turno. Sem conexão ou atividade por 90 segundos, você deixa de aparecer online. Suas entregas atribuídas continuam disponíveis.</p>{error && <p role="alert">{error}</p>}</div>
+    <div><strong>{online ? "Você está online para novas entregas" : "Você está offline para novas entregas"}</strong><p>A disponibilidade confirmada pelo despacho ou pelo Barba Bot vale até as 6h. Se ativar por esta tela, mantenha-a aberta. Suas entregas atribuídas continuam disponíveis.</p>{error && <p role="alert">{error}</p>}</div>
     <button className={styles.secondary} disabled={loading || busy} aria-pressed={online} onClick={() => { const next = !online; desired.current = next; void action.current(next); }}>{loading ? "Consultando…" : busy ? "Confirmando…" : online ? "Ficar offline" : "Ficar online"}</button>
   </section>;
 }

@@ -157,6 +157,7 @@ export const courierPayShifts = pgTable("courier_pay_shifts", {
 export const staffPresence = pgTable("staff_presence", {
   userId: integer("user_id").primaryKey().references(() => staffUsers.id, { onDelete: "cascade" }),
   available: boolean("available").notNull().default(false),
+  declaredAvailableUntil: timestamp("declared_available_until", { withTimezone: true }),
   lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
 });
 

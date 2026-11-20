@@ -6,7 +6,7 @@ import { deliveryProviderConfigured, getDeliveryProvider } from "@/lib/delivery-
 import { defaultDispatchConfig, evaluateDispatch, planDispatch, waitLimitMs, type DispatchConfig, type DispatchIssue, type DispatchOrder, type DispatchPlan, type DispatchReport } from "@/lib/dispatch-planner";
 import { dispatchProgress } from "@/lib/dispatch-progress";
 import { can } from "@/lib/permissions";
-import { PRESENCE_TTL_MS } from "@/lib/staff-presence";
+import { dispatchAvailablePresence } from "@/lib/courier-availability";
 
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 type Route = typeof dispatchRoutes.$inferSelect;
@@ -25,7 +25,6 @@ const ownDelivery = and(
 const orderFields = { id: orders.id, brand: orders.brand, address: orders.deliveryAddress, placedAt, scheduledAt };
 const driverFields = { id: staffUsers.id, name: staffUsers.name, role: staffUsers.role, permissions: staffUsers.permissions, vehicleModel: staffUsers.vehicleModel, vehicleColor: staffUsers.vehicleColor };
 const activeDriver = and(eq(staffUsers.role, "driver"), eq(staffUsers.active, true));
-const freshPresence = and(eq(staffPresence.available, true), sql`${staffPresence.lastSeenAt} > clock_timestamp() - ${PRESENCE_TTL_MS} * interval '1 millisecond'`);
 const openRoute = and(sql`${dispatchRoutes.startedAt} is not null`, isNull(dispatchRoutes.returnedAt));
 const hasUnfinishedStops = sql`exists (select 1 from ${orders} where ${orders.dispatchRouteId} = ${dispatchRoutes.id}
   and ${orders.status} is distinct from 'cancelled' and ${orders.status} is distinct from 'delivered'
@@ -218,7 +217,7 @@ export async function changeDispatchRoute(id: string, driverId: number | null) {
     const [driver] = await tx.select(driverFields).from(staffUsers)
       .where(and(eq(staffUsers.id, driverId), activeDriver)).for("update");
     const [presence] = await tx.select({ id: staffPresence.userId }).from(staffPresence)
-      .where(and(eq(staffPresence.userId, driverId), freshPresence)).for("share");
+      .where(and(eq(staffPresence.userId, driverId), dispatchAvailablePresence)).for("share");
     const [busy] = await tx.select({ id: staffUsers.id }).from(staffUsers)
       .where(and(eq(staffUsers.id, driverId), busyDriver));
     if (!driver || !can(driver, "deliveries") || !presence || busy) throw new DispatchError("Escolha um entregador online com acesso e sem entregas em andamento.");
@@ -251,7 +250,7 @@ export async function confirmDispatchReturn(id: string, driverId: number) {
 
 export async function dispatchOverview() {
   const recent = new Date(Date.now() - 24 * 60 * 60_000);
-  const [[state], origin, routes, candidates, roster] = await Promise.all([
+  const [[state], origin, routes, candidates, roster, [ifood]] = await Promise.all([
     db.select().from(dispatchSettings).where(settingsFilter),
     readOrigin(),
     db.select({ route: dispatchRoutes, driverName: staffUsers.name, vehicleModel: staffUsers.vehicleModel, vehicleColor: staffUsers.vehicleColor }).from(dispatchRoutes)
@@ -261,25 +260,31 @@ export async function dispatchOverview() {
     db.select(orderFields).from(orders).where(and(ownDelivery, isNull(orders.dispatchRouteId)))
       .orderBy(desc(placedAt), asc(orders.id)).limit(50),
     db.select({
-      ...driverFields, active: staffUsers.active,
-      online: sql<boolean>`(${freshPresence}) is true`,
+      ...driverFields, active: staffUsers.active, declaredAvailableUntil: staffPresence.declaredAvailableUntil,
+      online: sql<boolean>`(${dispatchAvailablePresence}) is true`,
       busy: sql<boolean>`${busyDriver}`,
     }).from(staffUsers)
       .leftJoin(staffPresence, eq(staffUsers.id, staffPresence.userId))
       .where(eq(staffUsers.role, "driver")).orderBy(asc(staffUsers.name), asc(staffUsers.id)),
+    // O monitor iFood registra DSP em delivery_status e CON/CAN em status.
+    db.select({
+      awaitingDispatch: sql<number>`count(*) filter (where ${orders.deliveryStatus} is distinct from 'out_for_delivery')`.mapWith(Number),
+      dispatched: sql<number>`count(*) filter (where ${orders.deliveryStatus} = 'out_for_delivery')`.mapWith(Number),
+    }).from(orders).where(and(eq(orders.channel, "ifood"), eq(orders.orderType, "delivery"),
+      inArray(orders.status, ["confirmed", "preparing", "ready"]), isNull(orders.archivedAt), gt(placedAt, recent))),
   ]);
   const config = state?.config ?? defaultDispatchConfig;
   const now = Date.now();
   const linked = routes.length ? await db.select({ ...orderFields, routeId: orders.dispatchRouteId, status: orders.status, deliveryStatus: orders.deliveryStatus, deliveredAt: orders.deliveredAt, totalCents: orders.totalCents, paymentStatus: orders.paymentStatus, eligible: sql<boolean>`(${ownDelivery}) is true` })
     .from(orders).where(inArray(orders.dispatchRouteId, routes.map(({ route }) => route.id))) : [];
-  const couriers = roster.map(({ id, name, vehicleModel, vehicleColor, active, online, busy, ...permissions }) => ({
-    id, name, vehicle: { model: vehicleModel, color: vehicleColor }, active, online, busy,
+  const couriers = roster.map(({ id, name, vehicleModel, vehicleColor, active, online, busy, declaredAvailableUntil, ...permissions }) => ({
+    id, name, vehicle: { model: vehicleModel, color: vehicleColor }, active, online, busy, declaredAvailableUntil,
     available: active && online && !busy && can(permissions, "deliveries"),
   }));
   return {
     config, revision: state?.revision ?? 0, report: state?.report ?? null,
     mapsReady: !!origin && deliveryProviderConfigured(origin.provider),
-    couriers,
+    couriers, ifood,
     drivers: couriers.filter(courier => courier.available).map(({ id, name, vehicle }) => ({ id, name, vehicle })),
     routes: routes.map(({ route, driverName, vehicleModel, vehicleColor }) => {
       const stats = evaluateDispatch(route.plan, route.departureConfig ?? config, route.startedAt?.getTime() ?? now);

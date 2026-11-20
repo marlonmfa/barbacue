@@ -197,6 +197,13 @@
       "when": 1795046400009,
       "tag": "0041_courier_pay_shifts",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1795046400010,
+      "tag": "0042_courier_availability",
+      "breakpoints": true
     }
   ]
 }

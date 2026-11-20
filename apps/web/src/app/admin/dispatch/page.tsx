@@ -21,9 +21,10 @@ type Route = {
     state: "pending" | "delivered" | "cancelled"; amountToCollectCents: number }[];
 };
 type Data = {
-  config: DispatchConfig; revision: number; canConfigure: boolean; canReviewCourierPay: boolean; mapsReady: boolean; report: DispatchReport | null;
+  config: DispatchConfig; revision: number; canConfigure: boolean; canReviewCourierPay: boolean; canSetCourierAvailability: boolean; mapsReady: boolean; report: DispatchReport | null;
+  ifood: { awaitingDispatch: number; dispatched: number };
   routes: Route[]; drivers: { id: number; name: string; vehicle: DispatchVehicle }[];
-  couriers: { id: number; name: string; vehicle: DispatchVehicle; active: boolean; online: boolean; busy: boolean; available: boolean }[];
+  couriers: { id: number; name: string; vehicle: DispatchVehicle; active: boolean; online: boolean; busy: boolean; available: boolean; declaredAvailableUntil?: string | null }[];
   pending: { id: string; brand: string; address: string | null; reason: string }[];
 };
 type Draft = { config: DispatchConfig; revision: number };
@@ -47,6 +48,7 @@ export default function DispatchPage() {
   const [data, setData] = useState<Data | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [busy, setBusy] = useState(false);
+  const [availabilityBusy, setAvailabilityBusy] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [refreshError, setRefreshError] = useState("");
   const [notice, setNotice] = useState("");
@@ -102,6 +104,21 @@ export default function DispatchPage() {
       await load();
       setBusy(false);
     }
+  }
+
+  async function markAvailable(driverId: number) {
+    if (availabilityBusy !== null) return;
+    setAvailabilityBusy(driverId); setError(""); setNotice("");
+    try {
+      const response = await fetch(`${endpoint}/disponibilidade`, { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ driverId }) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Não foi possível marcar a disponibilidade.");
+      await load();
+      setNotice("Disponibilidade registrada até as 6h.");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Não foi possível marcar a disponibilidade.");
+    } finally { setAvailabilityBusy(null); }
   }
 
   function edit(config: DispatchConfig) {
@@ -194,6 +211,7 @@ export default function DispatchPage() {
         </form>
       </details>
       <CourierRoster couriers={couriers} activeRoutes={activeRoutes} selectedId={courierId} now={now}
+        markAvailable={data.canSetCourierAvailability ? markAvailable : undefined} availabilityBusy={availabilityBusy}
         onSelect={id => courierId === id ? selectDispatchTab("all") : setCourierId(id)} />
       <nav className={queue.filters} aria-label="Filtrar despacho">
         <button aria-pressed={!courier && tab === "all"} onClick={() => selectDispatchTab("all")}>Todos</button>
@@ -201,6 +219,10 @@ export default function DispatchPage() {
         <button aria-pressed={!courier && tab === "pending"} onClick={() => selectDispatchTab("pending")}>Pedidos sem rota <span>{data.pending.length}{data.pending.length === 50 && "+"}</span></button>
         <button aria-pressed={!courier && tab === "started"} onClick={() => selectDispatchTab("started")}>Rotas e retornos <span>{started.length}</span></button>
       </nav>
+      {!courier && tab === "all" && <p className={styles.ifoodSummary}>
+        <strong>Entregas iFood</strong>
+        <span>{data.ifood.awaitingDispatch} aguardando saída · {data.ifood.dispatched} em entrega</span>
+      </p>}
       {courier ? renderCourierRoute(courier, true) : <>
         {tab === "pending" ? (
           data.pending.length ? <ul className={styles.pending}>{data.pending.map(order => <li key={order.id}>
@@ -225,9 +247,10 @@ export default function DispatchPage() {
   </div>;
 }
 
-function CourierRoster({ couriers, activeRoutes, selectedId, now, onSelect }: {
+function CourierRoster({ couriers, activeRoutes, selectedId, now, onSelect, markAvailable, availabilityBusy }: {
   couriers: Data["couriers"]; activeRoutes: Map<number | null, Route>;
   selectedId: number | null; now: number; onSelect: (id: number) => void;
+  markAvailable?: (id: number) => Promise<void>; availabilityBusy: number | null;
 }) {
   return <section className={styles.roster} aria-labelledby="dispatch-couriers">
     <h2 id="dispatch-couriers">Entregadores <span>{couriers.length}</span></h2>
@@ -237,10 +260,11 @@ function CourierRoster({ couriers, activeRoutes, selectedId, now, onSelect }: {
         const selected = selectedId === courier.id;
         const status = route?.phase === "returning" ? "Retornando à loja"
           : route?.phase === "delivering" ? `Entrega ${route.currentPosition} de ${route.totalStops}`
-          : "Aguardando rota";
+          : courier.available ? "Disponível · Aguardando rota" : "Aguardando rota";
         const availability = route || courier.available ? null
           : !courier.active ? "Cadastro inativo" : courier.busy ? "Em entrega avulsa"
           : courier.online ? "Indisponível" : "Fora de serviço";
+        const declared = courier.declaredAvailableUntil && new Date(courier.declaredAvailableUntil).getTime() > now;
         const position = route ? (estimatedRoutePosition(route, now)?.step ?? 0) / (route.stops.length + 1) : 0;
         const trackStyle = { "--bike-left": `${position * 100}%` } as CSSProperties;
         return <li key={courier.id}>
@@ -259,6 +283,12 @@ function CourierRoster({ couriers, activeRoutes, selectedId, now, onSelect }: {
               <DispatchMotorcycle vehicle={courier.vehicle} />
             </span>
           </button>
+          {markAvailable && courier.active && <button type="button" className={styles.courierAvailabilityAction}
+            disabled={availabilityBusy !== null || Boolean(declared)}
+            aria-label={declared ? `${courier.name} disponível até as 6h` : `Marcar ${courier.name} como disponível`}
+            onClick={() => void markAvailable(courier.id)}>
+            {availabilityBusy === courier.id ? "Registrando…" : declared ? "Disponível até as 6h" : "Marcar disponível"}
+          </button>}
         </li>;
       })}
     </ul> : <p>Nenhum entregador cadastrado.</p>}
