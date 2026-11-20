@@ -50,6 +50,12 @@ export default function DispatchPage() {
   const [refreshError, setRefreshError] = useState("");
   const [notice, setNotice] = useState("");
   const [tab, setTab] = useState<"all" | "queued" | "pending" | "started">("all");
+  const [courierId, setCourierId] = useState<number | null>(null);
+  const courierHeading = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (courierId !== null) courierHeading.current?.focus();
+  }, [courierId]);
 
   const load = useCallback(async (signal?: AbortSignal) => {
     try {
@@ -82,6 +88,7 @@ export default function DispatchPage() {
       if (!response.ok) throw new Error(payload.error || "Não foi possível atualizar o despacho.");
       if (method === "PUT") setDraft(null);
       if (method === "POST") {
+        setCourierId(null);
         setTab(payload.created ? "queued" : "pending");
         setNotice(payload.created ? `${payload.created} ${payload.created === 1 ? "rota entrou" : "rotas entraram"} na fila.` : "Nenhuma nova rota atende às regras neste momento.");
       } else if (success) {
@@ -110,7 +117,17 @@ export default function DispatchPage() {
   const waiting = data?.routes.filter(route => !route.startedAt) ?? [];
   const started = data?.routes.filter(route => route.startedAt) ?? [];
   const visibleRoutes = tab === "queued" ? waiting : tab === "started" ? started : [...started, ...waiting];
+  const activeRoutes = new Map(started.filter(route => !route.returnedAt).map(route => [route.driverId, route]));
+  const courier = data?.couriers.find(person => person.id === courierId);
+  const courierRoute = courier ? activeRoutes.get(courier.id) : undefined;
   const config = draft?.config ?? data?.config;
+
+  function renderRoute(route: Route) {
+    return <RouteCard key={route.id} route={route} drivers={data?.drivers ?? []} busy={busy} now={now}
+      start={driverId => void mutate("PATCH", { id: route.id, driverId }, "Saída registrada. As paradas estão em Minhas entregas.")}
+      release={() => void mutate("PATCH", { id: route.id, driverId: null }, "Pedidos devolvidos para planejamento.")} />;
+  }
+
   return <div className={queue.page}>
     <header className={queue.heading}>
       <div><h1>Despacho de entregas</h1><p>Organize pedidos prontos em rotas e registre a saída com o entregador.</p></div>
@@ -156,47 +173,65 @@ export default function DispatchPage() {
           </div>}
         </form>
       </details>
-      <CourierRoster couriers={data.couriers} routes={started} />
-      <nav className={queue.filters} aria-label="Filtrar despacho">
-        <button aria-pressed={tab === "all"} onClick={() => setTab("all")}>Todas as rotas <span>{data.routes.length}</span></button>
-        <button aria-pressed={tab === "queued"} onClick={() => setTab("queued")}>Rotas na fila <span>{waiting.length}</span></button>
-        <button aria-pressed={tab === "pending"} onClick={() => setTab("pending")}>Pedidos sem rota <span>{data.pending.length}{data.pending.length === 50 && "+"}</span></button>
-        <button aria-pressed={tab === "started"} onClick={() => setTab("started")}>Rotas e retornos <span>{started.length}</span></button>
-      </nav>
-      {tab === "pending" ? (
-        data.pending.length ? <ul className={styles.pending}>{data.pending.map(order => <li key={order.id}>
-          <div><strong>Pedido #{shortId(order.id)}</strong><span>{order.brand} · {order.address || "Sem endereço"}</span></div>
-          <span>{order.reason}</span>
-        </li>)}</ul> : <p className={queue.empty}>Nenhum pedido pronto aguardando rota.</p>
-      ) : (
-        visibleRoutes.length ? <div className={`${queue.deliveries} ${styles.routeList}`}>
-          {visibleRoutes.map(route => <RouteCard key={route.id} route={route} drivers={data.drivers} busy={busy} now={now}
-            start={driverId => void mutate("PATCH", { id: route.id, driverId }, "Saída registrada. As paradas estão em Minhas entregas.")}
-            release={() => void mutate("PATCH", { id: route.id, driverId: null }, "Pedidos devolvidos para planejamento.")} />)}
-        </div> : <EmptyTimeline hasRoutes={data.routes.length > 0} />
-      )}
-      {!!data.routes.length && <p className={styles.attribution}>Dados de mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a></p>}
+      <CourierRoster couriers={data.couriers} activeRoutes={activeRoutes} selectedId={courierId}
+        onSelect={id => setCourierId(current => current === id ? null : id)} />
+      {courier ? <section id="dispatch-courier-route" aria-labelledby="dispatch-courier-route-title">
+        <div className={styles.courierRouteHeading}>
+          <h2 id="dispatch-courier-route-title" ref={courierHeading} tabIndex={-1}>Rota de {courier.name}</h2>
+          <button className={queue.secondary} onClick={() => {
+            setCourierId(null);
+            document.getElementById(`dispatch-courier-${courier.id}`)?.focus();
+          }}>Voltar às rotas</button>
+        </div>
+        {courierRoute ? renderRoute(courierRoute) : <p className={queue.empty}>Sem rota ativa para este entregador.</p>}
+      </section> : <>
+        <nav className={queue.filters} aria-label="Filtrar despacho">
+          <button aria-pressed={tab === "all"} onClick={() => setTab("all")}>Todas as rotas <span>{data.routes.length}</span></button>
+          <button aria-pressed={tab === "queued"} onClick={() => setTab("queued")}>Rotas na fila <span>{waiting.length}</span></button>
+          <button aria-pressed={tab === "pending"} onClick={() => setTab("pending")}>Pedidos sem rota <span>{data.pending.length}{data.pending.length === 50 && "+"}</span></button>
+          <button aria-pressed={tab === "started"} onClick={() => setTab("started")}>Rotas e retornos <span>{started.length}</span></button>
+        </nav>
+        {tab === "pending" ? (
+          data.pending.length ? <ul className={styles.pending}>{data.pending.map(order => <li key={order.id}>
+            <div><strong>Pedido #{shortId(order.id)}</strong><span>{order.brand} · {order.address || "Sem endereço"}</span></div>
+            <span>{order.reason}</span>
+          </li>)}</ul> : <p className={queue.empty}>Nenhum pedido pronto aguardando rota.</p>
+        ) : (
+          visibleRoutes.length ? <div className={`${queue.deliveries} ${styles.routeList}`}>
+            {visibleRoutes.map(renderRoute)}
+          </div> : <EmptyTimeline hasRoutes={data.routes.length > 0} />
+        )}
+      </>}
+      {(courier ? courierRoute : tab !== "pending" && visibleRoutes.length > 0) && <p className={styles.attribution}>Dados de mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a></p>}
     </>}
   </div>;
 }
 
-function CourierRoster({ couriers, routes }: { couriers: Data["couriers"]; routes: Route[] }) {
-  const enRoute = new Map(routes.filter(route => !route.returnedAt).map(route => [route.driverId, route]));
+function CourierRoster({ couriers, activeRoutes, selectedId, onSelect }: {
+  couriers: Data["couriers"]; activeRoutes: Map<number | null, Route>;
+  selectedId: number | null; onSelect: (id: number) => void;
+}) {
   return <section className={styles.roster} aria-labelledby="dispatch-couriers">
     <h2 id="dispatch-couriers">Entregadores <span>{couriers.length}</span></h2>
     {couriers.length ? <ul aria-label="Entregadores cadastrados">
       {couriers.map(courier => {
-        const route = enRoute.get(courier.id);
+        const route = activeRoutes.get(courier.id);
+        const selected = selectedId === courier.id;
         const status = route?.phase === "returning" ? "Retornando à loja"
           : route?.phase === "delivering" ? `Entrega ${route.currentPosition} de ${route.totalStops}`
           : !courier.active ? "Cadastro inativo" : courier.busy ? "Em entrega avulsa"
           : courier.available ? "Aguardando rota" : courier.online ? "Indisponível" : "Fora de serviço";
         return <li key={courier.id}>
-          <span className={styles.rosterBike}><DispatchMotorcycle vehicle={courier.vehicle} /></span>
-          <div><strong>{courier.name}</strong>
-            <p>{status}</p>
-            {route && <p>A receber {money(route.amountToCollectCents)}</p>}
-          </div>
+          <button type="button" id={`dispatch-courier-${courier.id}`} className={styles.courierButton}
+            aria-label={`Ver rota de ${courier.name}`} aria-pressed={selected}
+            aria-describedby={`dispatch-courier-status-${courier.id}`}
+            aria-controls={selected ? "dispatch-courier-route" : undefined} onClick={() => onSelect(courier.id)}>
+            <span className={styles.rosterBike}><DispatchMotorcycle vehicle={courier.vehicle} /></span>
+            <span className={styles.courierDetails}><strong>{courier.name}</strong>
+              <span id={`dispatch-courier-status-${courier.id}`}>{status}</span>
+              {route && <span>A receber {money(route.amountToCollectCents)}</span>}
+            </span>
+          </button>
         </li>;
       })}
     </ul> : <p>Nenhum entregador cadastrado.</p>}

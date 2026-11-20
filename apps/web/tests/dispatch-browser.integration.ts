@@ -55,6 +55,17 @@ async function main() {
     const idleRoster = empty.getByRole("list", { name: "Entregadores cadastrados" });
     assert.equal(await idleRoster.getByRole("listitem").count(), 5);
     assert.equal(await idleRoster.getByText("Fora de serviço", { exact: true }).count(), 5);
+    for (let index = 1; index <= 5; index++) {
+      const name = `Entregador de homologação ${index}`;
+      const button = idleRoster.getByRole("button", { name: `Ver rota de ${name}` });
+      await button.click();
+      const panel = empty.getByRole("region", { name: `Rota de ${name}` });
+      await panel.getByText("Sem rota ativa para este entregador.").waitFor();
+      assert.equal(await button.getAttribute("aria-pressed"), "true");
+      assert.equal(await panel.getByRole("list", { name: "Sequência de paradas da rota" }).count(), 0);
+    }
+    await empty.getByRole("button", { name: "Voltar às rotas" }).click();
+    await empty.getByRole("list", { name: "Exemplo da linha de entregas" }).waitFor();
     if (process.env.DISPATCH_TEST_EMPTY_SCREENSHOT) {
       await empty.screenshot({ path: process.env.DISPATCH_TEST_EMPTY_SCREENSHOT, fullPage: true });
     }
@@ -132,7 +143,19 @@ async function main() {
     const roster = page.getByRole("list", { name: "Entregadores cadastrados" });
     await roster.getByText(`Entrega 1 de ${stops.length}`, { exact: true }).waitFor();
     assert.equal(await roster.getByText("Fora de serviço", { exact: true }).count(), 4);
-    await page.getByText("Posição estimada pelo tempo da etapa").waitFor();
+    const activeCourier = roster.getByRole("button", { name: "Ver rota de Entregador de homologação 1" });
+    await activeCourier.click();
+    const detail = page.getByRole("region", { name: "Rota de Entregador de homologação 1" });
+    await detail.getByText("Posição estimada pelo tempo da etapa").waitFor();
+    const amount = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(started.amountToCollectCents / 100);
+    assert((await detail.locator("article header").innerText()).includes(amount));
+    await detail.getByText(/Chegada estimada · falt/).first().waitFor();
+    await roster.getByRole("button", { name: "Ver rota de Entregador de homologação 2" }).click();
+    await page.getByRole("region", { name: "Rota de Entregador de homologação 2" }).getByText("Sem rota ativa para este entregador.").waitFor();
+    assert.equal(await timeline.count(), 0);
+    await activeCourier.click();
+    await detail.getByRole("list", { name: "Sequência de paradas da rota" }).waitFor();
+    assert.equal(await activeCourier.getAttribute("aria-pressed"), "true");
     const marker = timeline.locator('[aria-current="step"]');
     await marker.getByText("Parada 1", { exact: true }).waitFor();
     const motorcycle = marker.getByRole("img", { name: "Moto CG Fan 160, Prata" });
@@ -208,6 +231,10 @@ async function main() {
     assert.equal(returned.phase, "returned");
     assert(returned.returnedAt);
     assert.equal(returned.segment, null);
+    await detail.getByText("Sem rota ativa para este entregador.").waitFor();
+    await detail.getByRole("button", { name: "Voltar às rotas" }).click();
+    assert.equal(await activeCourier.getAttribute("aria-pressed"), "false");
+    assert(await activeCourier.evaluate(el => document.activeElement === el));
     for (const [model, color, silhouette, paint] of [
       ["Twister", "Cinza", "twister", "#68778f"],
       ["Fan", "Vermelha", "fan", "#df3e47"],
@@ -220,7 +247,7 @@ async function main() {
       assert.equal(await bike.getAttribute("data-silhouette"), silhouette);
       assert.equal(await bike.evaluate(el => getComputedStyle(el).getPropertyValue("--bike-paint").trim()), paint);
     }
-    console.log("Navegador validado: cinco entregadores, seleção por disponibilidade, avanço estimado pelo tempo, paradas e retorno.");
+    console.log("Navegador validado: cinco cartões clicáveis, rota isolada por entregador, valor a receber, avanço estimado, paradas e retorno.");
   } finally {
     await browser.close();
     await pool.end();
