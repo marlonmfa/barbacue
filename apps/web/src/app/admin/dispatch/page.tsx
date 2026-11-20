@@ -52,10 +52,10 @@ export default function DispatchPage() {
   const [notice, setNotice] = useState("");
   const [tab, setTab] = useState<"all" | "queued" | "pending" | "started">("all");
   const [courierId, setCourierId] = useState<number | null>(null);
-  const courierHeading = useRef<HTMLHeadingElement>(null);
+  const courierPanel = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (courierId !== null) courierHeading.current?.focus();
+    if (courierId !== null) courierPanel.current?.focus();
   }, [courierId]);
 
   const load = useCallback(async (signal?: AbortSignal) => {
@@ -127,8 +127,8 @@ export default function DispatchPage() {
     : [...started.filter(route => !route.returnedAt && (route.driverId === null || !courierIds.has(route.driverId))), ...waiting];
   const config = draft?.config ?? data?.config;
 
-  function renderRoute(route: Route) {
-    return <RouteCard key={route.id} route={route} drivers={data?.drivers ?? []} busy={busy} now={now}
+  function renderRoute(route: Route, riderName?: string) {
+    return <RouteCard key={route.id} route={route} riderName={riderName} drivers={data?.drivers ?? []} busy={busy} now={now}
       start={driverId => void mutate("PATCH", { id: route.id, driverId }, "Saída registrada. As paradas estão em Minhas entregas.")}
       release={() => void mutate("PATCH", { id: route.id, driverId: null }, "Pedidos devolvidos para planejamento.")} />;
   }
@@ -140,16 +140,10 @@ export default function DispatchPage() {
 
   function renderCourierRoute(person: Data["couriers"][number], focused = false) {
     const route = activeRoutes.get(person.id);
-    const headingId = `dispatch-courier-route-title-${person.id}`;
-    return <section key={person.id} id={`dispatch-courier-route-${person.id}`} aria-labelledby={headingId}>
-      <div className={styles.courierRouteHeading}>
-        <h2 id={headingId} ref={focused ? courierHeading : undefined} tabIndex={focused ? -1 : undefined}>Rota de {person.name}</h2>
-        {focused && <button className={queue.secondary} onClick={() => {
-          selectDispatchTab("all");
-          document.getElementById(`dispatch-courier-${person.id}`)?.focus();
-        }}>Ver todos os entregadores</button>}
-      </div>
-      {route ? renderRoute(route) : <WaitingTimeline vehicle={person.vehicle} />}
+    const riderName = person.name.trim().split(/\s+/, 1)[0];
+    return <section key={person.id} id={`dispatch-courier-route-${person.id}`} aria-label={`Rota de ${person.name}`}
+      ref={focused ? courierPanel : undefined} tabIndex={focused ? -1 : undefined}>
+      {route ? renderRoute(route, riderName) : <WaitingTimeline vehicle={person.vehicle} riderName={riderName} />}
     </section>;
   }
 
@@ -215,11 +209,11 @@ export default function DispatchPage() {
           </li>)}</ul> : <p className={queue.empty}>Nenhum pedido pronto aguardando rota.</p>
         ) : (
           <>
-            {overview && <div className={`${queue.deliveries} ${styles.routeList}`} role="region" aria-label="Rotas dos entregadores">
+            {overview && <div className={`${queue.deliveries} ${styles.routeList} ${styles.courierRoutes}`} role="region" aria-label="Rotas dos entregadores">
               {couriers.map(person => renderCourierRoute(person))}
             </div>}
             {visibleRoutes.length > 0 ? <div className={`${queue.deliveries} ${styles.routeList} ${overview ? styles.unassignedRoutes : ""}`}>
-              {visibleRoutes.map(renderRoute)}
+              {visibleRoutes.map(route => renderRoute(route))}
             </div> : !overview && (couriers.length ? <p className={queue.empty}>
               {data.routes.length ? "Nenhuma rota nesta aba." : "Nenhuma rota no momento."}
             </p> : <EmptyTimeline hasRoutes={data.routes.length > 0} />)}
@@ -275,8 +269,8 @@ function defaultLimit(metric: Exclude<keyof typeof dispatchMetrics, "waitMinutes
   return { stops: 4, distanceKm: 25, durationMinutes: 45, legMinutes: 20 }[metric];
 }
 
-function RouteCard({ route, drivers, busy, now, start, release }: {
-  route: Route; now: number; drivers: Data["drivers"]; busy: boolean; start: (driverId: number) => void; release: () => void;
+function RouteCard({ route, riderName, drivers, busy, now, start, release }: {
+  route: Route; riderName?: string; now: number; drivers: Data["drivers"]; busy: boolean; start: (driverId: number) => void; release: () => void;
 }) {
   const [driver, setDriver] = useState("");
   const selectedDriver = drivers.find(option => String(option.id) === driver);
@@ -297,14 +291,14 @@ function RouteCard({ route, drivers, busy, now, start, release }: {
       <h2>Rota #{shortId(route.id)}</h2>
       <p>{kilometres.format(route.distanceMeters / 1000)} km · {minutes(route.durationSeconds)} min com retorno</p>
       <p className={styles.progress}>
-        <strong>{phase}</strong>{route.driverName && <> · {route.driverName}</>}
+        <strong>{phase}</strong>{!riderName && route.driverName && <> · {route.driverName}</>}
         {" · "}{remainingLabel}
         {" · "}A receber {money(route.amountToCollectCents)}
       </p>
       {route.segment && <p className={styles.estimateNote}>Posição estimada pelo tempo da etapa</p>}
       {route.returnedAt && <p>Chegou à loja às {time(route.returnedAt)}</p>}
     </div><AdminIcon name="route" size={28} /></header>
-    <RouteTimeline route={route} now={now} vehicle={route.startedAt ? route.vehicle : selectedDriver?.vehicle} />
+    <RouteTimeline route={route} now={now} riderName={riderName} vehicle={route.startedAt ? route.vehicle : selectedDriver?.vehicle} />
     {!!route.violations.length && <p className={queue.error}>Replaneje esta rota. {route.violations.join(" · ")}</p>}
     {!route.startedAt && <form className={styles.dispatchForm} onSubmit={event => { event.preventDefault(); if (activeDriver && !tooEarly) start(Number(driver)); }}>
       <label>Entregador disponível
@@ -329,7 +323,7 @@ function estimatedRoutePosition(route: Route, now: number) {
   return { destination, step: from + elapsed * (destination - from) };
 }
 
-function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; vehicle?: DispatchVehicle }) {
+function RouteTimeline({ route, now, vehicle, riderName }: { route: Route; now: number; vehicle?: DispatchVehicle; riderName?: string }) {
   const scroller = useRef<HTMLOListElement>(null);
   const current = useRef<HTMLLIElement>(null);
   useEffect(() => {
@@ -346,11 +340,11 @@ function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; veh
   const markerStyle = position ? {
     "--bike-left": `${50 - (position.destination - position.step) * 100}%`,
   } as CSSProperties : undefined;
-  return <ol className={styles.timeline} ref={scroller} role="list" aria-label="Sequência de paradas da rota" tabIndex={0}>
+  return <ol className={riderName ? `${styles.timeline} ${styles.namedTimeline}` : styles.timeline} ref={scroller} role="list" aria-label="Sequência de paradas da rota" tabIndex={0}>
     <li className={styles.timelineStep} data-state={waiting ? "current" : "done"}
       aria-current={waiting ? "step" : undefined} ref={waiting ? current : undefined}>
       <div className={styles.trackPoint}>
-        {waiting && <DispatchMotorcycle vehicle={vehicle} />}
+        {waiting && <DispatchMotorcycle vehicle={vehicle} riderName={riderName} />}
         <span className={styles.point}><AdminIcon name="home" size={17} /></span>
       </div>
       <strong>Saída da loja</strong>
@@ -366,7 +360,7 @@ function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; veh
         data-state={isCurrent ? "current" : stop.state === "delivered" ? "done" : stop.state}
         ref={isCurrent ? current : undefined} aria-current={isCurrent ? "step" : undefined}>
         <div className={styles.trackPoint} style={isCurrent ? markerStyle : undefined}>
-          {isCurrent && <DispatchMotorcycle vehicle={vehicle} />}
+          {isCurrent && <DispatchMotorcycle vehicle={vehicle} riderName={riderName} />}
           <span className={styles.point}>{stop.state === "delivered" ? <AdminIcon name="check" size={16} /> : index + 1}</span>
         </div>
         <strong>Parada {index + 1}</strong>
@@ -381,7 +375,7 @@ function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; veh
     <li className={styles.timelineStep} data-state={returned ? "done" : returning ? "returning" : "pending"}
       aria-current={returning || returned ? "step" : undefined} ref={returning || returned ? current : undefined}>
       <div className={styles.trackPoint} style={returning ? markerStyle : undefined}>
-        {(returning || returned) && <DispatchMotorcycle vehicle={vehicle} />}
+        {(returning || returned) && <DispatchMotorcycle vehicle={vehicle} riderName={riderName} />}
         <span className={styles.point}><AdminIcon name={returned ? "check" : "home"} size={17} /></span>
       </div>
       <strong>Volta à loja</strong>
@@ -392,13 +386,12 @@ function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; veh
   </ol>;
 }
 
-function WaitingTimeline({ vehicle }: { vehicle: DispatchVehicle }) {
-  return <article className={`${queue.delivery} ${styles.timelinePreview}`}>
-    <h3>Aguardando rota</h3>
-    <ol className={`${styles.timeline} ${styles.waitingTimeline}`} role="list" aria-label="Linha de entregas em espera">
+function WaitingTimeline({ vehicle, riderName }: { vehicle: DispatchVehicle; riderName: string }) {
+  return <article className={`${queue.delivery} ${styles.waitingRoute}`}>
+    <ol className={`${styles.timeline} ${styles.namedTimeline} ${styles.waitingTimeline}`} role="list" aria-label="Linha de entregas em espera">
       <li className={styles.timelineStep} aria-current="step">
         <div className={styles.trackPoint}>
-          <DispatchMotorcycle vehicle={vehicle} />
+          <DispatchMotorcycle vehicle={vehicle} riderName={riderName} />
           <span className={styles.point}><AdminIcon name="home" size={17} /></span>
         </div>
         <strong>Loja</strong>

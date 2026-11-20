@@ -14,7 +14,7 @@ const paintColors = [
   [/amarel/i, "#eab53d"],
 ] as const;
 
-export function DispatchMotorcycle({ vehicle }: { vehicle?: DispatchVehicle | null }) {
+export function DispatchMotorcycle({ vehicle, riderName }: { vehicle?: DispatchVehicle | null; riderName?: string }) {
   const model = vehicle?.model?.trim();
   const color = vehicle?.color?.trim();
   const paint = paintColors.find(([pattern]) => pattern.test(color ?? ""))?.[1] ?? "#8993a3";
@@ -23,6 +23,7 @@ export function DispatchMotorcycle({ vehicle }: { vehicle?: DispatchVehicle | nu
 
   return <span className={styles.motorcycle} role="img" aria-label={label ? `Moto ${label}` : "Moto do entregador"}
     title={label || "Moto do entregador"} data-silhouette={silhouette} style={{ "--bike-paint": paint } as CSSProperties}>
+    {riderName && <span className={styles.motorcycleName}>{riderName}</span>}
     <span className={styles.bikeWheelBack} /><span className={styles.bikeWheelFront} />
     <span className={styles.bikeFrame} /><span className={styles.bikeFork} />
     <span className={styles.bikeSeat} /><span className={styles.bikeTank} />

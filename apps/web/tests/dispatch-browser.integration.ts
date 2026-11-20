@@ -6,11 +6,20 @@ import { Pool } from "pg";
 import { deliveryAddressKey } from "../src/lib/delivery";
 
 async function assertWaiting(panel: Locator) {
-  await panel.getByRole("heading", { name: "Aguardando rota" }).waitFor();
   const line = panel.getByRole("list", { name: "Linha de entregas em espera" });
   const store = line.getByRole("listitem").first();
   await store.getByText("Loja", { exact: true }).waitFor();
-  await store.getByRole("img", { name: /Moto/ }).waitFor();
+  const motorcycle = store.getByRole("img", { name: /Moto/ });
+  await motorcycle.waitFor();
+  const name = motorcycle.getByText("Entregador", { exact: true });
+  await name.waitFor();
+  const bikeBox = await motorcycle.boundingBox();
+  const nameBox = await name.boundingBox();
+  assert(bikeBox && nameBox && nameBox.y + nameBox.height <= bikeBox.y);
+  assert(Math.abs(nameBox.x + nameBox.width / 2 - (bikeBox.x + bikeBox.width / 2)) <= 1);
+  assert.equal(await panel.getByRole("heading").count(), 0);
+  const row = await panel.boundingBox();
+  assert(row && row.height < 140);
   assert.equal(await store.getAttribute("aria-current"), "step");
   assert.equal(await line.getByRole("img", { name: /Moto/ }).count(), 1);
   assert.equal(await panel.locator("time").count(), 0);
@@ -73,6 +82,8 @@ async function main() {
     assert(await rows.evaluateAll(elements => elements.every((row, index) =>
       !index || elements[index - 1].getBoundingClientRect().bottom < row.getBoundingClientRect().top)));
     assert.equal(await idleOverview.locator("time").count(), 0);
+    assert.equal(await idleOverview.getByText("Entregador", { exact: true }).count(), 5);
+    assert.equal(await idleOverview.getByRole("heading").count(), 0);
     const idleRoster = empty.getByRole("list", { name: "Entregadores cadastrados" });
     assert.equal(await idleRoster.getByRole("listitem").count(), 5);
     assert.equal(await idleRoster.getByText("Fora de serviço", { exact: true }).count(), 5);
@@ -198,6 +209,8 @@ async function main() {
     await marker.getByText("Parada 1", { exact: true }).waitFor();
     const motorcycle = marker.getByRole("img", { name: "Moto CG Fan 160, Prata" });
     assert.equal(await motorcycle.getAttribute("data-silhouette"), "fan");
+    await motorcycle.getByText("Entregador", { exact: true }).waitFor();
+    assert.equal(await detail.getByText("Entregador de homologação 1", { exact: true }).count(), 0);
     if (screenshot) await page.screenshot({ path: screenshot, fullPage: true });
     await page.setViewportSize({ width: 390, height: 844 });
     assert(await timeline.evaluate(el => el.scrollWidth > el.clientWidth));
@@ -275,9 +288,10 @@ async function main() {
     await assertWaiting(detail);
     await activeCourier.getByText("Aguardando rota", { exact: true }).waitFor();
     assert.equal(await activeCourier.locator('[style*="--bike-left: 0%"]').count(), 1);
-    await detail.getByRole("button", { name: "Ver todos os entregadores" }).click();
+    const todos = page.getByRole("navigation", { name: "Filtrar despacho" }).getByRole("button", { name: "Todos", exact: true });
+    await todos.click();
     assert.equal(await activeCourier.getAttribute("aria-pressed"), "false");
-    assert(await activeCourier.evaluate(el => document.activeElement === el));
+    assert(await todos.evaluate(el => document.activeElement === el));
     await overview.waitFor();
     assert.equal(await overview.getByRole("list", { name: "Linha de entregas em espera" }).count(), 5);
     for (const [model, color, silhouette, paint] of [
@@ -292,7 +306,7 @@ async function main() {
       assert.equal(await bike.getAttribute("data-silhouette"), silhouette);
       assert.equal(await bike.evaluate(el => getComputedStyle(el).getPropertyValue("--bike-paint").trim()), paint);
     }
-    console.log("Navegador validado: cinco linhas empilhadas, filtro individual, horários e movimento em rota, e volta à visão geral.");
+    console.log("Navegador validado: cinco linhas compactas, primeiro nome acima da moto, filtro individual e horários em rota.");
   } finally {
     await browser.close();
     await pool.end();
