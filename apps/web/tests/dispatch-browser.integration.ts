@@ -48,6 +48,13 @@ async function main() {
       originLatitude: origin[0], originLongitude: origin[1], baseFeeCents: 300, feePerKmCents: 125, minFeeCents: 400, maxDistanceMeters: 20000,
     } });
     assert.equal(settings.status(), 200);
+    const empty = await operator.newPage();
+    await empty.goto(new URL("/admin/dispatch", url).href);
+    await empty.getByRole("list", { name: "Exemplo da linha de entregas" }).waitFor();
+    if (process.env.DISPATCH_TEST_EMPTY_SCREENSHOT) {
+      await empty.screenshot({ path: process.env.DISPATCH_TEST_EMPTY_SCREENSHOT, fullPage: true });
+    }
+    await empty.close();
     const geocodable = process.env.DISPATCH_TEST_GEOCODABLE_ADDRESS;
     if (geocodable) {
       const quote = await operator.request.post(new URL("/api/delivery/quote", url).href, { data: {
@@ -139,6 +146,34 @@ async function main() {
     assert.equal(navigation.searchParams.get("dir_action"), "navigate");
     const { rows: [snapshot] } = await pool.query("select plan from dispatch_routes where id=$1", [assigned[0].dispatchRouteId]);
     const first = snapshot.plan.stops[0];
+    await courier.grantPermissions(["geolocation"], { origin: url.origin });
+    await courier.setGeolocation({ latitude: origin[0], longitude: origin[1], accuracy: 12 });
+    await courierPage.getByRole("button", { name: "Compartilhar localização" }).click();
+    await courierPage.getByText("Posição compartilhada com o despacho.").waitFor();
+    await page.getByText("GPS ao vivo", { exact: true }).waitFor();
+    const beforeGps = (await dispatch()).routes[0];
+    assert(beforeGps.gps.updatedAt && beforeGps.gps.progress < 0.5);
+    const blocked = await operator.request.patch(new URL("/api/admin/delivery", url).href, { data: {
+      gps: { action: "start", routeId: started.id, sessionId: started.id },
+    } });
+    assert.equal(blocked.status(), 403);
+    await courier.setGeolocation({ latitude: first.point.latitude, longitude: first.point.longitude, accuracy: 12 });
+    await page.waitForFunction(() => {
+      const current = document.querySelector('[aria-current="step"] [style*="--gps-left"]');
+      return current && Number.parseFloat((current as HTMLElement).style.getPropertyValue("--gps-left")) >= 35;
+    }, null, { timeout: 22_000 });
+    const moved = (await dispatch()).routes[0];
+    assert(moved.gps.updatedAt > beforeGps.gps.updatedAt && moved.gps.progress > beforeGps.gps.progress);
+    assert(Date.parse(moved.stops[0].estimatedArrival) < Date.parse(beforeGps.stops[0].estimatedArrival));
+    assert.notEqual(moved.stops[1].estimatedArrival, beforeGps.stops[1].estimatedArrival);
+    assert.notEqual(moved.returnEstimate, beforeGps.returnEstimate);
+    const { rows: [stored] } = await pool.query("select gps from dispatch_routes where id=$1", [started.id]);
+    assert(!/latitude|longitude/.test(JSON.stringify(stored.gps)));
+    if (process.env.DISPATCH_TEST_GPS_SCREENSHOT) {
+      await page.setViewportSize({ width: 1440, height: 980 });
+      await page.screenshot({ path: process.env.DISPATCH_TEST_GPS_SCREENSHOT, fullPage: true, animations: "disabled" });
+    }
+
     assert.equal(navigation.searchParams.get("destination"), `${first.point.latitude},${first.point.longitude}`);
     const reference = stops.find(stop => stop.address === first.address);
     assert(reference && Math.hypot((reference.latitude - first.point.latitude) * 111_000, (reference.longitude - first.point.longitude) * 99_000) <= 40);
@@ -161,11 +196,23 @@ async function main() {
     await back.getByRole("img", { name: "Moto CG Fan 160, Prata" }).waitFor();
     await back.locator("time").waitFor();
     assert.equal((await operator.request.patch(new URL("/api/admin/delivery", url).href, { data: { returnRouteId: started.id } })).status(), 409);
+    await page.waitForFunction(() => {
+      const current = document.querySelector('[data-state="returning"] [style*="--gps-left"]');
+      return Boolean(current);
+    }, null, { timeout: 22_000 });
+    assert((await dispatch()).routes[0].gps.updatedAt);
+    await courierPage.getByRole("button", { name: "Parar compartilhamento" }).click();
+    await page.getByText("GPS não compartilhado · previsão do planejamento", { exact: true }).waitFor();
+    assert.equal((await dispatch()).routes[0].gps.sharing, false);
+    await courierPage.getByRole("button", { name: "Compartilhar localização" }).click();
+    await courierPage.getByText("Posição compartilhada com o despacho.").waitFor();
     await courierPage.getByRole("button", { name: "Confirmar retorno" }).click();
     await courierPage.getByText("Retorno à loja confirmado.").waitFor();
     const returned = (await dispatch()).routes[0];
     assert.equal(returned.phase, "returned");
     assert(returned.returnedAt);
+    assert.equal(returned.gps.updatedAt, null);
+    assert.equal(returned.gps.sharing, false);
     for (const [model, color, silhouette, paint] of [
       ["Twister", "Cinza", "twister", "#68778f"],
       ["Fan", "Vermelha", "fan", "#df3e47"],
@@ -178,7 +225,7 @@ async function main() {
       assert.equal(await bike.getAttribute("data-silhouette"), silhouette);
       assert.equal(await bike.evaluate(el => getComputedStyle(el).getPropertyValue("--bike-paint").trim()), paint);
     }
-    console.log("Navegador validado: linha horizontal, moto cadastrada, ETA, cobrança, rolagem no celular e retorno.");
+    console.log("Navegador validado: linha no estado vazio, GPS em duas posições, ETA recalculado, acesso protegido e retorno.");
   } finally {
     await browser.close();
     await pool.end();

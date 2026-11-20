@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { AdminIcon } from "@/components/admin/AdminIcons";
 import queue from "@/components/admin/OperationalQueue.module.css";
 import { dispatchConfigSchema, dispatchMetrics, type DispatchConfig, type DispatchReport } from "@/lib/dispatch-planner";
+import { dispatchGpsFreshMs } from "@/lib/dispatch-gps";
 import { DispatchMotorcycle, type DispatchVehicle } from "./DispatchMotorcycle";
 import styles from "./page.module.css";
 
@@ -12,6 +13,7 @@ type Route = {
   id: string; startedAt: string | null; earliestDeparture: string | null; latestDeparture: string; driverName: string | null; waitingForScheduledTime: boolean;
   distanceMeters: number; durationSeconds: number; violations: string[];
   vehicle: DispatchVehicle;
+  gps: { updatedAt: number | null; progress: number | null; sharing: boolean };
   phase: "waiting" | "delivering" | "returning" | "returned";
   totalStops: number; remainingStops: number; currentStopId: string | null; currentPosition: number | null;
   amountToCollectCents: number; returnEstimate: string | null; returnedAt: string | null;
@@ -47,7 +49,7 @@ export default function DispatchPage() {
   const [error, setError] = useState("");
   const [refreshError, setRefreshError] = useState("");
   const [notice, setNotice] = useState("");
-  const [tab, setTab] = useState<"queued" | "pending" | "started">("queued");
+  const [tab, setTab] = useState<"all" | "queued" | "pending" | "started">("all");
 
   const load = useCallback(async (signal?: AbortSignal) => {
     try {
@@ -63,8 +65,8 @@ export default function DispatchPage() {
   useEffect(() => {
     const controller = new AbortController();
     const initial = window.setTimeout(() => void load(controller.signal), 0);
-    const timer = window.setInterval(() => void load(controller.signal), 10_000);
-    const countdown = window.setInterval(() => setNow(Date.now()), 15000);
+    const timer = window.setInterval(() => void load(controller.signal), 5_000);
+    const countdown = window.setInterval(() => setNow(Date.now()), 5_000);
     return () => { controller.abort(); window.clearTimeout(initial); window.clearInterval(timer); window.clearInterval(countdown); };
   }, [load]);
 
@@ -107,6 +109,7 @@ export default function DispatchPage() {
 
   const waiting = data?.routes.filter(route => !route.startedAt) ?? [];
   const started = data?.routes.filter(route => route.startedAt) ?? [];
+  const visibleRoutes = tab === "queued" ? waiting : tab === "started" ? started : [...started, ...waiting];
   const config = draft?.config ?? data?.config;
   return <div className={queue.page}>
     <header className={queue.heading}>
@@ -154,6 +157,7 @@ export default function DispatchPage() {
         </form>
       </details>
       <nav className={queue.filters} aria-label="Filtrar despacho">
+        <button aria-pressed={tab === "all"} onClick={() => setTab("all")}>Todas as rotas <span>{data.routes.length}</span></button>
         <button aria-pressed={tab === "queued"} onClick={() => setTab("queued")}>Rotas na fila <span>{waiting.length}</span></button>
         <button aria-pressed={tab === "pending"} onClick={() => setTab("pending")}>Pedidos sem rota <span>{data.pending.length}{data.pending.length === 50 && "+"}</span></button>
         <button aria-pressed={tab === "started"} onClick={() => setTab("started")}>Rotas e retornos <span>{started.length}</span></button>
@@ -164,11 +168,11 @@ export default function DispatchPage() {
           <span>{order.reason}</span>
         </li>)}</ul> : <p className={queue.empty}>Nenhum pedido pronto aguardando rota.</p>
       ) : (
-        (tab === "queued" ? waiting : started).length ? <div className={`${queue.deliveries} ${styles.routeList}`}>
-          {(tab === "queued" ? waiting : started).map(route => <RouteCard key={route.id} route={route} drivers={data.drivers} busy={busy} now={now}
+        visibleRoutes.length ? <div className={`${queue.deliveries} ${styles.routeList}`}>
+          {visibleRoutes.map(route => <RouteCard key={route.id} route={route} drivers={data.drivers} busy={busy} now={now}
             start={driverId => void mutate("PATCH", { id: route.id, driverId }, "Saída registrada. As paradas estão em Minhas entregas.")}
             release={() => void mutate("PATCH", { id: route.id, driverId: null }, "Pedidos devolvidos para planejamento.")} />)}
-        </div> : <p className={queue.empty}>{tab === "queued" ? "Nenhuma rota na fila de despacho." : "Nenhuma saída registrada nas últimas 24 horas."}</p>
+        </div> : <EmptyTimeline hasRoutes={data.routes.length > 0} />
       )}
       {!!data.routes.length && <p className={styles.attribution}>Dados de mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a></p>}
     </>}
@@ -192,6 +196,7 @@ function RouteCard({ route, drivers, busy, now, start, release }: {
     returning: "Retornando à loja",
     returned: "Retorno confirmado",
   }[route.phase];
+  const gpsLive = route.gps?.updatedAt != null && route.gps.updatedAt + dispatchGpsFreshMs > now;
   const remainingAfter = route.remainingStops - 1;
   const remainingLabel = route.phase === "delivering"
     ? remainingAfter ? `${remainingAfter} depois desta` : "Última entrega"
@@ -205,6 +210,9 @@ function RouteCard({ route, drivers, busy, now, start, release }: {
         {" · "}{remainingLabel}
         {" · "}A receber {money(route.amountToCollectCents)}
       </p>
+      {route.startedAt && !route.returnedAt && <p className={styles.gpsStatus} data-live={gpsLive}>
+        {gpsLive ? "GPS ao vivo" : route.gps?.sharing ? "Aguardando sinal do GPS · previsão do planejamento" : "GPS não compartilhado · previsão do planejamento"}
+      </p>}
       {route.returnedAt && <p>Chegou à loja às {time(route.returnedAt)}</p>}
     </div><AdminIcon name="route" size={28} /></header>
     <RouteTimeline route={route} now={now} vehicle={route.startedAt ? route.vehicle : selectedDriver?.vehicle} />
@@ -235,6 +243,9 @@ function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; veh
   const waiting = route.phase === "waiting";
   const returning = route.phase === "returning";
   const returned = route.phase === "returned";
+  const gps = route.gps?.updatedAt != null && route.gps.updatedAt + dispatchGpsFreshMs > now
+    ? route.gps.progress : null;
+  const markerStyle = gps === null ? undefined : { "--gps-left": `${(gps - 0.5) * 100}%` } as CSSProperties;
   return <ol className={styles.timeline} ref={scroller} role="list" aria-label="Sequência de paradas da rota" tabIndex={0}>
     <li className={styles.timelineStep} data-state={waiting ? "current" : "done"}
       aria-current={waiting ? "step" : undefined} ref={waiting ? current : undefined}>
@@ -254,7 +265,7 @@ function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; veh
       return <li key={stop.id} className={styles.timelineStep}
         data-state={isCurrent ? "current" : stop.state === "delivered" ? "done" : stop.state}
         ref={isCurrent ? current : undefined} aria-current={isCurrent ? "step" : undefined}>
-        <div className={styles.trackPoint}>
+        <div className={styles.trackPoint} style={isCurrent ? markerStyle : undefined}>
           {isCurrent && <DispatchMotorcycle vehicle={vehicle} />}
           <span className={styles.point}>{stop.state === "delivered" ? <AdminIcon name="check" size={16} /> : index + 1}</span>
         </div>
@@ -269,7 +280,7 @@ function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; veh
     })}
     <li className={styles.timelineStep} data-state={returned ? "done" : returning ? "returning" : "pending"}
       aria-current={returning || returned ? "step" : undefined} ref={returning || returned ? current : undefined}>
-      <div className={styles.trackPoint}>
+      <div className={styles.trackPoint} style={returning ? markerStyle : undefined}>
         {(returning || returned) && <DispatchMotorcycle vehicle={vehicle} />}
         <span className={styles.point}><AdminIcon name={returned ? "check" : "home"} size={17} /></span>
       </div>
@@ -279,4 +290,21 @@ function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; veh
           <small>Chegada estimada · {countdown(route.returnEstimate, now)}</small></> : null}
     </li>
   </ol>;
+}
+
+function EmptyTimeline({ hasRoutes }: { hasRoutes: boolean }) {
+  return <section className={`${queue.delivery} ${styles.timelinePreview}`}>
+    <h2>{hasRoutes ? "Nenhuma rota nesta aba" : "Nenhuma rota no momento"}</h2>
+    <p>{hasRoutes ? "Confira a aba Todas as rotas." : "A linha receberá horários quando houver uma rota planejada. Exemplo:"}</p>
+    <ol className={styles.timeline} role="list" aria-label="Exemplo da linha de entregas">
+      {["Saída da loja", "Parada 1", "Volta à loja"].map((label, index) =>
+        <li key={label} className={styles.timelineStep}>
+          <div className={styles.trackPoint}>
+            {index === 0 && <DispatchMotorcycle />}
+            <span className={styles.point}>{index === 1 ? "1" : <AdminIcon name="home" size={17} />}</span>
+          </div>
+          <strong>{label}</strong>
+        </li>)}
+    </ol>
+  </section>;
 }

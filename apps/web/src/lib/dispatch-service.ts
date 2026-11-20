@@ -4,6 +4,7 @@ import { deliveryQuotes, deliverySettings, dispatchRoutes, dispatchSettings, ord
 import { DeliveryError, deliveryAddressKey, deliveryCoordinatesSchema, type DeliveryCoordinates } from "@/lib/delivery";
 import { deliveryProviderConfigured, getDeliveryProvider } from "@/lib/delivery-provider";
 import { defaultDispatchConfig, evaluateDispatch, planDispatch, waitLimitMs, type DispatchConfig, type DispatchIssue, type DispatchOrder, type DispatchPlan, type DispatchReport } from "@/lib/dispatch-planner";
+import { matchingDispatchGps } from "@/lib/dispatch-gps";
 import { dispatchProgress } from "@/lib/dispatch-progress";
 import { can } from "@/lib/permissions";
 import { PRESENCE_TTL_MS } from "@/lib/staff-presence";
@@ -240,7 +241,7 @@ export async function returningDispatchRoute(driverId: number) {
 }
 
 export async function confirmDispatchReturn(id: string, driverId: number) {
-  const [updated] = await db.update(dispatchRoutes).set({ returnedAt: new Date() })
+  const [updated] = await db.update(dispatchRoutes).set({ returnedAt: new Date(), gps: null })
     .where(and(eq(dispatchRoutes.id, id), eq(dispatchRoutes.driverId, driverId), openRoute, sql`not ${hasUnfinishedStops}`))
     .returning({ id: dispatchRoutes.id });
   if (updated) return;
@@ -284,8 +285,14 @@ export async function dispatchOverview() {
         startedAt: route.startedAt, returnedAt: route.returnedAt,
         returnSeconds: route.plan.returnLeg.durationSeconds, serviceSeconds: (route.departureConfig ?? config).serviceSeconds,
       });
+      const gps = route.startedAt && !route.returnedAt
+        ? matchingDispatchGps(route.gps, progress.stops.filter(stop => stop.state === "pending"), now) : null;
+      const liveArrivals = new Map(gps?.arrivals.map(stop => [stop.id, stop.at]));
       return {
         ...progress,
+        gps: { updatedAt: gps?.at ?? null, progress: gps?.progress ?? null, sharing: !!route.gps },
+        stops: progress.stops.map(stop => ({ ...stop, estimatedArrival: liveArrivals.has(stop.id) ? new Date(liveArrivals.get(stop.id)!) : stop.estimatedArrival })),
+        returnEstimate: gps ? new Date(gps.returnAt) : progress.returnEstimate,
         id: route.id, createdAt: route.createdAt, startedAt: route.startedAt, returnedAt: route.returnedAt, driverName,
         vehicle: { model: vehicleModel, color: vehicleColor },
         waitingForScheduledTime: !route.startedAt && now < stats.earliestDeparture,

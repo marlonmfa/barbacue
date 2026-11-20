@@ -5,9 +5,15 @@ import { db } from "@/db";
 import { dispatchRoutes, orders, storeSettings } from "@/db/schema";
 import { withStaff } from "@/lib/admin-auth";
 import { confirmDispatchReturn, dispatchFailure, returningDispatchRoute } from "@/lib/dispatch-service";
+import { dispatchGpsInput, dispatchGpsRoute, updateDispatchGps } from "@/lib/dispatch-gps-service";
+import { rateLimit } from "@/lib/rate-limit";
 import { addressNavigationLinks, dispatchNavigationDestination } from "@/lib/delivery-navigation";
 
 export const GET = withStaff(async (req, _ctx, session) => {
+  if (req.nextUrl.searchParams.get("view") === "tracking") {
+    const routeId = session.role === "driver" ? await dispatchGpsRoute(session.userId) : null;
+    return NextResponse.json({ routeId }, { headers: { "Cache-Control": "no-store" } });
+  }
   if (req.nextUrl.searchParams.get("view") === "returning") {
     return NextResponse.json({ routeId: await returningDispatchRoute(session.userId) }, { headers: { "Cache-Control": "no-store" } });
   }
@@ -32,7 +38,22 @@ const deliverySchema = z.union([
   z.object({ returnRouteId: z.string().uuid() }).strict(),
 ]);
 export const PATCH = withStaff(async (req, _ctx, session) => {
-  const parsed = deliverySchema.safeParse(await req.json().catch(() => null));
+  const body = await req.json().catch(() => null);
+  if (body?.gps) {
+    if (session.role !== "driver") return NextResponse.json({ error: "Somente o entregador da rota pode compartilhar a posição." }, { status: 403 });
+    const gps = dispatchGpsInput.safeParse(body.gps);
+    if (!gps.success) return NextResponse.json({ error: "Posição inválida ou imprecisa." }, { status: 422 });
+    if (gps.data.action === "position" && !rateLimit(`dispatch-gps:${session.userId}`, 8, 60_000, 15_000).ok) {
+      return NextResponse.json({ error: "Aguarde a próxima atualização do GPS." }, { status: 429 });
+    }
+    try {
+      const result = await updateDispatchGps(session.userId, gps.data);
+      if (result === "ok") return NextResponse.json({ ok: true });
+      if (result === "closed") return NextResponse.json({ error: "Compartilhamento indisponível para esta rota." }, { status: 409 });
+      return NextResponse.json({ error: "Aguardando uma posição recente com acesso às vias." }, { status: 422 });
+    } catch { return NextResponse.json({ error: "O roteador está temporariamente indisponível." }, { status: 503 }); }
+  }
+  const parsed = deliverySchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Informe a próxima etapa da entrega." }, { status: 422 });
   if ("returnRouteId" in parsed.data) {
     try {
