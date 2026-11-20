@@ -1,4 +1,3 @@
-.shell { --online-accent: #ed1b24; --ss-surface: #241d18; --ss-surface-soft: #30251e; }
 .pixMethod { background: var(--ss-surface-soft); border-radius: 8px; padding: 15px; font-size: 13px; margin-top: 18px; }
 .pixMethod p { font-size: 12px; color: var(--ss-muted); line-height: 1.6; margin-top: 5px; }
 .freight { font-size: 13px; margin: 12px 0; }

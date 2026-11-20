@@ -415,7 +415,7 @@ export function OnlineMenu({ initialBrand, tableToken }: { initialBrand: Brand; 
   const filtered = publicMenu.filter(g => category === null || g.id === category).map(g => ({ ...g, products: g.products.filter(p => normalize(`${p.name} ${p.description ?? ""}`).includes(normalize(query))) })).filter(g => g.products.length);
   const paid = receipt?.paymentStatus === "paid";
   const payOnReceipt = receipt?.environment === PAY_ON_RECEIPT;
-  return <div className={`${s.shell} ${o.shell} ${brand === "barbacue" ? "" : `brand-site brand-site--${brand}`}`} data-brand={brand}>
+  return <div className={s.shell} data-brand={brand}>
     <header className={s.header}><Link href="/conta" className={o.accountLink}>Minha conta</Link><BrandNavigation active={brand} onSelect={switchBrand} disabled={locked} /></header>
     {receipt ? <main className={`${s.receipt} ${o.receipt}`}>
       <h1 ref={receiptTitle} tabIndex={-1} aria-live="polite">{receipt.status === "cancelled" ? "Pedido cancelado" : payOnReceipt ? receipt.status === "pending" ? "Pedido enviado à loja" : STAGES[receipt.status] ?? "Pedido recebido" : paid ? STAGES[receipt.status] ?? "Pagamento confirmado" : "Pague para confirmar seu pedido"}</h1>
