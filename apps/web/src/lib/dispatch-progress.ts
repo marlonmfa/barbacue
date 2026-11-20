@@ -3,8 +3,8 @@ type OrderProgress = { id: string; status: string | null; deliveryStatus: string
 
 export function dispatchProgress(
   stops: PlannedStop[], orders: OrderProgress[],
-  { departure, startedAt, returnedAt, returnSeconds, serviceSeconds }: {
-    departure: number; startedAt: Date | null; returnedAt: Date | null; returnSeconds: number; serviceSeconds: number;
+  { departure, now, startedAt, returnedAt, returnSeconds, serviceSeconds }: {
+    departure: number; now: number; startedAt: Date | null; returnedAt: Date | null; returnSeconds: number; serviceSeconds: number;
   },
 ) {
   const ordersById = new Map(orders.map(order => [order.id, order]));
@@ -35,14 +35,27 @@ export function dispatchProgress(
   const pending = deliveries.filter(stop => stop.state === "pending");
   const current = startedAt && !returnedAt ? pending[0] : undefined;
   const phase = returnedAt ? "returned" : !startedAt ? "waiting" : current ? "delivering" : "returning";
+  const firstArrival = current?.estimatedArrival.getTime();
+  const delayFromCurrent = firstArrival === undefined ? 0 : Math.max(0, now - firstArrival);
+  const lastPending = pending.at(-1);
+  const lastPendingArrival = lastPending
+    ? lastPending.estimatedArrival.getTime() + (lastPending === current ? 0 : delayFromCurrent) : null;
+  const returnStart = lastDeliveryMs || departure;
+  const returnAt = (lastPendingArrival === null ? returnStart
+    : Math.max(lastPendingArrival, startedAt ? now : departure) + serviceSeconds * 1000) + returnSeconds * 1000;
+  const segment = current ? {
+    from: Math.max(departure, ...progress.slice(0, progress.indexOf(current)).map(stop => stop.deliveredAt?.getTime() ?? 0)),
+    to: current.estimatedArrival.getTime(),
+  } : phase === "returning" ? { from: returnStart, to: returnAt } : null;
   return {
-    phase,
+    phase, segment,
     totalStops: deliveries.length,
     remainingStops: pending.length,
     currentStopId: current?.id ?? null,
     currentPosition: current ? deliveries.indexOf(current) + 1 : null,
     amountToCollectCents: pending.reduce((sum, stop) => sum + stop.amountToCollectCents, 0),
-    returnEstimate: phase === "returning" && lastDeliveryMs ? new Date(lastDeliveryMs + returnSeconds * 1000) : null,
-    stops: progress,
+    returnEstimate: phase === "returned" ? null : new Date(returnAt),
+    stops: progress.map(stop => stop.state === "pending" && stop !== current && delayFromCurrent
+      ? { ...stop, estimatedArrival: new Date(stop.estimatedArrival.getTime() + delayFromCurrent) } : stop),
   };
 }

@@ -4,7 +4,6 @@ import { deliveryQuotes, deliverySettings, dispatchRoutes, dispatchSettings, ord
 import { DeliveryError, deliveryAddressKey, deliveryCoordinatesSchema, type DeliveryCoordinates } from "@/lib/delivery";
 import { deliveryProviderConfigured, getDeliveryProvider } from "@/lib/delivery-provider";
 import { defaultDispatchConfig, evaluateDispatch, planDispatch, waitLimitMs, type DispatchConfig, type DispatchIssue, type DispatchOrder, type DispatchPlan, type DispatchReport } from "@/lib/dispatch-planner";
-import { matchingDispatchGps } from "@/lib/dispatch-gps";
 import { dispatchProgress } from "@/lib/dispatch-progress";
 import { can } from "@/lib/permissions";
 import { PRESENCE_TTL_MS } from "@/lib/staff-presence";
@@ -252,7 +251,7 @@ export async function confirmDispatchReturn(id: string, driverId: number) {
 
 export async function dispatchOverview() {
   const recent = new Date(Date.now() - 24 * 60 * 60_000);
-  const [[state], origin, routes, candidates, drivers] = await Promise.all([
+  const [[state], origin, routes, candidates, roster] = await Promise.all([
     db.select().from(dispatchSettings).where(settingsFilter),
     readOrigin(),
     db.select({ route: dispatchRoutes, driverName: staffUsers.name, vehicleModel: staffUsers.vehicleModel, vehicleColor: staffUsers.vehicleColor }).from(dispatchRoutes)
@@ -261,18 +260,27 @@ export async function dispatchOverview() {
       .orderBy(desc(isNull(dispatchRoutes.startedAt)), asc(dispatchRoutes.createdAt)).limit(100),
     db.select(orderFields).from(orders).where(and(ownDelivery, isNull(orders.dispatchRouteId)))
       .orderBy(desc(placedAt), asc(orders.id)).limit(50),
-    db.select(driverFields).from(staffUsers)
-      .innerJoin(staffPresence, eq(staffUsers.id, staffPresence.userId))
-      .where(and(activeDriver, freshPresence, sql`not ${busyDriver}`)).orderBy(asc(staffUsers.name)),
+    db.select({
+      ...driverFields, active: staffUsers.active,
+      online: sql<boolean>`(${freshPresence}) is true`,
+      busy: sql<boolean>`${busyDriver}`,
+    }).from(staffUsers)
+      .leftJoin(staffPresence, eq(staffUsers.id, staffPresence.userId))
+      .where(eq(staffUsers.role, "driver")).orderBy(asc(staffUsers.name), asc(staffUsers.id)),
   ]);
   const config = state?.config ?? defaultDispatchConfig;
   const now = Date.now();
   const linked = routes.length ? await db.select({ ...orderFields, routeId: orders.dispatchRouteId, status: orders.status, deliveryStatus: orders.deliveryStatus, deliveredAt: orders.deliveredAt, totalCents: orders.totalCents, paymentStatus: orders.paymentStatus, eligible: sql<boolean>`(${ownDelivery}) is true` })
     .from(orders).where(inArray(orders.dispatchRouteId, routes.map(({ route }) => route.id))) : [];
+  const couriers = roster.map(({ id, name, vehicleModel, vehicleColor, active, online, busy, ...permissions }) => ({
+    id, name, vehicle: { model: vehicleModel, color: vehicleColor }, active, online, busy,
+    available: active && online && !busy && can(permissions, "deliveries"),
+  }));
   return {
     config, revision: state?.revision ?? 0, report: state?.report ?? null,
     mapsReady: !!origin && deliveryProviderConfigured(origin.provider),
-    drivers: drivers.filter(driver => can(driver, "deliveries")).map(({ id, name, vehicleModel, vehicleColor }) => ({ id, name, vehicle: { model: vehicleModel, color: vehicleColor } })),
+    couriers,
+    drivers: couriers.filter(courier => courier.available).map(({ id, name, vehicle }) => ({ id, name, vehicle })),
     routes: routes.map(({ route, driverName, vehicleModel, vehicleColor }) => {
       const stats = evaluateDispatch(route.plan, route.departureConfig ?? config, route.startedAt?.getTime() ?? now);
       const rows = linked.filter(row => row.routeId === route.id);
@@ -281,19 +289,13 @@ export async function dispatchOverview() {
         stats.violations.push("Um pedido da rota mudou");
       }
       const progress = dispatchProgress(stats.stops, rows, {
-        departure: route.startedAt?.getTime() ?? Math.max(now, stats.earliestDeparture),
+        departure: route.startedAt?.getTime() ?? Math.max(now, stats.earliestDeparture), now,
         startedAt: route.startedAt, returnedAt: route.returnedAt,
         returnSeconds: route.plan.returnLeg.durationSeconds, serviceSeconds: (route.departureConfig ?? config).serviceSeconds,
       });
-      const gps = route.startedAt && !route.returnedAt
-        ? matchingDispatchGps(route.gps, progress.stops.filter(stop => stop.state === "pending"), now) : null;
-      const liveArrivals = new Map(gps?.arrivals.map(stop => [stop.id, stop.at]));
       return {
         ...progress,
-        gps: { updatedAt: gps?.at ?? null, progress: gps?.progress ?? null, sharing: !!route.gps },
-        stops: progress.stops.map(stop => ({ ...stop, estimatedArrival: liveArrivals.has(stop.id) ? new Date(liveArrivals.get(stop.id)!) : stop.estimatedArrival })),
-        returnEstimate: gps ? new Date(gps.returnAt) : progress.returnEstimate,
-        id: route.id, createdAt: route.createdAt, startedAt: route.startedAt, returnedAt: route.returnedAt, driverName,
+        id: route.id, createdAt: route.createdAt, startedAt: route.startedAt, returnedAt: route.returnedAt, driverId: route.driverId, driverName,
         vehicle: { model: vehicleModel, color: vehicleColor },
         waitingForScheduledTime: !route.startedAt && now < stats.earliestDeparture,
         earliestDeparture: Number.isFinite(stats.earliestDeparture) ? new Date(stats.earliestDeparture) : null,

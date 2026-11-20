@@ -5,15 +5,14 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties, type Form
 import { AdminIcon } from "@/components/admin/AdminIcons";
 import queue from "@/components/admin/OperationalQueue.module.css";
 import { dispatchConfigSchema, dispatchMetrics, type DispatchConfig, type DispatchReport } from "@/lib/dispatch-planner";
-import { dispatchGpsFreshMs } from "@/lib/dispatch-gps";
 import { DispatchMotorcycle, type DispatchVehicle } from "./DispatchMotorcycle";
 import styles from "./page.module.css";
 
 type Route = {
-  id: string; startedAt: string | null; earliestDeparture: string | null; latestDeparture: string; driverName: string | null; waitingForScheduledTime: boolean;
+  id: string; driverId: number | null; startedAt: string | null; earliestDeparture: string | null; latestDeparture: string; driverName: string | null; waitingForScheduledTime: boolean;
   distanceMeters: number; durationSeconds: number; violations: string[];
   vehicle: DispatchVehicle;
-  gps: { updatedAt: number | null; progress: number | null; sharing: boolean };
+  segment: { from: number; to: number } | null;
   phase: "waiting" | "delivering" | "returning" | "returned";
   totalStops: number; remainingStops: number; currentStopId: string | null; currentPosition: number | null;
   amountToCollectCents: number; returnEstimate: string | null; returnedAt: string | null;
@@ -23,6 +22,7 @@ type Route = {
 type Data = {
   config: DispatchConfig; revision: number; canConfigure: boolean; mapsReady: boolean; report: DispatchReport | null;
   routes: Route[]; drivers: { id: number; name: string; vehicle: DispatchVehicle }[];
+  couriers: { id: number; name: string; vehicle: DispatchVehicle; active: boolean; online: boolean; busy: boolean; available: boolean }[];
   pending: { id: string; brand: string; address: string | null; reason: string }[];
 };
 type Draft = { config: DispatchConfig; revision: number };
@@ -35,7 +35,7 @@ const money = (cents: number) => currency.format(cents / 100);
 const time = (value: string) => clock.format(new Date(value));
 function countdown(value: string, now: number) {
   const delta = new Date(value).getTime() - now;
-  const count = Math.ceil(Math.abs(delta) / 60_000);
+  const count = delta < 0 ? Math.floor(-delta / 60_000) : Math.ceil(delta / 60_000);
   if (!count) return "agora";
   return delta > 0 ? `${count === 1 ? "falta" : "faltam"} ${count} min` : `${count} min de atraso`;
 }
@@ -156,6 +156,7 @@ export default function DispatchPage() {
           </div>}
         </form>
       </details>
+      <CourierRoster couriers={data.couriers} routes={started} />
       <nav className={queue.filters} aria-label="Filtrar despacho">
         <button aria-pressed={tab === "all"} onClick={() => setTab("all")}>Todas as rotas <span>{data.routes.length}</span></button>
         <button aria-pressed={tab === "queued"} onClick={() => setTab("queued")}>Rotas na fila <span>{waiting.length}</span></button>
@@ -179,6 +180,29 @@ export default function DispatchPage() {
   </div>;
 }
 
+function CourierRoster({ couriers, routes }: { couriers: Data["couriers"]; routes: Route[] }) {
+  const enRoute = new Map(routes.filter(route => !route.returnedAt).map(route => [route.driverId, route]));
+  return <section className={styles.roster} aria-labelledby="dispatch-couriers">
+    <h2 id="dispatch-couriers">Entregadores <span>{couriers.length}</span></h2>
+    {couriers.length ? <ul aria-label="Entregadores cadastrados">
+      {couriers.map(courier => {
+        const route = enRoute.get(courier.id);
+        const status = route?.phase === "returning" ? "Retornando à loja"
+          : route?.phase === "delivering" ? `Entrega ${route.currentPosition} de ${route.totalStops}`
+          : !courier.active ? "Cadastro inativo" : courier.busy ? "Em entrega avulsa"
+          : courier.available ? "Aguardando rota" : courier.online ? "Indisponível" : "Fora de serviço";
+        return <li key={courier.id}>
+          <span className={styles.rosterBike}><DispatchMotorcycle vehicle={courier.vehicle} /></span>
+          <div><strong>{courier.name}</strong>
+            <p>{status}</p>
+            {route && <p>A receber {money(route.amountToCollectCents)}</p>}
+          </div>
+        </li>;
+      })}
+    </ul> : <p>Nenhum entregador cadastrado.</p>}
+  </section>;
+}
+
 function defaultLimit(metric: Exclude<keyof typeof dispatchMetrics, "waitMinutes">) {
   return { stops: 4, distanceKm: 25, durationMinutes: 45, legMinutes: 20 }[metric];
 }
@@ -196,7 +220,6 @@ function RouteCard({ route, drivers, busy, now, start, release }: {
     returning: "Retornando à loja",
     returned: "Retorno confirmado",
   }[route.phase];
-  const gpsLive = route.gps?.updatedAt != null && route.gps.updatedAt + dispatchGpsFreshMs > now;
   const remainingAfter = route.remainingStops - 1;
   const remainingLabel = route.phase === "delivering"
     ? remainingAfter ? `${remainingAfter} depois desta` : "Última entrega"
@@ -210,9 +233,7 @@ function RouteCard({ route, drivers, busy, now, start, release }: {
         {" · "}{remainingLabel}
         {" · "}A receber {money(route.amountToCollectCents)}
       </p>
-      {route.startedAt && !route.returnedAt && <p className={styles.gpsStatus} data-live={gpsLive}>
-        {gpsLive ? "GPS ao vivo" : route.gps?.sharing ? "Aguardando sinal do GPS · previsão do planejamento" : "GPS não compartilhado · previsão do planejamento"}
-      </p>}
+      {route.segment && <p className={styles.estimateNote}>Posição estimada pelo tempo da etapa</p>}
       {route.returnedAt && <p>Chegou à loja às {time(route.returnedAt)}</p>}
     </div><AdminIcon name="route" size={28} /></header>
     <RouteTimeline route={route} now={now} vehicle={route.startedAt ? route.vehicle : selectedDriver?.vehicle} />
@@ -243,9 +264,14 @@ function RouteTimeline({ route, now, vehicle }: { route: Route; now: number; veh
   const waiting = route.phase === "waiting";
   const returning = route.phase === "returning";
   const returned = route.phase === "returned";
-  const gps = route.gps?.updatedAt != null && route.gps.updatedAt + dispatchGpsFreshMs > now
-    ? route.gps.progress : null;
-  const markerStyle = gps === null ? undefined : { "--gps-left": `${(gps - 0.5) * 100}%` } as CSSProperties;
+  const activeIndex = returning ? route.stops.length : route.stops.findIndex(stop => stop.id === route.currentStopId);
+  const lastConfirmedIndex = route.stops.slice(0, Math.max(0, activeIndex)).findLastIndex(stop => stop.state === "delivered");
+  const segment = route.segment;
+  const elapsedFraction = segment
+    ? Math.min(1, Math.max(0, (now - segment.from) / Math.max(1, segment.to - segment.from))) : null;
+  const markerStyle = elapsedFraction === null ? undefined : {
+    "--bike-left": `${50 - (1 - elapsedFraction) * (activeIndex - lastConfirmedIndex) * 100}%`,
+  } as CSSProperties;
   return <ol className={styles.timeline} ref={scroller} role="list" aria-label="Sequência de paradas da rota" tabIndex={0}>
     <li className={styles.timelineStep} data-state={waiting ? "current" : "done"}
       aria-current={waiting ? "step" : undefined} ref={waiting ? current : undefined}>

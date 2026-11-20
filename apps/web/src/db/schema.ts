@@ -343,7 +343,7 @@ export const dispatchRoutes = pgTable("dispatch_routes", {
   startedAt: timestamp("started_at", { withTimezone: true }),
   releasedAt: timestamp("released_at", { withTimezone: true }),
   returnedAt: timestamp("returned_at", { withTimezone: true }),
-  gps: jsonb("gps").$type<import("@/lib/dispatch-gps").DispatchGpsState>(),
+  gps: jsonb("gps"),
   driverId: integer("driver_id").references(() => staffUsers.id, { onDelete: "set null" }),
 }, table => [index("dispatch_routes_queue_idx").on(table.createdAt).where(sql`${table.startedAt} is null and ${table.releasedAt} is null`)]);
 

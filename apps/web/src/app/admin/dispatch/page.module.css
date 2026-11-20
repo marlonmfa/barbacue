@@ -176,7 +176,7 @@
   position: absolute;
   z-index: 2;
   bottom: 34px;
-  left: var(--gps-left, 50%);
+  left: var(--bike-left, 50%);
   transition: left 600ms ease;
   width: 46px;
   height: 30px;
@@ -184,7 +184,7 @@
   filter: drop-shadow(0 2px 1px #21191540);
   --bike-outline: #24252e;
 }
-.timelineStep[data-state="returning"] .motorcycle { left: var(--gps-left, 0%); }
+.timelineStep[data-state="returning"] .motorcycle { left: var(--bike-left, 0%); }
 .motorcycle > span { position: absolute; display: block; }
 .bikeWheelBack, .bikeWheelFront {
   bottom: 1px;
@@ -225,5 +225,33 @@
 
 .timelinePreview h2 { font-size: 17px; font-weight: 700; }
 .timelinePreview > p { color: var(--text-muted); font-size: 13px; margin-top: 5px; }
-.gpsStatus[data-live="true"] { color: var(--success); font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .motorcycle { transition: none; } }
+
+
+.roster { margin: 6px 0 22px; }
+.roster h2 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+.roster h2 span { margin-left: 4px; color: var(--text-muted); }
+.roster ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(175px, 100%), 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+.roster li {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 9px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.roster li strong { display: block; overflow-wrap: anywhere; font-size: 13px; }
+.roster li p, .roster > p { font-size: 12px; color: var(--text-muted); }
+.rosterBike { position: relative; width: 46px; height: 30px; flex: 0 0 46px; }
+.rosterBike .motorcycle { bottom: 0; }
+
+.estimateNote { margin-top: 5px; font-size: 12px; color: var(--text-muted); }

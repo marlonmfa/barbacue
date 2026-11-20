@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { DriverGps } from "@/components/admin/DriverGps";
 import { DriverAvailability } from "@/components/admin/DriverAvailability";
 import { AdminIcon } from "@/components/admin/AdminIcons";
 import styles from "@/components/admin/OperationalQueue.module.css";
@@ -20,7 +19,6 @@ const paymentLabels: Record<string, string> = { cash: "Dinheiro", card_on_delive
 
 export default function DeliveryPage() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
-  const [tracking, setTracking] = useState<string | null>(null);
   const [returning, setReturning] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -29,16 +27,14 @@ export default function DeliveryPage() {
   const [busy, setBusy] = useState<string | null>(null);
   const load = useCallback(async (signal?: AbortSignal) => {
     try {
-      const [response, returnResponse, trackingResponse] = await Promise.all([
+      const [response, returnResponse] = await Promise.all([
         fetch("/api/admin/delivery", { cache: "no-store", signal }),
         fetch("/api/admin/delivery?view=returning", { cache: "no-store", signal }),
-        fetch("/api/admin/delivery?view=tracking", { cache: "no-store", signal }),
       ]);
       const data = await response.json();
       if (!response.ok) throw new Error(typeof data.error === "string" ? data.error : "Não foi possível atualizar suas entregas.");
       setDeliveries(data);
       setReturning(returnResponse.ok ? (await returnResponse.json()).routeId : null);
-      setTracking(trackingResponse.ok ? (await trackingResponse.json()).routeId : null);
       setError("");
     } catch (cause) { if (!signal?.aborted) setError(cause instanceof Error ? cause.message : "Confira a conexão e tente novamente."); }
     finally { if (!signal?.aborted) setLoading(false); }
@@ -81,7 +77,6 @@ export default function DeliveryPage() {
   return <div className={`${styles.page} ${styles.driverPage}`}>
     <header className={styles.heading}><div><h1>Minhas entregas</h1><p>Confira a retirada, abra a rota e registre a entrega.</p></div><button className={styles.secondary} onClick={() => void load()}><AdminIcon name="clock" /> Atualizar</button></header>
     <DriverAvailability />
-    {tracking && <DriverGps key={tracking} routeId={tracking} />}
     {returning && <section className={styles.availability} aria-label="Retorno da rota">
       <div><strong>Retornando à loja</strong><p>Confirme quando chegar para ficar disponível para a próxima rota.</p></div>
       <button className={styles.secondary} disabled={busy !== null} onClick={() => void confirmReturn(returning)}>Confirmar retorno</button>
