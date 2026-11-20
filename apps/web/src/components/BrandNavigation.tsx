@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BrandLogo } from "@/components/BrandLogo";
 import { BRANDS, BRAND_THEME, brandSwitcherOrder, type Brand } from "@/lib/brands";
 
 /**
@@ -27,9 +28,10 @@ export function BrandNavigation({ active, chat = false, onSelect, disabled = fal
     <div className="flex items-center justify-center gap-3 sm:gap-6">
       {brandSwitcherOrder(active).map(({ slug, featured }) => featured
         ? <Link key={slug} {...selection(slug)} aria-current="page" className="flex min-w-0 items-center gap-2 sm:gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={theme.logo} alt="" width={64} height={64}
-              className="h-14 w-14 shrink-0 rounded-2xl bg-white object-contain shadow-lg sm:h-16 sm:w-16" />
+            {onSelect && slug !== "chelas" ? <BrandLogo checkout brand={slug} width={56} className="shadow-lg" /> :
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={theme.logo} alt="" width={64} height={64}
+                className="h-14 w-14 shrink-0 rounded-2xl bg-white object-contain shadow-lg sm:h-16 sm:w-16" />}
             <span className="min-w-0 leading-tight">
               <strong className="block truncate text-xl font-black tracking-tight sm:text-2xl">{BRANDS[slug]}</strong>
               <span className="block truncate text-[10px] font-semibold uppercase tracking-widest sm:text-xs" style={{ color: theme.accent }}>{theme.tagline}</span>

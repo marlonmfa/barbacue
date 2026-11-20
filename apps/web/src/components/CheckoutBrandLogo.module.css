@@ -1,0 +1,10 @@
+.logo {
+  display: inline-block;
+  flex: none;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: center / contain no-repeat;
+}
+
+.barbacue { background-image: url("./admin/logos/barbacue.webp"); }
+.barbadog { background-image: url("./admin/logos/barbadog.webp"); }
