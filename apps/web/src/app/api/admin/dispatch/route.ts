@@ -11,8 +11,8 @@ const configInput = z.object({ config: dispatchConfigSchema, revision: z.number(
 const routeAction = z.object({ id: z.string().uuid(), driverId: z.number().int().positive().nullable() }).strict();
 const headers = { "Cache-Control": "private, no-store" };
 
-export const GET = withStaff(async (_request, _context, session) => {
-  try { return Response.json({ ...await dispatchOverview(), canConfigure: can(session, "settings"), canSetCourierAvailability: canSetCourierAvailability(session.role), canReviewCourierPay: canReviewCourierPay(session.role) }, { headers }); }
+export const GET = withStaff(async (request, _context, session) => {
+  try { return Response.json({ ...await dispatchOverview(request.nextUrl.searchParams.get("view") === "pending"), canConfigure: can(session, "settings"), canSetCourierAvailability: canSetCourierAvailability(session.role), canReviewCourierPay: canReviewCourierPay(session.role) }, { headers }); }
   catch (error) { return dispatchFailure(error); }
 });
 

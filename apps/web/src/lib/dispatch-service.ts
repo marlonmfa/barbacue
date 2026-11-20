@@ -248,8 +248,10 @@ export async function confirmDispatchReturn(id: string, driverId: number) {
   if (!closed) throw new DispatchError("O retorno só pode ser confirmado pelo entregador da rota após concluir as paradas.");
 }
 
-export async function dispatchOverview() {
+export async function dispatchOverview(includeAllPending = false) {
   const recent = new Date(Date.now() - 24 * 60 * 60_000);
+  const pendingOrders = db.select({ ...orderFields, count: sql<number>`count(*) over ()`.mapWith(Number) })
+    .from(orders).where(and(ownDelivery, isNull(orders.dispatchRouteId))).orderBy(asc(placedAt), asc(orders.id));
   const [[state], origin, routes, candidates, roster, [ifood]] = await Promise.all([
     db.select().from(dispatchSettings).where(settingsFilter),
     readOrigin(),
@@ -257,8 +259,7 @@ export async function dispatchOverview() {
       .leftJoin(staffUsers, eq(dispatchRoutes.driverId, staffUsers.id))
       .where(or(queued, openRoute, gt(dispatchRoutes.startedAt, recent), gt(dispatchRoutes.returnedAt, recent)))
       .orderBy(desc(isNull(dispatchRoutes.startedAt)), asc(dispatchRoutes.createdAt)).limit(100),
-    db.select({ ...orderFields, count: sql<number>`count(*) over ()`.mapWith(Number) }).from(orders).where(and(ownDelivery, isNull(orders.dispatchRouteId)))
-      .orderBy(desc(placedAt), asc(orders.id)).limit(50),
+    includeAllPending ? pendingOrders : pendingOrders.limit(50),
     db.select({
       ...driverFields, active: staffUsers.active, declaredAvailableUntil: staffPresence.declaredAvailableUntil,
       online: sql<boolean>`(${dispatchAvailablePresence}) is true`,
@@ -278,13 +279,14 @@ export async function dispatchOverview() {
   const now = Date.now();
   const linked = routes.length ? await db.select({ ...orderFields, routeId: orders.dispatchRouteId, status: orders.status, deliveryStatus: orders.deliveryStatus, deliveredAt: orders.deliveredAt, totalCents: orders.totalCents, paymentStatus: orders.paymentStatus, eligible: sql<boolean>`(${ownDelivery}) is true` })
     .from(orders).where(inArray(orders.dispatchRouteId, routes.map(({ route }) => route.id))) : [];
+  const mapsReady = !!origin && deliveryProviderConfigured(origin.provider);
   const couriers = roster.map(({ id, name, vehicleModel, vehicleColor, active, online, busy, declaredAvailableUntil, ...permissions }) => ({
     id, name, vehicle: { model: vehicleModel, color: vehicleColor }, active, online, busy, declaredAvailableUntil,
     available: active && online && !busy && can(permissions, "deliveries"),
   }));
   return {
     config, revision: state?.revision ?? 0, report: state?.report ?? null,
-    mapsReady: !!origin && deliveryProviderConfigured(origin.provider),
+    mapsReady,
     couriers, ifood,
     drivers: couriers.filter(courier => courier.available).map(({ id, name, vehicle }) => ({ id, name, vehicle })),
     routes: routes.map(({ route, driverName, vehicleModel, vehicleColor }) => {
@@ -315,6 +317,7 @@ export async function dispatchOverview() {
       reason: !row.address?.trim() ? "Endereço ausente" :
         !row.placedAt ? "Horário do pedido ausente" :
         now >= (row.scheduledAt ?? row.placedAt).getTime() + waitLimitMs(config) ? "Espera máxima atingida" :
+        !mapsReady ? "Origem ou serviço de mapas indisponível" :
         state?.report?.issues.find(issue => issue.id === row.id)?.reason ?? "Aguardando planejamento",
     })),
   };

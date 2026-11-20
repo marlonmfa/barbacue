@@ -66,6 +66,9 @@ div.dispatchPage { max-width: none; }
 .dispatchForm { display: grid; gap: 9px; }
 .dispatchForm label { font-size: 13px; color: var(--text-muted); }
 .dispatchForm select { width: 100%; margin-top: 5px; }
+.pendingTitle { margin: 0 0 10px; font-size: 18px; font-weight: 700; }
+.pendingOrderLink { color: var(--text); font-weight: 700; text-decoration: underline; }
+.pendingShortcut { text-decoration: underline; cursor: pointer; }
 .pending {
   list-style: none;
   margin: 0;

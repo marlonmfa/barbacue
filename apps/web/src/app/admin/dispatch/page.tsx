@@ -26,12 +26,13 @@ type Data = {
   routes: Route[]; drivers: { id: number; name: string; vehicle: DispatchVehicle }[];
   couriers: { id: number; name: string; vehicle: DispatchVehicle; active: boolean; online: boolean; busy: boolean; available: boolean; declaredAvailableUntil?: string | null }[];
   readyWithoutRoute: number;
-  pending: { id: string; brand: string; address: string | null; reason: string }[];
+  pending: { id: string; brand: string; address: string | null; placedAt: string | null; scheduledAt: string | null; reason: string }[];
 };
 type Draft = { config: DispatchConfig; revision: number };
 const endpoint = "/api/admin/dispatch";
 const shortId = (id: string) => id.slice(0, 8).toUpperCase();
 const clock = new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" });
+const orderTime = new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 const minutes = (seconds: number) => Math.ceil(seconds / 60);
 const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const money = (cents: number) => currency.format(cents / 100);
@@ -55,17 +56,19 @@ export default function DispatchPage() {
   const [notice, setNotice] = useState("");
   const [tab, setTab] = useState<"all" | "created" | "queued" | "pending" | "started">("all");
 
+  const pendingView = tab === "pending";
   const load = useCallback(async (signal?: AbortSignal) => {
     try {
-      const response = await fetch(endpoint, { cache: "no-store", signal });
+      const response = await fetch(pendingView ? `${endpoint}?view=pending` : endpoint, { cache: "no-store", signal });
       const payload = await response.json();
+      if (signal?.aborted) return;
       if (!response.ok) throw new Error(payload.error || "Não foi possível consultar o despacho.");
       setData(payload);
       setRefreshError("");
     } catch (cause) {
       if (!signal?.aborted) setRefreshError(cause instanceof Error ? cause.message : "Confira a conexão.");
     }
-  }, []);
+  }, [pendingView]);
   useEffect(() => {
     const controller = new AbortController();
     const initial = window.setTimeout(() => void load(controller.signal), 0);
@@ -213,22 +216,34 @@ export default function DispatchPage() {
       <nav className={queue.filters} aria-label="Filtrar despacho">
         <button aria-pressed={tab === "all"} onClick={() => setTab("all")}>Todos</button>
         <button aria-pressed={tab === "created"} onClick={() => setTab("created")}>Rotas criadas <span>{data.routes.length}</span></button>
+        <button aria-pressed={tab === "pending"} onClick={() => setTab("pending")}>Pedidos pendentes <span>{data.readyWithoutRoute}</span></button>
         <button aria-pressed={tab === "queued"} onClick={() => setTab("queued")}>Rotas na fila <span>{waiting.length}</span></button>
-        <button aria-pressed={tab === "pending"} onClick={() => setTab("pending")}>Pedidos sem rota <span>{data.readyWithoutRoute}</span></button>
         <button aria-pressed={tab === "started"} onClick={() => setTab("started")}>Rotas e retornos <span>{started.length}</span></button>
       </nav>
-      {tab === "created" && <p className={styles.readyCount} aria-live="polite">
-        {data.readyWithoutRoute === 1 ? "1 pedido pronto sem rota" : `${data.readyWithoutRoute} pedidos prontos sem rota`}
-      </p>}
+      {tab === "created" && <div className={styles.readyCount} aria-live="polite">
+        <button type="button" className={styles.pendingShortcut} onClick={() => setTab("pending")}>
+          {data.readyWithoutRoute === 1 ? "1 pedido pronto sem rota" : `${data.readyWithoutRoute} pedidos prontos sem rota`}
+        </button>
+      </div>}
       {(tab === "all" || tab === "created") && <p className={styles.ifoodSummary}>
         <strong>Entregas iFood</strong>
         <span>{data.ifood.inPreparation} na cozinha · {data.ifood.awaitingDispatch} prontos para sair · {data.ifood.dispatched} em entrega</span>
       </p>}
       {tab === "pending" ? (
-        data.pending.length ? <ul className={styles.pending}>{data.pending.map(order => <li key={order.id}>
-          <div><strong>Pedido #{shortId(order.id)}</strong><span>{order.brand} · {order.address || "Sem endereço"}</span></div>
-          <span>{order.reason}</span>
-        </li>)}</ul> : <p className={queue.empty}>Nenhum pedido pronto aguardando rota.</p>
+        <section aria-labelledby="dispatch-pending-title">
+          <h2 id="dispatch-pending-title" className={styles.pendingTitle}>Pedidos prontos sem rota</h2>
+          {data.pending.length ? <ul className={styles.pending} role="list" aria-labelledby="dispatch-pending-title">
+            {data.pending.map(order => <li key={order.id}>
+              <div>
+                <Link className={styles.pendingOrderLink} href={`/admin/orders?pedido=${order.id}`}>Pedido #{shortId(order.id)}</Link>
+                <span>{order.brand}{order.placedAt && <> · Recebido <time dateTime={order.placedAt}>{orderTime.format(new Date(order.placedAt))}</time></>}
+                  {order.scheduledAt && <> · Agendado <time dateTime={order.scheduledAt}>{orderTime.format(new Date(order.scheduledAt))}</time></>}</span>
+                <p>{order.address || "Sem endereço"}</p>
+              </div>
+              <span>{order.reason}</span>
+            </li>)}
+          </ul> : <p className={queue.empty}>Nenhum pedido pronto aguardando rota.</p>}
+        </section>
       ) : (
         <>
           {overview && <div className={`${queue.deliveries} ${styles.routeList} ${styles.courierRoutes}`} role="region" aria-label="Rotas dos entregadores">

@@ -18,8 +18,6 @@ async function assertWaiting(panel: Locator) {
   assert(bikeBox && nameBox && nameBox.y + nameBox.height <= bikeBox.y);
   assert(Math.abs(nameBox.x + nameBox.width / 2 - (bikeBox.x + bikeBox.width / 2)) <= 1);
   assert.equal(await panel.getByRole("heading").count(), 0);
-  const row = await panel.boundingBox();
-  assert(row && row.height < 140);
   assert.equal(await store.getAttribute("aria-current"), "step");
   assert.equal(await line.getByRole("img", { name: /Moto/ }).count(), 1);
   assert.equal(await panel.locator("time").count(), 0);
@@ -84,34 +82,24 @@ async function main() {
     assert.equal(await idleOverview.locator("time").count(), 0);
     assert.equal(await idleOverview.getByText("Entregador", { exact: true }).count(), 5);
     assert.equal(await idleOverview.getByRole("heading").count(), 0);
-    const idleRoster = empty.getByRole("list", { name: "Entregadores cadastrados" });
-    assert.equal(await idleRoster.getByRole("listitem").count(), 5);
-    assert.equal(await idleRoster.getByText("Fora de serviço", { exact: true }).count(), 5);
-    assert.equal(await idleRoster.getByText("Aguardando rota", { exact: true }).count(), 5);
-    assert.equal(await idleRoster.getByRole("img", { name: /Moto/ }).count(), 5);
-    assert.equal(await idleRoster.locator('[style*="--bike-left: 0%"]').count(), 5);
+    await assertWaiting(rows.first());
+    assert.equal(await idleOverview.getByText("Fora de serviço", { exact: true }).count(), 5);
     if (process.env.DISPATCH_TEST_EMPTY_SCREENSHOT) {
       await empty.screenshot({ path: process.env.DISPATCH_TEST_EMPTY_SCREENSHOT, fullPage: true });
     }
-    for (let index = 1; index <= 5; index++) {
-      const name = `Entregador de homologação ${index}`;
-      const button = idleRoster.getByRole("button", { name: `Ver rota de ${name}` });
-      await button.click();
-      await idleOverview.waitFor({ state: "hidden" });
-      assert.equal(await empty.getByRole("region", { name: /^Rota de / }).count(), 1);
-      const panel = empty.getByRole("region", { name: `Rota de ${name}` });
-      const store = await assertWaiting(panel);
-      if (index === 1) await store.getByRole("img", { name: "Moto CG Fan 160, Prata" }).waitFor();
-      assert.equal(await button.getAttribute("aria-pressed"), "true");
-      assert.equal(await panel.getByRole("list", { name: "Sequência de paradas da rota" }).count(), 0);
-    }
-    const allCouriersTab = empty.getByRole("navigation", { name: "Filtrar despacho" }).getByRole("button", { name: "Todos", exact: true });
-    assert.equal(await allCouriersTab.getAttribute("aria-pressed"), "false");
-    await allCouriersTab.click();
-    await idleOverview.waitFor();
-    assert.equal(await allCouriersTab.getAttribute("aria-pressed"), "true");
-    assert.equal(await rows.count(), 5);
-    assert.equal(await idleOverview.getByRole("img", { name: /Moto/ }).count(), 5);
+    const pendingTab = empty.getByRole("button", { name: /^Pedidos pendentes/ });
+    await pendingTab.click();
+    await empty.getByText("Nenhum pedido pronto aguardando rota.").waitFor();
+    const { rows: bulk } = await pool.query(`
+      insert into orders(brand,customer_name,customer_phone,items,subtotal_cents,total_cents,channel,status)
+      select 'barbacue','Volume de homologação','','[]',1000,1000,'click','ready'
+      from generate_series(1,51) returning id`);
+    const pendingList = empty.getByRole("list", { name: "Pedidos prontos sem rota" });
+    await pendingList.getByRole("listitem").nth(50).waitFor();
+    assert.equal(await pendingList.getByRole("listitem").count(), 51);
+    assert.equal(await pendingList.getByText("Endereço ausente", { exact: true }).count(), 51);
+    assert.equal((await pendingTab.innerText()).replace(/\s+/g, " "), "Pedidos pendentes 51");
+    await pool.query("update orders set archived_at = now() where id = any($1::uuid[])", [bulk.map(order => order.id)]);
     await empty.close();
     const geocodable = process.env.DISPATCH_TEST_GEOCODABLE_ADDRESS;
     if (geocodable) {
@@ -159,16 +147,30 @@ async function main() {
     const created = page.getByRole("button", { name: /^Rotas criadas/ });
     await created.click();
     await page.getByText(stops.length === 2 ? "1 pedido pronto sem rota" : `${stops.length - 1} pedidos prontos sem rota`, { exact: true }).waitFor();
+    await page.getByRole("button", { name: /^\d+ pedidos? prontos? sem rota$/ }).click();
+    const pending = page.getByRole("list", { name: "Pedidos prontos sem rota" });
+    await pending.getByRole("listitem").nth(stops.length - 2).waitFor();
+    assert.equal(await pending.getByRole("listitem").count(), stops.length - 1);
     const { rows: [preparing] } = await pool.query("select id from orders where status='preparing'");
     const ready = await operator.request.patch(new URL("/api/admin/kitchen", url).href, { data: { id: preparing.id, status: "ready" } });
     assert.equal(ready.status(), 200);
+    const added = pending.getByRole("link", { name: `Pedido #${preparing.id.slice(0, 8).toUpperCase()}` });
+    await added.waitFor();
+    assert.equal(await added.getAttribute("href"), `/admin/orders?pedido=${preparing.id}`);
+    assert.equal(await pending.getByRole("listitem").count(), stops.length);
+    if (process.env.DISPATCH_TEST_PENDING_SCREENSHOT) {
+      await page.screenshot({ path: process.env.DISPATCH_TEST_PENDING_SCREENSHOT, fullPage: true });
+    }
+    await created.click();
     await page.getByText(`${stops.length} pedidos prontos sem rota`, { exact: true }).waitFor();
-    assert.equal(await created.getAttribute("aria-pressed"), "true");
     await page.getByRole("button", { name: "Gerar rotas" }).click();
     await page.getByText(/entrou na fila|entraram na fila/).waitFor();
     await page.getByRole("button", { name: "Rotas criadas 1", exact: true }).waitFor();
     await page.getByText("0 pedidos prontos sem rota", { exact: true }).waitFor();
     assert.equal(await created.getAttribute("aria-pressed"), "true");
+    await page.getByRole("button", { name: "Pedidos pendentes 0", exact: true }).click();
+    await page.getByText("Nenhum pedido pronto aguardando rota.").waitFor();
+    await created.click();
     if (process.env.DISPATCH_TEST_CREATED_SCREENSHOT) {
       await page.screenshot({ path: process.env.DISPATCH_TEST_CREATED_SCREENSHOT, fullPage: true });
     }
@@ -197,28 +199,14 @@ async function main() {
     assert.equal(started.amountToCollectCents, assigned.reduce((sum: number, order: { amountToCollectCents: number }) => sum + order.amountToCollectCents, 0));
     assert(started.amountToCollectCents > 0);
     assert.equal((await courier.request.patch(new URL("/api/admin/delivery", url).href, { data: { returnRouteId: started.id } })).status(), 409);
-    const roster = page.getByRole("list", { name: "Entregadores cadastrados" });
-    await roster.getByText(`Entrega 1 de ${stops.length}`, { exact: true }).waitFor();
-    assert.equal(await roster.getByText("Fora de serviço", { exact: true }).count(), 4);
-    assert.equal(await roster.getByText("Aguardando rota", { exact: true }).count(), 4);
     const overview = page.getByRole("region", { name: "Rotas dos entregadores" });
-    await overview.getByRole("list", { name: "Sequência de paradas da rota" }).waitFor();
+    const detail = overview.getByRole("region", { name: "Rota de Entregador de homologação 1" });
+    await detail.getByText(`Entrega 1 de ${stops.length}`, { exact: true }).waitFor();
     assert.equal(await overview.getByRole("list", { name: "Linha de entregas em espera" }).count(), 4);
     assert.equal(await overview.getByRole("region", { name: /^Rota de / }).count(), 5);
-    const activeCourier = roster.getByRole("button", { name: "Ver rota de Entregador de homologação 1" });
-    await activeCourier.click();
-    const detail = page.getByRole("region", { name: "Rota de Entregador de homologação 1" });
-    await detail.getByText("Posição estimada pelo tempo da etapa").waitFor();
-    assert.equal(await page.getByRole("region", { name: /^Rota de / }).count(), 1);
     const amount = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(started.amountToCollectCents / 100);
     assert((await detail.locator("article header").innerText()).includes(amount));
     await detail.getByText(/Chegada estimada · falt/).first().waitFor();
-    await roster.getByRole("button", { name: "Ver rota de Entregador de homologação 2" }).click();
-    await assertWaiting(page.getByRole("region", { name: "Rota de Entregador de homologação 2" }));
-    assert.equal(await timeline.count(), 0);
-    await activeCourier.click();
-    await detail.getByRole("list", { name: "Sequência de paradas da rota" }).waitFor();
-    assert.equal(await activeCourier.getAttribute("aria-pressed"), "true");
     const marker = timeline.locator('[aria-current="step"]');
     await marker.getByText("Parada 1", { exact: true }).waitFor();
     const motorcycle = marker.getByRole("img", { name: "Moto CG Fan 160, Prata" });
@@ -250,12 +238,9 @@ async function main() {
     for (const fraction of [0.25, 0.75, 1.25]) {
       await page.clock.setFixedTime(new Date(started.segment.from + duration * fraction));
       await page.waitForFunction(expected => {
-        const target = document.querySelector('[aria-current="step"] [style*="--bike-left"]') as HTMLElement;
-        return target && Math.abs(Number.parseFloat(target.style.getPropertyValue("--bike-left")) - expected) < 0.1;
-      }, Math.min(fraction, 1) * 100 - 50);
-      const miniPosition = await activeCourier.locator('[style*="--bike-left"]').evaluate(el =>
-        Number.parseFloat((el as HTMLElement).style.getPropertyValue("--bike-left")));
-      assert(Math.abs(miniPosition - Math.min(fraction, 1) * 100 / (stops.length + 1)) < 0.1);
+        const target = document.querySelector('[aria-current="step"] [style*="--bike-offset"]') as HTMLElement;
+        return target && Math.abs(Number.parseFloat(target.style.getPropertyValue("--bike-offset")) - expected) < 0.1;
+      }, Math.min(fraction, 1) * 100 - 100);
       assert.equal((await dispatch()).routes[0].currentPosition, 1);
       if (fraction === 0.75 && process.env.DISPATCH_TEST_ESTIMATE_SCREENSHOT) {
         await page.setViewportSize({ width: 1440, height: 980 });
@@ -292,7 +277,7 @@ async function main() {
     await back.locator("time").waitFor();
     assert.equal((await operator.request.patch(new URL("/api/admin/delivery", url).href, { data: { returnRouteId: started.id } })).status(), 409);
     assert.equal(returning.segment.to, Date.parse(returning.returnEstimate));
-    await roster.getByText("Retornando à loja", { exact: true }).waitFor();
+    await detail.getByText("Retornando à loja", { exact: true }).waitFor();
     await courierPage.getByRole("button", { name: "Confirmar retorno" }).click();
     await courierPage.getByText("Retorno à loja confirmado.").waitFor();
     const returned = (await dispatch()).routes[0];
@@ -300,13 +285,7 @@ async function main() {
     assert(returned.returnedAt);
     assert.equal(returned.segment, null);
     await assertWaiting(detail);
-    await activeCourier.getByText(/Aguardando rota$/).waitFor();
-    assert.equal(await activeCourier.locator('[style*="--bike-left: 0%"]').count(), 1);
-    const todos = page.getByRole("navigation", { name: "Filtrar despacho" }).getByRole("button", { name: "Todos", exact: true });
-    await todos.click();
-    assert.equal(await activeCourier.getAttribute("aria-pressed"), "false");
-    assert(await todos.evaluate(el => document.activeElement === el));
-    await overview.waitFor();
+    await detail.getByText(/Aguardando rota$/).waitFor();
     assert.equal(await overview.getByRole("list", { name: "Linha de entregas em espera" }).count(), 5);
     for (const [model, color, silhouette, paint] of [
       ["Twister", "Cinza", "twister", "#68778f"],
@@ -320,7 +299,7 @@ async function main() {
       assert.equal(await bike.getAttribute("data-silhouette"), silhouette);
       assert.equal(await bike.evaluate(el => getComputedStyle(el).getPropertyValue("--bike-paint").trim()), paint);
     }
-    console.log("Navegador validado: aba Rotas criadas atualiza quando a cozinha marca pronto, criação, saída manual e retorno.");
+    console.log("Navegador validado: aba Pedidos pendentes, lista com mais de 50 itens, entrada ao marcar pronto e remoção ao gerar rota.");
   } finally {
     await browser.close();
     await pool.end();
