@@ -93,6 +93,7 @@
 .progress strong { color: var(--text); }
 
 .routeList { grid-template-columns: minmax(0, 1fr); }
+.unassignedRoutes { margin-top: 20px; }
 
 .timeline {
   position: relative;

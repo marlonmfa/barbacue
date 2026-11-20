@@ -94,7 +94,7 @@ export default function DispatchPage() {
         setNotice(payload.created ? `${payload.created} ${payload.created === 1 ? "rota entrou" : "rotas entraram"} na fila.` : "Nenhuma nova rota atende às regras neste momento.");
       } else if (success) {
         setNotice(success);
-        if (method === "PATCH" && body && "driverId" in body && body.driverId !== null) setTab("started");
+        if (method === "PATCH" && body && "driverId" in body && body.driverId !== null) setTab("all");
       }
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Confira a conexão.");
@@ -117,16 +117,40 @@ export default function DispatchPage() {
 
   const waiting = data?.routes.filter(route => !route.startedAt) ?? [];
   const started = data?.routes.filter(route => route.startedAt) ?? [];
-  const visibleRoutes = tab === "queued" ? waiting : tab === "started" ? started : [...started, ...waiting];
   const activeRoutes = new Map(started.filter(route => !route.returnedAt).map(route => [route.driverId, route]));
-  const courier = data?.couriers.find(person => person.id === courierId);
+  const couriers = data?.couriers ?? [];
+  const courierIds = new Set(couriers.map(person => person.id));
+  const courier = couriers.find(person => person.id === courierId);
   const courierRoute = courier ? activeRoutes.get(courier.id) : undefined;
+  const overview = tab === "all" && couriers.length > 0;
+  const visibleRoutes = tab === "queued" ? waiting : tab === "started" ? started
+    : [...started.filter(route => !route.returnedAt && (route.driverId === null || !courierIds.has(route.driverId))), ...waiting];
   const config = draft?.config ?? data?.config;
 
   function renderRoute(route: Route) {
     return <RouteCard key={route.id} route={route} drivers={data?.drivers ?? []} busy={busy} now={now}
       start={driverId => void mutate("PATCH", { id: route.id, driverId }, "Saída registrada. As paradas estão em Minhas entregas.")}
       release={() => void mutate("PATCH", { id: route.id, driverId: null }, "Pedidos devolvidos para planejamento.")} />;
+  }
+
+  function showAllCouriers() {
+    setCourierId(null);
+    setTab("all");
+  }
+
+  function renderCourierRoute(person: Data["couriers"][number], focused = false) {
+    const route = activeRoutes.get(person.id);
+    const headingId = `dispatch-courier-route-title-${person.id}`;
+    return <section key={person.id} id={`dispatch-courier-route-${person.id}`} aria-labelledby={headingId}>
+      <div className={styles.courierRouteHeading}>
+        <h2 id={headingId} ref={focused ? courierHeading : undefined} tabIndex={focused ? -1 : undefined}>Rota de {person.name}</h2>
+        {focused && <button className={queue.secondary} onClick={() => {
+          showAllCouriers();
+          document.getElementById(`dispatch-courier-${person.id}`)?.focus();
+        }}>Ver todos os entregadores</button>}
+      </div>
+      {route ? renderRoute(route) : <WaitingTimeline vehicle={person.vehicle} />}
+    </section>;
   }
 
   return <div className={queue.page}>
@@ -175,20 +199,11 @@ export default function DispatchPage() {
           </div>}
         </form>
       </details>
-      <CourierRoster couriers={data.couriers} activeRoutes={activeRoutes} selectedId={courierId} now={now}
-        onSelect={id => setCourierId(current => current === id ? null : id)} />
-      {courier ? <section id="dispatch-courier-route" aria-labelledby="dispatch-courier-route-title">
-        <div className={styles.courierRouteHeading}>
-          <h2 id="dispatch-courier-route-title" ref={courierHeading} tabIndex={-1}>Rota de {courier.name}</h2>
-          <button className={queue.secondary} onClick={() => {
-            setCourierId(null);
-            document.getElementById(`dispatch-courier-${courier.id}`)?.focus();
-          }}>Voltar às rotas</button>
-        </div>
-        {courierRoute ? renderRoute(courierRoute) : <WaitingTimeline vehicle={courier.vehicle} />}
-      </section> : <>
+      <CourierRoster couriers={couriers} activeRoutes={activeRoutes} selectedId={courierId} now={now}
+        onSelect={id => courierId === id ? showAllCouriers() : setCourierId(id)} />
+      {courier ? renderCourierRoute(courier, true) : <>
         <nav className={queue.filters} aria-label="Filtrar despacho">
-          <button aria-pressed={tab === "all"} onClick={() => setTab("all")}>Todas as rotas <span>{data.routes.length}</span></button>
+          <button aria-pressed={tab === "all"} onClick={() => setTab("all")}>Visão geral</button>
           <button aria-pressed={tab === "queued"} onClick={() => setTab("queued")}>Rotas na fila <span>{waiting.length}</span></button>
           <button aria-pressed={tab === "pending"} onClick={() => setTab("pending")}>Pedidos sem rota <span>{data.pending.length}{data.pending.length === 50 && "+"}</span></button>
           <button aria-pressed={tab === "started"} onClick={() => setTab("started")}>Rotas e retornos <span>{started.length}</span></button>
@@ -199,14 +214,19 @@ export default function DispatchPage() {
             <span>{order.reason}</span>
           </li>)}</ul> : <p className={queue.empty}>Nenhum pedido pronto aguardando rota.</p>
         ) : (
-          visibleRoutes.length ? <div className={`${queue.deliveries} ${styles.routeList}`}>
-            {visibleRoutes.map(renderRoute)}
-          </div> : data.couriers.length ? <p className={queue.empty}>
-            {data.routes.length ? "Nenhuma rota nesta aba." : "Nenhuma rota no momento."}
-          </p> : <EmptyTimeline hasRoutes={data.routes.length > 0} />
+          <>
+            {overview && <div className={`${queue.deliveries} ${styles.routeList}`} role="region" aria-label="Rotas dos entregadores">
+              {couriers.map(person => renderCourierRoute(person))}
+            </div>}
+            {visibleRoutes.length > 0 ? <div className={`${queue.deliveries} ${styles.routeList} ${overview ? styles.unassignedRoutes : ""}`}>
+              {visibleRoutes.map(renderRoute)}
+            </div> : !overview && (couriers.length ? <p className={queue.empty}>
+              {data.routes.length ? "Nenhuma rota nesta aba." : "Nenhuma rota no momento."}
+            </p> : <EmptyTimeline hasRoutes={data.routes.length > 0} />)}
+          </>
         )}
       </>}
-      {(courier ? courierRoute : tab !== "pending" && visibleRoutes.length > 0) && <p className={styles.attribution}>Dados de mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a></p>}
+      {(courier ? courierRoute : tab !== "pending" && (visibleRoutes.length > 0 || (overview && activeRoutes.size > 0))) && <p className={styles.attribution}>Dados de mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a></p>}
     </>}
   </div>;
 }
@@ -233,7 +253,7 @@ function CourierRoster({ couriers, activeRoutes, selectedId, now, onSelect }: {
           <button type="button" id={`dispatch-courier-${courier.id}`} className={styles.courierButton}
             aria-label={`Ver rota de ${courier.name}`} aria-pressed={selected}
             aria-describedby={`dispatch-courier-status-${courier.id}`}
-            aria-controls={selected ? "dispatch-courier-route" : undefined} onClick={() => onSelect(courier.id)}>
+            aria-controls={selected ? `dispatch-courier-route-${courier.id}` : undefined} onClick={() => onSelect(courier.id)}>
             <span className={styles.courierDetails}><strong>{courier.name}</strong>
               <span id={`dispatch-courier-status-${courier.id}`}>
                 <span className={styles.courierStatus}>{status}</span>
@@ -396,7 +416,7 @@ function WaitingTimeline({ vehicle }: { vehicle: DispatchVehicle }) {
 function EmptyTimeline({ hasRoutes }: { hasRoutes: boolean }) {
   return <section className={`${queue.delivery} ${styles.timelinePreview}`}>
     <h2>{hasRoutes ? "Nenhuma rota nesta aba" : "Nenhuma rota no momento"}</h2>
-    <p>{hasRoutes ? "Confira a aba Todas as rotas." : "A linha receberá horários quando houver uma rota planejada. Exemplo:"}</p>
+    <p>{hasRoutes ? "Confira a aba Visão geral." : "A linha receberá horários quando houver uma rota planejada. Exemplo:"}</p>
     <ol className={styles.timeline} role="list" aria-label="Exemplo da linha de entregas">
       {["Saída da loja", "Parada 1", "Volta à loja"].map((label, index) =>
         <li key={label} className={styles.timelineStep}>
