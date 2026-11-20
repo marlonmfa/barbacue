@@ -133,9 +133,9 @@ export default function DispatchPage() {
       release={() => void mutate("PATCH", { id: route.id, driverId: null }, "Pedidos devolvidos para planejamento.")} />;
   }
 
-  function showAllCouriers() {
+  function selectDispatchTab(next: typeof tab) {
     setCourierId(null);
-    setTab("all");
+    setTab(next);
   }
 
   function renderCourierRoute(person: Data["couriers"][number], focused = false) {
@@ -145,7 +145,7 @@ export default function DispatchPage() {
       <div className={styles.courierRouteHeading}>
         <h2 id={headingId} ref={focused ? courierHeading : undefined} tabIndex={focused ? -1 : undefined}>Rota de {person.name}</h2>
         {focused && <button className={queue.secondary} onClick={() => {
-          showAllCouriers();
+          selectDispatchTab("all");
           document.getElementById(`dispatch-courier-${person.id}`)?.focus();
         }}>Ver todos os entregadores</button>}
       </div>
@@ -200,14 +200,14 @@ export default function DispatchPage() {
         </form>
       </details>
       <CourierRoster couriers={couriers} activeRoutes={activeRoutes} selectedId={courierId} now={now}
-        onSelect={id => courierId === id ? showAllCouriers() : setCourierId(id)} />
+        onSelect={id => courierId === id ? selectDispatchTab("all") : setCourierId(id)} />
+      <nav className={queue.filters} aria-label="Filtrar despacho">
+        <button aria-pressed={!courier && tab === "all"} onClick={() => selectDispatchTab("all")}>Todos</button>
+        <button aria-pressed={!courier && tab === "queued"} onClick={() => selectDispatchTab("queued")}>Rotas na fila <span>{waiting.length}</span></button>
+        <button aria-pressed={!courier && tab === "pending"} onClick={() => selectDispatchTab("pending")}>Pedidos sem rota <span>{data.pending.length}{data.pending.length === 50 && "+"}</span></button>
+        <button aria-pressed={!courier && tab === "started"} onClick={() => selectDispatchTab("started")}>Rotas e retornos <span>{started.length}</span></button>
+      </nav>
       {courier ? renderCourierRoute(courier, true) : <>
-        <nav className={queue.filters} aria-label="Filtrar despacho">
-          <button aria-pressed={tab === "all"} onClick={() => setTab("all")}>Visão geral</button>
-          <button aria-pressed={tab === "queued"} onClick={() => setTab("queued")}>Rotas na fila <span>{waiting.length}</span></button>
-          <button aria-pressed={tab === "pending"} onClick={() => setTab("pending")}>Pedidos sem rota <span>{data.pending.length}{data.pending.length === 50 && "+"}</span></button>
-          <button aria-pressed={tab === "started"} onClick={() => setTab("started")}>Rotas e retornos <span>{started.length}</span></button>
-        </nav>
         {tab === "pending" ? (
           data.pending.length ? <ul className={styles.pending}>{data.pending.map(order => <li key={order.id}>
             <div><strong>Pedido #{shortId(order.id)}</strong><span>{order.brand} · {order.address || "Sem endereço"}</span></div>
@@ -416,7 +416,7 @@ function WaitingTimeline({ vehicle }: { vehicle: DispatchVehicle }) {
 function EmptyTimeline({ hasRoutes }: { hasRoutes: boolean }) {
   return <section className={`${queue.delivery} ${styles.timelinePreview}`}>
     <h2>{hasRoutes ? "Nenhuma rota nesta aba" : "Nenhuma rota no momento"}</h2>
-    <p>{hasRoutes ? "Confira a aba Visão geral." : "A linha receberá horários quando houver uma rota planejada. Exemplo:"}</p>
+    <p>{hasRoutes ? "Confira a aba Todos." : "A linha receberá horários quando houver uma rota planejada. Exemplo:"}</p>
     <ol className={styles.timeline} role="list" aria-label="Exemplo da linha de entregas">
       {["Saída da loja", "Parada 1", "Volta à loja"].map((label, index) =>
         <li key={label} className={styles.timelineStep}>

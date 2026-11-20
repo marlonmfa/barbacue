@@ -94,9 +94,13 @@ async function main() {
       assert.equal(await button.getAttribute("aria-pressed"), "true");
       assert.equal(await panel.getByRole("list", { name: "Sequência de paradas da rota" }).count(), 0);
     }
-    await empty.getByRole("button", { name: "Ver todos os entregadores" }).click();
+    const allCouriersTab = empty.getByRole("navigation", { name: "Filtrar despacho" }).getByRole("button", { name: "Todos", exact: true });
+    assert.equal(await allCouriersTab.getAttribute("aria-pressed"), "false");
+    await allCouriersTab.click();
     await idleOverview.waitFor();
+    assert.equal(await allCouriersTab.getAttribute("aria-pressed"), "true");
     assert.equal(await rows.count(), 5);
+    assert.equal(await idleOverview.getByRole("img", { name: /Moto/ }).count(), 5);
     await empty.close();
     const geocodable = process.env.DISPATCH_TEST_GEOCODABLE_ADDRESS;
     if (geocodable) {
