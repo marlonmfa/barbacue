@@ -1,0 +1,49 @@
+services:
+  extract:
+    profiles: [prepare]
+    build:
+      context: .
+      dockerfile: Dockerfile.extract
+    volumes:
+      - ${ROUTING_DATA_DIR:?configure ROUTING_DATA_DIR}:/data
+  osrm:
+    image: barbacue-routing-osrm:6.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile.osrm
+    command: ["osrm-routed", "--algorithm", "MLD", "--threads", "2", "--max-table-size", "17", "/data/jaragua.osrm"]
+    init: true
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${ROUTING_OSRM_PORT:-18965}:5000"
+    volumes:
+      - ${ROUTING_DATA_DIR:?configure ROUTING_DATA_DIR}:/data:ro
+    mem_limit: 1g
+    logging:
+      driver: none
+  nominatim:
+    build:
+      context: .
+      dockerfile: Dockerfile.nominatim
+    init: true
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${ROUTING_NOMINATIM_PORT:-18966}:8080"
+    environment:
+      PBF_PATH: /routing-input/jaragua.osm.pbf
+      NOMINATIM_PASSWORD: ${ROUTING_NOMINATIM_PASSWORD:?configure ROUTING_NOMINATIM_PASSWORD}
+      THREADS: "2"
+      GUNICORN_WORKERS: "2"
+      POSTGRES_SHARED_BUFFERS: 192MB
+      POSTGRES_MAINTENANCE_WORK_MEM: 256MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 768MB
+      FREEZE: "true"
+    volumes:
+      - ${ROUTING_DATA_DIR:?configure ROUTING_DATA_DIR}/jaragua.osm.pbf:/routing-input/jaragua.osm.pbf:ro
+      - nominatim_data:/var/lib/postgresql/16/main
+    shm_size: 256m
+    mem_limit: 2g
+    logging:
+      driver: none
+volumes:
+  nominatim_data:

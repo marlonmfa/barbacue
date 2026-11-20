@@ -3,7 +3,7 @@
 import { ifoodReceiptReferences } from "../../../../../print-agent/src/ifood-references.cjs";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { isBrand } from "@/lib/brands";
+import { BRANDS, isBrand, type Brand } from "@/lib/brands";
 import { OrderImport } from "@/components/admin/OrderImport";
 import { AdminIcon } from "@/components/admin/AdminIcons";
 import "./order-manager.css";
@@ -65,6 +65,13 @@ export default function AdminOrders() {
   const [filterStatus, setFilterStatus] = useState("");
   const [filterChannel, setFilterChannel] = useState("");
   const [view, setView] = useState("board");
+  const [filterBrand, setFilterBrand] = useState<Brand | "">("");
+  const [message, setMessage] = useState("");
+  const archived = view === "archive";
+  const loadVersion = useRef(0);
+  const archiveDialog = useRef<HTMLDialogElement>(null);
+  const [archiveBatch, setArchiveBatch] = useState<{ brand: Brand | null; ids: string[] } | null>(null);
+  const [archiveError, setArchiveError] = useState("");
   const [search, setSearch] = useState("");
   const [drivers, setDrivers] = useState<{ id: number; name: string }[]>([]);
   const openedLink = useRef(false);
@@ -72,9 +79,11 @@ export default function AdminOrders() {
   const [busy, setBusy] = useState<string | null>(null);
 
   const load = useCallback(async (signal?: AbortSignal) => {
+    const version = ++loadVersion.current;
     try {
-      const [response, driverResponse] = await Promise.all([fetch("/api/admin/orders", { cache: "no-store", signal }), fetch("/api/admin/orders?drivers=1", { cache: "no-store", signal })]);
+      const [response, driverResponse] = await Promise.all([fetch(archived ? "/api/admin/orders?archived=1" : "/api/admin/orders", { cache: "no-store", signal }), fetch("/api/admin/orders?drivers=1", { cache: "no-store", signal })]);
       const [data, driverData] = await Promise.all([response.json(), driverResponse.json()]);
+      if (signal?.aborted || version !== loadVersion.current) return;
       if (!response.ok || !driverResponse.ok) throw new Error("Não foi possível carregar os pedidos. Confira seu acesso e tente novamente.");
       setOrders(data); setDrivers(driverData.drivers); setError("");
       // /admin/orders?pedido=<id> (link do feed) abre o pedido direto na primeira carga.
@@ -83,9 +92,9 @@ export default function AdminOrders() {
       const linked = linkedId ? data.find((order: Order) => order.id === linkedId) ?? null : null;
       if (linked) openedLink.current = true;
       setSelected(current => current ? data.find((order: Order) => order.id === current.id) ?? null : linked);
-    } catch (cause) { if (!signal?.aborted) setError(cause instanceof Error ? cause.message : "Confira a conexão e tente novamente."); }
-    finally { if (!signal?.aborted) setLoading(false); }
-  }, []);
+    } catch (cause) { if (!signal?.aborted && version === loadVersion.current) setError(cause instanceof Error ? cause.message : "Confira a conexão e tente novamente."); }
+    finally { if (!signal?.aborted && version === loadVersion.current) setLoading(false); }
+  }, [archived]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -125,7 +134,49 @@ export default function AdminOrders() {
     finally { setBusy(null); }
   }
 
-  const filtered = orders.filter(o => (!filterStatus || o.status === filterStatus) && (!filterChannel || (o.channel || "other") === filterChannel));
+  function changeView(nextView: string) {
+    if ((nextView === "archive") !== archived) {
+      loadVersion.current++;
+      setOrders([]);
+      setLoading(true);
+      setFilterStatus("");
+    }
+    setView(nextView);
+  }
+
+  const restaurantOrders = orders.filter(order => !filterBrand || order.brand === filterBrand);
+  function openArchiveDialog() {
+    setArchiveBatch({ brand: filterBrand || null, ids: restaurantOrders.map(order => order.id) });
+    setArchiveError("");
+  }
+
+  useEffect(() => {
+    if (archiveBatch && !archiveDialog.current?.open) archiveDialog.current?.showModal();
+  }, [archiveBatch]);
+
+  async function archiveOrders() {
+    if (!archiveBatch || busy) return;
+    setBusy("archive");
+    setArchiveError("");
+    try {
+      const response = await fetch("/api/admin/orders/archive", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(archiveBatch),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Não foi possível arquivar os pedidos.");
+      const ids = new Set(archiveBatch.ids);
+      setOrders(current => current.filter(order => !ids.has(order.id)));
+      archiveDialog.current?.close();
+      setMessage(data.archived === 0 ? "Os pedidos já estavam arquivados." : data.archived === 1 ? "1 pedido arquivado." : `${data.archived} pedidos arquivados.`);
+      await load();
+    } catch (cause) {
+      setArchiveError(cause instanceof Error ? cause.message : "Confira a conexão e tente novamente.");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  const filtered = restaurantOrders.filter(o => (!filterStatus || o.status === filterStatus) && (!filterChannel || (o.channel || "other") === filterChannel));
   const channels = [...new Set(orders.map(o => o.channel || "other"))].sort();
 
   const stages = [
@@ -146,15 +197,34 @@ export default function AdminOrders() {
     <div className="order-manager">
       <div className="flex items-center justify-between mb-6">
         <div><h1 className="text-2xl font-bold text-white">Pedidos</h1><p className="text-[#a89a8c] text-sm mt-2">Acompanhe seus pedidos por etapa de atendimento.</p></div>
+        <div className="archive-header-actions">
+          {!archived && <button type="button" className="order-archive-button" disabled={loading || !!busy || restaurantOrders.length === 0} onClick={openArchiveDialog}>Limpar painel</button>}
         <button onClick={() => void load()} className="min-h-12 text-[#a89a8c] hover:text-white text-sm px-4 py-2 rounded-xl bg-[#1a1512] border border-[#352b24]">
           ↻ Atualizar
         </button>
+        </div>
       </div>
+      <dialog ref={archiveDialog} className="order-archive-dialog" aria-labelledby="archive-title" aria-describedby="archive-description"
+        onClose={() => setArchiveBatch(null)} onCancel={event => { if (busy === "archive") event.preventDefault(); }}>
+        {archiveBatch && <>
+          <h2 id="archive-title">Limpar painel de pedidos?</h2>
+          <p id="archive-description">Tem certeza de que deseja mover {archiveBatch.ids.length === 1 ? "1 pedido" : `${archiveBatch.ids.length} pedidos`} de {archiveBatch.brand ? BRANDS[archiveBatch.brand] : "todos os restaurantes"} para Arquivados? Isso inclui todas as etapas, modalidades e origens, mesmo com filtros de busca ativos.</p>
+          {archiveError && <p role="alert">{archiveError}</p>}
+          <div>
+            <button type="button" disabled={!!busy} onClick={() => archiveDialog.current?.close()}>Cancelar</button>
+            <button type="button" disabled={!!busy} onClick={() => void archiveOrders()}>{busy === "archive" ? "Arquivando…" : "Confirmar arquivamento"}</button>
+          </div>
+        </>}
+      </dialog>
+      {message && <p role="status">{message}</p>}
       {error && <p role="alert" className="mb-5 border border-red-900/60 bg-red-950/40 text-red-200 p-4 rounded-xl text-sm">{error}</p>}
 
       <details className="order-import"><summary>Importar pedido</summary><OrderImport onImported={() => void load()} /></details>
       <div className="order-controls">
-        <div role="group" aria-label="Visualização dos pedidos"><button aria-pressed={view === "board"} onClick={() => setView("board")}>Quadros</button><button aria-pressed={view === "list"} onClick={() => setView("list")}>Lista</button></div>
+        <div role="group" aria-label="Visualização dos pedidos"><button aria-pressed={view === "board"} onClick={() => changeView("board")}>Quadros</button><button aria-pressed={view === "list"} onClick={() => changeView("list")}>Lista</button><button disabled={!!busy} aria-pressed={archived} onClick={() => changeView("archive")}>Arquivados</button></div>
+        <label>Restaurante<select value={filterBrand} onChange={event => setFilterBrand(isBrand(event.target.value) ? event.target.value : "")}>
+          <option value="">Todos os restaurantes</option>{Object.entries(BRANDS).map(([id, label]) => <option key={id} value={id}>{label}</option>)}
+        </select></label>
         <label>Buscar pedido<input type="search" placeholder="Número, cliente ou telefone" value={search} onChange={e => setSearch(e.target.value)} /></label>
       </div>
       <label className="block mb-5 text-sm text-[#c8b89a]">Origem do pedido
@@ -163,10 +233,10 @@ export default function AdminOrders() {
       <div className="flex gap-2 mb-5 flex-wrap">
         <button onClick={() => setFilterStatus("")}
           className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${!filterStatus ? "bg-[#ed1b24] hover:bg-[#c8141c] text-white" : "bg-[#1a1512] text-[#a89a8c] border border-[#352b24]"}`}>
-          Todos ({orders.length})
+          Todos ({restaurantOrders.length})
         </button>
         {STATUSES.map((s) => {
-          const n = orders.filter((o) => o.status === s.key).length;
+          const n = restaurantOrders.filter((o) => o.status === s.key).length;
           return (
             <button key={s.key} onClick={() => setFilterStatus(s.key)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${filterStatus === s.key ? "bg-[#ed1b24] hover:bg-[#c8141c] text-white" : "bg-[#1a1512] text-[#a89a8c] border border-[#352b24]"}`}>
@@ -235,7 +305,7 @@ export default function AdminOrders() {
                       <select
                         value={o.status}
                         onChange={(e) => void updateOrder(o.id, { status: e.target.value })}
-                        disabled={busy !== null}
+                        disabled={archived || busy !== null}
                         aria-label={`Status do pedido ${o.id.slice(0, 8)}`}
                         className={`min-h-12 px-2.5 py-1 rounded-full text-xs font-medium border-0 cursor-pointer focus:outline-none ${st.color} bg-transparent`}
                       >
@@ -264,7 +334,7 @@ export default function AdminOrders() {
             </tbody>
           </table>
           {boardOrders.length === 0 && (
-            <p className="text-[#a89a8c] text-sm px-5 py-8 text-center">Nenhum pedido.</p>
+            <p className="text-[#a89a8c] text-sm px-5 py-8 text-center">{archived ? "Nenhum pedido arquivado." : "Nenhum pedido."}</p>
           )}
         </div>
       )}
@@ -324,6 +394,7 @@ export default function AdminOrders() {
               )}
 
               {selected.channel === "ifood" && <p className="no-print text-sm text-[#c8b89a] leading-relaxed">As alterações deste painel são internas. Para confirmar, despachar ou cancelar no iFood, use também o gestor iFood.</p>}
+              {!archived && <>
               {selected.orderType === "delivery" && <section className="no-print bg-[#0e0b0a] rounded-xl p-4">
                 <label className="block font-semibold text-white mb-2" htmlFor="assigned-driver">Entregador</label>
                 <select id="assigned-driver" className="w-full min-h-12 bg-[#241d18] border border-[#352b24] text-white rounded-lg px-3 text-sm" value={selected.deliveryDriverId ?? ""} disabled={busy !== null || selected.deliveryStatus === "out_for_delivery" || selected.deliveryStatus === "delivered" || selected.status === "delivered" || selected.status === "cancelled"} onChange={event => void updateOrder(selected.id, { deliveryDriverId: event.target.value ? Number(event.target.value) : null })}>
@@ -353,6 +424,7 @@ export default function AdminOrders() {
                 {selected.channel === "ifood" ? <a href="/admin/ifood">Abrir no Gestor iFood</a> : next && <button disabled={busy !== null || (selected.channel === "online" && selected.paymentStatus !== "paid")} onClick={() => void updateOrder(selected.id, { status: next.status })}>{busy === selected.id ? "Atualizando…" : next.label}</button>}
                 {selected.status === "ready" && selected.orderType === "delivery" && <p>O entregador atribuído registra a saída em Minhas entregas.</p>}
               </footer>
+              </>}
               <button
                 type="button"
                 onClick={() => window.print()}

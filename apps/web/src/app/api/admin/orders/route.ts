@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { orders, restaurantTables, staffUsers, storeSettings } from "@/db/schema";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, isNotNull } from "drizzle-orm";
 import { withStaff } from "@/lib/admin-auth";
 import { can } from "@/lib/permissions";
 import { addressNavigationLinks } from "@/lib/delivery-navigation";
@@ -39,12 +39,14 @@ export const GET = withStaff(async req => {
       paymentMethod: orders.paymentMethod,
       paymentStatus: orders.paymentStatus,
       status: orders.status,
+      archivedAt: orders.archivedAt,
       notes: orders.notes,
       createdAt: orders.createdAt,
     })
     .from(orders)
     .leftJoin(restaurantTables, eq(orders.tableId, restaurantTables.id))
     .leftJoin(staffUsers, eq(orders.deliveryDriverId, staffUsers.id))
+    .where(req.nextUrl.searchParams.get("archived") === "1" ? isNotNull(orders.archivedAt) : isNull(orders.archivedAt))
     .orderBy(desc(orders.createdAt));
 
   const [settings] = await db.select({ address: storeSettings.address }).from(storeSettings).where(eq(storeSettings.id, 1));

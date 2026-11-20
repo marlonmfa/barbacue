@@ -41,7 +41,7 @@ export function createWorkspace({ root, serverUrl, prefs, showSetup, isQuitting 
     if (request.method !== 'GET') return new Response('Método não permitido', { status: 405 });
     let path, type;
     if (routePaths.has(url.pathname)) { path = join(root, 'ui/workspace.html'); type = 'text/html; charset=utf-8'; }
-    else if (/^\/desktop-assets\/(app\.js|app\.css|tailwind\.css)$/.test(url.pathname)) {
+    else if (/^\/desktop-assets\/(app\.js|app\.css|tailwind\.css|theme\.css|theme-init\.js)$/.test(url.pathname)) {
       path = join(root, 'ui/renderer', url.pathname.split('/').at(-1)); type = url.pathname.endsWith('.js') ? mime['.js'] : mime['.css'];
     } else if (/^\/brand\/[a-zA-Z0-9_-]+\.(png|jpg|webp|svg|ico)$/.test(url.pathname)) {
       path = join(root, 'ui/renderer', url.pathname); type = mime[url.pathname.slice(url.pathname.lastIndexOf('.'))];

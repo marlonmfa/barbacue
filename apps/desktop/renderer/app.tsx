@@ -13,6 +13,7 @@ import AdminOrders from '@/app/admin/orders/page';
 
 import Kitchen from '@/app/admin/kitchen/page';
 import Waiter from '@/app/admin/waiter/page';
+import Dispatch from '@/app/admin/dispatch/page';
 import Delivery from '@/app/admin/delivery/page';
 import Ifood from '@/app/admin/ifood/page';
 import Customers from '@/app/admin/customers/page';
@@ -38,7 +39,7 @@ declare global {
 }
 const pages: Record<string, React.ComponentType> = {
   '/admin/catalogs': Catalogs, '/admin/products': Products, '/admin/categories': Categories, '/admin/coupons': Coupons,
-  '/admin/orders': Orders, '/admin/kitchen': Kitchen, '/admin/waiter': Waiter, '/admin/delivery': Delivery, '/admin/ifood': Ifood,
+  '/admin/orders': Orders, '/admin/kitchen': Kitchen, '/admin/waiter': Waiter, '/admin/delivery': Delivery, '/admin/dispatch': Dispatch, '/admin/ifood': Ifood,
   '/admin/customers': Customers, '/admin/tables': Tables, '/admin/team': Team, '/admin/staff': Staff,
   '/admin/settings': Settings, '/admin/delivery-settings': Freight, '/admin/system': System, '/admin/beta': Beta,
   '/admin/erp': Erp, '/admin/impersonate': Impersonate, '/whatsapp': WhatsAppPortal, '/teste_pedido': TestOrderChat,

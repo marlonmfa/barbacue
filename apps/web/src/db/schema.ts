@@ -11,9 +11,11 @@ import {
   pgEnum,
   customType,
   unique,
+  uniqueIndex,
   index,
   doublePrecision,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 // Postgres `bytea` mapped to a Node Buffer. drizzle-orm has no built-in bytea, so
 // we declare one: the `pg` driver returns bytea columns as Buffer on read and
@@ -140,6 +142,12 @@ export const staffUsers = pgTable("staff_users", {
 });
 
 // Verified recovery address; codes are stored only as keyed hashes.
+export const staffPresence = pgTable("staff_presence", {
+  userId: integer("user_id").primaryKey().references(() => staffUsers.id, { onDelete: "cascade" }),
+  available: boolean("available").notNull().default(false),
+  lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const staffAlternateEmails = pgTable("staff_alternate_emails", {
   userId: integer("user_id").primaryKey().references(() => staffUsers.id, { onDelete: "cascade" }),
   email: text("email").notNull(),
@@ -315,6 +323,24 @@ export const deliveryQuotes = pgTable("delivery_quotes", {
 
 // ─── Orders ──────────────────────────────────────────────────────────────────
 
+export const dispatchSettings = pgTable("dispatch_settings", {
+  id: integer("id").primaryKey(),
+  config: jsonb("config").$type<import("@/lib/dispatch-planner").DispatchConfig>().notNull(),
+  revision: integer("revision").notNull().default(0),
+  report: jsonb("report").$type<import("@/lib/dispatch-planner").DispatchReport>(),
+});
+
+export const dispatchRoutes = pgTable("dispatch_routes", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  plan: jsonb("plan").$type<import("@/lib/dispatch-planner").DispatchPlan>().notNull(),
+  originKey: text("origin_key").notNull(),
+  departureConfig: jsonb("departure_config").$type<import("@/lib/dispatch-planner").DispatchConfig>(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  startedAt: timestamp("started_at", { withTimezone: true }),
+  releasedAt: timestamp("released_at", { withTimezone: true }),
+  driverId: integer("driver_id").references(() => staffUsers.id, { onDelete: "set null" }),
+}, table => [index("dispatch_routes_queue_idx").on(table.createdAt).where(sql`${table.startedAt} is null and ${table.releasedAt} is null`)]);
+
 export const orders = pgTable("orders", {
   id: uuid("id").defaultRandom().primaryKey(),
   // Dedicated self-service idempotency; legacy channels leave these null.
@@ -336,6 +362,11 @@ export const orders = pgTable("orders", {
   deliveryRoute: jsonb("delivery_route").$type<import("@/lib/delivery").DeliveryRouteLinks>(),
   deliveryDriverId: integer("delivery_driver_id").references(() => staffUsers.id),
   deliveryStatus: text("delivery_status").$type<"assigned" | "out_for_delivery" | "delivered">(),
+  deliveryAccessToken: uuid("delivery_access_token").notNull().defaultRandom().unique(),
+  dispatchRouteId: uuid("dispatch_route_id").references(() => dispatchRoutes.id),
+  dispatchPosition: integer("dispatch_position"),
+  sourceCreatedAt: timestamp("source_created_at", { withTimezone: true }),
+  archivedAt: timestamp("archived_at", { withTimezone: true }),
   dispatchedAt: timestamp("dispatched_at", { withTimezone: true }),
   deliveredAt: timestamp("delivered_at", { withTimezone: true }),
   // [{product_id, name, price_cents, qty}]
@@ -354,10 +385,34 @@ export const orders = pgTable("orders", {
   channel: text("channel").default("click"),
   notes: text("notes"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-}, table => [index("orders_driver_delivery_idx").on(table.deliveryDriverId, table.deliveryStatus)]);
+}, table => [uniqueIndex("orders_dispatch_position_idx").on(table.dispatchRouteId, table.dispatchPosition), index("orders_driver_delivery_idx").on(table.deliveryDriverId, table.deliveryStatus)]);
 
 // One durable kitchen ticket per accepted self-service order. Expired leases
 // require review because the paper may already have left the printer.
+export const orderSchedules = pgTable("order_schedules", {
+  id: uuid("id").primaryKey(),
+  brand: text("brand").notNull(),
+  scheduledAt: timestamp("scheduled_at", { withTimezone: true }).notNull(),
+  state: text("state").$type<"pending" | "accepted" | "cancelled" | "released">().notNull().default("pending"),
+  orderId: uuid("order_id").unique().references(() => orders.id),
+  details: jsonb("details").notNull(),
+  revision: integer("revision").notNull().default(0),
+  requestHash: text("request_hash").notNull(),
+  createdBy: integer("created_by").references(() => staffUsers.id, { onDelete: "set null" }),
+  updatedBy: integer("updated_by").references(() => staffUsers.id, { onDelete: "set null" }),
+  cancellationReason: text("cancellation_reason"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+}, table => [index("order_schedules_brand_slot_idx").on(table.brand, table.scheduledAt)]);
+
+export const deliveryMessages = pgTable("delivery_messages", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  orderId: uuid("order_id").notNull().references(() => orders.id),
+  sender: text("sender").$type<"store" | "driver">().notNull(),
+  body: text("body").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, table => [index("delivery_messages_order_idx").on(table.orderId, table.createdAt)]);
+
 export const kitchenPrintJobs = pgTable("kitchen_print_jobs", {
   id: uuid("id").defaultRandom().primaryKey(),
   orderId: uuid("order_id").notNull().references(() => orders.id).unique(),

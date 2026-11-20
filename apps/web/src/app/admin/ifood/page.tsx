@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type Action = "confirm" | "startPreparation" | "readyToPickup" | "dispatch" | "cancel";
@@ -26,7 +28,7 @@ const COLUMNS = [
   { key: "done", title: "Concluídos (24h)", statuses: ["delivered", "cancelled"] },
 ];
 const STATUS_LABEL: Record<string, string> = { pending: "Aguardando confirmação", confirmed: "Confirmado", preparing: "Preparando", ready: "Pronto / despachado", delivered: "Concluído", cancelled: "Cancelado" };
-const STATE_STYLE: Record<string, string> = { OK: "bg-green-500/20 text-green-300", WARNING: "bg-yellow-500/20 text-yellow-300", CLOSED: "bg-[#352b24] text-[#c8b89a]", ERROR: "bg-red-500/20 text-red-300" };
+const STATE_STYLE: Record<string, string> = { OK: "bg-[var(--success-soft)] text-[var(--success)]", WARNING: "bg-[var(--warning-soft)] text-[var(--warning)]", CLOSED: "bg-[var(--surface-hover)] text-[var(--text-muted)]", ERROR: "bg-[var(--danger-soft)] text-[var(--danger)]" };
 const STATE_LABEL: Record<string, string> = { OK: "Aberta", WARNING: "Aberta com alerta", CLOSED: "Fechada", ERROR: "Com problema", UNAVAILABLE: "Status indisponível" };
 const TYPE_LABEL = { delivery: "Entrega", pickup: "Retirada", dine_in: "No local" } as const;
 
@@ -138,19 +140,22 @@ export default function IfoodManager() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-white">Gestor iFood</h1>
-          <p className="text-[#a89a8c] text-sm mt-2">Pedidos das três lojas em um só lugar. As ações vão direto para o iFood.</p>
+          <h1 className="text-2xl font-bold text-[var(--text)]">Gestor iFood</h1>
+          <p className="text-[var(--text-muted)] text-sm mt-2">Pedidos das três lojas em um só lugar. As ações vão direto para o iFood.</p>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => setSound(v => !v)} className="min-h-12 text-sm px-4 py-2 rounded-xl bg-[#1a1512] border border-[#352b24] text-[#c8b89a]">{sound ? "🔔 Som ligado" : "🔕 Som desligado"}</button>
-          <button onClick={() => void load()} className="min-h-12 text-[#a89a8c] hover:text-white text-sm px-4 py-2 rounded-xl bg-[#1a1512] border border-[#352b24]">↻ Atualizar</button>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/admin/ifood/cardapio" className="inline-flex min-h-12 items-center rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 text-sm text-[var(--text)]">Cardápio</Link>
+          <Link href="/admin/ifood/entregas" className="inline-flex min-h-12 items-center rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 text-sm text-[var(--text)]">Logistics</Link>
+          <Link href="/admin/ifood/financeiro" className="inline-flex min-h-12 items-center rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 text-sm text-[var(--text)]">Financeiro</Link>
+          <button onClick={() => setSound(v => !v)} className="min-h-12 text-sm px-4 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-[var(--text-muted)]">{sound ? "🔔 Som ligado" : "🔕 Som desligado"}</button>
+          <button onClick={() => void load()} className="min-h-12 text-[var(--text-muted)] hover:text-[var(--text)] text-sm px-4 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)]">↻ Atualizar</button>
         </div>
       </div>
 
-      {data && !data.configured && <p role="alert" className="mb-4 border border-yellow-900/60 bg-yellow-950/40 text-yellow-200 p-4 rounded-xl text-sm">As credenciais do iFood não estão configuradas no servidor. Os pedidos importados aparecem, mas as ações ficam indisponíveis.</p>}
-      {data?.configured && data.dryRun && <p role="alert" className="mb-4 border border-yellow-900/60 bg-yellow-950/40 text-yellow-200 p-4 rounded-xl text-sm">Modo simulação (IFOOD_DRY_RUN): nenhuma ação é enviada ao iFood.</p>}
-      {error && <p role="alert" className="mb-4 border border-red-900/60 bg-red-950/40 text-red-200 p-4 rounded-xl text-sm">{error}</p>}
-      {notice && <p role="status" className="mb-4 border border-green-900/60 bg-green-950/40 text-green-200 p-4 rounded-xl text-sm">{notice}</p>}
+      {data && !data.configured && <p role="alert" className="mb-4 border border-[var(--warning)]/50 bg-[var(--warning-soft)] text-[var(--warning)] p-4 rounded-xl text-sm">As credenciais do iFood não estão configuradas no servidor. Os pedidos importados aparecem, mas as ações ficam indisponíveis.</p>}
+      {data?.configured && data.dryRun && <p role="alert" className="mb-4 border border-[var(--warning)]/50 bg-[var(--warning-soft)] text-[var(--warning)] p-4 rounded-xl text-sm">Modo simulação (IFOOD_DRY_RUN): nenhuma ação é enviada ao iFood.</p>}
+      {error && <p role="alert" className="mb-4 border border-[var(--danger)]/50 bg-[var(--danger-soft)] text-[var(--danger)] p-4 rounded-xl text-sm">{error}</p>}
+      {notice && <p role="status" className="mb-4 border border-[var(--success)]/50 bg-[var(--success-soft)] text-[var(--success)] p-4 rounded-xl text-sm">{notice}</p>}
 
       <div className="grid gap-3 md:grid-cols-3 mb-6">
         {(data?.stores ?? []).map(store => {
@@ -159,24 +164,24 @@ export default function IfoodManager() {
           const pausedBy = store.interruptions?.find(i => (!i.start || Date.parse(i.start) <= now) && (!i.end || Date.parse(i.end) > now));
           const count = data?.orders.filter(o => o.storeId === store.id && ["pending", "confirmed", "preparing", "ready"].includes(o.status)).length ?? 0;
           return (
-            <section key={store.id} className={`rounded-2xl border p-4 bg-[#1a1512] ${storeFilter === store.id ? "border-[#ed1b24]" : "border-[#352b24]"}`}>
+            <section key={store.id} className={`rounded-2xl border p-4 bg-[var(--surface)] ${storeFilter === store.id ? "border-[var(--brand-copy)]" : "border-[var(--border)]"}`}>
               <div className="flex items-center justify-between gap-2">
                 <button onClick={() => setStoreFilter(f => f === store.id ? "" : store.id)} className="text-left">
-                  <h2 className="text-white font-semibold">{store.name}</h2>
-                  <p className="text-xs text-[#a89a8c]">{count} pedido(s) em andamento</p>
+                  <h2 className="text-[var(--text)] font-semibold">{store.name}</h2>
+                  <p className="text-xs text-[var(--text-muted)]">{count} pedido(s) em andamento</p>
                 </button>
                 {state && <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${STATE_STYLE[state] ?? STATE_STYLE.CLOSED}`}>{STATE_LABEL[state] ?? state}</span>}
               </div>
-              {(main?.message?.title || store.error) && <p className="text-xs text-[#c8b89a] mt-2">{store.error ?? [main?.message?.title, main?.message?.subtitle].filter(Boolean).join(" · ")}</p>}
+              {(main?.message?.title || store.error) && <p className="text-xs text-[var(--text-muted)] mt-2">{store.error ?? [main?.message?.title, main?.message?.subtitle].filter(Boolean).join(" · ")}</p>}
               <div className="flex flex-wrap gap-2 mt-3">
                 {pausedBy
                   ? <button disabled={busy !== null} onClick={() => void resume(store, pausedBy.id)} className="min-h-10 text-xs px-3 rounded-lg bg-green-600/80 hover:bg-green-600 text-white">Reabrir (pausada até {time(pausedBy.end ?? null)})</button>
                   : <>
                       <select aria-label={`Tempo de pausa de ${store.name}`} value={pauseMinutes[store.id] ?? 30} onChange={e => setPauseMinutes(m => ({ ...m, [store.id]: Number(e.target.value) }))}
-                        className="min-h-10 rounded-lg bg-[#241d18] px-2 text-xs text-white">
+                        className="min-h-10 rounded-lg bg-[var(--surface-2)] px-2 text-xs text-[var(--text)]">
                         {[15, 30, 60, 120, 240].map(m => <option key={m} value={m}>{m < 60 ? `${m} min` : `${m / 60} h`}</option>)}
                       </select>
-                      <button disabled={busy !== null || !data?.configured || store.forbidden} onClick={() => void pause(store)} className="min-h-10 text-xs px-3 rounded-lg bg-[#241d18] hover:bg-[#352b24] text-[#c8b89a] disabled:opacity-50">Pausar loja</button>
+                      <button disabled={busy !== null || !data?.configured || store.forbidden} onClick={() => void pause(store)} className="min-h-10 text-xs px-3 rounded-lg bg-[var(--surface-2)] hover:bg-[var(--surface-hover)] text-[var(--text-muted)] disabled:opacity-50">Pausar loja</button>
                     </>}
               </div>
             </section>
@@ -185,43 +190,43 @@ export default function IfoodManager() {
       </div>
 
       <div className="flex gap-2 mb-5 flex-wrap">
-        <button onClick={() => setStoreFilter("")} className={`px-3 py-1.5 rounded-full text-xs font-medium ${!storeFilter ? "bg-[#ed1b24] text-white" : "bg-[#1a1512] text-[#a89a8c] border border-[#352b24]"}`}>Todas as lojas</button>
+        <button onClick={() => setStoreFilter("")} className={`px-3 py-1.5 rounded-full text-xs font-medium ${!storeFilter ? "bg-[var(--brand-red)] text-white" : "bg-[var(--surface)] text-[var(--text-muted)] border border-[var(--border)]"}`}>Todas as lojas</button>
         {(data?.stores ?? []).map(s => (
-          <button key={s.id} onClick={() => setStoreFilter(s.id)} className={`px-3 py-1.5 rounded-full text-xs font-medium ${storeFilter === s.id ? "bg-[#ed1b24] text-white" : "bg-[#1a1512] text-[#a89a8c] border border-[#352b24]"}`}>{s.name}</button>
+          <button key={s.id} onClick={() => setStoreFilter(s.id)} className={`px-3 py-1.5 rounded-full text-xs font-medium ${storeFilter === s.id ? "bg-[var(--brand-red)] text-white" : "bg-[var(--surface)] text-[var(--text-muted)] border border-[var(--border)]"}`}>{s.name}</button>
         ))}
       </div>
 
-      {!data && !error ? <p className="text-[#a89a8c] text-sm">Carregando...</p> : (
+      {!data && !error ? <p className="text-[var(--text-muted)] text-sm">Carregando...</p> : (
         <div className="grid gap-4 lg:grid-cols-4">
           {COLUMNS.map(column => {
             const list = visible.filter(o => column.statuses.includes(o.status));
             return (
-              <section key={column.key} className="bg-[#120e0c] rounded-2xl border border-[#352b24] p-3 min-h-40">
-                <h2 className="text-sm font-semibold text-[#c8b89a] mb-3">{column.title} ({list.length})</h2>
+              <section key={column.key} className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] p-3 min-h-40">
+                <h2 className="text-sm font-semibold text-[var(--text-muted)] mb-3">{column.title} ({list.length})</h2>
                 <div className="space-y-3">
                   {list.map(order => {
                     const waiting = minutesAgo(order.createdAt, now);
                     const late = order.status === "pending" && waiting >= 5;
                     return (
-                      <article key={order.id} className={`rounded-xl border p-3 bg-[#1a1512] ${order.status === "pending" ? (late ? "border-red-500 animate-pulse" : "border-yellow-500/70") : "border-[#352b24]"}`}>
+                      <article key={order.id} className={`rounded-xl border p-3 bg-[var(--surface)] ${order.status === "pending" ? (late ? "border-red-500 animate-pulse" : "border-[var(--warning)]/50") : "border-[var(--border)]"}`}>
                         <button onClick={() => setSelected(order)} className="w-full text-left">
                           <div className="flex items-center justify-between gap-2">
-                            <span className="text-xs font-bold uppercase tracking-wide text-[#ed1b24]">{storeName(order.storeId)}</span>
-                            <span className="text-xs text-[#a89a8c]">{time(order.createdAt)} · {waiting} min</span>
+                            <span className="text-xs font-bold uppercase tracking-wide text-[var(--brand-copy)]">{storeName(order.storeId)}</span>
+                            <span className="text-xs text-[var(--text-muted)]">{time(order.createdAt)} · {waiting} min</span>
                           </div>
-                          <p className="text-white font-semibold mt-1">#{order.displayId ?? order.id.slice(0, 6).toUpperCase()} · {order.customerName}</p>
-                          <p className="text-xs text-[#a89a8c]">{TYPE_LABEL[order.orderType]} · {fmtR(order.totalCents)} · {order.paymentStatus === "paid" ? "Pago online" : "Cobrar na entrega"}</p>
-                          <ul className="text-xs text-[#c8b89a] mt-2 space-y-0.5">
+                          <p className="text-[var(--text)] font-semibold mt-1">#{order.displayId ?? order.id.slice(0, 6).toUpperCase()} · {order.customerName}</p>
+                          <p className="text-xs text-[var(--text-muted)]">{TYPE_LABEL[order.orderType]} · {fmtR(order.totalCents)} · {order.paymentStatus === "paid" ? "Pago online" : "Cobrar na entrega"}</p>
+                          <ul className="text-xs text-[var(--text-muted)] mt-2 space-y-0.5">
                             {(Array.isArray(order.items) ? order.items : []).slice(0, 4).map((item, i) => <li key={i}>{item.qty}× {item.name}</li>)}
                             {order.items.length > 4 && <li>+ {order.items.length - 4} item(ns)</li>}
                           </ul>
                         </button>
-                        {order.status === "cancelled" && <p className="text-xs text-red-300 mt-2">Cancelado</p>}
+                        {order.status === "cancelled" && <p className="text-xs text-[var(--danger)] mt-2">Cancelado</p>}
                         {order.actions.length > 0 && (
                           <div className="flex flex-wrap gap-2 mt-3">
                             {order.actions.map(action => (
                               <button key={action} disabled={busy !== null || !data?.configured} onClick={() => void act(order, action)}
-                                className={`min-h-10 text-xs px-3 rounded-lg disabled:opacity-50 ${action === "cancel" ? "bg-[#241d18] text-red-300 hover:bg-red-950/60" : "bg-[#ed1b24] hover:bg-[#c8141c] text-white font-semibold"}`}>
+                                className={`min-h-10 text-xs px-3 rounded-lg disabled:opacity-50 ${action === "cancel" ? "bg-[var(--surface-2)] text-[var(--danger)] hover:bg-[var(--danger-soft)]" : "bg-[var(--brand-red)] hover:bg-[var(--brand-red-hover)] text-white font-semibold"}`}>
                                 {busy === order.id ? "Enviando…" : ACTION_LABEL[action]}
                               </button>
                             ))}
@@ -230,7 +235,7 @@ export default function IfoodManager() {
                       </article>
                     );
                   })}
-                  {list.length === 0 && <p className="text-xs text-[#6b5d52] text-center py-6">Nenhum pedido</p>}
+                  {list.length === 0 && <p className="text-xs text-[var(--text-muted)] text-center py-6">Nenhum pedido</p>}
                 </div>
               </section>
             );
@@ -240,35 +245,35 @@ export default function IfoodManager() {
 
       {selected && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-label="Detalhes do pedido iFood">
-          <div className="bg-[#1a1512] rounded-2xl border border-[#352b24] w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
+          <div className="bg-[var(--surface)] rounded-2xl border border-[var(--border)] w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h2 className="text-lg font-bold text-white">iFood #{selected.displayId ?? selected.id.slice(0, 6).toUpperCase()}</h2>
-                <p className="text-xs text-[#a89a8c]">{storeName(selected.storeId)} · {TYPE_LABEL[selected.orderType]} · {STATUS_LABEL[selected.status] ?? selected.status}</p>
+                <h2 className="text-lg font-bold text-[var(--text)]">iFood #{selected.displayId ?? selected.id.slice(0, 6).toUpperCase()}</h2>
+                <p className="text-xs text-[var(--text-muted)]">{storeName(selected.storeId)} · {TYPE_LABEL[selected.orderType]} · {STATUS_LABEL[selected.status] ?? selected.status}</p>
               </div>
-              <button onClick={() => setSelected(null)} className="min-w-12 min-h-12 text-[#a89a8c] hover:text-white text-2xl leading-none" aria-label="Fechar">×</button>
+              <button onClick={() => setSelected(null)} className="min-w-12 min-h-12 text-[var(--text-muted)] hover:text-[var(--text)] text-2xl leading-none" aria-label="Fechar">×</button>
             </div>
-            <p className="text-white">{selected.customerName}{selected.customerPhone ? ` · ${selected.customerPhone}` : ""}</p>
-            {selected.deliveryAddress && <p className="text-sm text-[#c8b89a] mt-1">{selected.deliveryAddress}</p>}
+            <p className="text-[var(--text)]">{selected.customerName}{selected.customerPhone ? ` · ${selected.customerPhone}` : ""}</p>
+            {selected.deliveryAddress && <p className="text-sm text-[var(--text-muted)] mt-1">{selected.deliveryAddress}</p>}
             <ul className="mt-4 space-y-2 text-sm">
               {selected.items.map((item, i) => (
-                <li key={i} className="flex justify-between gap-3 text-[#e8dccb]">
-                  <span>{item.qty}× {item.name}{item.notes && <span className="block text-xs text-[#a89a8c]">{item.notes}</span>}</span>
+                <li key={i} className="flex justify-between gap-3 text-[var(--text-muted)]">
+                  <span>{item.qty}× {item.name}{item.notes && <span className="block text-xs text-[var(--text-muted)]">{item.notes}</span>}</span>
                   <span>{fmtR(item.qty * item.priceCents)}</span>
                 </li>
               ))}
             </ul>
-            <div className="border-t border-[#352b24] mt-4 pt-3 text-sm text-[#c8b89a] space-y-1">
+            <div className="border-t border-[var(--border)] mt-4 pt-3 text-sm text-[var(--text-muted)] space-y-1">
               {selected.deliveryFeeCents > 0 && <p className="flex justify-between"><span>Entrega</span><span>{fmtR(selected.deliveryFeeCents)}</span></p>}
               {(selected.discountCents ?? 0) > 0 && <p className="flex justify-between"><span>Descontos</span><span>- {fmtR(selected.discountCents ?? 0)}</span></p>}
-              <p className="flex justify-between text-white font-semibold"><span>Total</span><span>{fmtR(selected.totalCents)}</span></p>
+              <p className="flex justify-between text-[var(--text)] font-semibold"><span>Total</span><span>{fmtR(selected.totalCents)}</span></p>
             </div>
-            {selected.notes && <pre className="mt-4 whitespace-pre-wrap text-xs text-[#a89a8c] bg-[#120e0c] rounded-lg p-3">{selected.notes}</pre>}
+            {selected.notes && <pre className="mt-4 whitespace-pre-wrap text-xs text-[var(--text-muted)] bg-[var(--bg)] rounded-lg p-3">{selected.notes}</pre>}
             {selected.actions.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-4">
                 {selected.actions.map(action => (
                   <button key={action} disabled={busy !== null || !data?.configured} onClick={() => void act(selected, action)}
-                    className={`min-h-12 text-sm px-4 rounded-xl disabled:opacity-50 ${action === "cancel" ? "bg-[#241d18] text-red-300" : "bg-[#ed1b24] text-white font-semibold"}`}>{ACTION_LABEL[action]}</button>
+                    className={`min-h-12 text-sm px-4 rounded-xl disabled:opacity-50 ${action === "cancel" ? "bg-[var(--surface-2)] text-[var(--danger)]" : "bg-[var(--brand-red)] text-white font-semibold"}`}>{ACTION_LABEL[action]}</button>
                 ))}
               </div>
             )}
@@ -278,16 +283,16 @@ export default function IfoodManager() {
 
       {cancelling && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-label="Cancelar pedido iFood">
-          <div className="bg-[#1a1512] rounded-2xl border border-[#352b24] w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-lg font-bold text-white">Cancelar #{cancelling.order.displayId ?? cancelling.order.id.slice(0, 6).toUpperCase()}</h2>
-            <p className="text-sm text-[#a89a8c] mt-1 mb-4">Escolha o motivo aceito pelo iFood. O cliente é avisado pelo iFood.</p>
-            {!cancelling.reasons ? <p className="text-sm text-[#a89a8c]">Consultando motivos…</p>
-              : cancelling.reasons.length === 0 ? <p className="text-sm text-[#c8b89a]">O iFood não oferece cancelamento para este pedido agora.</p>
+          <div className="bg-[var(--surface)] rounded-2xl border border-[var(--border)] w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
+            <h2 className="text-lg font-bold text-[var(--text)]">Cancelar #{cancelling.order.displayId ?? cancelling.order.id.slice(0, 6).toUpperCase()}</h2>
+            <p className="text-sm text-[var(--text-muted)] mt-1 mb-4">Escolha o motivo aceito pelo iFood. O cliente é avisado pelo iFood.</p>
+            {!cancelling.reasons ? <p className="text-sm text-[var(--text-muted)]">Consultando motivos…</p>
+              : cancelling.reasons.length === 0 ? <p className="text-sm text-[var(--text-muted)]">O iFood não oferece cancelamento para este pedido agora.</p>
               : <div className="space-y-2">{cancelling.reasons.map(r => (
                 <button key={r.cancelCodeId} disabled={busy !== null} onClick={() => void confirmCancel(r.cancelCodeId, r.description)}
-                  className="w-full text-left min-h-12 px-4 rounded-xl bg-[#241d18] hover:bg-red-950/60 text-[#e8dccb] text-sm">{r.description}</button>
+                  className="w-full text-left min-h-12 px-4 rounded-xl bg-[var(--surface-2)] hover:bg-[var(--danger-soft)] text-[var(--text-muted)] text-sm">{r.description}</button>
               ))}</div>}
-            <button onClick={() => setCancelling(null)} className="mt-4 min-h-12 w-full rounded-xl border border-[#352b24] text-[#a89a8c]">Voltar</button>
+            <button onClick={() => setCancelling(null)} className="mt-4 min-h-12 w-full rounded-xl border border-[var(--border)] text-[var(--text-muted)]">Voltar</button>
           </div>
         </div>
       )}

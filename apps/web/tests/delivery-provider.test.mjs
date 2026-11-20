@@ -1,6 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { DeliveryProvider, deliveryProviderConfigured } from '../src/lib/delivery-provider.ts';
 import { createFakeDeliveryProvider } from './fake-delivery-provider.mjs';
 
@@ -59,4 +62,48 @@ test('geocoding rejects city-level results instead of quoting from a city center
   await assert.rejects(provider.geocode('São Paulo, Estado de São Paulo'), error => error.code === 'delivery_address_not_found');
   const blankCoordinates = new DeliveryProvider('osm', { env: { DELIVERY_NOMINATIM_URL: 'http://127.0.0.1:1', DELIVERY_OSRM_URL: 'http://127.0.0.1:1', DELIVERY_OSM_USER_AGENT: 'BarbacueDeliveryTest/1.0' }, fetch: async () => Response.json([{ lat: ' ', lon: '', addresstype: 'house' }]) });
   await assert.rejects(blankCoordinates.geocode('Rua Teste, 123, São Paulo'), error => error.code === 'delivery_address_not_found');
+});
+
+test('OSRM HTTP 400 distinguishes unreachable roads from invalid responses', async () => {
+  const env = {
+    DELIVERY_NOMINATIM_URL: 'http://127.0.0.1:1',
+    DELIVERY_OSRM_URL: 'http://127.0.0.1:1',
+    DELIVERY_OSM_USER_AGENT: 'BarbacueDeliveryTest/1.0',
+  };
+  const provider = code => new DeliveryProvider('osm', {
+    env,
+    fetch: async () => Response.json({ code }, { status: 400 }),
+  });
+  await assert.rejects(provider('NoSegment').route(origin, destination), error => error.code === 'delivery_route_not_found');
+  await assert.rejects(provider('InvalidQuery').route(origin, destination), error => error.code === 'delivery_provider_unavailable');
+});
+
+test('the local index resolves exact addresses and rejects conflicting postal codes and distant matches', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'barbacue-address-index-'));
+  const indexPath = join(dir, 'index.json');
+  try {
+    await writeFile(indexPath, JSON.stringify({
+      'rua presidente teste|123': [['jaragua do sul', '89250000', '', -26.49, -49.08]],
+      'rua presidente teste|124': [['jaragua do sul', '89250000', '', -26.49, -49.08], ['jaragua do sul', '89250000', '', -26.51, -49.07]],
+    }));
+    const provider = new DeliveryProvider('osm', {
+      env: {
+        DELIVERY_NOMINATIM_URL: 'http://127.0.0.1:1', DELIVERY_OSRM_URL: 'http://127.0.0.1:1',
+        DELIVERY_OSM_USER_AGENT: 'BarbacueDeliveryTest/1.0', DELIVERY_CNEFE_INDEX_PATH: indexPath,
+        DELIVERY_NOMINATIM_MIN_INTERVAL_MS: '0',
+      },
+      fetch: async () => Response.json([]),
+    });
+    const address = 'R. Pres. Teste, 123, Apto 5, Jaraguá do Sul - SC, 89250-000';
+    assert.deepEqual(await provider.geocode(address), { latitude: -26.49, longitude: -49.08, address });
+    for (const value of [address.replace('89250', '89251'), address.replace('Jaraguá do Sul', 'Guaramirim'), address.replace('123', '124'), 'Rua Presidente Teste, 123']) {
+      await assert.rejects(provider.geocode(value), error => error.code === 'delivery_address_not_found');
+    }
+    const shortAddress = 'Rua Presidente Teste, 123';
+    assert.deepEqual(await provider.geocode(shortAddress, { allowRegionalMatch: true }), { latitude: -26.49, longitude: -49.08, address: shortAddress });
+    await assert.rejects(provider.geocode(shortAddress), error => error.code === 'delivery_address_not_found');
+    await assert.rejects(provider.geocode(`${shortAddress}, Itajaí - SC`, { allowRegionalMatch: true }), error => error.code === 'delivery_address_not_found');
+  } finally {
+    await rm(dir, { recursive: true });
+  }
 });

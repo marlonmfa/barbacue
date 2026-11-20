@@ -1,25 +1,25 @@
 import { NextResponse } from "next/server";
-import { and, asc, eq, inArray, or, gte } from "drizzle-orm";
+import { and, asc, eq, inArray, or, gte, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
-import { orders, storeSettings } from "@/db/schema";
+import { dispatchRoutes, orders, storeSettings } from "@/db/schema";
 import { withStaff } from "@/lib/admin-auth";
-import { addressNavigationLinks } from "@/lib/delivery-navigation";
+import { addressNavigationLinks, dispatchNavigationDestination } from "@/lib/delivery-navigation";
 
 export const GET = withStaff(async (_req, _ctx, session) => {
   // Assignment is always bound to the authenticated identity. There is no
   // driverId query parameter and no fallback to unassigned orders.
   const [rows, [settings]] = await Promise.all([
-    db.select({ id: orders.id, brand: orders.brand, customerName: orders.customerName, customerPhone: orders.customerPhone, deliveryAddress: orders.deliveryAddress, deliveryFeeCents: orders.deliveryFeeCents, deliveryDistanceMeters: orders.deliveryDistanceMeters, deliveryDurationSeconds: orders.deliveryDurationSeconds, deliveryRoute: orders.deliveryRoute, totalCents: orders.totalCents, paymentMethod: orders.paymentMethod, paymentStatus: orders.paymentStatus, changeForCents: orders.changeForCents, items: orders.items, notes: orders.notes, status: orders.status, deliveryStatus: orders.deliveryStatus, createdAt: orders.createdAt, dispatchedAt: orders.dispatchedAt, deliveredAt: orders.deliveredAt })
-      .from(orders).where(and(eq(orders.deliveryDriverId, session.userId), eq(orders.orderType, "delivery"), inArray(orders.status, ["pending", "confirmed", "preparing", "ready", "delivered"]), or(inArray(orders.deliveryStatus, ["assigned", "out_for_delivery"]), and(eq(orders.deliveryStatus, "delivered"), gte(orders.deliveredAt, new Date(Date.now() - 24 * 60 * 60_000))))))
-      .orderBy(asc(orders.createdAt)).limit(100),
+    db.select({ id: orders.id, brand: orders.brand, customerName: orders.customerName, customerPhone: orders.customerPhone, deliveryAddress: orders.deliveryAddress, deliveryFeeCents: orders.deliveryFeeCents, deliveryDistanceMeters: orders.deliveryDistanceMeters, deliveryDurationSeconds: orders.deliveryDurationSeconds, deliveryRoute: orders.deliveryRoute, dispatchRouteId: orders.dispatchRouteId, dispatchPosition: orders.dispatchPosition, dispatchPoint: sql<{ latitude: number; longitude: number } | null>`(${dispatchRoutes.plan}->'stops'->(${orders.dispatchPosition} - 1)->'point')`, totalCents: orders.totalCents, paymentMethod: orders.paymentMethod, paymentStatus: orders.paymentStatus, changeForCents: orders.changeForCents, items: orders.items, notes: orders.notes, status: orders.status, deliveryStatus: orders.deliveryStatus, createdAt: orders.createdAt, dispatchedAt: orders.dispatchedAt, deliveredAt: orders.deliveredAt })
+      .from(orders).leftJoin(dispatchRoutes, eq(orders.dispatchRouteId, dispatchRoutes.id)).where(and(eq(orders.deliveryDriverId, session.userId), eq(orders.orderType, "delivery"), inArray(orders.status, ["pending", "confirmed", "preparing", "ready", "delivered"]), or(inArray(orders.deliveryStatus, ["assigned", "out_for_delivery"]), and(eq(orders.deliveryStatus, "delivered"), gte(orders.deliveredAt, new Date(Date.now() - 24 * 60 * 60_000))))))
+      .orderBy(asc(eq(orders.deliveryStatus, "delivered")), asc(sql`case when ${orders.dispatchRouteId} is not null then ${orders.dispatchedAt} else ${orders.createdAt} end`), asc(orders.dispatchRouteId), asc(orders.dispatchPosition), asc(orders.createdAt)).limit(100),
     db.select({ address: storeSettings.address }).from(storeSettings).where(eq(storeSettings.id, 1)),
   ]);
-  return NextResponse.json(rows.map(({ items, deliveryRoute, ...row }) => ({
+  return NextResponse.json(rows.map(({ items, deliveryRoute, dispatchPoint, ...row }) => ({
     ...row,
     itemCount: Array.isArray(items) ? items.reduce((sum, item: { qty?: number }) => sum + (item.qty ?? 0), 0) : 0,
     amountToCollectCents: row.paymentStatus === "paid" ? 0 : row.totalCents,
-    navigationLinks: deliveryRoute ?? addressNavigationLinks(row.deliveryAddress, settings?.address ?? null),
+    navigationLinks: row.dispatchRouteId ? addressNavigationLinks(dispatchNavigationDestination(dispatchPoint, row.deliveryAddress), null) : deliveryRoute ?? addressNavigationLinks(row.deliveryAddress, settings?.address ?? null),
   })), { headers: { "Cache-Control": "no-store" } });
 });
 

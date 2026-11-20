@@ -4,6 +4,7 @@ import tailwind from '@tailwindcss/postcss';
 import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
+import { themeInit } from '../../web/src/lib/theme-init.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const web = fileURLToPath(new URL('../../web/', import.meta.url));
 const outdir = join(root, 'ui/renderer');
@@ -12,12 +13,14 @@ const result = await build({ entryPoints: [join(root, 'renderer/app.tsx')], outd
   bundle: true, platform: 'browser', format: 'esm', target: 'chrome142', jsx: 'automatic', minify: true, metafile: true,
   define: { 'process.env.NODE_ENV': '"production"' },
   alias: { '@': join(web, 'src'), 'next/link': join(root, 'renderer/link.tsx'), 'next/image': join(root, 'renderer/image.tsx'), 'next/navigation': join(root, 'renderer/navigation.ts') },
-  loader: { '.module.css': 'local-css' },
+  loader: { '.module.css': 'local-css', '.webp': 'dataurl' },
   plugins: [{ name: 'local-administration', setup(builder) {
     builder.onLoad({ filter: /admin\/tables\/page\.tsx$/ }, async args => ({ loader: 'tsx', contents: (await readFile(args.path, 'utf8')).replace('setOrigin(window.location.origin)', 'setOrigin(window.__BARBACUE_API_ORIGIN__)') }));
     builder.onResolve({ filter: /^(node:|pg$|drizzle-orm|next\/server|next\/headers|@\/db(?:\/|$)|@\/lib\/(?:admin-auth|staff-auth|erp|managed-catalog)$)/ }, args => ({ errors: [{ text: `Código do servidor não pode entrar no desktop: ${args.path}` }] }));
   } }], logLevel: 'warning',
 });
+await writeFile(join(outdir, 'theme-init.js'), themeInit);
+await cp(join(web, 'src/app/theme.css'), join(outdir, 'theme.css'));
 const css = await postcss([tailwind({ base: root })]).process('@import "tailwindcss";\n@source "../../web/src";\n@source "../renderer";\n', { from: join(root, 'renderer/tailwind.css') });
 await writeFile(join(outdir, 'tailwind.css'), css.css);
 await cp(join(web, 'public/brand'), join(outdir, 'brand'), { recursive: true });

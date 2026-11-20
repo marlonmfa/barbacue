@@ -10,6 +10,7 @@ export const moduleGroups = [
     { id: 'ifood', label: 'Gestor iFood', path: '/admin/ifood' },
     { id: 'kitchen', label: 'Cozinha e impressoras', path: '/admin/kitchen', accelerator: 'F4' },
     { id: 'floor', label: 'Salão', path: '/admin/waiter' },
+    { id: 'dispatch', label: 'Despacho de entregas', path: '/admin/dispatch' },
     { id: 'delivery', label: 'Minhas entregas', path: '/admin/delivery' },
     { id: 'service', label: 'Testar pedido', path: '/teste_pedido' },
   ] },

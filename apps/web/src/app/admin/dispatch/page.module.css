@@ -1,0 +1,94 @@
+.settings {
+  margin-bottom: 24px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.settings summary {
+  padding: 18px 22px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.settings summary span {
+  display: inline-block;
+  margin-left: 12px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+.rules {
+  padding: 0 22px 22px;
+  font-size: 14px;
+}
+.rules p { margin-bottom: 14px; color: var(--text-muted); }
+.rules fieldset { border: 0; padding: 0; min-width: 0; }
+.options, .metrics {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+}
+.options { margin-bottom: 14px; }
+.options label, .metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+.options label:has(input[type="checkbox"]), .metric label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 9px;
+}
+.metric input[type="number"], .options input[type="number"], .dispatchForm select {
+  box-sizing: border-box;
+  min-height: 40px;
+  width: 76px;
+  border: 1px solid var(--border-hover);
+  border-radius: 6px;
+  padding: 6px 8px;
+  background: var(--surface-2);
+  color: var(--text);
+}
+.metric input:disabled { opacity: .45; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.routeHeading p { text-transform: none; }
+.stops { list-style: decimal; padding: 0 0 0 21px; margin: 16px 0; }
+.stops li { padding: 8px 0 8px 6px; overflow-wrap: anywhere; }
+.stops li + li { border-top: 1px solid var(--border); }
+.stops span, .stops small, .pending li div span {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-muted);
+}
+.stops small { font-size: 12px; }
+.dispatchForm { display: grid; gap: 9px; }
+.dispatchForm label { font-size: 13px; color: var(--text-muted); }
+.dispatchForm select { width: 100%; margin-top: 5px; }
+.pending {
+  list-style: none;
+  margin: 0;
+  padding: 0 18px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.pending li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.pending li + li { border-top: 1px solid var(--border); }
+.pending li > span { color: var(--warning); }
+.attribution { color: var(--text-muted); font-size: 12px; }
+.attribution a { color: inherit; text-decoration: underline; }
+@media (max-width: 600px) {
+  .pending li { align-items: flex-start; flex-direction: column; gap: 6px; }
+}

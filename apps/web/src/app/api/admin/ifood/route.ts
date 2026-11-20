@@ -7,8 +7,11 @@ import { allowedIfoodActions, ifoodExternalId, ifoodStoreFromNotes } from "@/lib
 import { ifoodSettings, storeOverview } from "@/lib/ifood-api";
 
 // Visão única das três lojas: situação no iFood e pedidos importados pelo monitor.
-export const GET = withStaff(async () => {
+export const GET = withStaff(async (request) => {
   const settings = ifoodSettings();
+  if (request.nextUrl.searchParams.get("view") === "stores") {
+    return NextResponse.json({ stores: settings.stores }, { headers: { "Cache-Control": "no-store" } });
+  }
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const rows = await db.select({
     id: orders.id, brand: orders.brand, customerName: orders.customerName, customerPhone: orders.customerPhone,

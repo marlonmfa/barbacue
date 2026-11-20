@@ -28,6 +28,7 @@ const groups: { label: string; items: NavItem[] }[] = [
       { href: "/admin/orders/feed", label: "Feed de pedidos", icon: "orders" },
       { href: "/admin/ifood", label: "Gestor iFood", icon: "orders" },
       { href: "/admin/waiter", label: "Salão", icon: "tables" },
+      { href: "/admin/dispatch", label: "Despacho de entregas", icon: "route" },
       { href: "/admin/delivery", label: "Minhas entregas", icon: "delivery" },
       { href: "/whatsapp", label: "WhatsApp", icon: "whatsapp", adminOnly: true },
       { href: "/teste_pedido", label: "Testar pedido", icon: "beaker" },
@@ -44,6 +45,8 @@ const groups: { label: string; items: NavItem[] }[] = [
   {
     label: "Gestão",
     items: [
+      { href: "/admin/financeiro", label: "Financeiro", icon: "orders", adminOnly: true },
+      { href: "/admin/cobertura-documental", label: "Cobertura documental", icon: "check", adminOnly: true },
       { href: "/admin/erp", label: "ERP e financeiro", icon: "orders", adminOnly: true },
       { href: "/admin/tables", label: "Mesas", icon: "tables" },
       { href: "/admin/customers", label: "Clientes", icon: "customers" },
