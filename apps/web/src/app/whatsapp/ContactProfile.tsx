@@ -61,7 +61,7 @@ export function ContactProfile({ jid }: { jid: string }) {
     {profile?.canEdit && <label>Classificação
       <select value={profile.source === "manual" ? profile.role ?? "" : ""} disabled={saving} onChange={event => void changeRole(event.target.value)}>
         <option value="">Automática</option>
-        {CONTACT_ROLES.map(role => <option key={role} value={role} disabled={role === "customer" && !customer}>{CONTACT_ROLE_LABELS[role]}</option>)}
+        {CONTACT_ROLES.map(role => <option key={role} value={role} disabled={!profile.canAssignManagement && (role === "admin" || role === "manager")}>{CONTACT_ROLE_LABELS[role]}</option>)}
       </select>
     </label>}
     {error && <span role="alert">{error}</span>}

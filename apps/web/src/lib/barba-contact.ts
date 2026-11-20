@@ -11,13 +11,19 @@ export type BarbaContactProfile = {
   name: string | null;
   customer: { orderCount: number; lastOrderAt: string; brands: string[] } | null;
   canEdit: boolean;
+  canAssignManagement: boolean;
 };
 
 export function barbaContactPhone(value: string): string | null {
-  const match = /^(\+?[\d(). -]+)(?:@(?:s\.whatsapp\.net|c\.us))?$/.exec(value.trim());
-  const phone = match ? canonicalPhone(match[1]) : null;
+  const match = /^(\+?[\d(). -]+)(@(?:s\.whatsapp\.net|c\.us))?$/.exec(value.trim());
+  if (!match) return null;
+  const digits = match[1].replace(/\D/g, "");
+  const international = match[1].startsWith("+") || match[2];
+  const phone = international && !digits.startsWith("55")
+    ? (/^[1-9]\d{6,14}$/.test(digits) ? digits : null)
+    : canonicalPhone(digits);
   // WhatsApp also uses legacy Brazilian mobile JIDs with eight local digits.
-  return phone?.length === 12 && /^[6-9]/.test(phone.slice(4)) ? phone.slice(0, 4) + "9" + phone.slice(4) : phone;
+  return phone && /^55\d{2}[6-9]\d{7}$/.test(phone) ? phone.slice(0, 4) + "9" + phone.slice(4) : phone;
 }
 
 export function barbaOrderPhoneKeys(phone: string): string[] {
