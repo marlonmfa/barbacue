@@ -4,6 +4,7 @@ import { deliveryQuotes, deliverySettings, dispatchRoutes, dispatchSettings, ord
 import { DeliveryError, deliveryAddressKey, deliveryCoordinatesSchema, type DeliveryCoordinates } from "@/lib/delivery";
 import { deliveryProviderConfigured, getDeliveryProvider } from "@/lib/delivery-provider";
 import { defaultDispatchConfig, evaluateDispatch, planDispatch, waitLimitMs, type DispatchConfig, type DispatchIssue, type DispatchOrder, type DispatchPlan, type DispatchReport } from "@/lib/dispatch-planner";
+import { dispatchProgress } from "@/lib/dispatch-progress";
 import { can } from "@/lib/permissions";
 import { PRESENCE_TTL_MS } from "@/lib/staff-presence";
 
@@ -25,8 +26,13 @@ const orderFields = { id: orders.id, brand: orders.brand, address: orders.delive
 const driverFields = { id: staffUsers.id, name: staffUsers.name, role: staffUsers.role, permissions: staffUsers.permissions };
 const activeDriver = and(eq(staffUsers.role, "driver"), eq(staffUsers.active, true));
 const freshPresence = and(eq(staffPresence.available, true), sql`${staffPresence.lastSeenAt} > clock_timestamp() - ${PRESENCE_TTL_MS} * interval '1 millisecond'`);
-const busyDriver = sql`exists (select 1 from ${orders} where ${orders.deliveryDriverId} = ${staffUsers.id}
-  and ${orders.deliveryStatus} in ('assigned', 'out_for_delivery') and ${orders.status} not in ('cancelled', 'delivered'))`;
+const openRoute = and(sql`${dispatchRoutes.startedAt} is not null`, isNull(dispatchRoutes.returnedAt));
+const hasUnfinishedStops = sql`exists (select 1 from ${orders} where ${orders.dispatchRouteId} = ${dispatchRoutes.id}
+  and ${orders.status} is distinct from 'cancelled' and ${orders.status} is distinct from 'delivered'
+  and ${orders.deliveryStatus} is distinct from 'delivered')`;
+const busyDriver = sql`(exists (select 1 from ${orders} where ${orders.deliveryDriverId} = ${staffUsers.id}
+  and ${orders.deliveryStatus} in ('assigned', 'out_for_delivery') and ${orders.status} not in ('cancelled', 'delivered'))
+  or exists (select 1 from ${dispatchRoutes} where ${dispatchRoutes.driverId} = ${staffUsers.id} and ${openRoute}))`;
 
 class DispatchError extends Error {
   constructor(message: string, public status: number = 409) { super(message); }
@@ -226,13 +232,31 @@ export async function changeDispatchRoute(id: string, driverId: number | null) {
   });
 }
 
+export async function returningDispatchRoute(driverId: number) {
+  const [route] = await db.select({ id: dispatchRoutes.id }).from(dispatchRoutes)
+    .where(and(eq(dispatchRoutes.driverId, driverId), openRoute, sql`not ${hasUnfinishedStops}`))
+    .orderBy(asc(dispatchRoutes.startedAt)).limit(1);
+  return route?.id ?? null;
+}
+
+export async function confirmDispatchReturn(id: string, driverId: number) {
+  const [updated] = await db.update(dispatchRoutes).set({ returnedAt: new Date() })
+    .where(and(eq(dispatchRoutes.id, id), eq(dispatchRoutes.driverId, driverId), openRoute, sql`not ${hasUnfinishedStops}`))
+    .returning({ id: dispatchRoutes.id });
+  if (updated) return;
+  const [closed] = await db.select({ id: dispatchRoutes.id }).from(dispatchRoutes)
+    .where(and(eq(dispatchRoutes.id, id), eq(dispatchRoutes.driverId, driverId), sql`${dispatchRoutes.returnedAt} is not null`));
+  if (!closed) throw new DispatchError("O retorno só pode ser confirmado pelo entregador da rota após concluir as paradas.");
+}
+
 export async function dispatchOverview() {
+  const recent = new Date(Date.now() - 24 * 60 * 60_000);
   const [[state], origin, routes, candidates, drivers] = await Promise.all([
     db.select().from(dispatchSettings).where(settingsFilter),
     readOrigin(),
     db.select({ route: dispatchRoutes, driverName: staffUsers.name }).from(dispatchRoutes)
       .leftJoin(staffUsers, eq(dispatchRoutes.driverId, staffUsers.id))
-      .where(or(queued, gt(dispatchRoutes.startedAt, new Date(Date.now() - 24 * 60 * 60_000))))
+      .where(or(queued, openRoute, gt(dispatchRoutes.startedAt, recent), gt(dispatchRoutes.returnedAt, recent)))
       .orderBy(desc(isNull(dispatchRoutes.startedAt)), asc(dispatchRoutes.createdAt)).limit(100),
     db.select(orderFields).from(orders).where(and(ownDelivery, isNull(orders.dispatchRouteId)))
       .orderBy(desc(placedAt), asc(orders.id)).limit(50),
@@ -242,7 +266,7 @@ export async function dispatchOverview() {
   ]);
   const config = state?.config ?? defaultDispatchConfig;
   const now = Date.now();
-  const linked = routes.length ? await db.select({ ...orderFields, routeId: orders.dispatchRouteId, status: orders.status, eligible: sql<boolean>`(${ownDelivery}) is true` })
+  const linked = routes.length ? await db.select({ ...orderFields, routeId: orders.dispatchRouteId, status: orders.status, deliveryStatus: orders.deliveryStatus, deliveredAt: orders.deliveredAt, totalCents: orders.totalCents, paymentStatus: orders.paymentStatus, eligible: sql<boolean>`(${ownDelivery}) is true` })
     .from(orders).where(inArray(orders.dispatchRouteId, routes.map(({ route }) => route.id))) : [];
   return {
     config, revision: state?.revision ?? 0, report: state?.report ?? null,
@@ -255,13 +279,18 @@ export async function dispatchOverview() {
       if (!route.startedAt && !matchesPlan(rows.filter(row => row.eligible), route.plan)) {
         stats.violations.push("Um pedido da rota mudou");
       }
+      const progress = dispatchProgress(stats.stops, rows, {
+        departure: route.startedAt?.getTime() ?? Math.max(now, stats.earliestDeparture),
+        startedAt: route.startedAt, returnedAt: route.returnedAt,
+        returnSeconds: route.plan.returnLeg.durationSeconds, serviceSeconds: (route.departureConfig ?? config).serviceSeconds,
+      });
       return {
-        id: route.id, createdAt: route.createdAt, startedAt: route.startedAt, driverName,
+        ...progress,
+        id: route.id, createdAt: route.createdAt, startedAt: route.startedAt, returnedAt: route.returnedAt, driverName,
         waitingForScheduledTime: !route.startedAt && now < stats.earliestDeparture,
         earliestDeparture: Number.isFinite(stats.earliestDeparture) ? new Date(stats.earliestDeparture) : null,
         latestDeparture: new Date(stats.latestDeparture), distanceMeters: stats.distanceMeters, durationSeconds: stats.durationSeconds,
         violations: route.startedAt ? [] : stats.violations,
-        stops: stats.stops.map(stop => ({ ...stop, status: rows.find(row => row.id === stop.id)?.status ?? null })),
       };
     }),
     pending: candidates.map(row => ({

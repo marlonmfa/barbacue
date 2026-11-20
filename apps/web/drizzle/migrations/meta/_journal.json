@@ -169,6 +169,20 @@
       "when": 1795046400005,
       "tag": "0037_dispatch_routes",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1795046400006,
+      "tag": "0038_barba_contact_profiles",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1795046400007,
+      "tag": "0039_dispatch_return",
+      "breakpoints": true
     }
   ]
 }

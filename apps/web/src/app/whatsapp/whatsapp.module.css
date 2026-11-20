@@ -73,3 +73,8 @@
 .chatRow { height:88px; box-sizing:border-box; overflow:hidden }
 .messages { overflow-anchor:none; overscroll-behavior:contain }
 .loadingMore { position:sticky; bottom:0; background:white }
+
+.contactProfile { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; padding: 8px 16px; border-bottom: 1px solid rgba(128, 128, 128, .25); font-size: 13px; }
+.contactProfile > div, .contactProfile label { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.contactProfile select { border: 1px solid rgba(128, 128, 128, .5); border-radius: 6px; padding: 4px; color: inherit; background: transparent; }
+.contactProfile select option { color: initial; }

@@ -11,7 +11,10 @@ import { hashPassword } from "@/lib/staff-auth";
 
 import { STAFF_ROLES, PERMISSION_IDS } from "@/lib/permissions";
 
+import { staffContactFields, staffContactSelection } from "@/lib/staff-contact-fields";
+
 const StaffSchema = z.object({
+  ...staffContactFields,
   name: z.string().min(1),
   username: z.string().min(3).transform((s) => s.trim().toLowerCase()),
   password: z.string().min(6),
@@ -25,6 +28,7 @@ export const GET = withRole("admin", async () => {
   // Never leak password hashes to the client.
   const all = await db
     .select({
+      ...staffContactSelection(staffUsers),
       id: staffUsers.id,
       name: staffUsers.name,
       username: staffUsers.username,
@@ -44,13 +48,14 @@ export const POST = withRole("admin", async (req: NextRequest) => {
   const parsed = StaffSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
 
-  const { name, username, password, role, active, jobTitle, permissions } = parsed.data;
+  const { name, username, password, role, active, jobTitle, permissions, ...contact } = parsed.data;
   try {
     const [user] = await db
       .insert(staffUsers)
-      .values({ name, username, role, jobTitle, permissions, active: active ?? true, passwordHash: await hashPassword(password) })
+      .values({ ...contact, name, username, role, jobTitle, permissions, active: active ?? true, passwordHash: await hashPassword(password) })
       .returning({
-        id: staffUsers.id,
+        ...staffContactSelection(staffUsers),
+      id: staffUsers.id,
         name: staffUsers.name,
         username: staffUsers.username,
         role: staffUsers.role,
@@ -62,6 +67,6 @@ export const POST = withRole("admin", async (req: NextRequest) => {
     return NextResponse.json(user, { status: 201 });
   } catch {
     // Unique violation on username, etc.
-    return NextResponse.json({ error: "Usuário já existe" }, { status: 409 });
+    return NextResponse.json({ error: "Usuário ou WhatsApp já cadastrado." }, { status: 409 });
   }
 });

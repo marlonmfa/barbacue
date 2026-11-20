@@ -14,7 +14,7 @@ export default async function WhatsAppPage({ searchParams }: { searchParams: Pro
   const requestHeaders = await headers();
   const host = (requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "").split(",")[0].trim().toLowerCase();
   const requested = query.brand;
-  const initialFilter = requested === "all" || requested === "barbacue" || requested === "barbadog" || requested === "chelas"
+  const initialFilter = requested === "cogia" || requested === "all" || requested === "barbacue" || requested === "barbadog" || requested === "chelas"
     ? requested : host.startsWith("chelas.") ? "chelas" : host.startsWith("barbadog.") ? "barbadog" : "barbacue";
   return <WhatsAppPortal initialFilter={initialFilter} />;
 }

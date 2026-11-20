@@ -16,6 +16,7 @@ const routes = [
   [/^\/api\/admin\/delivery\/presence$/, ['GET', 'PATCH']],
   [/^\/api\/admin\/delivery-settings\/geocode$/, ['POST']],
   [/^\/api\/admin\/ifood\/(orders|stores)\/[A-Za-z0-9_-]+$/, ['GET', 'POST', 'PATCH', 'DELETE']],
+  [/^\/api\/admin\/whatsapp\/contact-profile$/, ['GET', 'POST']],
   [/^\/api\/admin\/whatsapp\/(accounts|chats|messages|read|pair|pair-cancel|disconnect)$/, ['GET', 'POST']],
   [/^\/api\/admin\/whatsapp(?:\/media(?:\/[A-Za-z0-9_%.-]+)*)?$/, ['GET', 'HEAD']],
   [/^\/api\/admin\/(upload|impersonate)$/, ['POST']],

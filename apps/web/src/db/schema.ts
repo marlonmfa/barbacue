@@ -136,6 +136,10 @@ export const staffUsers = pgTable("staff_users", {
   mustChangePassword: boolean("must_change_password").notNull().default(false),
   role: staffRoleEnum("role").notNull().default("manager"),
   jobTitle: text("job_title"),
+  whatsappPhone: text("whatsapp_phone").unique("staff_users_whatsapp_phone_key"),
+  vehicleModel: text("vehicle_model"),
+  vehicleColor: text("vehicle_color"),
+  vehiclePlate: text("vehicle_plate"),
   permissions: jsonb("permissions").$type<import("@/lib/permissions").Permission[]>(),
   active: boolean("active").default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
@@ -338,6 +342,7 @@ export const dispatchRoutes = pgTable("dispatch_routes", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   startedAt: timestamp("started_at", { withTimezone: true }),
   releasedAt: timestamp("released_at", { withTimezone: true }),
+  returnedAt: timestamp("returned_at", { withTimezone: true }),
   driverId: integer("driver_id").references(() => staffUsers.id, { onDelete: "set null" }),
 }, table => [index("dispatch_routes_queue_idx").on(table.createdAt).where(sql`${table.startedAt} is null and ${table.releasedAt} is null`)]);
 
@@ -573,4 +578,12 @@ export const aiProviderSettings = pgTable("ai_provider_settings", {
   id: integer("id").primaryKey(),
   encryptedValue: text("encrypted_value").notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export type BarbaContactRole = "admin" | "manager" | "driver" | "customer";
+
+export const barbaContactProfiles = pgTable("barba_contact_profiles", {
+  phone: text("phone").primaryKey(),
+  role: text("role").$type<BarbaContactRole>().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

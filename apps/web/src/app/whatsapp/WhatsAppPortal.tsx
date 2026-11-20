@@ -6,6 +6,8 @@ import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { WHATSAPP_PAIRING, type WhatsAppConnection } from "@/lib/whatsapp-pairing";
 import styles from "./whatsapp.module.css";
+import { ContactProfile } from "./ContactProfile";
+import { barbaContactPhone } from "@/lib/barba-contact";
 
 type Brand = "barbacue" | "chelas" | "barbadog";
 type Filter = Brand | "all" | "cogia";
@@ -326,6 +328,7 @@ export function WhatsAppPortal({ initialFilter = "all", manageConnection = true 
           {active ? <>
             <div className={styles.conversationWatermark} aria-hidden="true"><BrandMark brand={active.account} size={300}/></div>
             <header className={styles.chatHeader}><button className={styles.mobileBack} onClick={() => setActive(null)}><Icon name="back"/></button><div className={styles.headerAvatar}>{active.avatar ? <span className={styles.profilePhoto} style={{ backgroundImage: `url(${active.avatar})` }}/> : active.name[0]}</div><div><strong>{active.name}</strong><span><BrandMark brand={active.account} size={14}/>{brands[active.account].name} · {active.jid.replace(/@.*/, "")}</span></div><div className={styles.chatTools}><button className={automation?.mode === "manual" ? styles.manualControl : styles.botControl} disabled={automationBusy} onClick={toggleAutomation} aria-label={automation?.mode === "manual" ? "Devolver conversa ao robô" : "Assumir atendimento manual"} title={automation?.mode === "manual" ? "Devolver ao robô" : "Assumir atendimento"}><Icon name="bot" size={18}/><span>{automationBusy ? "Alterando…" : automation?.mode === "manual" ? "Devolver ao robô" : "Assumir"}</span></button><button aria-label="Mais opções"><Icon name="dots"/></button></div></header>
+            {active.connection === "cogia" && !active.isGroup && barbaContactPhone(active.jid) && <ContactProfile key={active.jid} jid={active.jid} />}
             {automation?.mode === "manual" && <div className={styles.handoffBanner}><b>Atendimento humano ativo.</b> O robô não responderá esta conversa até ela ser devolvida. <span>{automation.updatedBy}</span></div>}
             <div className={styles.messages} ref={messagesRef} onScroll={event => {
               const el = event.currentTarget;

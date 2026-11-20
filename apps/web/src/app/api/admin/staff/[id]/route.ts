@@ -8,7 +8,10 @@ import { hashPassword } from "@/lib/staff-auth";
 
 import { STAFF_ROLES, PERMISSION_IDS } from "@/lib/permissions";
 
+import { staffContactFields, staffContactSelection } from "@/lib/staff-contact-fields";
+
 const PatchSchema = z.object({
+  ...staffContactFields,
   name: z.string().min(1).optional(),
   password: z.string().min(6).optional(),
   role: z.enum(STAFF_ROLES).optional(),
@@ -31,6 +34,9 @@ export const PATCH = withRole("admin", async (req: NextRequest, { params }: Para
   }
 
   const data: Record<string, unknown> = {};
+  for (const field of Object.keys(staffContactFields) as (keyof typeof staffContactFields)[]) {
+    if (parsed.data[field] !== undefined) data[field] = parsed.data[field];
+  }
   if (parsed.data.jobTitle !== undefined) data.jobTitle = parsed.data.jobTitle;
   if (parsed.data.permissions !== undefined) data.permissions = parsed.data.permissions;
   if (parsed.data.name !== undefined) data.name = parsed.data.name;
@@ -43,6 +49,7 @@ export const PATCH = withRole("admin", async (req: NextRequest, { params }: Para
     .set(data)
     .where(eq(staffUsers.id, Number(id)))
     .returning({
+      ...staffContactSelection(staffUsers),
       id: staffUsers.id,
       name: staffUsers.name,
       username: staffUsers.username,
@@ -51,8 +58,12 @@ export const PATCH = withRole("admin", async (req: NextRequest, { params }: Para
       permissions: staffUsers.permissions,
       active: staffUsers.active,
       createdAt: staffUsers.createdAt,
+    }).catch(error => {
+      if ((error?.cause?.code ?? error?.code) === "23505") return ["duplicate" as const];
+      throw error;
     });
 
+  if (updated === "duplicate") return NextResponse.json({ error: "WhatsApp já cadastrado." }, { status: 409 });
   if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(updated);
 });

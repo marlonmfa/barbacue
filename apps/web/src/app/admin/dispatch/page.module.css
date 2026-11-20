@@ -92,3 +92,9 @@
 @media (max-width: 600px) {
   .pending li { align-items: flex-start; flex-direction: column; gap: 6px; }
 }
+
+.progress { line-height: 1.65; }
+.progress strong { color: var(--text); }
+.stops .currentStop { display: inline-block; color: var(--success); font-size: 12px; margin-left: 8px; }
+
+.routeList { grid-template-columns: minmax(0, 1fr); }

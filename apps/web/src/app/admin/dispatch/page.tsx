@@ -10,7 +10,11 @@ import styles from "./page.module.css";
 type Route = {
   id: string; startedAt: string | null; earliestDeparture: string | null; latestDeparture: string; driverName: string | null; waitingForScheduledTime: boolean;
   distanceMeters: number; durationSeconds: number; violations: string[];
-  stops: { id: string; address: string; brand: string; arrivalSeconds: number; status: string | null }[];
+  phase: "waiting" | "delivering" | "returning" | "returned";
+  totalStops: number; remainingStops: number; currentStopId: string | null; currentPosition: number | null;
+  amountToCollectCents: number; returnEstimate: string | null; returnedAt: string | null;
+  stops: { id: string; address: string; brand: string; estimatedArrival: string; deliveredAt: string | null;
+    state: "pending" | "delivered" | "cancelled"; amountToCollectCents: number }[];
 };
 type Data = {
   config: DispatchConfig; revision: number; canConfigure: boolean; mapsReady: boolean; report: DispatchReport | null;
@@ -22,9 +26,19 @@ const endpoint = "/api/admin/dispatch";
 const shortId = (id: string) => id.slice(0, 8).toUpperCase();
 const clock = new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" });
 const minutes = (seconds: number) => Math.ceil(seconds / 60);
+const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+const money = (cents: number) => currency.format(cents / 100);
+const time = (value: string) => clock.format(new Date(value));
+function eta(value: string, now: number) {
+  const delta = new Date(value).getTime() - now;
+  const count = Math.ceil(Math.abs(delta) / 60_000);
+  if (!count) return `${time(value)} · agora`;
+  return delta > 0 ? `${time(value)} · ${count === 1 ? "falta" : "faltam"} ${count} min` : `${time(value)} · ${count} min de atraso`;
+}
 const kilometres = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 });
 
 export default function DispatchPage() {
+  const [now, setNow] = useState(Date.now);
   const [data, setData] = useState<Data | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [busy, setBusy] = useState(false);
@@ -48,7 +62,8 @@ export default function DispatchPage() {
     const controller = new AbortController();
     const initial = window.setTimeout(() => void load(controller.signal), 0);
     const timer = window.setInterval(() => void load(controller.signal), 10_000);
-    return () => { controller.abort(); window.clearTimeout(initial); window.clearInterval(timer); };
+    const countdown = window.setInterval(() => setNow(Date.now()), 15000);
+    return () => { controller.abort(); window.clearTimeout(initial); window.clearInterval(timer); window.clearInterval(countdown); };
   }, [load]);
 
   async function mutate(method: "POST" | "PUT" | "PATCH", body?: object, success?: string) {
@@ -65,7 +80,10 @@ export default function DispatchPage() {
       if (method === "POST") {
         setTab(payload.created ? "queued" : "pending");
         setNotice(payload.created ? `${payload.created} ${payload.created === 1 ? "rota entrou" : "rotas entraram"} na fila.` : "Nenhuma nova rota atende às regras neste momento.");
-      } else if (success) setNotice(success);
+      } else if (success) {
+        setNotice(success);
+        if (method === "PATCH" && body && "driverId" in body && body.driverId !== null) setTab("started");
+      }
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Confira a conexão.");
     } finally {
@@ -136,7 +154,7 @@ export default function DispatchPage() {
       <nav className={queue.filters} aria-label="Filtrar despacho">
         <button aria-pressed={tab === "queued"} onClick={() => setTab("queued")}>Rotas na fila <span>{waiting.length}</span></button>
         <button aria-pressed={tab === "pending"} onClick={() => setTab("pending")}>Pedidos sem rota <span>{data.pending.length}{data.pending.length === 50 && "+"}</span></button>
-        <button aria-pressed={tab === "started"} onClick={() => setTab("started")}>Saídas de 24 h <span>{started.length}</span></button>
+        <button aria-pressed={tab === "started"} onClick={() => setTab("started")}>Rotas e retornos <span>{started.length}</span></button>
       </nav>
       {tab === "pending" ? (
         data.pending.length ? <ul className={styles.pending}>{data.pending.map(order => <li key={order.id}>
@@ -144,8 +162,8 @@ export default function DispatchPage() {
           <span>{order.reason}</span>
         </li>)}</ul> : <p className={queue.empty}>Nenhum pedido pronto aguardando rota.</p>
       ) : (
-        (tab === "queued" ? waiting : started).length ? <div className={queue.deliveries}>
-          {(tab === "queued" ? waiting : started).map(route => <RouteCard key={route.id} route={route} drivers={data.drivers} busy={busy}
+        (tab === "queued" ? waiting : started).length ? <div className={`${queue.deliveries} ${styles.routeList}`}>
+          {(tab === "queued" ? waiting : started).map(route => <RouteCard key={route.id} route={route} drivers={data.drivers} busy={busy} now={now}
             start={driverId => void mutate("PATCH", { id: route.id, driverId }, "Saída registrada. As paradas estão em Minhas entregas.")}
             release={() => void mutate("PATCH", { id: route.id, driverId: null }, "Pedidos devolvidos para planejamento.")} />)}
         </div> : <p className={queue.empty}>{tab === "queued" ? "Nenhuma rota na fila de despacho." : "Nenhuma saída registrada nas últimas 24 horas."}</p>
@@ -159,24 +177,42 @@ function defaultLimit(metric: Exclude<keyof typeof dispatchMetrics, "waitMinutes
   return { stops: 4, distanceKm: 25, durationMinutes: 45, legMinutes: 20 }[metric];
 }
 
-function RouteCard({ route, drivers, busy, start, release }: {
-  route: Route; drivers: Data["drivers"]; busy: boolean; start: (driverId: number) => void; release: () => void;
+function RouteCard({ route, drivers, busy, now, start, release }: {
+  route: Route; now: number; drivers: Data["drivers"]; busy: boolean; start: (driverId: number) => void; release: () => void;
 }) {
   const [driver, setDriver] = useState("");
   const activeDriver = drivers.some(option => String(option.id) === driver);
   const tooEarly = route.waitingForScheduledTime;
+  const phase = {
+    waiting: route.waitingForScheduledTime ? "Aguardando horário de saída" : "Aguardando saída",
+    delivering: `Entrega ${route.currentPosition} de ${route.totalStops}`,
+    returning: "Retornando à loja",
+    returned: "Retorno confirmado",
+  }[route.phase];
+  const remainingAfter = route.remainingStops - 1;
+  const remainingLabel = route.phase === "delivering"
+    ? remainingAfter ? `${remainingAfter} depois desta` : "Última entrega"
+    : route.remainingStops ? `${route.remainingStops} por fazer` : "Nenhuma entrega restante";
   return <article className={queue.delivery}>
     <header className={`${queue.deliveryHeading} ${styles.routeHeading}`}><div>
-      <span className={`${queue.badge} ${route.violations.length ? "" : queue.ready}`}>
-        {route.startedAt ? route.stops.every(stop => stop.status === "delivered" || stop.status === "cancelled") ? "Encerrada" : "Em entrega" : route.violations.length ? "Replanejar" : "Na fila"}
-      </span>
       <h2>Rota #{shortId(route.id)}</h2>
       <p>{kilometres.format(route.distanceMeters / 1000)} km · {minutes(route.durationSeconds)} min com retorno</p>
-      <p>{route.startedAt ? `Saída às ${clock.format(new Date(route.startedAt))} · ${route.driverName ?? "Entregador"}` : route.earliestDeparture ? `Saída entre ${clock.format(new Date(route.earliestDeparture))} e ${clock.format(new Date(route.latestDeparture))}` : `Despachar até ${clock.format(new Date(route.latestDeparture))}`}</p>
+      <p className={styles.progress}>
+        <strong>{phase}</strong>{route.driverName && <> · {route.driverName}</>}
+        {" · "}{remainingLabel}
+        {" · "}A receber {money(route.amountToCollectCents)}
+      </p>
+      {route.phase === "returning" && route.returnEstimate && <p>Retorno estimado às {eta(route.returnEstimate, now)}</p>}
+      {route.returnedAt && <p>Chegou à loja às {time(route.returnedAt)}</p>}
     </div><AdminIcon name="route" size={28} /></header>
     <ol className={styles.stops}>{route.stops.map(stop => <li key={stop.id}>
-      <strong>#{shortId(stop.id)} · {stop.brand}</strong><span>{stop.address}</span>
-      <small>{stop.status === "delivered" ? "Entregue" : stop.status === "cancelled" ? "Cancelada" : `Chegada estimada em ${minutes(stop.arrivalSeconds)} min após a saída`}</small>
+      <strong>#{shortId(stop.id)} · {stop.brand}</strong>
+      {route.currentStopId === stop.id && <span className={styles.currentStop}>Parada atual</span>}
+      <span>{stop.address}</span>
+      <small>{stop.state === "cancelled" ? "Cancelada" : stop.state === "delivered"
+        ? stop.deliveredAt ? `Entregue às ${time(stop.deliveredAt)}` : "Entregue"
+        : `Chegada estimada às ${eta(stop.estimatedArrival, now)}${route.phase === "waiting" && !route.waitingForScheduledTime ? " · se sair agora" : ""}`}</small>
+      {stop.state === "pending" && stop.amountToCollectCents > 0 && <small>A receber {money(stop.amountToCollectCents)}</small>}
     </li>)}</ol>
     {!!route.violations.length && <p className={queue.error}>Replaneje esta rota. {route.violations.join(" · ")}</p>}
     {!route.startedAt && <form className={styles.dispatchForm} onSubmit={event => { event.preventDefault(); if (activeDriver && !tooEarly) start(Number(driver)); }}>

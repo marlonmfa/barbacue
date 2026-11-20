@@ -86,6 +86,7 @@ async function main() {
       `, [stop.address, quote?.id ?? null]);
     }
 
+    await pool.query("update orders set payment_status='paid' where delivery_address=$1", [stops[0].address]);
     const page = await operator.newPage();
     await page.goto(new URL("/admin/dispatch", url).href);
     await page.getByRole("heading", { name: "Despacho de entregas" }).waitFor();
@@ -93,7 +94,8 @@ async function main() {
     await page.getByText(/entrou na fila|entraram na fila/).waitFor();
     for (const stop of stops) await page.getByText(stop.address, { exact: true }).waitFor();
     await page.getByRole("link", { name: "OpenStreetMap" }).waitFor();
-    if (screenshot) await page.screenshot({ path: screenshot, fullPage: true });
+    await page.getByText(/Aguardando saída/).waitFor();
+    await page.getByText(/Chegada estimada às \d{2}:\d{2} · falt/).first().waitFor();
     await page.getByLabel("Entregador disponível").first().selectOption(String(driver.id));
     await page.getByRole("button", { name: "Registrar saída da rota" }).first().click();
     await page.getByText("Saída registrada. As paradas estão em Minhas entregas.", { exact: true }).waitFor();
@@ -101,6 +103,16 @@ async function main() {
     assert.equal(assigned.length, stops.length);
     assert.equal(new Set(assigned.map((order: { dispatchRouteId: string }) => order.dispatchRouteId)).size, 1);
     assert.deepEqual(assigned.map((order: { dispatchPosition: number }) => order.dispatchPosition), stops.map((_, index) => index + 1));
+    const dispatch = async () => (await operator.request.get(new URL("/api/admin/dispatch", url).href)).json();
+    const started = (await dispatch()).routes[0];
+    assert.equal(started.phase, "delivering");
+    assert.equal(started.currentPosition, 1);
+    assert.equal(started.remainingStops, stops.length);
+    assert.equal(started.amountToCollectCents, assigned.reduce((sum: number, order: { amountToCollectCents: number }) => sum + order.amountToCollectCents, 0));
+    assert(started.amountToCollectCents > 0);
+    assert.equal((await courier.request.patch(new URL("/api/admin/delivery", url).href, { data: { returnRouteId: started.id } })).status(), 409);
+    await page.getByText(`Entrega 1 de ${stops.length}`, { exact: true }).waitFor();
+    if (screenshot) await page.screenshot({ path: screenshot, fullPage: true });
     const courierPage = await courier.newPage();
     await courierPage.goto(new URL("/admin/delivery", url).href);
     const map = courierPage.getByRole("link", { name: "Google Maps" }).first();
@@ -118,11 +130,24 @@ async function main() {
     for (let remaining = stops.length; remaining > 0; remaining--) {
       await courierPage.getByRole("button", { name: "Concluir entrega" }).first().click();
       await courierPage.getByText(/Entrega #.*concluída/).waitFor();
+      const route = (await dispatch()).routes[0];
+      assert.equal(route.remainingStops, remaining - 1);
+      if (remaining > 1) assert.equal(route.currentPosition, stops.length - remaining + 2);
     }
     const complete = await (await courier.request.get(new URL("/api/admin/delivery", url).href)).json();
     assert.equal(complete.length, stops.length);
     assert(complete.every((order: { deliveryStatus: string }) => order.deliveryStatus === "delivered"));
-    console.log("Navegador validado: permissões, cotação, matriz real, fila, saída, Google Maps por link e conclusão.");
+    const returning = (await dispatch()).routes[0];
+    assert.equal(returning.phase, "returning");
+    assert.equal(returning.amountToCollectCents, 0);
+    assert(returning.returnEstimate);
+    assert.equal((await operator.request.patch(new URL("/api/admin/delivery", url).href, { data: { returnRouteId: started.id } })).status(), 409);
+    await courierPage.getByRole("button", { name: "Confirmar retorno" }).click();
+    await courierPage.getByText("Retorno à loja confirmado.").waitFor();
+    const returned = (await dispatch()).routes[0];
+    assert.equal(returned.phase, "returned");
+    assert(returned.returnedAt);
+    console.log("Navegador validado: ETA, cobrança, ordem das paradas, navegação, conclusão e retorno com permissão.");
   } finally {
     await browser.close();
     await pool.end();

@@ -4,9 +4,13 @@ import { z } from "zod";
 import { db } from "@/db";
 import { dispatchRoutes, orders, storeSettings } from "@/db/schema";
 import { withStaff } from "@/lib/admin-auth";
+import { confirmDispatchReturn, dispatchFailure, returningDispatchRoute } from "@/lib/dispatch-service";
 import { addressNavigationLinks, dispatchNavigationDestination } from "@/lib/delivery-navigation";
 
-export const GET = withStaff(async (_req, _ctx, session) => {
+export const GET = withStaff(async (req, _ctx, session) => {
+  if (req.nextUrl.searchParams.get("view") === "returning") {
+    return NextResponse.json({ routeId: await returningDispatchRoute(session.userId) }, { headers: { "Cache-Control": "no-store" } });
+  }
   // Assignment is always bound to the authenticated identity. There is no
   // driverId query parameter and no fallback to unassigned orders.
   const [rows, [settings]] = await Promise.all([
@@ -23,10 +27,19 @@ export const GET = withStaff(async (_req, _ctx, session) => {
   })), { headers: { "Cache-Control": "no-store" } });
 });
 
-const deliverySchema = z.object({ id: z.string().uuid(), deliveryStatus: z.enum(["out_for_delivery", "delivered"]) }).strict();
+const deliverySchema = z.union([
+  z.object({ id: z.string().uuid(), deliveryStatus: z.enum(["out_for_delivery", "delivered"]) }).strict(),
+  z.object({ returnRouteId: z.string().uuid() }).strict(),
+]);
 export const PATCH = withStaff(async (req, _ctx, session) => {
   const parsed = deliverySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Informe a próxima etapa da entrega." }, { status: 422 });
+  if ("returnRouteId" in parsed.data) {
+    try {
+      await confirmDispatchReturn(parsed.data.returnRouteId, session.userId);
+      return NextResponse.json({ ok: true });
+    } catch (error) { return dispatchFailure(error); }
+  }
   const { id, deliveryStatus } = parsed.data;
   const now = new Date();
   const [updated] = await db.update(orders)

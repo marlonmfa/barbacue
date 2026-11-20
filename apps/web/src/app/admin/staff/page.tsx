@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { DEFAULT_PERMISSIONS, effectivePermissions, landingPath, PERMISSIONS, ROLE_DESCRIPTIONS, ROLE_LABELS, STAFF_ROLES, type AccessRole, type Permission } from "@/lib/permissions";
 import styles from "@/components/admin/Access.module.css";
 
-type Staff = { id: number; name: string; username: string; role: AccessRole; jobTitle: string | null; permissions: Permission[] | null; active: boolean };
-const empty = { name: "", username: "", password: "", role: "employee" as AccessRole, jobTitle: "", permissions: [] as Permission[], active: true };
+const vehicleFields = [{ key: "vehicleModel", label: "Modelo", maxLength: 80 }, { key: "vehicleColor", label: "Cor", maxLength: 40 }, { key: "vehiclePlate", label: "Placa", maxLength: 16 }] as const;
+type Staff = { whatsappPhone: string | null; vehicleModel: string | null; vehicleColor: string | null; vehiclePlate: string | null; id: number; name: string; username: string; role: AccessRole; jobTitle: string | null; permissions: Permission[] | null; active: boolean };
+const empty = { whatsappPhone: "", vehicleModel: "", vehicleColor: "", vehiclePlate: "", name: "", username: "", password: "", role: "employee" as AccessRole, jobTitle: "", permissions: [] as Permission[], active: true };
 export default function StaffPage() {
   const [users, setUsers] = useState<Staff[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +35,7 @@ export default function StaffPage() {
   }, []);
   function edit(user?: Staff) {
     setEditing(user?.id ?? "new"); setError(""); setNotice("");
-    setForm(user ? { ...user, jobTitle: user.jobTitle ?? "", password: "", permissions: effectivePermissions(user) } : { ...empty });
+    setForm(user ? { ...user, whatsappPhone: user.whatsappPhone ?? "", vehicleModel: user.vehicleModel ?? "", vehicleColor: user.vehicleColor ?? "", vehiclePlate: user.vehiclePlate ?? "", jobTitle: user.jobTitle ?? "", password: "", permissions: effectivePermissions(user) } : { ...empty });
   }
   async function save(event: React.FormEvent) {
     event.preventDefault(); setSaving(true); setError("");
@@ -49,7 +50,7 @@ export default function StaffPage() {
       setEditing(null); setNotice("Acessos salvos. As permissões já valem para a próxima solicitação do usuário."); await load();
     } catch(e) { setError(e instanceof Error ? e.message : "Falha de conexão. Tente novamente."); } finally { setSaving(false); }
   }
-  const visible = users.filter(u => `${u.name} ${u.username} ${u.jobTitle ?? ""}`.toLowerCase().includes(search.toLowerCase()) && (!permission || effectivePermissions(u).includes(permission as Permission)));
+  const visible = users.filter(u => `${u.name} ${u.username} ${u.whatsappPhone ?? ""} ${u.jobTitle ?? ""}`.toLowerCase().includes(search.toLowerCase()) && (!permission || effectivePermissions(u).includes(permission as Permission)));
   return <div className={styles.page}>
     <header className={styles.head}><div><h1>Usuários e acessos</h1><p>Cada pessoa com as funções de que precisa. Defina o perfil e ajuste o acesso de cada usuário.</p></div><button className={styles.primary} onClick={() => edit()}>Nova conta da equipe</button></header>
     <section className={styles.profiles} aria-label="Perfis de entrada">
@@ -67,6 +68,8 @@ export default function StaffPage() {
         <label className={styles.field}>{editing === "new" ? "Senha" : "Nova senha (opcional)"}<input className={styles.input} type="password" autoComplete="new-password" required={editing === "new"} minLength={6} value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} /></label>
         <label className={styles.field}>Perfil<select className={styles.input} value={form.role} onChange={e => { const role = e.target.value as AccessRole; setForm({ ...form, role, permissions: [...DEFAULT_PERMISSIONS[role]] }); }}>{STAFF_ROLES.map(role => <option key={role} value={role}>{ROLE_LABELS[role]}</option>)}</select></label>
         <label className={styles.field}>Cargo específico (opcional)<input className={styles.input} maxLength={100} placeholder="Ex.: Chapeiro, auxiliar de cozinha, líder de turno" value={form.jobTitle} onChange={e => setForm({ ...form, jobTitle: e.target.value })} /></label>
+        <label className={styles.field}>WhatsApp (opcional)<input className={styles.input} type="tel" maxLength={30} value={form.whatsappPhone} onChange={e => setForm({ ...form, whatsappPhone: e.target.value })} /></label>
+        {form.role === "driver" && vehicleFields.map(({ key, label, maxLength }) => <label key={key} className={styles.field}>{label} (opcional)<input className={styles.input} maxLength={maxLength} value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })} /></label>)}
         <label className={styles.check}><input type="checkbox" checked={form.active} onChange={e => setForm({ ...form, active: e.target.checked })} /><span>Conta ativa<small>Desativar impede novos acessos, inclusive com uma sessão aberta.</small></span></label>
       </div>
       <h2>Funções permitidas</h2><p>{form.role === "admin" ? "Administradores têm acesso completo e podem editar as permissões de todos." : "O perfil sugere o acesso inicial. Marque ou desmarque as funções para esta pessoa."}</p>
@@ -75,6 +78,6 @@ export default function StaffPage() {
       <div className={styles.actions}><button disabled={saving} className={styles.primary}>{saving ? "Salvando…" : "Salvar acessos"}</button><button type="button" disabled={saving} className={styles.secondary} onClick={() => setEditing(null)}>Cancelar</button></div>
     </form>}
     <div className={styles.toolbar}><input aria-label="Buscar pessoa ou cargo" className={styles.input} placeholder="Buscar pessoa ou cargo" value={search} onChange={e => setSearch(e.target.value)} /><select aria-label="Filtrar por função permitida" className={styles.input} value={permission} onChange={e => setPermission(e.target.value)}><option value="">Todas as funções</option>{PERMISSIONS.map(p => <option key={p.id} value={p.id}>Quem pode: {p.label.toLowerCase()}</option>)}</select></div>
-    <div className={styles.panel}>{loading ? <p className={styles.empty}>Carregando acessos…</p> : <><table className={styles.table}><thead><tr><th>Pessoa</th><th>Perfil e cargo</th><th>Funções</th><th>Status</th><th>Acesso</th></tr></thead><tbody>{visible.map(u => <tr key={u.id}><td><strong>{u.name}</strong><small>{u.username}</small></td><td>{ROLE_LABELS[u.role]}<small>{u.jobTitle || "Sem cargo específico"}</small></td><td>{u.role === "admin" ? "Acesso completo" : `${effectivePermissions(u).length} ${effectivePermissions(u).length === 1 ? "função" : "funções"}`}<small>{effectivePermissions(u).map(id => PERMISSIONS.find(p => p.id === id)?.label).join(", ") || "Nenhuma função"}</small></td><td>{u.active ? "Ativo" : "Inativo"}</td><td><button className={styles.secondary} onClick={() => edit(u)} aria-label={`Editar acesso de ${u.name}`}>Editar</button></td></tr>)}</tbody></table>{!visible.length && <p className={styles.empty}>{users.length ? "Nenhuma pessoa encontrada para este filtro." : "Crie a primeira conta da equipe para distribuir as funções."}</p>}</>}</div>
+    <div className={styles.panel}>{loading ? <p className={styles.empty}>Carregando acessos…</p> : <><table className={styles.table}><thead><tr><th>Pessoa</th><th>Perfil e cargo</th><th>Funções</th><th>Status</th><th>Acesso</th></tr></thead><tbody>{visible.map(u => <tr key={u.id}><td><strong>{u.name}</strong><small>{u.username}</small>{u.whatsappPhone && <small>WhatsApp +{u.whatsappPhone}</small>}</td><td>{ROLE_LABELS[u.role]}<small>{u.jobTitle || "Sem cargo específico"}</small>{u.role === "driver" && <small>{[u.vehicleModel, u.vehicleColor, u.vehiclePlate].filter(Boolean).join(" · ") || "Veículo pendente"}{(u.vehicleModel || u.vehicleColor) && !u.vehiclePlate && " · Placa pendente"}</small>}</td><td>{u.role === "admin" ? "Acesso completo" : `${effectivePermissions(u).length} ${effectivePermissions(u).length === 1 ? "função" : "funções"}`}<small>{effectivePermissions(u).map(id => PERMISSIONS.find(p => p.id === id)?.label).join(", ") || "Nenhuma função"}</small></td><td>{u.active ? "Ativo" : "Inativo"}</td><td><button className={styles.secondary} onClick={() => edit(u)} aria-label={`Editar acesso de ${u.name}`}>Editar</button></td></tr>)}</tbody></table>{!visible.length && <p className={styles.empty}>{users.length ? "Nenhuma pessoa encontrada para este filtro." : "Crie a primeira conta da equipe para distribuir as funções."}</p>}</>}</div>
   </div>;
 }

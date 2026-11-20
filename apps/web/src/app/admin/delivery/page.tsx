@@ -19,6 +19,7 @@ const paymentLabels: Record<string, string> = { cash: "Dinheiro", card_on_delive
 
 export default function DeliveryPage() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
+  const [returning, setReturning] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -26,10 +27,15 @@ export default function DeliveryPage() {
   const [busy, setBusy] = useState<string | null>(null);
   const load = useCallback(async (signal?: AbortSignal) => {
     try {
-      const response = await fetch("/api/admin/delivery", { cache: "no-store", signal });
+      const [response, returnResponse] = await Promise.all([
+        fetch("/api/admin/delivery", { cache: "no-store", signal }),
+        fetch("/api/admin/delivery?view=returning", { cache: "no-store", signal }),
+      ]);
       const data = await response.json();
       if (!response.ok) throw new Error(typeof data.error === "string" ? data.error : "Não foi possível atualizar suas entregas.");
-      setDeliveries(data); setError("");
+      setDeliveries(data);
+      setReturning(returnResponse.ok ? (await returnResponse.json()).routeId : null);
+      setError("");
     } catch (cause) { if (!signal?.aborted) setError(cause instanceof Error ? cause.message : "Confira a conexão e tente novamente."); }
     finally { if (!signal?.aborted) setLoading(false); }
   }, []);
@@ -52,6 +58,18 @@ export default function DeliveryPage() {
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Confira a conexão e tente novamente."); }
     finally { setBusy(null); }
   }
+  async function confirmReturn(routeId: string) {
+    if (busy) return;
+    setBusy(routeId); setError(""); setNotice("");
+    try {
+      const response = await fetch("/api/admin/delivery", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ returnRouteId: routeId }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Não foi possível confirmar o retorno.");
+      setNotice("Retorno à loja confirmado.");
+      await load();
+    } catch (cause) { setError(cause instanceof Error ? cause.message : "Confira a conexão e tente novamente."); }
+    finally { setBusy(null); }
+  }
   const active = deliveries.filter(delivery => delivery.deliveryStatus !== "delivered");
   const done = deliveries.filter(delivery => delivery.deliveryStatus === "delivered");
   const visible = completed ? done : active;
@@ -59,6 +77,10 @@ export default function DeliveryPage() {
   return <div className={`${styles.page} ${styles.driverPage}`}>
     <header className={styles.heading}><div><h1>Minhas entregas</h1><p>Confira a retirada, abra a rota e registre a entrega.</p></div><button className={styles.secondary} onClick={() => void load()}><AdminIcon name="clock" /> Atualizar</button></header>
     <DriverAvailability />
+    {returning && <section className={styles.availability} aria-label="Retorno da rota">
+      <div><strong>Retornando à loja</strong><p>Confirme quando chegar para ficar disponível para a próxima rota.</p></div>
+      <button className={styles.secondary} disabled={busy !== null} onClick={() => void confirmReturn(returning)}>Confirmar retorno</button>
+    </section>}
     <div className={styles.filters} aria-label="Filtrar minhas entregas"><button aria-pressed={!completed} onClick={() => setCompleted(false)}>Em andamento <span>{active.length}</span></button><button aria-pressed={completed} onClick={() => setCompleted(true)}>Concluídas <span>{done.length}</span></button></div>
     {error && <p role="alert" className={styles.error}>{error}</p>}{notice && <p role="status" className={styles.notice}>{notice}</p>}
     {loading ? <p className={styles.empty}>Carregando suas entregas…</p> : !visible.length ? <div className={styles.empty}><AdminIcon name="delivery" size={40} /><h2>{completed ? "Nenhuma entrega concluída nas últimas 24 horas" : "Nenhuma entrega atribuída a você"}</h2><p>{completed ? "As entregas que você concluir ficam aqui por 24 horas." : "Quando o caixa atribuir uma entrega, ela aparece aqui."}</p></div> : <div className={styles.deliveries}>{visible.map(delivery => <article className={styles.delivery} key={delivery.id}>
