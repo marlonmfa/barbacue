@@ -27,6 +27,16 @@ async function assertWaiting(panel: Locator) {
   return store;
 }
 
+async function assertBikePosition(line: Locator, start: number, end: number, fraction: number) {
+  const geometry = await line.evaluate((track, { start, end }) => {
+    const center = (element: Element) => { const box = element.getBoundingClientRect(); return box.x + box.width / 2; };
+    const points = Array.from(track.children, step => step.firstElementChild!.lastElementChild!);
+    return { origin: center(points[start]), destination: center(points[end]), bike: center(track.querySelector('[role="img"]')!) };
+  }, { start, end });
+  assert(geometry.destination > geometry.origin);
+  assert(Math.abs(geometry.bike - (geometry.origin + (geometry.destination - geometry.origin) * fraction)) < 2, JSON.stringify(geometry));
+}
+
 async function main() {
   const database = new URL(process.env.DATABASE_URL ?? "");
   const url = new URL(process.env.DISPATCH_TEST_URL ?? "");
@@ -177,10 +187,12 @@ async function main() {
     for (const stop of stops) await page.getByText(stop.address, { exact: true }).waitFor();
     await page.getByRole("link", { name: "OpenStreetMap" }).waitFor();
     await page.getByText(/Aguardando saída/).waitFor();
+    await page.getByText("A motinha começa a avançar após registrar a saída.", { exact: true }).waitFor();
     const timeline = page.getByRole("list", { name: "Sequência de paradas da rota" });
     await timeline.getByText(/Chegada estimada · falt/).first().waitFor();
     assert.equal(await timeline.getByRole("listitem").count(), stops.length + 2);
     await timeline.getByRole("img", { name: "Moto do entregador" }).waitFor();
+    await assertBikePosition(timeline, 0, 1, 0);
     await timeline.locator("time").first().waitFor();
     assert.equal(await page.getByLabel("Entregador disponível").first().locator("option").count(), 2);
     await page.getByLabel("Entregador disponível").first().selectOption(String(driver.id));
@@ -235,18 +247,26 @@ async function main() {
     assert.equal(started.segment.to, Date.parse(started.stops[0].estimatedArrival));
     const duration = started.segment.to - started.segment.from;
     assert(duration > 0);
+    const clockPosition = await motorcycle.evaluate(el => parseFloat(getComputedStyle(el).left));
+    await page.waitForFunction(initial => {
+      const bike = document.querySelector('[aria-current="step"] [style*="--bike-offset"] [role="img"]');
+      return bike && parseFloat(getComputedStyle(bike).left) > initial + 0.15;
+    }, clockPosition, { timeout: 8_000 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
     for (const fraction of [0.25, 0.75, 1.25]) {
       await page.clock.setFixedTime(new Date(started.segment.from + duration * fraction));
       await page.waitForFunction(expected => {
         const target = document.querySelector('[aria-current="step"] [style*="--bike-offset"]') as HTMLElement;
         return target && Math.abs(Number.parseFloat(target.style.getPropertyValue("--bike-offset")) - expected) < 0.1;
       }, Math.min(fraction, 1) * 100 - 100);
+      await assertBikePosition(timeline, 0, 1, Math.min(fraction, 1));
       assert.equal((await dispatch()).routes[0].currentPosition, 1);
       if (fraction === 0.75 && process.env.DISPATCH_TEST_ESTIMATE_SCREENSHOT) {
         await page.setViewportSize({ width: 1440, height: 980 });
         await page.screenshot({ path: process.env.DISPATCH_TEST_ESTIMATE_SCREENSHOT, fullPage: true, animations: "disabled" });
       }
     }
+    await detail.getByText("Previsão atingida · aguardando confirmação da entrega", { exact: true }).waitFor();
     await page.clock.setFixedTime(new Date());
     assert.equal(navigation.searchParams.get("destination"), `${first.point.latitude},${first.point.longitude}`);
     const reference = stops.find(stop => stop.address === first.address);
@@ -278,6 +298,15 @@ async function main() {
     assert.equal((await operator.request.patch(new URL("/api/admin/delivery", url).href, { data: { returnRouteId: started.id } })).status(), 409);
     assert.equal(returning.segment.to, Date.parse(returning.returnEstimate));
     await detail.getByText("Retornando à loja", { exact: true }).waitFor();
+    assert(returning.segment.to > returning.segment.from);
+    await page.clock.setFixedTime(new Date((returning.segment.from + returning.segment.to) / 2));
+    await page.waitForFunction(() => {
+      const target = document.querySelector('[data-state="returning"] [style*="--bike-offset"]') as HTMLElement;
+      return target && Math.abs(Number.parseFloat(target.style.getPropertyValue("--bike-offset")) + 50) < 0.1;
+    });
+    await assertBikePosition(timeline, stops.length, stops.length + 1, 0.5);
+    if (process.env.DISPATCH_TEST_RETURN_SCREENSHOT) await page.screenshot({ path: process.env.DISPATCH_TEST_RETURN_SCREENSHOT, fullPage: true });
+    await page.clock.setFixedTime(new Date());
     await courierPage.getByRole("button", { name: "Confirmar retorno" }).click();
     await courierPage.getByText("Retorno à loja confirmado.").waitFor();
     const returned = (await dispatch()).routes[0];
@@ -299,7 +328,7 @@ async function main() {
       assert.equal(await bike.getAttribute("data-silhouette"), silhouette);
       assert.equal(await bike.evaluate(el => getComputedStyle(el).getPropertyValue("--bike-paint").trim()), paint);
     }
-    console.log("Navegador validado: aba Pedidos pendentes, lista com mais de 50 itens, entrada ao marcar pronto e remoção ao gerar rota.");
+    console.log("Navegador validado: motinha parada antes da saída, avanço medido em pixels pelo relógio, confirmação de entrega e movimento no retorno.");
   } finally {
     await browser.close();
     await pool.end();

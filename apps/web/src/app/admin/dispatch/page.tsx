@@ -74,7 +74,7 @@ export default function DispatchPage() {
     const controller = new AbortController();
     const initial = window.setTimeout(() => void load(controller.signal), 0);
     const timer = window.setInterval(() => void load(controller.signal), 5_000);
-    const countdown = window.setInterval(() => setNow(Date.now()), 5_000);
+    const countdown = window.setInterval(() => setNow(Date.now()), 1_000);
     return () => { controller.abort(); window.clearTimeout(initial); window.clearInterval(timer); window.clearInterval(countdown); };
   }, [load]);
 
@@ -295,7 +295,11 @@ function RouteCard({ route, riderName, availability, drivers, busy, now, start, 
         {" · "}{remainingLabel}
         {" · "}A receber {money(route.amountToCollectCents)}
       </p>
-      {route.segment && <p className={styles.estimateNote}>Posição estimada pelo tempo da etapa</p>}
+      {route.phase === "waiting" && <p className={styles.estimateNote}>A motinha começa a avançar após registrar a saída.</p>}
+      {route.segment && <p className={styles.estimateNote}>{now < route.segment.to
+        ? "Posição estimada pelo tempo da etapa"
+        : route.phase === "returning" ? "Previsão atingida · aguardando confirmação do retorno"
+        : "Previsão atingida · aguardando confirmação da entrega"}</p>}
       {route.returnedAt && <p>Chegou à loja às {time(route.returnedAt)}</p>}
     </div><div className={styles.routeActions}>
       {availability}

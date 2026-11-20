@@ -202,7 +202,7 @@ div.dispatchPage { max-width: none; }
   z-index: 2;
   bottom: 34px;
   left: calc(var(--point-x, 50%) + var(--bike-offset, 0%) * var(--segment-scale, 1));
-  transition: left 600ms ease;
+  transition: left 1s linear;
   width: 46px;
   height: 30px;
   transform: translateX(-50%);
