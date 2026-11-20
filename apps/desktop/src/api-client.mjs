@@ -10,6 +10,7 @@ const routes = [
   [/^\/api\/admin\/(products|categories|coupons|tables|staff|employees|closed-days)\/[A-Za-z0-9_-]+$/, ['PATCH', 'DELETE']],
   [/^\/api\/admin\/catalogs\/(barbacue|barbadog|chelas)\/[A-Za-z0-9_-]+$/, ['PATCH', 'DELETE']],
   [/^\/api\/admin\/(orders|kitchen|waiter|delivery|dispatch|settings|delivery-settings|erp|ifood)$/, ['GET', 'POST', 'PUT', 'PATCH']],
+  [/^\/api\/admin\/dispatch\/remuneracao$/, ['GET', 'POST']],
   [/^\/api\/admin\/orders\/[A-Za-z0-9_-]+$/, ['PATCH']],
   [/^\/api\/admin\/orders\/import$/, ['POST']],
   [/^\/api\/admin\/kitchen\/(printing|printers)$/, ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']],

@@ -11,6 +11,12 @@ test('only known operations reach the configured HTTPS API', () => {
   for (const value of ['https://evil.test/api/admin/auth', 'barbacue-app://other/api/admin/auth', 'file:///api/admin/auth', 'barbacue-app://u:p@desktop/api/admin/auth']) assert.throws(() => apiTarget(value, 'POST', origin));
   assert.equal(isLocalUrl('https://desktop/admin'), false);
 });
+test('courier remuneration only exposes report and review operations in the desktop transport', () => {
+  const path = '/api/admin/dispatch/remuneracao';
+  assert.equal(apiTarget(url(path + '?dia=2026-11-20'), 'GET', origin), origin + path + '?dia=2026-11-20');
+  assert.equal(apiTarget(url(path), 'POST', origin), origin + path);
+  assert.throws(() => apiTarget(url(path), 'DELETE', origin));
+});
 test('online cookies stay in the native session; renderer headers cannot inject credentials', async () => {
   let count = 0;
   const forward = createOnlineApi({ origin, fetch: async (target, init) => {

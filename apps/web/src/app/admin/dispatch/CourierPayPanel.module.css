@@ -1,0 +1,14 @@
+.panel { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); }
+.panel > summary { padding: 16px; font-weight: 750; cursor: pointer; }
+.body, .report { display: grid; gap: 12px; }
+.body { padding: 0 16px 16px; }
+.body p, .deliveries { color: var(--text-muted); font-size: 13px; }
+.filters, .total, .deliveries li { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.total, .deliveries li { justify-content: space-between; }
+.filters label { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-weight: 650; }
+.filters input { padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); }
+.driver { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; }
+.driver h3, .total strong { font-weight: 750; }
+.driver summary { cursor: pointer; font-size: 13px; font-weight: 650; }
+.deliveries { list-style: none; margin: 8px 0 0; padding: 0; }
+.deliveries li { padding: 7px 0; border-top: 1px solid var(--border); }

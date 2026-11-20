@@ -145,7 +145,15 @@ export const staffUsers = pgTable("staff_users", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
-// Verified recovery address; codes are stored only as keyed hashes.
+// A manager can confirm work on an operating day even when there were no deliveries.
+export const courierPayShifts = pgTable("courier_pay_shifts", {
+  driverId: integer("driver_id").notNull().references(() => staffUsers.id),
+  day: date("operating_day").notNull(),
+  confirmed: boolean("confirmed").notNull().default(true),
+  recordedBy: integer("recorded_by").notNull().references(() => staffUsers.id),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+}, table => [uniqueIndex("courier_pay_shifts_day_driver_idx").on(table.day, table.driverId)]);
+
 export const staffPresence = pgTable("staff_presence", {
   userId: integer("user_id").primaryKey().references(() => staffUsers.id, { onDelete: "cascade" }),
   available: boolean("available").notNull().default(false),

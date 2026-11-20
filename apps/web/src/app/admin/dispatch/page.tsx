@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties, type Form
 import { AdminIcon } from "@/components/admin/AdminIcons";
 import queue from "@/components/admin/OperationalQueue.module.css";
 import { dispatchConfigSchema, dispatchMetrics, type DispatchConfig, type DispatchReport } from "@/lib/dispatch-planner";
+import { CourierPayPanel } from "./CourierPayPanel";
 import { DispatchMotorcycle, type DispatchVehicle } from "./DispatchMotorcycle";
 import styles from "./page.module.css";
 
@@ -20,7 +21,7 @@ type Route = {
     state: "pending" | "delivered" | "cancelled"; amountToCollectCents: number }[];
 };
 type Data = {
-  config: DispatchConfig; revision: number; canConfigure: boolean; mapsReady: boolean; report: DispatchReport | null;
+  config: DispatchConfig; revision: number; canConfigure: boolean; canReviewCourierPay: boolean; mapsReady: boolean; report: DispatchReport | null;
   routes: Route[]; drivers: { id: number; name: string; vehicle: DispatchVehicle }[];
   couriers: { id: number; name: string; vehicle: DispatchVehicle; active: boolean; online: boolean; busy: boolean; available: boolean }[];
   pending: { id: string; brand: string; address: string | null; reason: string }[];
@@ -133,6 +134,7 @@ export default function DispatchPage() {
       <div><h1>Despacho de entregas</h1><p>Organize pedidos prontos em rotas e registre a saída com o entregador.</p></div>
       <button className={queue.secondary} disabled={!data?.mapsReady || busy} onClick={() => void mutate("POST")}><AdminIcon name="route" /> {busy ? "Processando…" : "Gerar rotas"}</button>
     </header>
+    {data?.canReviewCourierPay && <CourierPayPanel />}
     {refreshError && <p className={queue.error} role="alert">{refreshError}</p>}
     {error && <p className={queue.error} role="alert">{error}</p>}
     {notice && <p className={queue.notice} role="status">{notice}</p>}

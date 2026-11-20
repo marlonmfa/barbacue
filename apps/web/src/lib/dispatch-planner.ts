@@ -36,7 +36,7 @@ export const defaultDispatchConfig: DispatchConfig = {
 };
 
 export type DispatchOrder = { id: string; address: string; brand: string; placedAt: number; scheduledAt: number | null; point: DeliveryCoordinates };
-export type DispatchStop = DispatchOrder & { leg: DeliveryRoadRoute };
+export type DispatchStop = DispatchOrder & { leg: DeliveryRoadRoute; originDistanceMeters?: number };
 export type DispatchPlan = { stops: DispatchStop[]; returnLeg: DeliveryRoadRoute };
 export type DispatchIssue = { id: string; reason: string };
 export type DispatchReport = { time: string; created: number; issues: DispatchIssue[]; error?: string };
@@ -87,7 +87,7 @@ export function planDispatch(
     for (const index of sequence) {
       const leg = matrix[previous][index];
       if (!leg) return null;
-      stops.push({ ...orders[index - 1], leg });
+      stops.push({ ...orders[index - 1], leg, originDistanceMeters: matrix[0][index]?.distanceMeters });
       previous = index;
     }
     const returnLeg = matrix[previous][0];
