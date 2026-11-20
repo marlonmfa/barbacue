@@ -11,6 +11,11 @@ test('only known operations reach the configured HTTPS API', () => {
   for (const value of ['https://evil.test/api/admin/auth', 'barbacue-app://other/api/admin/auth', 'file:///api/admin/auth', 'barbacue-app://u:p@desktop/api/admin/auth']) assert.throws(() => apiTarget(value, 'POST', origin));
   assert.equal(isLocalUrl('https://desktop/admin'), false);
 });
+test('iFood Logistics exposes only the event view and explicit stage actions', () => {
+  const path = '/api/admin/ifood/orders/8011184a-95cc-4b97-a22a-d89e485c9855/logistics';
+  for (const method of ['GET', 'POST']) assert.equal(apiTarget(url(path), method, origin), origin + path);
+  assert.throws(() => apiTarget(url(path), 'PATCH', origin));
+});
 test('courier remuneration only exposes report and review operations in the desktop transport', () => {
   const path = '/api/admin/dispatch/remuneracao';
   assert.equal(apiTarget(url(path + '?dia=2026-11-20'), 'GET', origin), origin + path + '?dia=2026-11-20');

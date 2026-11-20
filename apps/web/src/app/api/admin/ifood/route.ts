@@ -38,7 +38,7 @@ export const GET = withStaff(async (request) => {
         externalId,
         displayId: row.notes?.match(/^iFood #(.+)$/m)?.[1] ?? null,
         storeId: store?.id ?? null,
-        actions: externalId ? allowedIfoodActions(row.status, row.orderType) : [],
+        actions: externalId ? allowedIfoodActions(row.status) : [],
       };
     }),
   }, { headers: { "Cache-Control": "no-store" } });

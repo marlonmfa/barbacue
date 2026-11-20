@@ -24,6 +24,7 @@ export const PATCH = withStaff(async (req: NextRequest, { params }: Params) => {
     const updated = await db.transaction(async tx => {
       const [order] = await tx.select().from(orders).where(eq(orders.id, id)).for("update");
       if (!order) throw new OrderUpdateError("Pedido não encontrado.", 404);
+      if (order.channel === "ifood") throw new OrderUpdateError("Atualize pedidos iFood pela Cozinha ou pelo Gestor iFood.", 409);
       if (parsed.data.deliveryDriverId !== undefined) {
         if (order.orderType !== "delivery") throw new OrderUpdateError("Somente pedidos de entrega podem receber um entregador.", 422);
         if (order.status === "delivered" || order.status === "cancelled" || order.deliveryStatus === "out_for_delivery" || order.deliveryStatus === "delivered") {

@@ -63,13 +63,12 @@ export const ACTION_LABELS: Record<IfoodAction, string> = {
 };
 
 /** Ações possíveis no iFood conforme a etapa local (espelho dos eventos PLC/CFM/PRS/RTP/DSP). */
-export function allowedIfoodActions(status: string | null, orderType: string | null): IfoodAction[] {
-  const finish: IfoodAction = orderType === "delivery" ? "dispatch" : "readyToPickup";
+export function allowedIfoodActions(status: string | null): IfoodAction[] {
   switch (status) {
     case "pending": return ["confirm", "cancel"];
-    case "confirmed": return ["startPreparation", finish, "cancel"];
-    case "preparing": return [finish, "cancel"];
-    // "ready" já representa RTP ou DSP no monitor; a conclusão vem do iFood (CON).
+    case "confirmed": return ["startPreparation", "readyToPickup", "cancel"];
+    case "preparing": return ["readyToPickup", "cancel"];
+    // A saída de entrega própria passa pelo Logistics. A conclusão vem do evento CON.
     default: return [];
   }
 }

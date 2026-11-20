@@ -95,6 +95,7 @@
 .routeList { grid-template-columns: minmax(0, 1fr); }
 .courierRoutes { gap: 8px; }
 .unassignedRoutes { margin-top: 20px; }
+.readyCount { margin: 0 0 12px; font-size: 13px; color: var(--text-muted); }
 
 .timeline {
   position: relative;

@@ -8,6 +8,7 @@ export const moduleGroups = [
     { id: 'order-feed', label: 'Feed de pedidos', path: '/admin/orders/feed' },
     { id: 'whatsapp', label: 'Atendimento / WhatsApp', path: '/whatsapp', accelerator: 'F3' },
     { id: 'ifood', label: 'Gestor iFood', path: '/admin/ifood' },
+    { id: 'ifood-logistics', label: 'Logistics iFood', path: '/admin/ifood/entregas' },
     { id: 'kitchen', label: 'Cozinha e impressoras', path: '/admin/kitchen', accelerator: 'F4' },
     { id: 'floor', label: 'Salão', path: '/admin/waiter' },
     { id: 'dispatch', label: 'Despacho de entregas', path: '/admin/dispatch' },

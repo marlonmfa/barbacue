@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-type Action = "confirm" | "startPreparation" | "readyToPickup" | "dispatch" | "cancel";
+type Action = "confirm" | "startPreparation" | "readyToPickup" | "cancel";
 interface OrderItem { name: string; priceCents: number; qty: number; notes?: string | null }
 interface IfoodOrder {
   id: string; brand: "barbacue" | "barbadog" | "chelas"; customerName: string; customerPhone: string;
@@ -20,7 +20,7 @@ interface Store {
 }
 interface Data { configured: boolean; dryRun: boolean; stores: Store[]; orders: IfoodOrder[] }
 
-const ACTION_LABEL: Record<Action, string> = { confirm: "Confirmar", startPreparation: "Iniciar preparo", readyToPickup: "Pronto p/ retirada", dispatch: "Saiu p/ entrega", cancel: "Cancelar" };
+const ACTION_LABEL: Record<Action, string> = { confirm: "Confirmar", startPreparation: "Iniciar preparo", readyToPickup: "Pronto p/ retirada", cancel: "Cancelar" };
 const COLUMNS = [
   { key: "new", title: "Novos", statuses: ["pending"] },
   { key: "prep", title: "Em preparo", statuses: ["confirmed", "preparing"] },
@@ -30,6 +30,9 @@ const COLUMNS = [
 const STATUS_LABEL: Record<string, string> = { pending: "Aguardando confirmação", confirmed: "Confirmado", preparing: "Preparando", ready: "Pronto / despachado", delivered: "Concluído", cancelled: "Cancelado" };
 const STATE_STYLE: Record<string, string> = { OK: "bg-[var(--success-soft)] text-[var(--success)]", WARNING: "bg-[var(--warning-soft)] text-[var(--warning)]", CLOSED: "bg-[var(--surface-hover)] text-[var(--text-muted)]", ERROR: "bg-[var(--danger-soft)] text-[var(--danger)]" };
 const STATE_LABEL: Record<string, string> = { OK: "Aberta", WARNING: "Aberta com alerta", CLOSED: "Fechada", ERROR: "Com problema", UNAVAILABLE: "Status indisponível" };
+const hasLogistics = (order: IfoodOrder) => order.orderType === "delivery" &&
+  ["confirmed", "preparing", "ready"].includes(order.status) && Boolean(order.externalId);
+const logisticsHref = (id: string) => `/admin/ifood/entregas?pedido=${encodeURIComponent(id)}`;
 const TYPE_LABEL = { delivery: "Entrega", pickup: "Retirada", dine_in: "No local" } as const;
 
 const fmtR = (cents: number) => `R$ ${(cents / 100).toFixed(2).replace(".", ",")}`;
@@ -222,7 +225,7 @@ export default function IfoodManager() {
                           </ul>
                         </button>
                         {order.status === "cancelled" && <p className="text-xs text-[var(--danger)] mt-2">Cancelado</p>}
-                        {order.actions.length > 0 && (
+                        {(order.actions.length > 0 || hasLogistics(order)) && (
                           <div className="flex flex-wrap gap-2 mt-3">
                             {order.actions.map(action => (
                               <button key={action} disabled={busy !== null || !data?.configured} onClick={() => void act(order, action)}
@@ -230,6 +233,7 @@ export default function IfoodManager() {
                                 {busy === order.id ? "Enviando…" : ACTION_LABEL[action]}
                               </button>
                             ))}
+                            {hasLogistics(order) && <Link className="self-center px-2 py-2 text-xs underline" href={logisticsHref(order.id)}>Acompanhar no Logistics</Link>}
                           </div>
                         )}
                       </article>
@@ -269,12 +273,13 @@ export default function IfoodManager() {
               <p className="flex justify-between text-[var(--text)] font-semibold"><span>Total</span><span>{fmtR(selected.totalCents)}</span></p>
             </div>
             {selected.notes && <pre className="mt-4 whitespace-pre-wrap text-xs text-[var(--text-muted)] bg-[var(--bg)] rounded-lg p-3">{selected.notes}</pre>}
-            {selected.actions.length > 0 && (
+            {(selected.actions.length > 0 || hasLogistics(selected)) && (
               <div className="flex flex-wrap gap-2 mt-4">
                 {selected.actions.map(action => (
                   <button key={action} disabled={busy !== null || !data?.configured} onClick={() => void act(selected, action)}
                     className={`min-h-12 text-sm px-4 rounded-xl disabled:opacity-50 ${action === "cancel" ? "bg-[var(--surface-2)] text-[var(--danger)]" : "bg-[var(--brand-red)] text-white font-semibold"}`}>{ACTION_LABEL[action]}</button>
                 ))}
+                  {hasLogistics(selected) && <Link className="self-center px-2 py-2 text-sm underline" href={logisticsHref(selected.id)}>Acompanhar no Logistics</Link>}
               </div>
             )}
           </div>

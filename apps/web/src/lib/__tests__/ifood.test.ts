@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { IFOOD_STORES, allowedIfoodActions, ifoodExternalId, ifoodLocalId, ifoodStoreFromNotes, loadIfoodStores, storeLocalIso } from "../ifood.ts";
 import { DEFAULT_MERCHANTS } from "../../../../../packages/ifood/src/merchants.ts";
 import { ifoodLocalId as monitorLocalId } from "../../../../../packages/ifood/src/order-store.ts";
+import { logisticsTransition } from "../ifood-logistics.ts";
 import { canAccessPath } from "../permissions.ts";
 
 test("gestor usa as mesmas lojas e a mesma identidade de pedido do monitor", () => {
@@ -19,11 +20,25 @@ test("ID externo só é aceito quando corresponde ao pedido local", () => {
   assert.equal(ifoodStoreFromNotes(notes, IFOOD_STORES)?.brand, "barbacue");
 });
 
-test("ações seguem a etapa e o tipo do pedido", () => {
-  assert.deepEqual(allowedIfoodActions("pending", "delivery"), ["confirm", "cancel"]);
-  assert.deepEqual(allowedIfoodActions("confirmed", "delivery"), ["startPreparation", "dispatch", "cancel"]);
-  assert.deepEqual(allowedIfoodActions("preparing", "pickup"), ["readyToPickup", "cancel"]);
-  for (const status of ["ready", "delivered", "cancelled"]) assert.deepEqual(allowedIfoodActions(status, "delivery"), []);
+test("prontidão é uma ação de pedido e a saída pertence ao Logistics", () => {
+  assert.deepEqual(allowedIfoodActions("pending"), ["confirm", "cancel"]);
+  assert.deepEqual(allowedIfoodActions("confirmed"), ["startPreparation", "readyToPickup", "cancel"]);
+  assert.deepEqual(allowedIfoodActions("preparing"), ["readyToPickup", "cancel"]);
+  for (const status of ["ready", "delivered", "cancelled"]) assert.deepEqual(allowedIfoodActions(status), []);
+});
+
+test("Logistics espera eventos de prontidão, chegada e solicitação de código", () => {
+  const next = (...codes: string[]) => logisticsTransition(codes.map(code => ({ code, fullCode: null })));
+  assert.equal(next().next, "assignDriver");
+  assert.equal(next("ADR").next, "goingToOrigin");
+  assert.equal(next("GTO", "ADR").next, "arrivedAtOrigin");
+  assert.deepEqual(next("AAO"), { next: null, waitingForReady: true });
+  assert.deepEqual(next("RTP", "AAO"), { next: "dispatch", waitingForReady: false });
+  assert.equal(next("DSP", "DDCR").next, "arrivedAtDestination");
+  assert.equal(next("AAD").next, null);
+  assert.equal(next("AAD", "DDCR").next, "verifyDeliveryCode");
+  for (const end of ["CON", "CAN", "DDCS", "DRGO", "DRDO"]) assert.equal(next("AAD", "DDCR", end).next, null);
+  assert.equal(logisticsTransition([{ code: "", fullCode: "ARRIVED_AT_ORIGIN" }, { code: "", fullCode: "READY_TO_PICKUP" }]).next, "dispatch");
 });
 
 test("mapeamento de lojas rejeita configuração inválida", () => {

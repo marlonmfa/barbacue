@@ -26,11 +26,22 @@ export default function IfoodLogistics() {
   const [sent, setSent] = useState<LogisticsState["next"]>(null);
 
   useEffect(() => {
-    if (!sent || !path) return;
+    if (!path) return;
     const controller = new AbortController();
-    const timer = window.setInterval(() => void reload(controller.signal), 15_000);
+    const timer = window.setInterval(() => void reload(controller.signal), 30_000);
     return () => { controller.abort(); window.clearInterval(timer); };
-  }, [sent, path, reload]);
+  }, [path, reload]);
+
+  useEffect(() => {
+    const select = window.setTimeout(() => setOrder(new URLSearchParams(window.location.search).get("pedido") ?? ""), 0);
+    return () => window.clearTimeout(select);
+  }, []);
+
+  useEffect(() => {
+    if (!sent) return;
+    const retry = window.setTimeout(() => { setSent(null); setNotice(""); }, 75_000);
+    return () => window.clearTimeout(retry);
+  }, [sent]);
 
   function clearSelection() {
     setSent(null); setCode(""); setName(""); setPhone(""); setNotice(""); setFailure("");
@@ -77,6 +88,7 @@ export default function IfoodLogistics() {
     {loading && <p role="status">Consultando a entrega no iFood…</p>}
     {data && <>
       <p className="mb-4 text-sm">Responsável pela entrega: {data.deliveredBy === "MERCHANT" ? "Loja" : data.deliveredBy === "IFOOD" ? "iFood" : "Indisponível"}</p>
+      {data.waitingForReady && <p className="mb-4 text-sm" role="status">Aguardando o iFood confirmar que o pedido está pronto para liberar a saída.</p>}
       {data.next && <div className="mb-6 flex flex-wrap items-end gap-3">
         {data.next === "assignDriver" && <>
           <label className="grid gap-1 text-sm">Nome do entregador<input className={inputClass} value={name} maxLength={120} onChange={e => setName(e.target.value)} /></label>

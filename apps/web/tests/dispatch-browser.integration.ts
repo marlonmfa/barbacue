@@ -148,16 +148,30 @@ async function main() {
       `, [stop.address, deliveryAddressKey(stop.address), ...origin, stop.latitude, stop.longitude]);
       await pool.query(`
         insert into orders(brand,customer_name,customer_phone,items,subtotal_cents,total_cents,channel,status,delivery_address,delivery_quote_id)
-        values ('barbacue','Pedido de homologação','','[]',1000,1000,'click','ready',$1,$2)
-      `, [stop.address, quote?.id ?? null]);
+        values ('barbacue','Pedido de homologação','','[]',1000,1000,'click',$3,$1,$2)
+      `, [stop.address, quote?.id ?? null, stop === stops[0] ? "preparing" : "ready"]);
     }
 
     await pool.query("update orders set payment_status='paid' where delivery_address=$1", [stops[0].address]);
     const page = await operator.newPage();
     await page.goto(new URL("/admin/dispatch", url).href);
     await page.getByRole("heading", { name: "Despacho de entregas" }).waitFor();
+    const created = page.getByRole("button", { name: /^Rotas criadas/ });
+    await created.click();
+    await page.getByText(stops.length === 2 ? "1 pedido pronto sem rota" : `${stops.length - 1} pedidos prontos sem rota`, { exact: true }).waitFor();
+    const { rows: [preparing] } = await pool.query("select id from orders where status='preparing'");
+    const ready = await operator.request.patch(new URL("/api/admin/kitchen", url).href, { data: { id: preparing.id, status: "ready" } });
+    assert.equal(ready.status(), 200);
+    await page.getByText(`${stops.length} pedidos prontos sem rota`, { exact: true }).waitFor();
+    assert.equal(await created.getAttribute("aria-pressed"), "true");
     await page.getByRole("button", { name: "Gerar rotas" }).click();
     await page.getByText(/entrou na fila|entraram na fila/).waitFor();
+    await page.getByRole("button", { name: "Rotas criadas 1", exact: true }).waitFor();
+    await page.getByText("0 pedidos prontos sem rota", { exact: true }).waitFor();
+    assert.equal(await created.getAttribute("aria-pressed"), "true");
+    if (process.env.DISPATCH_TEST_CREATED_SCREENSHOT) {
+      await page.screenshot({ path: process.env.DISPATCH_TEST_CREATED_SCREENSHOT, fullPage: true });
+    }
     for (const stop of stops) await page.getByText(stop.address, { exact: true }).waitFor();
     await page.getByRole("link", { name: "OpenStreetMap" }).waitFor();
     await page.getByText(/Aguardando saída/).waitFor();
@@ -286,7 +300,7 @@ async function main() {
     assert(returned.returnedAt);
     assert.equal(returned.segment, null);
     await assertWaiting(detail);
-    await activeCourier.getByText("Aguardando rota", { exact: true }).waitFor();
+    await activeCourier.getByText(/Aguardando rota$/).waitFor();
     assert.equal(await activeCourier.locator('[style*="--bike-left: 0%"]').count(), 1);
     const todos = page.getByRole("navigation", { name: "Filtrar despacho" }).getByRole("button", { name: "Todos", exact: true });
     await todos.click();
@@ -306,7 +320,7 @@ async function main() {
       assert.equal(await bike.getAttribute("data-silhouette"), silhouette);
       assert.equal(await bike.evaluate(el => getComputedStyle(el).getPropertyValue("--bike-paint").trim()), paint);
     }
-    console.log("Navegador validado: cinco linhas compactas, primeiro nome acima da moto, filtro individual e horários em rota.");
+    console.log("Navegador validado: aba Rotas criadas atualiza quando a cozinha marca pronto, criação, saída manual e retorno.");
   } finally {
     await browser.close();
     await pool.end();

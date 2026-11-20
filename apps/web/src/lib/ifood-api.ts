@@ -132,10 +132,10 @@ export async function runIfoodAction(externalId: string, action: IfoodAction, ca
   const id = encodeURIComponent(externalId);
   if (action === "cancel") {
     if (!cancel) throw new IfoodApiError("Escolha o motivo do cancelamento.", 422);
-    await call(`/order/v1.0/orders/${id}/requestCancellation`, { method: "POST", body: cancel });
+    await call(`/order/v1.0/orders/${id}/requestCancellation`, { method: "POST", body: cancel, requireResource: true, preserveClientStatus: true });
     return;
   }
-  await call(`/order/v1.0/orders/${id}/${action}`, { method: "POST" });
+  await call(`/order/v1.0/orders/${id}/${action}`, { method: "POST", requireResource: true, preserveClientStatus: true });
 }
 
 export async function pauseStore(store: IfoodStore, minutes: number, description: string) {

@@ -22,9 +22,10 @@ type Route = {
 };
 type Data = {
   config: DispatchConfig; revision: number; canConfigure: boolean; canReviewCourierPay: boolean; canSetCourierAvailability: boolean; mapsReady: boolean; report: DispatchReport | null;
-  ifood: { awaitingDispatch: number; dispatched: number };
+  ifood: { inPreparation: number; awaitingDispatch: number; dispatched: number };
   routes: Route[]; drivers: { id: number; name: string; vehicle: DispatchVehicle }[];
   couriers: { id: number; name: string; vehicle: DispatchVehicle; active: boolean; online: boolean; busy: boolean; available: boolean; declaredAvailableUntil?: string | null }[];
+  readyWithoutRoute: number;
   pending: { id: string; brand: string; address: string | null; reason: string }[];
 };
 type Draft = { config: DispatchConfig; revision: number };
@@ -52,7 +53,7 @@ export default function DispatchPage() {
   const [error, setError] = useState("");
   const [refreshError, setRefreshError] = useState("");
   const [notice, setNotice] = useState("");
-  const [tab, setTab] = useState<"all" | "queued" | "pending" | "started">("all");
+  const [tab, setTab] = useState<"all" | "created" | "queued" | "pending" | "started">("all");
   const [courierId, setCourierId] = useState<number | null>(null);
   const courierPanel = useRef<HTMLElement>(null);
 
@@ -92,7 +93,7 @@ export default function DispatchPage() {
       if (method === "PUT") setDraft(null);
       if (method === "POST") {
         setCourierId(null);
-        setTab(payload.created ? "queued" : "pending");
+        setTab(payload.created ? "created" : "pending");
         setNotice(payload.created ? `${payload.created} ${payload.created === 1 ? "rota entrou" : "rotas entraram"} na fila.` : "Nenhuma nova rota atende às regras neste momento.");
       } else if (success) {
         setNotice(success);
@@ -140,7 +141,7 @@ export default function DispatchPage() {
   const courier = couriers.find(person => person.id === courierId);
   const courierRoute = courier ? activeRoutes.get(courier.id) : undefined;
   const overview = tab === "all" && couriers.length > 0;
-  const visibleRoutes = tab === "queued" ? waiting : tab === "started" ? started
+  const visibleRoutes = tab === "created" ? [...waiting, ...started] : tab === "queued" ? waiting : tab === "started" ? started
     : [...started.filter(route => !route.returnedAt && (route.driverId === null || !courierIds.has(route.driverId))), ...waiting];
   const config = draft?.config ?? data?.config;
 
@@ -215,13 +216,17 @@ export default function DispatchPage() {
         onSelect={id => courierId === id ? selectDispatchTab("all") : setCourierId(id)} />
       <nav className={queue.filters} aria-label="Filtrar despacho">
         <button aria-pressed={!courier && tab === "all"} onClick={() => selectDispatchTab("all")}>Todos</button>
+        <button aria-pressed={!courier && tab === "created"} onClick={() => selectDispatchTab("created")}>Rotas criadas <span>{data.routes.length}</span></button>
         <button aria-pressed={!courier && tab === "queued"} onClick={() => selectDispatchTab("queued")}>Rotas na fila <span>{waiting.length}</span></button>
-        <button aria-pressed={!courier && tab === "pending"} onClick={() => selectDispatchTab("pending")}>Pedidos sem rota <span>{data.pending.length}{data.pending.length === 50 && "+"}</span></button>
+        <button aria-pressed={!courier && tab === "pending"} onClick={() => selectDispatchTab("pending")}>Pedidos sem rota <span>{data.readyWithoutRoute}</span></button>
         <button aria-pressed={!courier && tab === "started"} onClick={() => selectDispatchTab("started")}>Rotas e retornos <span>{started.length}</span></button>
       </nav>
-      {!courier && tab === "all" && <p className={styles.ifoodSummary}>
+      {!courier && tab === "created" && <p className={styles.readyCount} aria-live="polite">
+        {data.readyWithoutRoute === 1 ? "1 pedido pronto sem rota" : `${data.readyWithoutRoute} pedidos prontos sem rota`}
+      </p>}
+      {!courier && (tab === "all" || tab === "created") && <p className={styles.ifoodSummary}>
         <strong>Entregas iFood</strong>
-        <span>{data.ifood.awaitingDispatch} aguardando saída · {data.ifood.dispatched} em entrega</span>
+        <span>{data.ifood.inPreparation} na cozinha · {data.ifood.awaitingDispatch} prontos para sair · {data.ifood.dispatched} em entrega</span>
       </p>}
       {courier ? renderCourierRoute(courier, true) : <>
         {tab === "pending" ? (

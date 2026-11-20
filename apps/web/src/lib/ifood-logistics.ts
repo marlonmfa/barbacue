@@ -31,6 +31,7 @@ export interface LogisticsState {
   deliveredBy: string | null;
   next: LogisticsAction | null;
   events: LogisticsEvent[];
+  waitingForReady: boolean;
 }
 
 const movement = [
@@ -41,9 +42,18 @@ const movement = [
   ["AAD", "ARRIVED_AT_DESTINATION", null],
 ] as const;
 
-export function nextLogisticsAction(events: Pick<LogisticsEvent, "code" | "fullCode">[]): LogisticsAction | null {
+type EventCode = Pick<LogisticsEvent, "code" | "fullCode">;
+
+export function logisticsTransition(events: EventCode[]): { next: LogisticsAction | null; waitingForReady: boolean } {
+  const next = nextLogisticsAction(events);
+  const waitingForReady = next === "dispatch" && !events.some(event => event.code === "RTP" || event.fullCode === "READY_TO_PICKUP");
+  return { next: waitingForReady ? null : next, waitingForReady };
+}
+
+function nextLogisticsAction(events: EventCode[]): LogisticsAction | null {
   const has = (code: string, fullCode: string) => events.some(event => event.code === code || event.fullCode === fullCode);
-  if (has("CAN", "CANCELLED") || has("CON", "CONCLUDED") || has("DDCS", "DELIVERY_DROP_CODE_SUCCEEDED")) return null;
+  if (has("CAN", "CANCELLED") || has("CON", "CONCLUDED") || has("DDCS", "DELIVERY_DROP_CODE_SUCCEEDED") ||
+    has("DRGO", "DELIVERY_RETURNING_TO_ORIGIN") || has("DRDO", "DELIVERY_RETURNED_TO_ORIGIN")) return null;
   const phase = movement.findLast(([code, fullCode]) => has(code, fullCode));
   if (phase?.[0] === "AAD") return has("DDCR", "DELIVERY_DROP_CODE_REQUESTED") ? "verifyDeliveryCode" : null;
   return phase ? phase[2] : "assignDriver";

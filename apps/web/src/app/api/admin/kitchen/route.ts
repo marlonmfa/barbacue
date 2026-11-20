@@ -3,6 +3,9 @@ import { and, asc, eq, inArray, or, ne, isNull } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { kitchenPrintJobs, orders, restaurantTables } from "@/db/schema";
+import { ifoodExternalId } from "@/lib/ifood";
+import { runIfoodAction } from "@/lib/ifood-api";
+import { ifoodFailure } from "@/lib/ifood-route";
 import { withStaff } from "@/lib/admin-auth";
 const projection = { id: orders.id, brand: orders.brand, items: orders.items, notes: orders.notes, status: orders.status, createdAt: orders.createdAt, orderType: orders.orderType, channel: orders.channel, customerName: orders.customerName };
 function kitchenTicket(row: { id: string; brand: string; items: unknown; notes: string | null; status: string | null; createdAt: Date | null; orderType: string; channel: string | null; customerName: string; tableNumber?: number | null; ticket?: { tableNumber: number | null } | null; printStatus?: string | null }) {
@@ -21,7 +24,22 @@ export const PATCH = withStaff(async req => {
   const parsed = schema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Pedido ou etapa inválida." }, { status: 422 });
   const { id, status } = parsed.data;
-  const [updated] = await db.update(orders).set({ status }).where(and(eq(orders.id, id), eq(orders.status, status === "preparing" ? "confirmed" : "preparing"), or(isNull(orders.channel), ne(orders.channel, "online"), eq(orders.paymentStatus, "paid")))).returning(projection);
+  const previous = status === "preparing" ? "confirmed" : "preparing";
+  const ticket = and(eq(orders.id, id), isNull(orders.archivedAt));
+  const externalStages = status === "preparing" ? ["confirmed"] as const : ["confirmed", "preparing"] as const;
+  const [external] = await db.select({ notes: orders.notes }).from(orders)
+    .where(and(ticket, inArray(orders.status, externalStages), eq(orders.channel, "ifood")));
+  if (external) {
+    const externalId = ifoodExternalId(id, external.notes);
+    if (!externalId) return NextResponse.json({ error: "Pedido sem referência válida do iFood." }, { status: 422 });
+    try {
+      await runIfoodAction(externalId, status === "preparing" ? "startPreparation" : "readyToPickup");
+      return NextResponse.json({ accepted: true }, { status: 202 });
+    } catch (error) { return ifoodFailure(error); }
+  }
+  const [updated] = await db.update(orders).set({ status }).where(and(ticket, eq(orders.status, previous),
+    or(isNull(orders.channel), ne(orders.channel, "ifood")),
+    or(isNull(orders.channel), ne(orders.channel, "online"), eq(orders.paymentStatus, "paid")))).returning(projection);
   if (!updated) return NextResponse.json({ error: "Este pedido mudou de etapa. Atualize a fila." }, { status: 409 });
   return NextResponse.json(kitchenTicket(updated));
 });

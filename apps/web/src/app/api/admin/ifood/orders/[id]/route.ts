@@ -46,7 +46,10 @@ export const POST = withStaff(async (req: NextRequest, { params }: Params) => {
   const parsed = ActionSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Ação inválida." }, { status: 422 });
   const { action, cancellationCode, reason } = parsed.data;
-  if (!allowedIfoodActions(order.status, order.orderType).includes(action)) {
+  if (action === "dispatch") {
+    return NextResponse.json({ error: "Registre a saída no Logistics, depois da confirmação de pedido pronto e da chegada à loja." }, { status: 409 });
+  }
+  if (!allowedIfoodActions(order.status).includes(action)) {
     return NextResponse.json({ error: "Esta ação não vale para a etapa atual do pedido. Atualize a tela." }, { status: 409 });
   }
   try {

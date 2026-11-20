@@ -257,7 +257,7 @@ export async function dispatchOverview() {
       .leftJoin(staffUsers, eq(dispatchRoutes.driverId, staffUsers.id))
       .where(or(queued, openRoute, gt(dispatchRoutes.startedAt, recent), gt(dispatchRoutes.returnedAt, recent)))
       .orderBy(desc(isNull(dispatchRoutes.startedAt)), asc(dispatchRoutes.createdAt)).limit(100),
-    db.select(orderFields).from(orders).where(and(ownDelivery, isNull(orders.dispatchRouteId)))
+    db.select({ ...orderFields, count: sql<number>`count(*) over ()`.mapWith(Number) }).from(orders).where(and(ownDelivery, isNull(orders.dispatchRouteId)))
       .orderBy(desc(placedAt), asc(orders.id)).limit(50),
     db.select({
       ...driverFields, active: staffUsers.active, declaredAvailableUntil: staffPresence.declaredAvailableUntil,
@@ -268,7 +268,8 @@ export async function dispatchOverview() {
       .where(eq(staffUsers.role, "driver")).orderBy(asc(staffUsers.name), asc(staffUsers.id)),
     // O monitor iFood registra DSP em delivery_status e CON/CAN em status.
     db.select({
-      awaitingDispatch: sql<number>`count(*) filter (where ${orders.deliveryStatus} is distinct from 'out_for_delivery')`.mapWith(Number),
+      inPreparation: sql<number>`count(*) filter (where ${orders.status} in ('confirmed', 'preparing') and ${orders.deliveryStatus} is distinct from 'out_for_delivery')`.mapWith(Number),
+      awaitingDispatch: sql<number>`count(*) filter (where ${orders.status} = 'ready' and ${orders.deliveryStatus} is distinct from 'out_for_delivery')`.mapWith(Number),
       dispatched: sql<number>`count(*) filter (where ${orders.deliveryStatus} = 'out_for_delivery')`.mapWith(Number),
     }).from(orders).where(and(eq(orders.channel, "ifood"), eq(orders.orderType, "delivery"),
       inArray(orders.status, ["confirmed", "preparing", "ready"]), isNull(orders.archivedAt), gt(placedAt, recent))),
@@ -308,7 +309,8 @@ export async function dispatchOverview() {
         violations: route.startedAt ? [] : stats.violations,
       };
     }),
-    pending: candidates.map(row => ({
+    readyWithoutRoute: candidates[0]?.count ?? 0,
+    pending: candidates.map(({ count: _count, ...row }) => ({
       ...row,
       reason: !row.address?.trim() ? "Endereço ausente" :
         !row.placedAt ? "Horário do pedido ausente" :

@@ -393,9 +393,9 @@ export default function AdminOrders() {
                 </div>
               )}
 
-              {selected.channel === "ifood" && <p className="no-print text-sm text-[#c8b89a] leading-relaxed">As alterações deste painel são internas. Para confirmar, despachar ou cancelar no iFood, use também o gestor iFood.</p>}
+              {selected.channel === "ifood" && <p className="no-print text-sm text-[#c8b89a] leading-relaxed">O status é atualizado pelos eventos do iFood. Abra o Gestor iFood para acompanhar ou alterar o pedido.</p>}
               {!archived && <>
-              {selected.orderType === "delivery" && <section className="no-print bg-[#0e0b0a] rounded-xl p-4">
+              {selected.orderType === "delivery" && selected.channel !== "ifood" && <section className="no-print bg-[#0e0b0a] rounded-xl p-4">
                 <label className="block font-semibold text-white mb-2" htmlFor="assigned-driver">Entregador</label>
                 <select id="assigned-driver" className="w-full min-h-12 bg-[#241d18] border border-[#352b24] text-white rounded-lg px-3 text-sm" value={selected.deliveryDriverId ?? ""} disabled={busy !== null || selected.deliveryStatus === "out_for_delivery" || selected.deliveryStatus === "delivered" || selected.status === "delivered" || selected.status === "cancelled"} onChange={event => void updateOrder(selected.id, { deliveryDriverId: event.target.value ? Number(event.target.value) : null })}>
                   <option value="">Sem entregador</option>
@@ -412,7 +412,7 @@ export default function AdminOrders() {
                 <label className="text-[#a89a8c] text-xs">Status</label>
                 <select value={selected.status}
                   onChange={(e) => void updateOrder(selected.id, { status: e.target.value })}
-                  disabled={busy !== null}
+                  disabled={busy !== null || selected.channel === "ifood"}
                   className="min-h-12 bg-[#241d18] border border-[#352b24] text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none">
                   {STATUSES.map((s) => (
                     <option key={s.key} value={s.key} disabled={selected.channel === "online" && selected.paymentStatus !== "paid" && !["pending", "cancelled"].includes(s.key)}>{s.label}</option>
@@ -422,7 +422,7 @@ export default function AdminOrders() {
 
               <footer className="order-actions">
                 {selected.channel === "ifood" ? <a href="/admin/ifood">Abrir no Gestor iFood</a> : next && <button disabled={busy !== null || (selected.channel === "online" && selected.paymentStatus !== "paid")} onClick={() => void updateOrder(selected.id, { status: next.status })}>{busy === selected.id ? "Atualizando…" : next.label}</button>}
-                {selected.status === "ready" && selected.orderType === "delivery" && <p>O entregador atribuído registra a saída em Minhas entregas.</p>}
+                {selected.status === "ready" && selected.orderType === "delivery" && selected.channel !== "ifood" && <p>O entregador atribuído registra a saída em Minhas entregas.</p>}
               </footer>
               </>}
               <button
