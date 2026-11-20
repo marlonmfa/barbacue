@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { and, asc, eq, inArray, or, ne, isNull } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
@@ -7,6 +7,7 @@ import { ifoodExternalId } from "@/lib/ifood";
 import { runIfoodAction } from "@/lib/ifood-api";
 import { ifoodFailure } from "@/lib/ifood-route";
 import { withStaff } from "@/lib/admin-auth";
+import { generateDispatchOnReady } from "@/lib/dispatch-service";
 const projection = { id: orders.id, brand: orders.brand, items: orders.items, notes: orders.notes, status: orders.status, createdAt: orders.createdAt, orderType: orders.orderType, channel: orders.channel, customerName: orders.customerName };
 function kitchenTicket(row: { id: string; brand: string; items: unknown; notes: string | null; status: string | null; createdAt: Date | null; orderType: string; channel: string | null; customerName: string; tableNumber?: number | null; ticket?: { tableNumber: number | null } | null; printStatus?: string | null }) {
   const items = Array.isArray(row.items) ? row.items.map((item: { name?: string; qty?: number; notes?: string | null }) => ({ name: item.name ?? "Item", qty: item.qty ?? 1, notes: item.notes ?? null })) : [];
@@ -41,5 +42,6 @@ export const PATCH = withStaff(async req => {
     or(isNull(orders.channel), ne(orders.channel, "ifood")),
     or(isNull(orders.channel), ne(orders.channel, "online"), eq(orders.paymentStatus, "paid")))).returning(projection);
   if (!updated) return NextResponse.json({ error: "Este pedido mudou de etapa. Atualize a fila." }, { status: 409 });
+  if (status === "ready" && updated.orderType === "delivery" && updated.channel !== "test") after(generateDispatchOnReady);
   return NextResponse.json(kitchenTicket(updated));
 });

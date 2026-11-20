@@ -1,10 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/db";
 import { orders, staffUsers } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { withStaff } from "@/lib/admin-auth";
 import { can } from "@/lib/permissions";
+import { generateDispatchOnReady } from "@/lib/dispatch-service";
 
 const PatchSchema = z.object({
   status: z.enum(["pending", "confirmed", "preparing", "ready", "delivered", "cancelled"]).optional(),
@@ -21,7 +22,7 @@ export const PATCH = withStaff(async (req: NextRequest, { params }: Params) => {
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
 
   try {
-    const updated = await db.transaction(async tx => {
+    const { saved, becameReady } = await db.transaction(async tx => {
       const [order] = await tx.select().from(orders).where(eq(orders.id, id)).for("update");
       if (!order) throw new OrderUpdateError("Pedido não encontrado.", 404);
       if (order.channel === "ifood") throw new OrderUpdateError("Atualize pedidos iFood pela Cozinha ou pelo Gestor iFood.", 409);
@@ -38,7 +39,7 @@ export const PATCH = withStaff(async (req: NextRequest, { params }: Params) => {
         }
         const [saved] = await tx.update(orders).set({ deliveryDriverId, deliveryStatus: deliveryDriverId === null ? null : "assigned", dispatchedAt: null, deliveredAt: null })
           .where(eq(orders.id, id)).returning({ id: orders.id, status: orders.status, deliveryDriverId: orders.deliveryDriverId, deliveryStatus: orders.deliveryStatus });
-        return saved;
+        return { saved, becameReady: false };
       }
       const status = parsed.data.status!;
       if (order.channel === "online" && order.paymentStatus !== "paid" && status !== "pending" && status !== "cancelled") throw new OrderUpdateError("Aguarde a confirmação do pagamento online antes de liberar a produção.", 409);
@@ -51,9 +52,12 @@ export const PATCH = withStaff(async (req: NextRequest, { params }: Params) => {
         ...(status === "delivered" ? { deliveredAt: order.deliveredAt ?? new Date(), ...(order.orderType === "delivery" && order.deliveryDriverId ? { deliveryStatus: "delivered" as const } : {}) } : {}),
         ...(status === "cancelled" ? { deliveryStatus: null } : {}),
       }).where(eq(orders.id, id)).returning({ id: orders.id, status: orders.status, deliveryDriverId: orders.deliveryDriverId, deliveryStatus: orders.deliveryStatus });
-      return saved;
+      const becameReady = status === "ready" && order.status !== "ready" && order.orderType === "delivery" &&
+        order.channel !== "test" && !order.archivedAt && !order.deliveryStatus && !order.deliveryDriverId;
+      return { saved, becameReady };
     });
-    return NextResponse.json(updated);
+    if (becameReady) after(generateDispatchOnReady);
+    return NextResponse.json(saved);
   } catch (error) {
     if (error instanceof OrderUpdateError) return NextResponse.json({ error: error.message }, { status: error.status });
     throw error;

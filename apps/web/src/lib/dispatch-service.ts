@@ -19,7 +19,7 @@ const scheduledAt = sql<Date>`(select ${orderSchedules.scheduledAt} from ${order
 const ownDelivery = and(
   eq(orders.orderType, "delivery"), eq(orders.status, "ready"), isNull(orders.archivedAt),
   isNull(orders.deliveryStatus), isNull(orders.deliveryDriverId), isNull(orders.dispatchedAt), isNull(orders.deliveredAt),
-  or(isNull(orders.channel), ne(orders.channel, "ifood")),
+  sql`${orders.channel} is distinct from 'ifood' and ${orders.channel} is distinct from 'test'`,
   or(isNull(orders.channel), ne(orders.channel, "online"), eq(orders.paymentStatus, "paid")),
 );
 const orderFields = { id: orders.id, brand: orders.brand, address: orders.deliveryAddress, placedAt, scheduledAt };
@@ -185,6 +185,14 @@ export async function generateDispatch(auto = false) {
   }
   inProgress ??= generate(auto).finally(() => { inProgress = undefined; });
   return inProgress;
+}
+
+export async function generateDispatchOnReady() {
+  // A run that started before this order was committed may have read its candidates already.
+  await inProgress?.catch(error => {
+    console.error("Dispatch worker failed", error instanceof Error ? error.name : "unknown");
+  });
+  await generateDispatch(true);
 }
 
 export async function saveDispatchConfig(config: DispatchConfig, revision: number) {
